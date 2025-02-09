@@ -1,221 +1,266 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Your Name - 個人履歷</title>
+  <meta charset="UTF-8" />
+  <title>Hao-Jyun Liang - Resume</title>
   <style>
-    /* 一些基本的全域設定 */
+    /* 一些基本的重置與全域設定 */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     body {
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
+      font-family: Arial, sans-serif;
       line-height: 1.6;
+      color: #333;
+      background-color: #f8f9fa;
+      padding: 20px;
     }
-    /* 網頁容器 */
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       background-color: #fff;
-      padding: 2rem;
-    }
-    /* 頁首區域 */
-    header {
-      background-color: #2c3e50;
-      padding: 2rem 1rem;
-      color: #fff;
-      text-align: center;
-      margin-bottom: 1rem;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     header h1 {
+      font-size: 2rem;
       margin-bottom: 0.5rem;
     }
-    header p {
-      margin-bottom: 0.25rem;
-      font-weight: 300;
-    }
-    /* 大頭照與基本資訊欄位 */
-    .profile-section {
-      display: flex;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .profile-img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 1rem;
-      flex-shrink: 0;
-    }
-    .profile-img img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .basic-info {
-      flex: 1;
-    }
-    .basic-info h2 {
-      margin-bottom: 0.5rem;
-      font-size: 1.5rem;
-    }
-    .basic-info p {
-      margin-bottom: 0.25rem;
-      color: #666;
-    }
-    /* 區塊標題 */
-    .section-title {
-      font-size: 1.25rem;
+    header .contact-info {
       margin-bottom: 1rem;
+      font-style: italic;
+    }
+    section {
+      margin-top: 2rem;
+    }
+    section h2 {
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid #dee2e6;
       padding-bottom: 0.3rem;
-      border-bottom: 2px solid #ddd;
     }
-    /* 清單樣式 */
     ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
+      list-style: none;
+      padding-left: 0;
     }
-    li {
+    ul li {
       margin-bottom: 1rem;
     }
-    /* 作品或經歷的標題 */
+    .subitem {
+      margin-left: 1.5rem;
+    }
+    /* 小標題或細節的樣式 */
     .item-title {
       font-weight: bold;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.3rem;
     }
-    .item-period {
+    .item-period, .item-location {
       font-size: 0.9rem;
-      color: #999;
-      margin-bottom: 0.5rem;
+      color: #777;
     }
-    /* 頁尾 */
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      padding: 1rem;
-      color: #999;
-      font-size: 0.9rem;
-    }
-    /* 超連結樣式 */
-    a {
-      color: #2c3e50;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    /* 響應式調整：若畫面較小，圖片和文字改為直向排列 */
-    @media (max-width: 600px) {
-      .profile-section {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .profile-img {
-        margin-bottom: 1rem;
-      }
+    .item-description {
+      margin-top: 0.3rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Your Name</h1>
-    <p>你的職稱或目標領域 (如「前端工程師」、「UI/UX 設計師」)</p>
-    <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
-    <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
-    <p>Website / LinkedIn / GitHub: 
-      <a href="https://yourwebsite.com" target="_blank">yourwebsite.com</a>
-    </p>
-  </header>
-
   <div class="container">
-    <!-- 個人簡介 / 大頭照 -->
-    <div class="profile-section">
-      <div class="profile-img">
-        <!-- 替換成你的個人照片 -->
-        <img src="your-photo.jpg" alt="Your Name">
+    <header>
+      <h1>Hao-Jyun Liang</h1>
+      <div class="contact-info">
+        Email | LinkedIn | 0982-955885
       </div>
-      <div class="basic-info">
-        <h2>關於我</h2>
-        <p>
-          簡短介紹你的背景、興趣或專長，可包含求職目標、核心能力，讓訪客能快速了解你是誰。
-        </p>
-      </div>
-    </div>
+    </header>
 
-    <!-- 技能區 -->
+    <!-- Education Section -->
     <section>
-      <h3 class="section-title">技能與專長</h3>
-      <ul>
-        <li>技能 #1 (例如：HTML、CSS、JavaScript、React 等)</li>
-        <li>技能 #2</li>
-        <li>技能 #3</li>
-        <li>技能 #4</li>
-      </ul>
-    </section>
-
-    <!-- 工作經歷 -->
-    <section>
-      <h3 class="section-title">工作經歷</h3>
+      <h2>Education</h2>
       <ul>
         <li>
-          <div class="item-title">職稱 @ 公司名稱</div>
-          <div class="item-period">YYYY/MM - YYYY/MM</div>
-          <p>描述在此職位的主要責任與成就，簡潔有力。</p>
+          <div class="item-title">
+            National Yang Ming Chiao Tung University 
+            (Master of Engineering - Pioneer Semiconductor Innovation | Digital IC Design)
+          </div>
+          <div class="item-period">Sept. 2025 – Present</div>
+          <div class="item-location">Hsinchu, Taiwan</div>
         </li>
         <li>
-          <div class="item-title">職稱 @ 公司名稱</div>
-          <div class="item-period">YYYY/MM - YYYY/MM</div>
-          <p>描述在此職位的主要責任與成就，簡潔有力。</p>
-        </li>
-      </ul>
-    </section>
-
-    <!-- 教育背景 -->
-    <section>
-      <h3 class="section-title">教育背景</h3>
-      <ul>
-        <li>
-          <div class="item-title">學位名稱 @ 學校名稱</div>
-          <div class="item-period">YYYY/MM - YYYY/MM</div>
-          <p>可以簡要描述主修科目、課程重點或在校經歷。</p>
+          <div class="item-title">
+            National Tsing Hua University 
+            (Bachelor of Engineering - Electrical Engineering | GPA 4.10/4.30 | Honor Graduation)
+          </div>
+          <div class="item-period">Sept. 2021 – Jun. 2024</div>
+          <div class="item-location">Hsinchu, Taiwan</div>
         </li>
         <li>
-          <div class="item-title">學位名稱 @ 學校名稱</div>
-          <div class="item-period">YYYY/MM - YYYY/MM</div>
-          <p>可以簡要描述主修科目、課程重點或在校經歷。</p>
+          <div class="item-title">
+            National Tsing Hua University 
+            (Bachelor of Science - Physics | Transferred to EE)
+          </div>
+          <div class="item-period">Sept. 2020 – Jun. 2021</div>
+          <div class="item-location">Hsinchu, Taiwan</div>
         </li>
       </ul>
     </section>
 
-    <!-- 作品集 / 專案 -->
+    <!-- Work Experience Section -->
     <section>
-      <h3 class="section-title">專案 / 作品集</h3>
+      <h2>Work Experience</h2>
       <ul>
         <li>
-          <div class="item-title">專案名稱</div>
-          <p>簡短介紹此專案的內容、目的或成果。 
-            <a href="#" target="_blank">查看專案連結</a>
-          </p>
+          <div class="item-title">Hardware and Algorithm Codevelopment - Affiliate Trainee</div>
+          <div class="item-period">Jan. 2025 – Present</div>
+          <div class="item-location">Accelerated AI Algorithms for Data-Driven Discovery | Washington, U.S.</div>
+          <div class="item-description">
+            • Optimizing GPU algorithms for particle trajectory reconstruction at the HL-LHC in HEP experiments
+          </div>
         </li>
         <li>
-          <div class="item-title">專案名稱</div>
-          <p>簡短介紹此專案的內容、目的或成果。 
-            <a href="#" target="_blank">查看專案連結</a>
-          </p>
+          <div class="item-title">Graduate Research Assistant</div>
+          <div class="item-period">Dec. 2024 – Present</div>
+          <div class="item-location">National Yang Ming Chiao Tung University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Intelligent computing, hardware-software co-acceleration and architectural design
+          </div>
         </li>
+        <li>
+          <div class="item-title">AI/Deep Learning Accelerator - Digital Design Intern</div>
+          <div class="item-period">Nov. 2024 – Present</div>
+          <div class="item-location">Andes Technology Corporation | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • CPU-related AI and Deep Learning accelerator
+          </div>
+        </li>
+        <li>
+          <div class="item-title">General Physics Experiment Teaching Assistant</div>
+          <div class="item-period">Sept. 2023 – Jan. 2024</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Exams management and demonstrations for general physics experiments
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Awards Section -->
+    <section>
+      <h2>Awards</h2>
+      <ul>
+        <li>
+          <div class="item-title">Certificate of Outstanding Graduate Award</div>
+          <div class="item-period">Jun. 2024</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Top eight students in Dept. of EE at graduation, evidenced by cumulative major GPA
+          </div>
+        </li>
+        <li>
+          <div class="item-title">College of Science Elite Student Award</div>
+          <div class="item-period">Apr. 2021</div>
+          <div class="item-location">National Tsing Hua University | College of Science | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Top one student in Dept. of Physics, evidenced by cumulative GPA during an academic year
+          </div>
+        </li>
+        <li>
+          <div class="item-title">Three Presidential Awards</div>
+          <div class="item-period">Sept. 2020 – Jun. 2024</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Top 5% students in Dept. of EE and Physics, evidenced by cumulative GPA during semester
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Certificates Section -->
+    <section>
+      <h2>Certificates</h2>
+      <ul>
+        <li>
+          <div class="item-title">
+            (ADFP - TSMC 16nm) Cell-Based Digital Chip Design and Implementation
+          </div>
+          <div class="item-period">Sep. 2024</div>
+          <div class="item-location">Taiwan Semiconductor Research Institute | TSRI | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Exploring key aspects of digital circuit design, providing a comprehensive overview of the digital design flow
+          </div>
+        </li>
+        <li>
+          <div class="item-title">
+            Building Transformer-Based Natural Language Processing Applications
+          </div>
+          <div class="item-period">Dec. 2023</div>
+          <div class="item-location">Deep Learning Institute | NVIDIA | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Successful development of Transformer-based natural language processing applications
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Projects Section -->
+    <section>
+      <h2>Projects</h2>
+      <ul>
+        <li>
+          <div class="item-title">
+            RISC-V Five-Stage Pipelined Featuring Stall and Forwarding Control
+          </div>
+          <div class="item-period">Dec. 2023 – Jan. 2024</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Stall and forward logic address data/control hazards, reducing NOP insertion by the compiler <br>
+            • Quicksort used to compare CPU performance, showcasing efficiency of hardware hazard control
+          </div>
+        </li>
+        <li>
+          <div class="item-title">
+            Tunable Bandgap in Bilayer Graphene Dual-Gate FET Implementation
+          </div>
+          <div class="item-period">Mar. 2023 – Nov. 2023</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Bilayer graphene offers up to 250 meV tunable bandgap via real-time external electric field <br>
+            • The dual-gate FET was fabricated with PDMS and tested by I-V measurements, showcasing its tunable bandgap
+          </div>
+        </li>
+        <li>
+          <div class="item-title">
+            FPGA-Based Tetris with Basys 3 Artix-7
+          </div>
+          <div class="item-period">May 2023 – Jun. 2023</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Classic Tetris gameplay with custom music, elimination effects, and “T-spin” <br>
+            • Pre-game menu for player settings and main gameplay interface
+          </div>
+        </li>
+        <li>
+          <div class="item-title">
+            High-Speed 128x16-bit ROM Macro with Sub-5ns Access Time
+          </div>
+          <div class="item-period">Dec. 2022 – Jan. 2023</div>
+          <div class="item-location">National Tsing Hua University | Hsinchu, Taiwan</div>
+          <div class="item-description">
+            • Pre-sim includes five process corners; post-sim at TT 25°C with R-C-CC extraction at CIC 0.18um <br>
+            • Focusing on balancing area and timing, measuring access time and power in waveform cycles
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Skills Section -->
+    <section>
+      <h2>Skills</h2>
+      <ul>
+        <li><strong>Programming Languages:</strong> Verilog, Python, C/C++</li>
+        <li><strong>Design Tools:</strong> VCS, Verdi, SpyGlass, DC, PrimeTime, Hspice, Laker, Innovus, Calibre, Virtuoso, Caliber</li>
       </ul>
     </section>
   </div>
-
-  <footer>
-    &copy; 2025 Your Name. All rights reserved.
-  </footer>
 </body>
 </html>
