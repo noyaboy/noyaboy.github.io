@@ -23,7 +23,15 @@
   <main>
     <section class="container">
       <h1>Résumé</h1>
-      <p>Download PDF: <a href="assets/resume.pdf">resume.pdf</a></p>
+      <!-- 以 embed 直接內嵌 PDF -->
+      <div class="pdf-container">
+        <embed
+          src="assets/resume.pdf"
+          type="application/pdf"
+          width="100%"
+          height="800px"
+        />
+      </div>
     </section>
   </main>
   <footer>
