@@ -13,8 +13,7 @@ redirect_from:
 
 <div class="cv-section">
 
-Education
-======
+## Education
 
 <div class="experience-item">
   <div class="job-info">
@@ -35,8 +34,7 @@ Education
 
 <div class="cv-section">
 
-Work Experience
-======
+## Work Experience
 
 <div class="experience-item">
   <div class="job-info">
@@ -75,8 +73,7 @@ Work Experience
 
 <div class="cv-section">
 
-Skills
-======
+## Skills
 
 <div class="skills-container">
   <span class="skill-tag">Efficient Machine Learning</span>
@@ -90,8 +87,7 @@ Skills
 
 <div class="cv-section">
 
-Publications
-======
+## Publications
   <ul>{% for post in site.publications reversed %}
     {% include archive-single-cv.html %}
   {% endfor %}</ul>
@@ -100,8 +96,7 @@ Publications
 
 <div class="cv-section">
 
-Talks
-======
+## Talks
   <ul>{% for post in site.talks reversed %}
     {% include archive-single-talk-cv.html  %}
   {% endfor %}</ul>

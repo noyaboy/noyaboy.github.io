@@ -8,4 +8,4 @@ date: 2025-09-03
 location: "CERN / Hybrid"
 ---
 
-Speaker: Mr Hao-Chun Liang
+Presenting research on real-time GPU-accelerated Kalman filter tracking algorithms, featuring kernel refactoring techniques and INT8 surrogate models for high-luminosity collider experiments.
