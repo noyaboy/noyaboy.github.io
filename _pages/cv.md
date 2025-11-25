@@ -11,54 +11,39 @@ redirect_from:
 
 Education
 ======
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
-* M.S. in Jekyll, GitHub University, 2014
-* B.S. in GitHub, GitHub University, 2012
+* M.Eng. in Digital VLSI and System Design, National Yang Ming Chiao Tung University, 2025 (Expected)
+* B.S. in Electrical Engineering, National Tsing Hua University - Distinction (Ranked 1st in class)
 
-Work experience
+Work Experience
 ======
-* Spring 2024: Academic Pages Collaborator
-  * GitHub University
-  * Duties includes: Updates and improvements to template
-  * Supervisor: The Users
+* November 2024 - Present: Digital Design Intern
+  * Andes Technology Corporation
+  * Focusing on CPU-related AI and deep learning accelerator development
 
-* Fall 2015: Research Assistant
-  * GitHub University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
+* Present: Affiliate Trainee
+  * A3D3 Institute (University of Washington)
+  * Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC HEP experiments
 
-* Summer 2015: Research Assistant
-  * GitHub University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
-  
+* Present: Graduate Research Assistant
+  * Parallel Computing System Laboratory, NYCU
+  * Research on hardware-software co-acceleration and heterogeneous platforms (FPGA/GPU)
+
 Skills
 ======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
+* Efficient Machine Learning
+* FPGA/GPU Heterogeneous System
+* HLS for Machine Learning
+* Digital IC Design
+* Data-Driven RTL/C++ Codegen
 
 Publications
 ======
   <ul>{% for post in site.publications reversed %}
     {% include archive-single-cv.html %}
   {% endfor %}</ul>
-  
+
 Talks
 ======
   <ul>{% for post in site.talks reversed %}
     {% include archive-single-talk-cv.html  %}
   {% endfor %}</ul>
-  
-Teaching
-======
-  <ul>{% for post in site.teaching reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Service and leadership
-======
-* Currently signed in to 43 different slack teams
