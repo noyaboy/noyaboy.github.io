@@ -1,152 +1,124 @@
 {
   "basics": {
-    "name": "Your Sidebar Name",
-    "email": "none@example.org",
+    "name": "Hao-Chun Liang",
+    "email": "science103555@gmail.com",
     "phone": "",
-    "website": "https://academicpages.github.io",
-    "summary": "Currently employed at Red Brick University. Short biography for the left-hand sidebar",
+    "website": "https://noyaboy.github.io",
+    "summary": "Thesis-Based Master Student at National Yang Ming Chiao Tung University, working on Parallel Computing Systems. Also a Digital Design Intern at Andes Technology and Affiliate Trainee at A3D3 Institute.",
     "location": {
       "address": "",
       "postalCode": "",
-      "city": "Earth",
-      "countryCode": "US",
-      "region": ""
+      "city": "Hsinchu",
+      "countryCode": "TW",
+      "region": "Taiwan"
     },
-    "profiles": [
-      {
-        "network": "Google Scholar",
-        "username": "",
-        "url": "https://scholar.google.com/citations?user=PS_CX0AAAAAJ"
-      },
-      {
-        "network": "ORCID",
-        "username": "",
-        "url": "https://orcid.org/yourorcidurl"
-      },
-      {
-        "network": "GitHub",
-        "username": "academicpages",
-        "url": "https://github.com/academicpages"
-      }
-    ]
+    "profiles": []
   },
-  "work": [],
+  "work": [
+    {
+      "company": "Andes Technology Corporation",
+      "position": "Digital Design Intern",
+      "website": "",
+      "startDate": "2024-11",
+      "endDate": "Present",
+      "summary": "Focusing on CPU-related AI and deep learning accelerator development.",
+      "highlights": []
+    },
+    {
+      "company": "A3D3 Institute (University of Washington)",
+      "position": "Affiliate Trainee",
+      "website": "",
+      "startDate": "",
+      "endDate": "Present",
+      "summary": "Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC HEP experiments.",
+      "highlights": []
+    },
+    {
+      "company": "Parallel Computing System Laboratory, NYCU",
+      "position": "Graduate Research Assistant",
+      "website": "",
+      "startDate": "",
+      "endDate": "Present",
+      "summary": "Research on hardware-software co-acceleration and heterogeneous platforms (FPGA/GPU).",
+      "highlights": []
+    }
+  ],
   "education": [
     {
-      "institution": "GitHub University",
-      "area": "Ph.D in Version Control Theory",
-      "studyType": "",
+      "institution": "National Yang Ming Chiao Tung University",
+      "area": "M.Eng. in Digital VLSI and System Design",
+      "studyType": "Master of Engineering",
       "startDate": "",
-      "endDate": "2018",
+      "endDate": "2025 (Expected)",
       "gpa": null,
       "courses": []
     },
     {
-      "institution": "GitHub University",
-      "area": "M.S. in Jekyll",
-      "studyType": "",
+      "institution": "National Tsing Hua University",
+      "area": "B.S. in Electrical Engineering",
+      "studyType": "Bachelor of Science",
       "startDate": "",
-      "endDate": "2014",
-      "gpa": null,
-      "courses": []
-    },
-    {
-      "institution": "GitHub University",
-      "area": "B.S. in GitHub",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2012",
-      "gpa": null,
+      "endDate": "",
+      "gpa": "Distinction (Ranked 1st in class)",
       "courses": []
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "Technical Skills",
+      "level": "",
+      "keywords": [
+        "Efficient Machine Learning",
+        "FPGA/GPU Heterogeneous System",
+        "HLS for Machine Learning",
+        "Digital IC Design",
+        "Data-Driven RTL/C++ Codegen"
+      ]
+    }
+  ],
   "languages": [],
   "interests": [],
   "references": [],
   "publications": [
     {
-      "name": "Paper Title Number 1",
-      "publisher": "Journal 1",
-      "releaseDate": "2009-10-01",
-      "website": "https://academicpages.github.io/files/paper1.pdf",
-      "summary": "This paper is about the number 1. The number 2 is left for future work."
+      "name": "Fine-Grained Image Recognition from Scratch with Teacher-Guided Data Augmentation",
+      "publisher": "arXiv",
+      "releaseDate": "2025",
+      "website": "https://noah-site.netlify.app/uploads/fgir.pdf",
+      "summary": "Introduces Teacher‑Guided Data Augmentation (TGDA), showing that un‑pretrained fine‑grained recognition models with LRNet and ViTFS match or exceed SOTA using fewer parameters."
     },
     {
-      "name": "Paper Title Number 2",
-      "publisher": "Journal 1",
-      "releaseDate": "2010-10-01",
-      "website": "https://academicpages.github.io/files/paper2.pdf",
-      "summary": "This paper is about the number 2. The number 3 is left for future work."
+      "name": "HiGTR: A High-Performance FPGA Implementation for Complete GNN-Based Trajectory Reconstruction in High-Energy Physics",
+      "publisher": "Taiwan and Japan Conference on Circuits and Systems (TJCAS)",
+      "releaseDate": "2025",
+      "website": "https://noah-site.netlify.app/uploads/tjcas_gnn_trajectory_reconstruction.pdf",
+      "summary": "FPGA-accelerated GNN pipeline for HL-LHC exceeding latency and throughput requirements."
     },
     {
-      "name": "Paper Title Number 3",
-      "publisher": "Journal 1",
-      "releaseDate": "2015-10-01",
-      "website": "https://academicpages.github.io/files/paper3.pdf",
-      "summary": "This paper is about the number 3. The number 4 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 4",
-      "publisher": "GitHub Journal of Bugs",
-      "releaseDate": "2024-02-17",
-      "website": "https://academicpages.github.io/files/paper3.pdf",
-      "summary": "This paper is about fixing template issue #693."
+      "name": "A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA",
+      "publisher": "VLSI Design / CAD Symposium",
+      "releaseDate": "2025",
+      "website": "https://noah-site.netlify.app/uploads/gnn_trajectory_reconstruction.pdf",
+      "summary": "FPGA-accelerated GNN pipeline for HL-LHC exceeding latency and throughput requirements."
     }
   ],
   "presentations": [
     {
-      "name": "Talk 1 on Relevant Topic in Your Field",
-      "event": "UC San Francisco, Department of Testing",
-      "date": "2012-03-01",
-      "location": "San Francisco, CA, USA",
-      "description": ""
-    },
-    {
-      "name": "Tutorial 1 on Relevant Topic in Your Field",
-      "event": "UC-Berkeley Institute for Testing Science",
-      "date": "2013-03-01",
-      "location": "Berkeley, CA, USA",
-      "description": ""
-    },
-    {
-      "name": "Talk 2 on Relevant Topic in Your Field",
-      "event": "London School of Testing",
-      "date": "2014-02-01",
-      "location": "London, UK",
-      "description": ""
-    },
-    {
-      "name": "Conference Proceeding talk 3 on Relevant Topic in Your Field",
-      "event": "Testing Institute of America 2014 Annual Conference",
-      "date": "2014-03-01",
-      "location": "Los Angeles, CA, USA",
-      "description": ""
+      "name": "Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders",
+      "event": "Fast Machine Learning for Science Conference 2025",
+      "date": "2025",
+      "location": "CERN / Hybrid",
+      "description": "Speaker: Mr Hao-Chun Liang"
     }
   ],
-  "teaching": [
-    {
-      "course": "Teaching experience 1",
-      "institution": "University 1, Department",
-      "date": "2014-01-01",
-      "role": "Undergraduate course",
-      "description": ""
-    },
-    {
-      "course": "Teaching experience 2",
-      "institution": "University 1, Department",
-      "date": "2015-01-01",
-      "role": "Workshop",
-      "description": ""
-    }
-  ],
+  "teaching": [],
   "portfolio": [
     {
-      "name": "Portfolio item number 1",
+      "name": "traccc Optimization",
       "category": "portfolio",
       "date": "",
       "url": "",
-      "description": "Short description of portfolio item number 1<br/><img src='/images/500x300.png'>"
+      "description": "Optimizing GPU algorithms in traccc to enhance performance and address computational challenges in particle trajectory reconstruction for the High-Luminosity Large Hadron Collider (HL-LHC)."
     }
   ]
 }
