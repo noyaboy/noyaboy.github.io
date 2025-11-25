@@ -9,32 +9,84 @@ redirect_from:
 
 {% include base_path %}
 
+<div class="cv-section">
+
 Education
 ======
-* M.Eng. in Digital VLSI and System Design, National Yang Ming Chiao Tung University, 2025 (Expected)
-* B.S. in Electrical Engineering, National Tsing Hua University - Distinction (Ranked 1st in class)
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>M.Eng. in Digital VLSI and System Design</strong><br>
+    <em>National Yang Ming Chiao Tung University (NYCU)</em>
+  </div>
+  <div class="job-date">2025 (Expected)</div>
+</div>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>B.S. in Electrical Engineering</strong><br>
+    <em>National Tsing Hua University (NTHU)</em> — <span class="achievement">Distinction (Ranked 1st in class)</span>
+  </div>
+</div>
+
+</div>
+
+<div class="cv-section">
 
 Work Experience
 ======
-* November 2024 - Present: Digital Design Intern
-  * Andes Technology Corporation
-  * Focusing on CPU-related AI and deep learning accelerator development
 
-* Present: Affiliate Trainee
-  * A3D3 Institute (University of Washington)
-  * Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC HEP experiments
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Digital Design Intern</strong><br>
+    <em>Andes Technology Corporation</em>
+  </div>
+  <div class="job-date">Nov 2024 - Present</div>
+</div>
+<ul class="experience-details">
+  <li>Focusing on CPU-related AI and deep learning accelerator development</li>
+</ul>
 
-* Present: Graduate Research Assistant
-  * Parallel Computing System Laboratory, NYCU
-  * Research on hardware-software co-acceleration and heterogeneous platforms (FPGA/GPU)
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Affiliate Trainee</strong><br>
+    <em>A3D3 Institute (University of Washington)</em>
+  </div>
+  <div class="job-date">Present</div>
+</div>
+<ul class="experience-details">
+  <li>Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC HEP experiments</li>
+</ul>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Graduate Research Assistant</strong><br>
+    <em>Parallel Computing System Laboratory, NYCU</em>
+  </div>
+  <div class="job-date">Present</div>
+</div>
+<ul class="experience-details">
+  <li>Research on hardware-software co-acceleration and heterogeneous platforms (FPGA/GPU)</li>
+</ul>
+
+</div>
+
+<div class="cv-section">
 
 Skills
 ======
-* Efficient Machine Learning
-* FPGA/GPU Heterogeneous System
-* HLS for Machine Learning
-* Digital IC Design
-* Data-Driven RTL/C++ Codegen
+
+<div class="skills-container">
+  <span class="skill-tag">Efficient Machine Learning</span>
+  <span class="skill-tag">FPGA/GPU Heterogeneous System</span>
+  <span class="skill-tag">HLS for Machine Learning</span>
+  <span class="skill-tag">Digital IC Design</span>
+  <span class="skill-tag">Data-Driven RTL/C++ Codegen</span>
+</div>
+
+</div>
+
+<div class="cv-section">
 
 Publications
 ======
@@ -42,8 +94,14 @@ Publications
     {% include archive-single-cv.html %}
   {% endfor %}</ul>
 
+</div>
+
+<div class="cv-section">
+
 Talks
 ======
   <ul>{% for post in site.talks reversed %}
     {% include archive-single-talk-cv.html  %}
   {% endfor %}</ul>
+
+</div>
