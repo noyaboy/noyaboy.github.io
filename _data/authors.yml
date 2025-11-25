@@ -1,18 +1,8 @@
 # Authors
 
-Name Name:
-  name        : "Name Name"
-  uri         : "https://name.com"
-  email       : "name@name.com"
-  bio         : "This is the first name."
-  avatar      : "bio-photo-2.jpg"
-  twitter     : "name"
-  google_plus : "Name"
-
-Name2 Name2:
-  name        : "Name2 Name2"
-  email       : "name2@name2.com"
-  bio         : "I ordered what?"
-  avatar      : "bio-photo.jpg"
-  twitter     : "name2"
-  google_plus : "Name"
+Hao-Chun Liang:
+  name        : "Hao-Chun Liang"
+  uri         : "https://noyaboy.github.io"
+  email       : "science103555@gmail.com"
+  bio         : "Thesis-Based Master Student at NYCU, working on Parallel Computing Systems."
+  avatar      : "profile.png"
