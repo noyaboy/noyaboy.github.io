@@ -9,6 +9,8 @@ redirect_from:
 
 {% include base_path %}
 
+<p><a href="/files/resume.pdf" class="pub-button" style="font-size: 1.1em; padding: 0.5em 1.2em;">Download CV (PDF)</a></p>
+
 <div class="cv-section">
 
 Education
