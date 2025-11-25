@@ -1,0 +1,225 @@
+/* ==========================================================================
+   CUSTOM STYLES FOR HAO-CHUN LIANG'S WEBSITE
+   ========================================================================== */
+
+/* ==========================================================================
+   VARIABLES - Accent Colors
+   ========================================================================== */
+
+$accent-color: #1a365d;
+$accent-light: #e2e8f0;
+$accent-hover: #2c5282;
+$achievement-bg: #fef3c7;
+$achievement-text: #92400e;
+$date-color: #6c757d;
+
+/* ==========================================================================
+   TYPOGRAPHY - Google Fonts
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600&display=swap');
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', Georgia, serif;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ==========================================================================
+   HEADER EMPHASIS
+   ========================================================================== */
+
+.page__content h1 {
+  color: $accent-color;
+  border-bottom: 3px solid $accent-color;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.8em;
+}
+
+.page__content h2 {
+  color: $accent-color;
+  border-bottom: 2px solid $accent-color;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.8em;
+}
+
+/* ==========================================================================
+   ACCENT COLOR SYSTEM
+   ========================================================================== */
+
+.page__content a:not(.btn) {
+  color: $accent-color;
+
+  &:hover {
+    color: $accent-hover;
+  }
+}
+
+.author__name {
+  color: $accent-color;
+}
+
+.author__bio {
+  color: #4a5568;
+}
+
+/* ==========================================================================
+   EXPERIENCE LAYOUT - Flexbox for dates
+   ========================================================================== */
+
+.experience-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 0.5em;
+
+  .job-info {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .job-date {
+    color: $date-color;
+    font-size: 0.9em;
+    white-space: nowrap;
+    margin-left: 1em;
+  }
+}
+
+.experience-details {
+  margin-left: 0;
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+  padding-left: 1em;
+  border-left: 2px solid $accent-light;
+
+  li {
+    margin-bottom: 0.3em;
+  }
+}
+
+/* ==========================================================================
+   WHITESPACE IMPROVEMENTS
+   ========================================================================== */
+
+.cv-section {
+  margin-bottom: 2.5em;
+}
+
+.archive ul li {
+  margin-bottom: 1em;
+}
+
+.page__content ul li {
+  margin-bottom: 0.8em;
+}
+
+/* ==========================================================================
+   SKILLS - Pill/Tag Style
+   ========================================================================== */
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 1em 0;
+}
+
+.skill-tag {
+  display: inline-block;
+  background-color: $accent-light;
+  color: $accent-color;
+  padding: 0.35em 0.9em;
+  margin: 0.2em;
+  border-radius: 9999px;
+  font-size: 0.875em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $accent-color;
+    color: white;
+  }
+}
+
+/* ==========================================================================
+   ACHIEVEMENT HIGHLIGHT
+   ========================================================================== */
+
+.achievement {
+  background-color: $achievement-bg;
+  padding: 0.15em 0.5em;
+  border-radius: 4px;
+  font-weight: 600;
+  color: $achievement-text;
+}
+
+/* ==========================================================================
+   PUBLICATION ENHANCEMENTS
+   ========================================================================== */
+
+.pub-button {
+  display: inline-block;
+  background-color: $accent-color;
+  color: white !important;
+  padding: 0.25em 0.7em;
+  margin: 0.2em;
+  border-radius: 4px;
+  font-size: 0.8em;
+  text-decoration: none !important;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: $accent-hover;
+    color: white !important;
+  }
+}
+
+.pub-authors {
+  color: #4a5568;
+  font-size: 0.95em;
+
+  strong {
+    color: $accent-color;
+  }
+}
+
+.pub-venue {
+  font-style: italic;
+  color: #718096;
+}
+
+/* ==========================================================================
+   SIDEBAR ENHANCEMENTS
+   ========================================================================== */
+
+.author__avatar img {
+  border: 3px solid $accent-light;
+}
+
+.author__urls .svg-inline--fa {
+  color: $accent-color;
+}
+
+/* ==========================================================================
+   ARCHIVE/LIST IMPROVEMENTS
+   ========================================================================== */
+
+.archive__item-title {
+  color: $accent-color;
+
+  a {
+    color: $accent-color;
+
+    &:hover {
+      color: $accent-hover;
+    }
+  }
+}
+
+.archive__item-excerpt {
+  color: #4a5568;
+}
