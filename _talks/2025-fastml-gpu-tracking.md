@@ -4,7 +4,7 @@ collection: talks
 type: "Talk"
 permalink: /talks/2025-fastml-gpu-tracking
 venue: "Fast Machine Learning for Science Conference 2025"
-date: 2025-01-01
+date: 2025-09-03
 location: "CERN / Hybrid"
 ---
 
