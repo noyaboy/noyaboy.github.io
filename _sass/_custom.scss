@@ -223,3 +223,71 @@ body {
 .archive__item-excerpt {
   color: #4a5568;
 }
+
+/* ==========================================================================
+   TALK VENUE STYLING
+   ========================================================================== */
+
+.talk-venue {
+  em {
+    font-style: italic;
+    color: $accent-color;
+  }
+}
+
+.talk-location {
+  color: $date-color;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   CITATION COLLAPSIBLE
+   ========================================================================== */
+
+.citation-details {
+  margin-top: 0.5em;
+
+  summary {
+    cursor: pointer;
+    color: $accent-color;
+    font-size: 0.9em;
+    font-weight: 500;
+
+    &:hover {
+      color: $accent-hover;
+    }
+  }
+
+  .citation-text {
+    background-color: #f7fafc;
+    border-left: 3px solid $accent-light;
+    padding: 0.75em 1em;
+    margin-top: 0.5em;
+    font-size: 0.85em;
+    color: #4a5568;
+    overflow-x: auto;
+  }
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .author__avatar img {
+    max-width: 100px;
+  }
+
+  .experience-item {
+    flex-direction: column;
+
+    .job-date {
+      margin-left: 0;
+      margin-top: 0.25em;
+    }
+  }
+
+  .skills-container {
+    justify-content: center;
+  }
+}
