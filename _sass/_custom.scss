@@ -231,6 +231,17 @@ body {
   }
 }
 
+.cert-title-link {
+  color: inherit !important;
+  text-decoration: none !important;
+  border-bottom: 1px dashed $color-accent;
+
+  &:hover {
+    color: $color-accent !important;
+    border-bottom-style: solid;
+  }
+}
+
 /* Certificate Modal */
 .cert-modal {
   display: none;
@@ -711,6 +722,14 @@ body {
 
     &:hover {
       color: $dark-accent-hover !important;
+    }
+  }
+
+  .cert-title-link {
+    border-bottom-color: $dark-accent;
+
+    &:hover {
+      color: $dark-accent !important;
     }
   }
 
