@@ -8,6 +8,7 @@ date: 2025-01-03
 venue: 'VLSI Design / CAD Symposium'
 paperurl: '/files/gnn_trajectory_reconstruction.pdf'
 slidesurl: '/files/vlsicad2025-slides.pdf'
+authors: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai'
 citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai. (2025). &quot;A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA.&quot; <i>VLSI Design / CAD Symposium 2025</i>.'
 ---
 
