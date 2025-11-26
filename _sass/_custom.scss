@@ -212,6 +212,14 @@ body {
   color: $color-text-secondary;
 }
 
+.award-description {
+  font-size: 0.9em;
+  color: $color-text-secondary;
+  margin-top: 0.25em;
+  margin-bottom: 1em;
+  font-style: italic;
+}
+
 /* ==========================================================================
    WHITESPACE IMPROVEMENTS
    ========================================================================== */
@@ -626,6 +634,10 @@ body {
   }
 
   .cv-pub-venue {
+    color: $dark-text-muted;
+  }
+
+  .award-description {
     color: $dark-text-muted;
   }
 }
