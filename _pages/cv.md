@@ -150,8 +150,7 @@ document.addEventListener('keydown', function(e) {
   <div class="job-date">Jun 2024 – Present</div>
 </div>
 <ul class="experience-details">
-  <li>Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC experiments</li>
-  <li>Implementing Kalman filter tracking with kernel refactoring and INT8 surrogates</li>
+  <li>Optimizing CUDA Pipeline for particle trajectory reconstruction in HL-LHC experiments</li>
 </ul>
 
 <div class="experience-item">
