@@ -1,5 +1,5 @@
 ---
-title: "Token Reduction for Vision Transformers"
+title: "NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for Vision Transformers"
 excerpt: "A research framework for optimizing Vision Transformers (ViT) by reducing token redundancy. Implements pruning and fine-tuning strategies to accelerate inference."
 collection: portfolio
 slidesurl: "/files/Profile_Token_Reduction_for_Vision_Transformer.pdf"
