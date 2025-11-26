@@ -212,12 +212,10 @@ body {
   color: $color-text-secondary;
 }
 
-.award-description {
-  font-size: 0.9em;
+.award-stat {
+  font-size: 0.85em;
   color: $color-text-secondary;
-  margin-top: 0.25em;
-  margin-bottom: 1em;
-  font-style: italic;
+  font-weight: 400;
 }
 
 /* ==========================================================================
@@ -637,7 +635,7 @@ body {
     color: $dark-text-muted;
   }
 
-  .award-description {
+  .award-stat {
     color: $dark-text-muted;
   }
 }

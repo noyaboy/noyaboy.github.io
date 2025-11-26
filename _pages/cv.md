@@ -59,12 +59,11 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Distinction Graduation</strong><br>
+    <strong>Distinction Graduation</strong> <span class="award-stat">(Top 10 of 116)</span><br>
     <em>Department of Electrical Engineering, NTHU</em>
   </div>
   <div class="job-date">Jun 2023</div>
 </div>
-<p class="award-description">Awarded to top 10 students out of 116 graduates in the department.</p>
 
 </div>
 
