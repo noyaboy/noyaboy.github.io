@@ -9,7 +9,19 @@ redirect_from:
 
 {% include base_path %}
 
-<p><a href="/files/resume.pdf" class="pub-button" style="font-size: 1.1em; padding: 0.5em 1.2em;">Download CV (PDF)</a></p>
+<div class="cv-header">
+  <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
+</div>
+
+<div class="cv-section">
+
+## Research Interests
+
+<p class="research-interests">
+Hardware-software co-design for efficient machine learning, real-time particle tracking algorithms on heterogeneous platforms (FPGA/GPU), and data-driven hardware generation for high-energy physics applications.
+</p>
+
+</div>
 
 <div class="cv-section">
 
@@ -20,7 +32,7 @@ redirect_from:
     <strong>M.Eng. in Digital VLSI and System Design</strong><br>
     <em>National Yang Ming Chiao Tung University (NYCU)</em>
   </div>
-  <div class="job-date">2025 (Expected)</div>
+  <div class="job-date">Sep 2023 – Jun 2025 (Expected)</div>
 </div>
 
 <div class="experience-item">
@@ -28,6 +40,29 @@ redirect_from:
     <strong>B.S. in Electrical Engineering</strong><br>
     <em>National Tsing Hua University (NTHU)</em> — <span class="achievement">Distinction (Ranked 1st in class)</span>
   </div>
+  <div class="job-date">Sep 2019 – Jun 2023</div>
+</div>
+
+</div>
+
+<div class="cv-section">
+
+## Awards & Honors
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Excellent Poster Award</strong><br>
+    <em>Taiwan and Japan Conference on Circuits and Systems (TJCAS)</em>
+  </div>
+  <div class="job-date">Aug 2025</div>
+</div>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Ranked 1st in Graduating Class</strong><br>
+    <em>Department of Electrical Engineering, NTHU</em>
+  </div>
+  <div class="job-date">Jun 2023</div>
 </div>
 
 </div>
@@ -41,21 +76,23 @@ redirect_from:
     <strong>Digital Design Intern</strong><br>
     <em>Andes Technology Corporation</em>
   </div>
-  <div class="job-date">Nov 2024 - Present</div>
+  <div class="job-date">Nov 2024 – Present</div>
 </div>
 <ul class="experience-details">
-  <li>Focusing on CPU-related AI and deep learning accelerator development</li>
+  <li>Developing CPU-related AI and deep learning accelerators</li>
+  <li>Working on RISC-V based neural network acceleration solutions</li>
 </ul>
 
 <div class="experience-item">
   <div class="job-info">
     <strong>Affiliate Trainee</strong><br>
-    <em>A3D3 Institute (University of Washington)</em>
+    <em>A3D3 Institute, University of Washington</em>
   </div>
-  <div class="job-date">Present</div>
+  <div class="job-date">Jun 2024 – Present</div>
 </div>
 <ul class="experience-details">
-  <li>Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC HEP experiments</li>
+  <li>Optimizing GPU algorithms for particle trajectory reconstruction in HL-LHC experiments</li>
+  <li>Implementing Kalman filter tracking with kernel refactoring and INT8 surrogates</li>
 </ul>
 
 <div class="experience-item">
@@ -63,10 +100,12 @@ redirect_from:
     <strong>Graduate Research Assistant</strong><br>
     <em>Parallel Computing System Laboratory, NYCU</em>
   </div>
-  <div class="job-date">Present</div>
+  <div class="job-date">Sep 2023 – Present</div>
 </div>
 <ul class="experience-details">
-  <li>Research on hardware-software co-acceleration and heterogeneous platforms (FPGA/GPU)</li>
+  <li>Researching hardware-software co-acceleration for machine learning workloads</li>
+  <li>Developing FPGA-based GNN implementations for real-time particle tracking</li>
+  <li>Contributing to hls4ml framework for HLS-based neural network deployment</li>
 </ul>
 
 </div>
@@ -75,12 +114,25 @@ redirect_from:
 
 ## Skills
 
-<div class="skills-container">
-  <span class="skill-tag">Efficient Machine Learning</span>
-  <span class="skill-tag">FPGA/GPU Heterogeneous System</span>
-  <span class="skill-tag">HLS for Machine Learning</span>
-  <span class="skill-tag">Digital IC Design</span>
-  <span class="skill-tag">Data-Driven RTL/C++ Codegen</span>
+<div class="skills-category">
+  <span class="skills-label">Languages & Tools</span>
+  <div class="skills-container">
+    <span class="skill-tag">Python</span>
+    <span class="skill-tag">C/C++</span>
+    <span class="skill-tag">Verilog/SystemVerilog</span>
+    <span class="skill-tag">HLS</span>
+    <span class="skill-tag">CUDA</span>
+  </div>
+</div>
+
+<div class="skills-category">
+  <span class="skills-label">Domains</span>
+  <div class="skills-container">
+    <span class="skill-tag">Efficient Machine Learning</span>
+    <span class="skill-tag">FPGA/GPU Heterogeneous Systems</span>
+    <span class="skill-tag">Digital IC Design</span>
+    <span class="skill-tag">Data-Driven RTL/C++ Codegen</span>
+  </div>
 </div>
 
 </div>
@@ -88,9 +140,14 @@ redirect_from:
 <div class="cv-section">
 
 ## Selected Publications & Presentations
-  <ul>{% for post in site.publications reversed limit:4 %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  <p><a href="/publications/">View all publications →</a></p>
+
+<ul class="cv-publications">{% for post in site.publications reversed limit:4 %}
+  <li>
+    <a href="{{ base_path }}{{ post.url }}">{{ post.title }}</a><br>
+    <span class="cv-pub-authors">{{ post.authors }}</span><br>
+    <span class="cv-pub-venue"><em>{{ post.venue }}</em>, {{ post.date | date: "%Y" }}</span>
+  </li>
+{% endfor %}</ul>
+<p><a href="/publications/">View all publications →</a></p>
 
 </div>
