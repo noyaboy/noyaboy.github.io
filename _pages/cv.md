@@ -157,11 +157,6 @@ document.addEventListener('keydown', function(e) {
   </div>
   <div class="job-date">Sep 2023 – Present</div>
 </div>
-<ul class="experience-details">
-  <li>Researching hardware-software co-acceleration for machine learning workloads</li>
-  <li>Developing FPGA-based GNN implementations for real-time particle tracking</li>
-  <li>Contributing to hls4ml framework for HLS-based neural network deployment</li>
-</ul>
 
 </div>
 
