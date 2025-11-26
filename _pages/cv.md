@@ -157,6 +157,3 @@ document.addEventListener('keydown', function(e) {
 
 </div>
 
-<div class="cv-header" style="justify-content: center; margin-top: 2em;">
-  <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
-</div>
