@@ -65,6 +65,11 @@ Hardware-software co-design for efficient machine learning, real-time particle t
   <div class="job-date">Jun 2023</div>
 </div>
 
+<figure style="margin-top: 1em;">
+  <img src="/images/distinction-graduation.png" alt="Distinction Graduation Certificate" style="max-width: 60%; border-radius: 8px;">
+  <figcaption style="color: #6b7280; font-size: 0.9em; margin-top: 0.5em;">Outstanding Academic Performance Award Certificate</figcaption>
+</figure>
+
 </div>
 
 <div class="cv-section">
