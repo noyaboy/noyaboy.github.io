@@ -77,11 +77,11 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <script>
 function openCertModal() {
-  document.getElementById('certModal').classList.add('active');
+  document.getElementById('certModal').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
 function closeCertModal() {
-  document.getElementById('certModal').classList.remove('active');
+  document.getElementById('certModal').style.display = 'none';
   document.body.style.overflow = 'auto';
 }
 document.addEventListener('keydown', function(e) {
