@@ -202,11 +202,11 @@ body {
 
 .cv-pub-authors {
   font-size: 0.9em;
-  color: $color-text-secondary;
+  color: #777777;  // Gray for other authors
   margin-top: 0.25em;
 
   strong {
-    color: $color-heading-other;
+    color: $color-heading-other;  // Near-black for my name
   }
 }
 
@@ -373,11 +373,11 @@ body {
 }
 
 .pub-authors {
-  color: $color-text-main;
+  color: #777777;  // Gray for other authors
   font-size: 0.95em;
 
   strong {
-    color: $color-heading-other;
+    color: $color-heading-other;  // Near-black for my name
     font-weight: 600;
   }
 }
@@ -624,10 +624,11 @@ body {
 
   // Publication styling
   .pub-authors {
-    color: $dark-text-muted;
+    color: #888888;  // Gray for other authors
 
     strong {
-      color: $dark-heading;
+      color: #cccccc;  // Light gray bold for my name
+      font-weight: 700;
     }
   }
 
@@ -722,10 +723,11 @@ body {
   }
 
   .cv-pub-authors {
-    color: $dark-text-muted;
+    color: #888888;  // Gray for other authors
 
     strong {
-      color: $dark-heading;
+      color: #cccccc;  // Light gray bold for my name
+      font-weight: 700;
     }
   }
 
