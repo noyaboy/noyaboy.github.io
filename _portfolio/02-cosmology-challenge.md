@@ -1,5 +1,5 @@
 ---
-title: "Weak Lensing Cosmology Challenge"
+title: "UltraLightweight HDC-CNN Architecture for Weak-Lensing Convergence Maps"
 excerpt: "NeurIPS 2025 Machine Learning competition focused on Weak Gravitational Lensing. Explores uncertainty-aware and out-of-distribution detection AI techniques for cosmological parameter analysis."
 collection: portfolio
 paperurl: "/files/FAIR_Universe_Submission_Writeup.pdf"
