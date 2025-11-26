@@ -3,7 +3,7 @@ title: "An Integrated FPGA Implementation of Complete GNN-Based Trajectory Recon
 collection: publications
 category: conferences
 permalink: /publication/2025-higtr-tjcas
-excerpt: 'FPGA-accelerated GNN pipeline for HL-LHC trajectory reconstruction. Received Excellent Poster Award at TJCAS 2025.'
+excerpt: 'Abstract: Trajectory reconstruction in high-energy physics, particularly for the High-Luminosity Large Hadron Collider (HL-LHC), presents a significant computational challenge due to the immense pile-up and data rates. This paper presents an integrated Field-Programmable Gate Array (FPGA) implementation of a complete Graph Neural Network (GNN)-based pipeline for particle tracking. By leveraging the parallel processing capabilities of FPGAs, we propose an efficient hardware architecture that accelerates the GNN inference process. The design optimizes both latency and throughput, ensuring that the trajectory reconstruction meets the stringent real-time requirements of the HL-LHC experiments. Our implementation demonstrates the feasibility and performance benefits of using FPGA-accelerated GNNs for next-generation particle detector trigger systems.'
 date: 2025-08-28
 venue: 'Taiwan and Japan Conference on Circuits and Systems (TJCAS)'
 paperurl: '/files/tjcas_gnn_trajectory_reconstruction.pdf'
@@ -19,7 +19,7 @@ citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Chen
 
 <p><span class="achievement">Excellent Poster Award</span></p>
 
-An integrated FPGA implementation for complete GNN-based trajectory reconstruction in high-energy physics, designed for the High-Luminosity Large Hadron Collider (HL-LHC) experiments.
+Abstract: Trajectory reconstruction in high-energy physics, particularly for the High-Luminosity Large Hadron Collider (HL-LHC), presents a significant computational challenge due to the immense pile-up and data rates. This paper presents an integrated Field-Programmable Gate Array (FPGA) implementation of a complete Graph Neural Network (GNN)-based pipeline for particle tracking. By leveraging the parallel processing capabilities of FPGAs, we propose an efficient hardware architecture that accelerates the GNN inference process. The design optimizes both latency and throughput, ensuring that the trajectory reconstruction meets the stringent real-time requirements of the HL-LHC experiments. Our implementation demonstrates the feasibility and performance benefits of using FPGA-accelerated GNNs for next-generation particle detector trigger systems.
 
 <a href="/files/tjcas_gnn_trajectory_reconstruction.pdf" class="pub-button">Paper</a>
 <a href="/files/tjcas2025-slides.pdf" class="pub-button">Slides</a>
