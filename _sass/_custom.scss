@@ -396,8 +396,9 @@ body {
 .author__avatar img {
   border: 3px solid $accent-light;
   border-radius: 50%;
-  width: 150%;
-  max-width: none;
+  width: 148.5px;
+  height: 148.5px;
+  object-fit: cover;
 }
 
 .author__urls .svg-inline--fa {
@@ -475,8 +476,8 @@ body {
 
 @media (max-width: 600px) {
   .author__avatar img {
-    width: 300px;
-    max-width: none;
+    width: 295.5px;
+    height: 295.5px;
   }
 
   .experience-item {
