@@ -15,16 +15,6 @@ redirect_from:
 
 <div class="cv-section">
 
-<h2>Research Interests</h2>
-
-<p class="research-interests">
-I specialize in the intersection of High-Performance Computing (HPC) and Computer Architecture, targeting the rigorous optimization of CUDA pipelines. My work involves using NVIDIA NSYS and NCU to conduct deep-dive profiling, systematically addressing architectural constraints to minimize data transfer latency and optimize compute resource utilization.
-</p>
-
-</div>
-
-<div class="cv-section">
-
 <h2>Education</h2>
 
 <div class="experience-item">
