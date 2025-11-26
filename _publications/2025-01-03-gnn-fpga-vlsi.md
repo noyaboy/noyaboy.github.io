@@ -3,7 +3,7 @@ title: "A High-Performance Implementation of GNN-Based Trajectory Reconstruction
 collection: publications
 category: conferences
 permalink: /publication/2025-gnn-fpga-vlsi
-excerpt: 'FPGA-accelerated GNN pipeline for HL-LHC exceeding latency and throughput requirements.'
+excerpt: 'Abstract: We propose a high-performance hardware implementation for GNN-based trajectory reconstruction, tailored for the computing demands of the High-Luminosity LHC. This work focuses on optimizing the hardware mapping of Graph Neural Networks onto FPGA platforms to maximize throughput and minimize latency. The proposed architecture, referred to as HiGTR, employs efficient dataflow management and processing element utilization to handle the sparse and irregular nature of graph data in particle tracking. Experimental results indicate that our FPGA-based solution significantly exceeds the baseline latency and throughput requirements, providing a robust and scalable solution for real-time edge processing in high-energy physics applications.'
 date: 2025-01-03
 venue: 'VLSI Design / CAD Symposium'
 paperurl: '/files/gnn_trajectory_reconstruction.pdf'
@@ -16,7 +16,7 @@ citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai. (2025).
 
 <p class="pub-venue">VLSI Design / CAD Symposium, 2025</p>
 
-A high-performance FPGA implementation for GNN-based trajectory reconstruction, designed for real-time particle tracking at the High-Luminosity Large Hadron Collider (HL-LHC).
+Abstract: We propose a high-performance hardware implementation for GNN-based trajectory reconstruction, tailored for the computing demands of the High-Luminosity LHC. This work focuses on optimizing the hardware mapping of Graph Neural Networks onto FPGA platforms to maximize throughput and minimize latency. The proposed architecture, referred to as HiGTR, employs efficient dataflow management and processing element utilization to handle the sparse and irregular nature of graph data in particle tracking. Experimental results indicate that our FPGA-based solution significantly exceeds the baseline latency and throughput requirements, providing a robust and scalable solution for real-time edge processing in high-energy physics applications.
 
 <a href="/files/gnn_trajectory_reconstruction.pdf" class="pub-button">Paper</a>
 <a href="/files/vlsicad2025-slides.pdf" class="pub-button">Slides</a>
