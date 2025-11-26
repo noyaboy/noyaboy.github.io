@@ -1,5 +1,5 @@
 ---
-title: "HL-LHC Particle Tracking Optimization"
+title: "Optimization of CUDA Pipeline for Particle Tracking at HL-LHC"
 excerpt: "High-performance GPU algorithm optimization for real-time particle trajectory reconstruction at the High-Luminosity Large Hadron Collider (HL-LHC)."
 collection: portfolio
 github: "https://github.com/noyaboy/traccc-optimization"
