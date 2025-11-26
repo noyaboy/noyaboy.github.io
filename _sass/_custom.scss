@@ -580,10 +580,14 @@ body {
   }
 
   // Headers
-  .page__content h1,
-  .page__content h2 {
+  .page__content h1 {
     color: $dark-accent;
     border-bottom-color: rgba($dark-accent, 0.4);
+  }
+
+  .page__content h2 {
+    color: $dark-heading;
+    border-bottom-color: rgba($dark-heading, 0.4);
   }
 
   .page__content h3,
