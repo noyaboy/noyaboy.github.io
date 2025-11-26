@@ -12,7 +12,6 @@ redirect_from:
 <div class="cv-header" style="text-align: center;">
   <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
 </div>
-
 <div class="cv-section">
 <h2>Education</h2>
 
