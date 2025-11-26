@@ -123,12 +123,98 @@ body {
 }
 
 /* ==========================================================================
-   WHITESPACE IMPROVEMENTS
+   CV LAYOUT ENHANCEMENTS
    ========================================================================== */
+
+.cv-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5em;
+}
+
+.cv-download-btn {
+  font-size: 1em !important;
+  padding: 0.5em 1.2em !important;
+}
 
 .cv-section {
   margin-bottom: 2.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid $accent-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
+
+.research-interests {
+  font-size: 1.05em;
+  line-height: 1.8;
+  color: $color-text-main;
+  margin: 0;
+}
+
+/* Skills Categories */
+.skills-category {
+  margin-bottom: 1.25em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.skills-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: $color-text-secondary;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* CV Publications List */
+.cv-publications {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+
+  li {
+    margin-bottom: 1.25em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid rgba($accent-light, 0.5);
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    a {
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+}
+
+.cv-pub-authors {
+  font-size: 0.9em;
+  color: $color-text-secondary;
+  margin-top: 0.25em;
+
+  strong {
+    color: $color-heading-other;
+  }
+}
+
+.cv-pub-venue {
+  font-size: 0.85em;
+  color: $color-text-secondary;
+}
+
+/* ==========================================================================
+   WHITESPACE IMPROVEMENTS
+   ========================================================================== */
 
 .archive ul li {
   margin-bottom: 1em;
@@ -511,6 +597,35 @@ body {
   }
 
   .talk-location {
+    color: $dark-text-muted;
+  }
+
+  // CV enhancements
+  .cv-section {
+    border-bottom-color: #334155;
+  }
+
+  .research-interests {
+    color: $dark-text;
+  }
+
+  .skills-label {
+    color: $dark-text-muted;
+  }
+
+  .cv-publications li {
+    border-bottom-color: #334155;
+  }
+
+  .cv-pub-authors {
+    color: $dark-text-muted;
+
+    strong {
+      color: $dark-heading;
+    }
+  }
+
+  .cv-pub-venue {
     color: $dark-text-muted;
   }
 }
