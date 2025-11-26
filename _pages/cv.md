@@ -153,6 +153,11 @@ document.addEventListener('keydown', function(e) {
   </div>
   <div class="job-date">Sep 2025 – Jun 2027 (Expected)</div>
 </div>
+<ul class="experience-details">
+  <li>Authored high-quality research papers, leading to successful publication/project</li>
+  <li>Designed impactful visual content and posters, enhancing external communication</li>
+  <li>Analyzed profiles to derive actionable insights for strategic planning</li>
+</ul>
 
 </div>
 
