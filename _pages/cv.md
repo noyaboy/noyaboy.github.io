@@ -32,7 +32,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
     <strong><a href="https://iais.nycu.edu.tw/en/intro1.html" target="_blank">M.Eng. in Institute of Pioneer Semiconductor Innovation (ICS &amp; EDA Group)</a></strong><br>
     <em>National Yang Ming Chiao Tung University (NYCU)</em>
   </div>
-  <div class="job-date">Sep 2023 – Jun 2025 (Expected)</div>
+  <div class="job-date">Sep 2025 – Jun 2027 (Expected)</div>
 </div>
 
 <div class="experience-item">
@@ -40,7 +40,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
     <strong><a href="https://dee.site.nthu.edu.tw/index.php?Lang=en" target="_blank">B.S. in Electrical Engineering</a></strong><br>
     <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement"><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></span> <span class="award-stat">(Top 10 of 116)</span>
   </div>
-  <div class="job-date">Sep 2019 – Jun 2023</div>
+  <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
 
 </div>
@@ -62,7 +62,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
     <strong><a href="#" class="cert-title-link" onclick="openModal('adfpModal'); return false;">Cell-Based Digital Chip Design and Implementation</a></strong> <span class="award-stat">(ADFP - TSMC 16nm)</span><br>
     <em>Taiwan Semiconductor Research Institute (TSRI)</em>
   </div>
-  <div class="job-date">2024</div>
+  <div class="job-date">Sep 2024</div>
 </div>
 
 <!-- TJCAS Certificate Modal -->
@@ -129,7 +129,7 @@ document.addEventListener('keydown', function(e) {
     <strong>Digital IC Design Intern</strong><br>
     <em><a href="https://www.andestech.com/en/" target="_blank">Andes Technology Corporation</a></em>
   </div>
-  <div class="job-date">Nov 2024 – Present</div>
+  <div class="job-date">Nov 2024 – Aug 2025</div>
 </div>
 <ul class="experience-details">
   <li>Developing Register File Code Generation from scratch</li>
@@ -151,7 +151,7 @@ document.addEventListener('keydown', function(e) {
     <strong>Graduate Research Assistant</strong><br>
     <em><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/" target="_blank">Parallel Computing System Laboratory</a>, NYCU</em>
   </div>
-  <div class="job-date">Sep 2023 – Present</div>
+  <div class="job-date">Sep 2025 – Jun 2027 (Expected)</div>
 </div>
 
 </div>
