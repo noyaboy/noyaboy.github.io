@@ -145,7 +145,7 @@ document.addEventListener('keydown', function(e) {
 <div class="experience-item">
   <div class="job-info">
     <strong>Affiliate Trainee</strong><br>
-    <em>A3D3 Institute, University of Washington</em>
+    <em><a href="https://a3d3.ai/" target="_blank">A3D3 Institute</a>, <a href="https://www.washington.edu/" target="_blank">University of Washington</a></em>
   </div>
   <div class="job-date">Jun 2024 – Present</div>
 </div>
