@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "CV"
+title: ""
 permalink: /cv/
 author_profile: true
 redirect_from:
@@ -9,9 +9,6 @@ redirect_from:
 
 {% include base_path %}
 
-<div class="cv-header">
-  <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
-</div>
 <div class="cv-section">
 <h2>Education</h2>
 
@@ -158,4 +155,8 @@ document.addEventListener('keydown', function(e) {
 {% endfor %}</ul>
 <p style="text-align: center; margin-top: 1em;"><a href="/publications/" class="pub-button">View All Publications</a></p>
 
+</div>
+
+<div class="cv-header" style="justify-content: center; margin-top: 2em;">
+  <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
 </div>
