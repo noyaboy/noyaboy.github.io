@@ -591,25 +591,25 @@ body {
     }
   }
 
-  // Headers
+  // Headers - white in dark mode
   .page__content h1 {
-    color: $dark-accent;
-    border-bottom-color: rgba($dark-accent, 0.4);
+    color: #ffffff !important;
+    border-bottom-color: rgba(255, 255, 255, 0.4);
   }
 
   .page__content h2 {
-    color: $dark-accent;
-    border-bottom-color: rgba($dark-accent, 0.4);
+    color: #ffffff !important;
+    border-bottom-color: rgba(255, 255, 255, 0.4);
   }
 
   .page__content h3,
   .page__content h4 {
-    color: $dark-heading;
+    color: #ffffff !important;
   }
 
   // Sidebar
   .author__name {
-    color: $dark-heading;
+    color: #ffffff !important;  // White in dark mode
   }
 
   .author__bio {
@@ -628,13 +628,13 @@ body {
     color: $dark-text;
   }
 
-  // Archive items
+  // Archive items - publication titles white in dark mode
   .archive__item-title,
   .archive__item-title a {
-    color: $dark-accent;
+    color: #ffffff !important;  // White in dark mode
 
     &:hover {
-      color: $dark-accent-hover;
+      color: #cccccc;
     }
   }
 
@@ -731,7 +731,7 @@ body {
   }
 
   .research-interests {
-    color: $dark-text;
+    color: #ffffff;  // White in dark mode
   }
 
   .skills-label {
