@@ -25,6 +25,8 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 /* ==========================================================================
@@ -289,5 +291,59 @@ body {
 
   .skills-container {
     justify-content: center;
+  }
+
+  .page__content,
+  .page__inner-wrap {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+
+/* ==========================================================================
+   PORTFOLIO GRID LAYOUT
+   ========================================================================== */
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5em;
+  margin: 1em 0;
+}
+
+.portfolio-item {
+  border: 1px solid $accent-light;
+  border-radius: 8px;
+  padding: 1.25em;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+  }
+
+  p {
+    color: #4a5568;
+    font-size: 0.9em;
+    margin-bottom: 0;
+  }
+}
+
+/* ==========================================================================
+   LINK ACCESSIBILITY
+   ========================================================================== */
+
+.page__content a:not(.btn):not(.pub-button) {
+  text-decoration: underline;
+  text-decoration-color: rgba($accent-color, 0.3);
+  text-underline-offset: 2px;
+
+  &:hover {
+    text-decoration-color: $accent-hover;
   }
 }
