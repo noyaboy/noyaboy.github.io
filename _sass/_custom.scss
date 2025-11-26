@@ -393,12 +393,19 @@ body {
    SIDEBAR ENHANCEMENTS
    ========================================================================== */
 
+.author__avatar {
+  display: flex;
+  justify-content: center;
+}
+
 .author__avatar img {
   border: 3px solid $accent-light;
   border-radius: 50%;
-  width: 148.5px;
-  height: 148.5px;
+  width: 130px !important;
+  height: 130px !important;
+  max-width: 130px !important;
   object-fit: cover;
+  object-position: center;
 }
 
 .author__urls .svg-inline--fa {
@@ -476,8 +483,9 @@ body {
 
 @media (max-width: 600px) {
   .author__avatar img {
-    width: 295.5px;
-    height: 295.5px;
+    width: 180px !important;
+    height: 180px !important;
+    max-width: 180px !important;
   }
 
   .experience-item {
