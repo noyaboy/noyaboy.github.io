@@ -15,7 +15,7 @@ redirect_from:
 
 <div class="cv-section">
 
-## Research Interests
+<h2>Research Interests</h2>
 
 <p class="research-interests">
 Hardware-software co-design for efficient machine learning, real-time particle tracking algorithms on heterogeneous platforms (FPGA/GPU), and data-driven hardware generation for high-energy physics applications.
@@ -25,7 +25,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="cv-section">
 
-## Education
+<h2>Education</h2>
 
 <div class="experience-item">
   <div class="job-info">
@@ -47,7 +47,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="cv-section">
 
-## Awards & Honors
+<h2>Awards &amp; Honors</h2>
 
 <div class="experience-item">
   <div class="job-info">
@@ -69,7 +69,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="cv-section">
 
-## Work Experience
+<h2>Work Experience</h2>
 
 <div class="experience-item">
   <div class="job-info">
@@ -112,7 +112,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="cv-section">
 
-## Skills
+<h2>Skills</h2>
 
 <div class="skills-category">
   <span class="skills-label">Languages & Tools</span>
@@ -139,7 +139,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="cv-section">
 
-## Selected Publications & Presentations
+<h2>Selected Publications &amp; Presentations</h2>
 
 <ul class="cv-publications">{% for post in site.publications reversed limit:4 %}
   <li>
