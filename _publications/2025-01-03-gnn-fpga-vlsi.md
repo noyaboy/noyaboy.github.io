@@ -17,7 +17,7 @@ citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai. (2025).
 
 A high-performance FPGA implementation for GNN-based trajectory reconstruction, designed for real-time particle tracking at the High-Luminosity Large Hadron Collider (HL-LHC).
 
-<a href="/files/gnn_trajectory_reconstruction.pdf" class="pub-button">PDF</a>
+<a href="/files/gnn_trajectory_reconstruction.pdf" class="pub-button">Paper</a>
 <a href="/files/vlsicad2025-slides.pdf" class="pub-button">Slides</a>
 
 <figure>
