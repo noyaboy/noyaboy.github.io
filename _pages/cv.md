@@ -59,16 +59,35 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Distinction Graduation</strong> <span class="award-stat">(Top 10 of 116)</span><br>
+    <strong>Distinction Graduation</strong> <span class="award-stat">(Top 10 of 116)</span>
+    <a href="#" class="cert-link" onclick="openCertModal(); return false;">View Certificate</a><br>
     <em>Department of Electrical Engineering, NTHU</em>
   </div>
   <div class="job-date">Jun 2023</div>
 </div>
 
-<figure style="margin-top: 1em;">
-  <img src="/images/distinction-graduation.png" alt="Distinction Graduation Certificate" style="max-width: 60%; border-radius: 8px;">
-  <figcaption style="color: #6b7280; font-size: 0.9em; margin-top: 0.5em;">Outstanding Academic Performance Award Certificate</figcaption>
-</figure>
+<!-- Certificate Modal -->
+<div id="certModal" class="cert-modal" onclick="closeCertModal()">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeCertModal()">&times;</span>
+    <img src="/images/distinction-graduation.png" alt="Distinction Graduation Certificate">
+    <p class="cert-modal-caption">Outstanding Academic Performance Award Certificate</p>
+  </div>
+</div>
+
+<script>
+function openCertModal() {
+  document.getElementById('certModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeCertModal() {
+  document.getElementById('certModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeCertModal();
+});
+</script>
 
 </div>
 
