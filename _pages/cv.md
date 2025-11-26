@@ -156,7 +156,7 @@ document.addEventListener('keydown', function(e) {
 <div class="experience-item">
   <div class="job-info">
     <strong>Graduate Research Assistant</strong><br>
-    <em>Parallel Computing System Laboratory, NYCU</em>
+    <em><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/" target="_blank">Parallel Computing System Laboratory</a>, NYCU</em>
   </div>
   <div class="job-date">Sep 2023 – Present</div>
 </div>
