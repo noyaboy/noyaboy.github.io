@@ -59,7 +59,7 @@ body {
 }
 
 .page__content h2 {
-  color: $color-heading-other;
+  color: $color-accent;
   border-bottom: 2px solid $accent-light;
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
@@ -586,8 +586,8 @@ body {
   }
 
   .page__content h2 {
-    color: $dark-heading;
-    border-bottom-color: rgba($dark-heading, 0.4);
+    color: $dark-accent;
+    border-bottom-color: rgba($dark-accent, 0.4);
   }
 
   .page__content h3,
@@ -597,7 +597,7 @@ body {
 
   // Sidebar
   .author__name {
-    color: $dark-accent;
+    color: $dark-heading;
   }
 
   .author__bio {
@@ -683,7 +683,7 @@ body {
   }
 
   .job-date {
-    color: $dark-text-muted !important;
+    color: $dark-text !important;
   }
 
   // Portfolio
