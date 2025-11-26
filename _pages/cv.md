@@ -51,7 +51,8 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Excellent Poster Award</strong><br>
+    <strong>Excellent Poster Award</strong>
+    <a href="#" class="cert-link" onclick="openModal('tjcasModal'); return false;">View Certificate</a><br>
     <em>Taiwan and Japan Conference on Circuits and Systems (TJCAS)</em>
   </div>
   <div class="job-date">Aug 2025</div>
@@ -60,32 +61,44 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 <div class="experience-item">
   <div class="job-info">
     <strong>Distinction Graduation</strong> <span class="award-stat">(Top 10 of 116)</span>
-    <a href="#" class="cert-link" onclick="openCertModal(); return false;">View Certificate</a><br>
+    <a href="#" class="cert-link" onclick="openModal('certModal'); return false;">View Certificate</a><br>
     <em>Department of Electrical Engineering, NTHU</em>
   </div>
   <div class="job-date">Jun 2023</div>
 </div>
 
-<!-- Certificate Modal -->
-<div id="certModal" class="cert-modal" onclick="closeCertModal()">
+<!-- TJCAS Certificate Modal -->
+<div id="tjcasModal" class="cert-modal" onclick="closeModal('tjcasModal')">
   <div class="cert-modal-content" onclick="event.stopPropagation()">
-    <span class="cert-modal-close" onclick="closeCertModal()">&times;</span>
+    <span class="cert-modal-close" onclick="closeModal('tjcasModal')">&times;</span>
+    <img src="/images/tjcas-certificate.jpg" alt="TJCAS Excellent Poster Award Certificate">
+    <p class="cert-modal-caption">Excellent Poster Award Certificate - TJCAS 2025</p>
+  </div>
+</div>
+
+<!-- Distinction Graduation Certificate Modal -->
+<div id="certModal" class="cert-modal" onclick="closeModal('certModal')">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeModal('certModal')">&times;</span>
     <img src="/images/distinction-graduation.png" alt="Distinction Graduation Certificate">
     <p class="cert-modal-caption">Outstanding Academic Performance Award Certificate</p>
   </div>
 </div>
 
 <script>
-function openCertModal() {
-  document.getElementById('certModal').style.display = 'flex';
+function openModal(id) {
+  document.getElementById(id).style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
-function closeCertModal() {
-  document.getElementById('certModal').style.display = 'none';
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
   document.body.style.overflow = 'auto';
 }
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeCertModal();
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.cert-modal').forEach(function(m) { m.style.display = 'none'; });
+    document.body.style.overflow = 'auto';
+  }
 });
 </script>
 
