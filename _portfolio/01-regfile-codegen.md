@@ -7,7 +7,7 @@ github: "https://github.com/noyaboy/andla_codegen"
 
 ## Overview
 
-An automation tool designed to streamline hardware IP design workflows. It generates Verilog register files, C headers, and documentation automatically from standardized CSV definitions, significantly reducing manual coding errors and setup time.
+An automation tool designed to streamline hardware IP design workflows. It parses standardized CSV register definitions to automatically generate synthesizable Verilog register files, C/C++ headers, and technical documentation, ensuring hardware-software interface consistency and significantly accelerating the development cycle.
 
 ## Technical Stack
 
