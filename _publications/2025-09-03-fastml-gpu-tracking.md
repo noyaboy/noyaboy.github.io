@@ -18,3 +18,8 @@ citation: '<strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai. (2025)
 Poster presentation on real-time GPU-accelerated Kalman filter tracking algorithms, featuring kernel refactoring techniques and INT8 surrogate models for high-luminosity collider experiments.
 
 <a href="/files/fastml2025-poster.pdf" class="pub-button">Poster</a>
+
+<figure>
+  <img src="/images/fastml-presentation.jpg" alt="Presenting at Fast Machine Learning for Science Conference 2025" style="max-width: 100%; border-radius: 8px; margin-top: 1em;">
+  <figcaption style="color: #6b7280; font-size: 0.9em; margin-top: 0.5em;">Presenting at Fast Machine Learning for Science Conference 2025, CERN</figcaption>
+</figure>
