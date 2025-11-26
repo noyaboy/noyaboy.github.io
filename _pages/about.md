@@ -7,7 +7,7 @@ redirect_from:
   - /about.html
 ---
 
-I am currently pursuing a Master of Engineering at the Institute of Pioneer Semiconductor Innovation (Chip Design Group), National Yang Ming Chiao Tung University, working in the Parallel Computing System Laboratory under Professor Lai, Bo-Cheng.
+I am currently pursuing a Master of Engineering at the Institute of Pioneer Semiconductor Innovation (ICS &amp; EDA Group), National Yang Ming Chiao Tung University, working in the Parallel Computing System Laboratory under Professor Lai, Bo-Cheng.
 
 My research focuses on developing advanced methodologies for intelligent computing, with an emphasis on hardware-software co-acceleration and heterogeneous platforms integrating FPGAs and GPUs.
 
