@@ -52,10 +52,11 @@
     <p class="archive__item-excerpt" itemprop="description"><p>{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}<strong><a href="{{ base_path }}{{ post.url }}" rel="permalink"> Read more</a></strong></p></p>
     {% endif %}
     
-    {% if post.paperurl or post.slidesurl or post.bibtexurl %}
+    {% if post.paperurl or post.slidesurl or post.posterurl or post.bibtexurl %}
     <p class="pub-links">
       {% if post.paperurl %}<a href="{{ post.paperurl }}" class="pub-button">PDF</a>{% endif %}
       {% if post.slidesurl %}<a href="{{ post.slidesurl }}" class="pub-button">Slides</a>{% endif %}
+      {% if post.posterurl %}<a href="{{ post.posterurl }}" class="pub-button">Poster</a>{% endif %}
       {% if post.bibtexurl %}<a href="{{ post.bibtexurl }}" class="pub-button">BibTeX</a>{% endif %}
     </p>
     {% endif %}
