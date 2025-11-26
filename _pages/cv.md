@@ -38,7 +38,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 <div class="experience-item">
   <div class="job-info">
     <strong>B.S. in Electrical Engineering</strong><br>
-    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement">Graduated with Honors</span>
+    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement">Distinction Graduation</span>
   </div>
   <div class="job-date">Sep 2019 – Jun 2023</div>
 </div>
@@ -59,7 +59,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Graduated with Honors</strong><br>
+    <strong>Distinction Graduation</strong><br>
     <em>Department of Electrical Engineering, NTHU</em>
   </div>
   <div class="job-date">Jun 2023</div>
