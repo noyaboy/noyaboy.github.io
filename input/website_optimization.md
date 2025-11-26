@@ -1,81 +1,79 @@
-# Website Layout & Typography Review
-**Target Website:** [noyaboy.github.io](https://noyaboy.github.io/)  
-**Date:** November 26, 2025
+Role: Senior Frontend Developer & UI/UX Designer
 
-This document outlines suggested optimizations for layout, typography, and user experience (UX) to enhance the professional appearance and readability of your academic website.
 
----
 
-## 1. Global Layout & Sidebar (All Pages)
+Task: Update the "Portfolio"  section of my website.
 
-The sidebar is the most persistent element of your site; ensuring it is clean and readable is crucial.
 
-* **Sidebar Bio Length:**
-    * **Observation:** The bio text in the sidebar (*"Master's Student at National Yang Ming Chiao Tung University..."*) is quite long and dense. This can clutter the visual hierarchy, especially on smaller desktop screens.
-    * **Action:** Shorten the sidebar bio to a punchy summary (e.g., *"M.Eng. Student at NYCU | Digital Design Intern | Affiliate at A3D3"*). Keep the full detailed bio for the main **"About Me"** content area.
-* **University Name Wrapping:**
-    * **Observation:** "National Yang Ming Chiao Tung University" is a very long string.
-    * **Action:** In the sidebar metadata, consider using the abbreviation **"NYCU"** or ensuring the CSS handles line breaks gracefully without creating awkward widows (single words on a new line).
-* **Profile Image:**
-    * **Action:** Ensure the profile image is high-resolution and properly cropped (circular or square with rounded corners usually looks best in this theme).
 
----
+Context:
 
-## 2. CV Page (`/cv/`)
+I have a personal portfolio website (currently hosted at https://noyaboy.github.io/portfolio/). I need to refresh the project showcase section to reflect my latest work.
 
-This page is critical for recruitment and academic networking.
 
-* **"Download" Call-to-Action (CTA):**
-    * **Observation:** The "[Download CV (PDF)]" link is a standard text link.
-    * **Action:** Style this as a **button** to make it stand out. It should be the most prominent element on this page.
-    * *Example CSS Class:* `.btn .btn--primary` (if using Minimal Mistakes theme).
-* **Skills Section Formatting:**
-    * **Observation:** The skills seem to be listed as a continuous text or simple list (*"Efficient Machine Learning FPGA/GPU Heterogeneous System..."*). It is hard to scan.
-    * **Action:** Format these as **Tags/Pills** or a **Grid Layout**. This improves readability and highlights keywords for recruiters scanning the page.
-    * *Example:* `[Verilog] [Python] [HLS] [PyTorch]`
-* **Content Redundancy:**
-    * **Observation:** You list full publications and talks on the CV page, which duplicates the content of the dedicated `/publications` and `/talks` pages.
-    * **Action:** Consider listing only **"Selected Publications"** on the CV page to keep it concise, or ensure the formatting is identical to the main Publications page to maintain consistency.
 
----
+Instructions:
 
-## 3. Publications & Talks (`/publications/`, `/talks/`)
 
-* **Date Consistency:**
-    * **Observation:** In Publications, dates are formatted as "Jan 2025". In Talks, the date is "September 03, 2025".
-    * **Action:** Standardize all dates to a single format (e.g., **"Jan 2025"** or **"January 2025"**) across the entire site for a polished look.
-* **Visual Hierarchy (Teasers):**
-    * **Observation:** The lists are text-heavy.
-    * **Action:** If possible, add **thumbnail images** (teasers) for each publication or talk. This could be a diagram from the paper or a slide from the talk. It breaks up the wall of text and makes the list more engaging.
-* **Citation Buttons:**
-    * **Action:** Ensure the "Cite" buttons function correctly (expanding the BibTeX) and are styled consistently with the "PDF" links.
 
----
+1. **Remove Existing Content**:
 
-## 4. Portfolio (`/portfolio/`)
+   - Completely remove the existing project entry titled "traccc Optimization" in Portfolio.
 
-* **Content Density:**
-    * **Observation:** Currently, there is only one item ("traccc Optimization").
-    * **Action:** While building your portfolio:
-        1.  **Enhance the single item:** Add a representative image/thumbnail to the main list view so it doesn't look like a single line of text.
-        2.  **Grid View:** If you plan to add more, a grid layout (3 items per row) usually looks better for portfolios than a vertical list.
 
----
 
-## 5. Typography & Readability (General)
+2. **Add New Projects**:
 
-* **Font Sizes:**
-    * **Observation:** Ensure the body text size is large enough for comfortable reading (typically 16px-18px).
-* **Line Height:**
-    * **Observation:** Check line height in the "About Me" paragraphs. A line-height of 1.6 to 1.8 improves readability for academic texts.
-* **Link Contrast:**
-    * **Action:** Verify that hyperlinks in the body text (blue/colored) have sufficient contrast against the background and clear hover states.
+   - Insert the following 4 projects into the portfolio.
 
----
+   - Use the titles, descriptions, and tech stacks provided below.
 
-## 6. Mobile Responsiveness
+   - Ensure the design style (cards, layout, fonts, buttons) matches the existing aesthetic of the website.
 
-* **Navigation:**
-    * **Action:** Test the "Hamburger" menu on mobile. Ensure the "CV", "Publications", etc., are easily clickable and not hidden behind other elements.
-* **Padding:**
-    * **Action:** Ensure there is sufficient padding (margins) on the left and right sides of the text content on mobile screens so text doesn't touch the screen edges.
+   - If the current site uses tags or icons for languages (like C++, Python), please apply them accordingly.
+
+
+
+### Project 1: Regfile Automatic Code Generation
+
+- **Description**: An automation tool designed to streamline hardware IP design workflows. It generates Verilog register files, C headers, and documentation automatically from standardized CSV definitions, significantly reducing manual coding errors and setup time.
+
+- **Tech Stack**: Perl, Python, Verilog, Shell
+
+- **Link**: https://github.com/noyaboy/andla_codegen
+
+
+
+### Project 2: Weak Lensing Cosmology Challenge
+
+- **Description**: A repository for the NeurIPS 2025 Machine Learning competition focused on Weak Gravitational Lensing. Explores uncertainty-aware and out-of-distribution detection AI techniques to analyze cosmological parameters from simulated dark matter maps.
+
+- **Tech Stack**: Python, Jupyter Notebook, Machine Learning, PyTorch/TensorFlow
+
+- **Link**: https://github.com/noyaboy/Cosmology_Challenge
+
+
+
+### Project 3: Token Reduction for Vision Transformers
+
+- **Description**: A research framework for optimizing Vision Transformers (ViT) by reducing token redundancy. Implements pruning and fine-tuning strategies to accelerate inference speed while maintaining model accuracy.
+
+- **Tech Stack**: Python, PyTorch, Deep Learning
+
+- **Link**: https://github.com/noyaboy/TokenReductionPT
+
+
+
+### Project 4: HL-LHC Particle Tracking Optimization (traccc)
+
+- **Description**: High-performance GPU algorithm optimization for real-time particle trajectory reconstruction at the High-Luminosity Large Hadron Collider (HL-LHC). Features Kalman filter acceleration and parallel computing implementations.
+
+- **Tech Stack**: C++, CUDA, SYCL, Alpaka
+
+- **Link**: https://github.com/noyaboy/traccc-optimization
+
+
+
+Action Required:
+
+Please provide the updated HTML code for the projects section. If you need the full HTML file to ensure context, let me know, otherwise, output the specific `div` or `section` that needs to be replaced.
