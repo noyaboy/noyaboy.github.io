@@ -59,8 +59,8 @@ body {
 }
 
 .page__content h2 {
-  color: $color-accent;
-  border-bottom: 2px solid $accent-light;
+  color: #000000;  // Pure black in light mode
+  border-bottom: 2px solid #000000;  // Pure black line
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
 }
@@ -83,7 +83,7 @@ body {
 }
 
 .author__name {
-  color: $color-accent;
+  color: #000000;  // Pure black in light mode
 }
 
 .author__bio {
@@ -427,10 +427,10 @@ body {
    ========================================================================== */
 
 .archive__item-title {
-  color: $color-accent;
+  color: #000000;  // Pure black in light mode
 
   a {
-    color: $color-accent;
+    color: #000000;  // Pure black in light mode
 
     &:hover {
       color: $color-link-hover;
