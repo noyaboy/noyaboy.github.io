@@ -347,3 +347,143 @@ body {
     text-decoration-color: $accent-hover;
   }
 }
+
+/* ==========================================================================
+   DARK MODE - WCAG Accessible Colors
+   Light cyan (#7dd3fc) provides 8.6:1 contrast on dark backgrounds
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  // Dark mode link colors
+  $dark-link: #7dd3fc;       // Tailwind sky-300 - WCAG AAA compliant
+  $dark-link-hover: #a5f3fc; // Tailwind cyan-200
+  $dark-text: #e2e8f0;       // Light gray text
+  $dark-text-muted: #94a3b8; // Muted text
+
+  // Links
+  .page__content a:not(.btn):not(.pub-button) {
+    color: $dark-link;
+    text-decoration-color: rgba($dark-link, 0.4);
+
+    &:hover {
+      color: $dark-link-hover;
+      text-decoration-color: $dark-link-hover;
+    }
+  }
+
+  // Headers
+  .page__content h1,
+  .page__content h2 {
+    color: $dark-link;
+    border-bottom-color: $dark-link;
+  }
+
+  // Sidebar
+  .author__name {
+    color: $dark-link;
+  }
+
+  .author__bio {
+    color: $dark-text-muted;
+  }
+
+  .author__urls .svg-inline--fa {
+    color: $dark-link;
+  }
+
+  // Archive items
+  .archive__item-title,
+  .archive__item-title a {
+    color: $dark-link;
+
+    &:hover {
+      color: $dark-link-hover;
+    }
+  }
+
+  .archive__item-excerpt {
+    color: $dark-text-muted;
+  }
+
+  // Publication styling
+  .pub-authors {
+    color: $dark-text-muted;
+
+    strong {
+      color: $dark-link;
+    }
+  }
+
+  .pub-venue {
+    color: $dark-text-muted;
+  }
+
+  .pub-button {
+    background-color: #0ea5e9; // sky-500 for better visibility
+
+    &:hover {
+      background-color: #38bdf8; // sky-400
+    }
+  }
+
+  // Skills
+  .skill-tag {
+    background-color: #1e3a5f;
+    color: $dark-link;
+
+    &:hover {
+      background-color: $dark-link;
+      color: #0f172a;
+    }
+  }
+
+  // Achievement
+  .achievement {
+    background-color: #422006;
+    color: #fbbf24;
+  }
+
+  // Citation
+  .citation-details {
+    summary {
+      color: $dark-link;
+
+      &:hover {
+        color: $dark-link-hover;
+      }
+    }
+
+    .citation-text {
+      background-color: #1e293b;
+      border-left-color: #334155;
+      color: $dark-text-muted;
+    }
+  }
+
+  // Experience details
+  .experience-details {
+    border-left-color: #334155;
+  }
+
+  .job-date {
+    color: $dark-text-muted !important;
+  }
+
+  // Portfolio
+  .portfolio-item {
+    border-color: #334155;
+
+    p {
+      color: $dark-text-muted;
+    }
+  }
+
+  // Talk venue
+  .talk-venue em {
+    color: $dark-link;
+  }
+
+  .talk-location {
+    color: $dark-text-muted;
+  }
+}
