@@ -218,6 +218,73 @@ body {
   font-weight: 400;
 }
 
+/* Certificate Link */
+.cert-link {
+  font-size: 0.85em;
+  margin-left: 0.5em;
+  color: $color-accent !important;
+  text-decoration: none !important;
+
+  &:hover {
+    color: $color-link-hover !important;
+    text-decoration: underline !important;
+  }
+}
+
+/* Certificate Modal */
+.cert-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 2em;
+}
+
+.cert-modal-content {
+  position: relative;
+  max-width: 800px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5em;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+  img {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+    display: block;
+  }
+}
+
+.cert-modal-close {
+  position: absolute;
+  top: 0.5em;
+  right: 0.75em;
+  font-size: 2em;
+  color: #666;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+.cert-modal-caption {
+  text-align: center;
+  color: $color-text-secondary;
+  font-size: 0.9em;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
 /* ==========================================================================
    WHITESPACE IMPROVEMENTS
    ========================================================================== */
@@ -636,6 +703,34 @@ body {
   }
 
   .award-stat {
+    color: $dark-text-muted;
+  }
+
+  .cert-link {
+    color: $dark-accent !important;
+
+    &:hover {
+      color: $dark-accent-hover !important;
+    }
+  }
+
+  .cert-modal-content {
+    background: #1e293b;
+
+    img {
+      border: 1px solid #334155;
+    }
+  }
+
+  .cert-modal-close {
+    color: #94a3b8;
+
+    &:hover {
+      color: #e2e8f0;
+    }
+  }
+
+  .cert-modal-caption {
     color: $dark-text-muted;
   }
 }
