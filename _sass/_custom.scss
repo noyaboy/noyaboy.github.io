@@ -345,9 +345,9 @@ body {
 .author__avatar img {
   border: 3px solid $accent-light;
   border-radius: 50%;
-  width: 130px !important;
-  height: 130px !important;
-  max-width: 130px !important;
+  width: 169px !important;
+  height: 169px !important;
+  max-width: 169px !important;
   object-fit: cover;
   object-position: center 50%;
 }
@@ -402,9 +402,9 @@ body {
 
 @media (max-width: 600px) {
   .author__avatar img {
-    width: 180px !important;
-    height: 180px !important;
-    max-width: 180px !important;
+    width: 234px !important;
+    height: 234px !important;
+    max-width: 234px !important;
   }
 
   .experience-item {
