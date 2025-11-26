@@ -116,7 +116,7 @@ document.addEventListener('keydown', function(e) {
 <h2>Skills</h2>
 
 <p><strong>Languages & Tools:</strong> Python, C/C++, Verilog/SystemVerilog, HLS, CUDA</p>
-<p><strong>Domains:</strong> Efficient Machine Learning, FPGA/GPU Heterogeneous Systems, Digital IC Design, Data-Driven RTL/C++ Codegen</p>
+<p><strong>Domains:</strong> Efficient Machine Learning, Computer Architecture, Digital IC Design, Data-Driven RTL/C++ Codegen</p>
 
 </div>
 
