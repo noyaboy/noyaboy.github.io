@@ -134,7 +134,7 @@ document.addEventListener('keydown', function(e) {
 <div class="experience-item">
   <div class="job-info">
     <strong>Digital Design Intern</strong><br>
-    <em>Andes Technology Corporation</em>
+    <em><a href="https://www.andestech.com/en/" target="_blank">Andes Technology Corporation</a></em>
   </div>
   <div class="job-date">Nov 2024 – Present</div>
 </div>
