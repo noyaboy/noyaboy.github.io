@@ -106,6 +106,29 @@ document.addEventListener('keydown', function(e) {
 
 <div class="cv-section">
 
+<h2>Certificates</h2>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Cell-Based Digital Chip Design and Implementation</strong> <span class="award-stat">(ADFP - TSMC 16nm)</span>
+    <a href="#" class="cert-link" onclick="openModal('adfpModal'); return false;">View Certificate</a><br>
+    <em>Taiwan Semiconductor Research Institute (TSRI)</em>
+  </div>
+</div>
+
+<!-- ADFP Certificate Modal -->
+<div id="adfpModal" class="cert-modal" onclick="closeModal('adfpModal')">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeModal('adfpModal')">&times;</span>
+    <img src="/images/adfp-certificate.jpg" alt="ADFP Certificate">
+    <p class="cert-modal-caption">Cell-Based Digital Chip Design and Implementation Certificate - TSRI</p>
+  </div>
+</div>
+
+</div>
+
+<div class="cv-section">
+
 <h2>Work Experience</h2>
 
 <div class="experience-item">
