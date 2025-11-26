@@ -8,7 +8,7 @@ github: "https://github.com/noyaboy/TokenReductionPT"
 
 ## Overview
 
-A research framework for optimizing Vision Transformers (ViT) by reducing token redundancy. Implements pruning and fine-tuning strategies to accelerate inference speed while maintaining model accuracy.
+A comprehensive performance analysis of Token Reduction mechanisms in Vision Transformers (ViT) utilizing NVIDIA Nsight Systems (NSYS) and Nsight Compute (NCU). The study investigates computational bottlenecks and profiles kernel-level execution to evaluate the trade-offs between token pruning strategies and inference latency acceleration.
 
 ## Technical Stack
 
