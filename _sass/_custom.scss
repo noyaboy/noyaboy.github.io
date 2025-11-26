@@ -599,7 +599,7 @@ body {
 
   .page__content h2 {
     color: #ffffff !important;
-    border-bottom-color: rgba(255, 255, 255, 0.4);
+    border-bottom-color: rgba(255, 255, 255, 0.4) !important;
   }
 
   .page__content h3,
@@ -634,7 +634,7 @@ body {
     color: #ffffff !important;  // White in dark mode
 
     &:hover {
-      color: #cccccc;
+      color: #cccccc !important;
     }
   }
 
