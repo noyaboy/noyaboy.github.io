@@ -133,14 +133,13 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Digital Design Intern</strong><br>
+    <strong>Digital IC Design Intern</strong><br>
     <em><a href="https://www.andestech.com/en/" target="_blank">Andes Technology Corporation</a></em>
   </div>
   <div class="job-date">Nov 2024 – Present</div>
 </div>
 <ul class="experience-details">
-  <li>Developing CPU-related AI and deep learning accelerators</li>
-  <li>Working on RISC-V based neural network acceleration solutions</li>
+  <li>Developing Register File Code Generation from scratch</li>
 </ul>
 
 <div class="experience-item">
