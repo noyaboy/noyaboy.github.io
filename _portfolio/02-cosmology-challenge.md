@@ -19,5 +19,5 @@ A repository for the NeurIPS 2025 Machine Learning competition focused on Weak G
 </div>
 
 <p style="margin-top: 1.5em;">
-  <a href="https://github.com/noyaboy/Cosmology_Challenge" class="pub-button">GitHub</a>
+  <a href="https://github.com/noyaboy/Weak-Lensing-Uncertainty-Challenge" class="pub-button">GitHub</a>
 </p>
