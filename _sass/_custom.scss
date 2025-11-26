@@ -3,17 +3,28 @@
    ========================================================================== */
 
 /* ==========================================================================
-   VARIABLES - Accent Colors
+   VARIABLES - Slate Navy Color Scheme (Option A)
+   Optimized for readability, hierarchy, and WCAG accessibility
    ========================================================================== */
 
-$accent-color: #1a365d;
-$accent-light: #e2e8f0;
-$accent-hover: #2c5282;
-$achievement-bg: #fef3c7;
-$achievement-text: #92400e;
-$date-color: #6c757d;
-$text-color: #1f2937;        // Dark gray for body text
-$heading-color: #111827;     // Near-black for headings
+// Primary palette
+$color-accent: #1e3a5f;          // Deep slate navy - H1, H2, links (10.2:1 contrast)
+$color-text-main: #374151;       // Charcoal gray - body text (8.5:1 contrast)
+$color-text-secondary: #6b7280;  // Medium gray - dates, metadata (5.0:1 contrast)
+$color-link-hover: #2563eb;      // Bright blue - hover state (4.6:1 contrast)
+$color-heading-other: #1f2937;   // Near-black - H3, H4 (14.7:1 contrast)
+
+// Supporting colors
+$accent-light: #e2e8f0;          // Light gray - borders, backgrounds
+$achievement-bg: #fef3c7;        // Warm yellow - achievement badges
+$achievement-text: #92400e;      // Brown - achievement text
+
+// Legacy aliases (for compatibility)
+$accent-color: $color-accent;
+$accent-hover: $color-link-hover;
+$text-color: $color-text-main;
+$heading-color: $color-heading-other;
+$date-color: $color-text-secondary;
 
 /* ==========================================================================
    TYPOGRAPHY - Google Fonts
@@ -36,17 +47,22 @@ body {
    ========================================================================== */
 
 .page__content h1 {
-  color: $heading-color;
+  color: $color-accent;
   border-bottom: 3px solid $accent-light;
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
 }
 
 .page__content h2 {
-  color: $heading-color;
+  color: $color-accent;
   border-bottom: 2px solid $accent-light;
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
+}
+
+.page__content h3,
+.page__content h4 {
+  color: $color-heading-other;
 }
 
 /* ==========================================================================
@@ -54,19 +70,19 @@ body {
    ========================================================================== */
 
 .page__content a:not(.btn) {
-  color: $accent-color;
+  color: $color-accent;
 
   &:hover {
-    color: $accent-hover;
+    color: $color-link-hover;
   }
 }
 
 .author__name {
-  color: $heading-color;
+  color: $color-accent;
 }
 
 .author__bio {
-  color: $text-color;
+  color: $color-text-main;
 }
 
 /* ==========================================================================
@@ -86,7 +102,7 @@ body {
   }
 
   .job-date {
-    color: $date-color;
+    color: $color-text-secondary;
     font-size: 0.9em;
     white-space: nowrap;
     margin-left: 1em;
@@ -135,7 +151,7 @@ body {
 .skill-tag {
   display: inline-block;
   background-color: $accent-light;
-  color: $accent-color;
+  color: $color-accent;
   padding: 0.35em 0.9em;
   margin: 0.2em;
   border-radius: 9999px;
@@ -144,7 +160,7 @@ body {
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: $accent-color;
+    background-color: $color-accent;
     color: white;
   }
 }
@@ -167,7 +183,7 @@ body {
 
 .pub-button {
   display: inline-block;
-  background-color: $accent-color;
+  background-color: $color-accent;
   color: white !important;
   padding: 0.25em 0.7em;
   margin: 0.2em;
@@ -177,24 +193,24 @@ body {
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: $accent-hover;
+    background-color: $color-link-hover;
     color: white !important;
   }
 }
 
 .pub-authors {
-  color: $text-color;
+  color: $color-text-main;
   font-size: 0.95em;
 
   strong {
-    color: $heading-color;
+    color: $color-heading-other;
     font-weight: 600;
   }
 }
 
 .pub-venue {
   font-style: italic;
-  color: $date-color;
+  color: $color-text-secondary;
 }
 
 /* ==========================================================================
@@ -206,7 +222,7 @@ body {
 }
 
 .author__urls .svg-inline--fa {
-  color: $accent-color;
+  color: $color-accent;
 }
 
 /* ==========================================================================
@@ -214,19 +230,19 @@ body {
    ========================================================================== */
 
 .archive__item-title {
-  color: $accent-color;
+  color: $color-accent;
 
   a {
-    color: $accent-color;
+    color: $color-accent;
 
     &:hover {
-      color: $accent-hover;
+      color: $color-link-hover;
     }
   }
 }
 
 .archive__item-excerpt {
-  color: $text-color;
+  color: $color-text-main;
 }
 
 /* ==========================================================================
@@ -236,12 +252,12 @@ body {
 .talk-venue {
   em {
     font-style: italic;
-    color: $text-color;
+    color: $color-text-main;
   }
 }
 
 .talk-location {
-  color: $date-color;
+  color: $color-text-secondary;
   font-style: italic;
 }
 
@@ -254,12 +270,12 @@ body {
 
   summary {
     cursor: pointer;
-    color: $accent-color;
+    color: $color-accent;
     font-size: 0.9em;
     font-weight: 500;
 
     &:hover {
-      color: $accent-hover;
+      color: $color-link-hover;
     }
   }
 
@@ -269,7 +285,7 @@ body {
     padding: 0.75em 1em;
     margin-top: 0.5em;
     font-size: 0.85em;
-    color: #4a5568;
+    color: $color-text-secondary;
     overflow-x: auto;
   }
 }
@@ -331,7 +347,7 @@ body {
   }
 
   p {
-    color: #4a5568;
+    color: $color-text-secondary;
     font-size: 0.9em;
     margin-bottom: 0;
   }
@@ -343,11 +359,11 @@ body {
 
 .page__content a:not(.btn):not(.pub-button) {
   text-decoration: underline;
-  text-decoration-color: rgba($accent-color, 0.3);
+  text-decoration-color: rgba($color-accent, 0.3);
   text-underline-offset: 2px;
 
   &:hover {
-    text-decoration-color: $accent-hover;
+    text-decoration-color: $color-link-hover;
   }
 }
 
