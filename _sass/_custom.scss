@@ -3,22 +3,22 @@
    ========================================================================== */
 
 /* ==========================================================================
-   VARIABLES - Accessible Teal Color Scheme
-   Blue-green theme optimized for readability and WCAG accessibility
+   VARIABLES - Black/White/Gray Color Scheme
+   Minimalist monochrome theme for clean readability
    ========================================================================== */
 
 // Primary palette - Light Mode
-$color-accent: #0e7490;          // Deep teal - H1, H2, links (5.7:1 contrast)
-$color-text-main: #374151;       // Charcoal gray - body text (8.5:1 contrast)
-$color-text-secondary: #6b7280;  // Medium gray - dates, metadata (5.0:1 contrast)
-$color-link-hover: #06b6d4;      // Bright cyan - hover state (3.1:1 - OK for interactive)
-$color-heading-other: #1f2937;   // Near-black - H3, H4 (14.7:1 contrast)
+$color-accent: #111111;          // Near-black - headings, links
+$color-text-main: #333333;       // Dark gray - body text
+$color-text-secondary: #666666;  // Medium gray - dates, metadata
+$color-link-hover: #555555;      // Gray - hover state
+$color-heading-other: #111111;   // Near-black - all headings
 
 // Supporting colors
-$accent-light: #cffafe;          // Light cyan - borders, skill tag backgrounds
-$accent-light-muted: #e0f2fe;    // Very light cyan - subtle backgrounds
-$achievement-bg: #fef3c7;        // Warm yellow - achievement badges
-$achievement-text: #92400e;      // Brown - achievement text
+$accent-light: #e5e5e5;          // Light gray - borders
+$accent-light-muted: #f5f5f5;    // Very light gray - subtle backgrounds
+$achievement-bg: #f0f0f0;        // Light gray - achievement badges
+$achievement-text: #333333;      // Dark gray - achievement text
 
 // Legacy aliases (for compatibility)
 $accent-color: $color-accent;
@@ -465,7 +465,7 @@ body {
   }
 
   .citation-text {
-    background-color: #f7fafc;
+    background-color: #f5f5f5;
     border-left: 3px solid $accent-light;
     padding: 0.75em 1em;
     margin-top: 0.5em;
@@ -555,18 +555,18 @@ body {
 }
 
 /* ==========================================================================
-   DARK MODE - Accessible Teal Theme
-   Cyan/teal colors optimized for dark backgrounds (WCAG compliant)
+   DARK MODE - Black/White/Gray Theme
+   Monochrome colors optimized for dark backgrounds
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
-  // Dark mode teal palette
-  $dark-accent: #22d3ee;       // Cyan-400 - primary accent (8.9:1 contrast)
-  $dark-accent-hover: #67e8f9; // Cyan-300 - hover state (11.3:1 contrast)
-  $dark-text: #e2e8f0;         // Light gray - primary text
-  $dark-text-muted: #94a3b8;   // Slate-400 - secondary text
-  $dark-heading: #f1f5f9;      // Slate-100 - H3, H4
-  $dark-bg-subtle: #164e63;    // Cyan-900 - subtle backgrounds
+  // Dark mode black/white/gray palette
+  $dark-accent: #ffffff;       // White - headings, links
+  $dark-accent-hover: #cccccc; // Light gray - hover state
+  $dark-text: #e5e5e5;         // Light gray - primary text
+  $dark-text-muted: #999999;   // Medium gray - secondary text
+  $dark-heading: #ffffff;      // White - headings
+  $dark-bg-subtle: #333333;    // Dark gray - subtle backgrounds
 
   // Links
   .page__content a:not(.btn):not(.pub-button) {
@@ -636,28 +636,28 @@ body {
   }
 
   .pub-button {
-    background-color: #0891b2; // Cyan-600
+    background-color: #555555;
 
     &:hover {
-      background-color: #06b6d4; // Cyan-500
+      background-color: #777777;
     }
   }
 
   // Skills
   .skill-tag {
     background-color: $dark-bg-subtle;
-    color: $dark-accent;
+    color: $dark-text;
 
     &:hover {
-      background-color: $dark-accent;
-      color: #0f172a;
+      background-color: #555555;
+      color: #ffffff;
     }
   }
 
   // Achievement
   .achievement {
-    background-color: #422006;
-    color: #fbbf24;
+    background-color: #444444;
+    color: #ffffff;
   }
 
   // Citation
@@ -671,7 +671,7 @@ body {
     }
 
     .citation-text {
-      background-color: #1e293b;
+      background-color: #1a1a1a;
       border-left-color: $dark-bg-subtle;
       color: $dark-text-muted;
     }
@@ -688,7 +688,7 @@ body {
 
   // Portfolio
   .portfolio-item {
-    border-color: #334155;
+    border-color: #444444;
 
     p {
       color: $dark-text-muted;
@@ -706,7 +706,7 @@ body {
 
   // CV enhancements
   .cv-section {
-    border-bottom-color: #334155;
+    border-bottom-color: #444444;
   }
 
   .research-interests {
@@ -718,7 +718,7 @@ body {
   }
 
   .cv-publications li {
-    border-bottom-color: #334155;
+    border-bottom-color: #444444;
   }
 
   .cv-pub-authors {
@@ -754,18 +754,18 @@ body {
   }
 
   .cert-modal-content {
-    background: #1e293b;
+    background: #222222;
 
     img {
-      border: 1px solid #334155;
+      border: 1px solid #444444;
     }
   }
 
   .cert-modal-close {
-    color: #94a3b8;
+    color: #999999;
 
     &:hover {
-      color: #e2e8f0;
+      color: #e5e5e5;
     }
   }
 
