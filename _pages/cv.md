@@ -87,19 +87,10 @@ redirect_from:
 
 <div class="cv-section">
 
-## Selected Publications
-  <ul>{% for post in site.publications reversed limit:3 %}
+## Selected Publications & Presentations
+  <ul>{% for post in site.publications reversed limit:4 %}
     {% include archive-single-cv.html %}
   {% endfor %}</ul>
   <p><a href="/publications/">View all publications →</a></p>
-
-</div>
-
-<div class="cv-section">
-
-## Talks
-  <ul>{% for post in site.talks reversed %}
-    {% include archive-single-talk-cv.html  %}
-  {% endfor %}</ul>
 
 </div>
