@@ -14,7 +14,6 @@ redirect_from:
 </div>
 
 <div class="cv-section">
-
 <h2>Education</h2>
 
 <div class="experience-item">
