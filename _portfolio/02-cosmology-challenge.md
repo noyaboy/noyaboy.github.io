@@ -8,7 +8,7 @@ github: "https://github.com/noyaboy/Weak-Lensing-Uncertainty-Challenge"
 
 ## Overview
 
-A repository for the NeurIPS 2025 Machine Learning competition focused on Weak Gravitational Lensing. Explores uncertainty-aware and out-of-distribution detection AI techniques to analyze cosmological parameters from simulated dark matter maps.
+A highly efficient solution for the NeurIPS 2025 FAIR Universe Weak Lensing Challenge, securing a top-20 ranking using an ultra-lightweight model with only 0.2M parameters. The approach combines an HDC-CNN architecture, an 8-model Mixture of Gaussians (MoG) ensemble, and Isotonic Calibration to achieve robust uncertainty quantification with minimal computational cost.
 
 ## Technical Stack
 
