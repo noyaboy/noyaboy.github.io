@@ -29,7 +29,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>M.Eng. in Digital VLSI and System Design</strong><br>
+    <strong>M.Eng. in Institute of Pioneer Semiconductor Innovation (Chip Design Group)</strong><br>
     <em>National Yang Ming Chiao Tung University (NYCU)</em>
   </div>
   <div class="job-date">Sep 2023 – Jun 2025 (Expected)</div>
