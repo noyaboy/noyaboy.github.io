@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-<div class="cv-header">
+<div class="cv-header" style="text-align: center;">
   <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
 </div>
 
@@ -38,7 +38,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 <div class="experience-item">
   <div class="job-info">
     <strong><a href="https://dee.site.nthu.edu.tw/index.php?Lang=en" target="_blank">B.S. in Electrical Engineering</a></strong><br>
-    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement">Distinction Graduation</span>
+    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement"><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></span> <span class="award-stat">(Top 10 of 116)</span>
   </div>
   <div class="job-date">Sep 2019 – Jun 2023</div>
 </div>
@@ -47,7 +47,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="cv-section">
 
-<h2>Awards &amp; Honors</h2>
+<h2>Awards &amp; Certificates</h2>
 
 <div class="experience-item">
   <div class="job-info">
@@ -59,10 +59,10 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 10 of 116)</span><br>
-    <em>Department of Electrical Engineering, NTHU</em>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('adfpModal'); return false;">Cell-Based Digital Chip Design and Implementation</a></strong> <span class="award-stat">(ADFP - TSMC 16nm)</span><br>
+    <em>Taiwan Semiconductor Research Institute (TSRI)</em>
   </div>
-  <div class="job-date">Jun 2023</div>
+  <div class="job-date">2024</div>
 </div>
 
 <!-- TJCAS Certificate Modal -->
@@ -80,6 +80,15 @@ Hardware-software co-design for efficient machine learning, real-time particle t
     <span class="cert-modal-close" onclick="closeModal('certModal')">&times;</span>
     <img src="/images/distinction-graduation.png" alt="Distinction Graduation Certificate">
     <p class="cert-modal-caption">Outstanding Academic Performance Award Certificate</p>
+  </div>
+</div>
+
+<!-- ADFP Certificate Modal -->
+<div id="adfpModal" class="cert-modal" onclick="closeModal('adfpModal')">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeModal('adfpModal')">&times;</span>
+    <img src="/images/adfp-certificate.jpg" alt="ADFP Certificate">
+    <p class="cert-modal-caption">Cell-Based Digital Chip Design and Implementation Certificate - TSRI</p>
   </div>
 </div>
 
@@ -104,23 +113,10 @@ document.addEventListener('keydown', function(e) {
 
 <div class="cv-section">
 
-<h2>Certificates</h2>
+<h2>Skills</h2>
 
-<div class="experience-item">
-  <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('adfpModal'); return false;">Cell-Based Digital Chip Design and Implementation</a></strong> <span class="award-stat">(ADFP - TSMC 16nm)</span><br>
-    <em>Taiwan Semiconductor Research Institute (TSRI)</em>
-  </div>
-</div>
-
-<!-- ADFP Certificate Modal -->
-<div id="adfpModal" class="cert-modal" onclick="closeModal('adfpModal')">
-  <div class="cert-modal-content" onclick="event.stopPropagation()">
-    <span class="cert-modal-close" onclick="closeModal('adfpModal')">&times;</span>
-    <img src="/images/adfp-certificate.jpg" alt="ADFP Certificate">
-    <p class="cert-modal-caption">Cell-Based Digital Chip Design and Implementation Certificate - TSRI</p>
-  </div>
-</div>
+<p><strong>Languages & Tools:</strong> Python, C/C++, Verilog/SystemVerilog, HLS, CUDA</p>
+<p><strong>Domains:</strong> Efficient Machine Learning, FPGA/GPU Heterogeneous Systems, Digital IC Design, Data-Driven RTL/C++ Codegen</p>
 
 </div>
 
@@ -162,33 +158,6 @@ document.addEventListener('keydown', function(e) {
 
 <div class="cv-section">
 
-<h2>Skills</h2>
-
-<div class="skills-category">
-  <span class="skills-label">Languages & Tools</span>
-  <div class="skills-container">
-    <span class="skill-tag">Python</span>
-    <span class="skill-tag">C/C++</span>
-    <span class="skill-tag">Verilog/SystemVerilog</span>
-    <span class="skill-tag">HLS</span>
-    <span class="skill-tag">CUDA</span>
-  </div>
-</div>
-
-<div class="skills-category">
-  <span class="skills-label">Domains</span>
-  <div class="skills-container">
-    <span class="skill-tag">Efficient Machine Learning</span>
-    <span class="skill-tag">FPGA/GPU Heterogeneous Systems</span>
-    <span class="skill-tag">Digital IC Design</span>
-    <span class="skill-tag">Data-Driven RTL/C++ Codegen</span>
-  </div>
-</div>
-
-</div>
-
-<div class="cv-section">
-
 <h2>Selected Publications &amp; Presentations</h2>
 
 <ul class="cv-publications">{% for post in site.publications reversed limit:4 %}
@@ -198,6 +167,6 @@ document.addEventListener('keydown', function(e) {
     <span class="cv-pub-venue"><em>{{ post.venue }}</em>, {{ post.date | date: "%Y" }}</span>
   </li>
 {% endfor %}</ul>
-<p><a href="/publications/">View all publications →</a></p>
+<p style="text-align: center; margin-top: 1em;"><a href="/publications/" class="pub-button">View All Publications</a></p>
 
 </div>
