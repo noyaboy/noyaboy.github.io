@@ -340,6 +340,8 @@ body {
 .author__avatar {
   display: flex;
   justify-content: center;
+  text-align: center;
+  width: 100%;
 }
 
 .author__avatar img {
@@ -350,6 +352,7 @@ body {
   max-width: 169px !important;
   object-fit: cover;
   object-position: center 50%;
+  margin: 0 auto !important;
 }
 
 /* Icon colors are set in light/dark mode sections below */
