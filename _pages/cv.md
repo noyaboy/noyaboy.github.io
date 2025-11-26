@@ -51,8 +51,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Excellent Poster Award</strong>
-    <a href="#" class="cert-link" onclick="openModal('tjcasModal'); return false;">View Certificate</a><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('tjcasModal'); return false;">Excellent Poster Award</a></strong><br>
     <em>Taiwan and Japan Conference on Circuits and Systems (TJCAS)</em>
   </div>
   <div class="job-date">Aug 2025</div>
@@ -60,8 +59,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Distinction Graduation</strong> <span class="award-stat">(Top 10 of 116)</span>
-    <a href="#" class="cert-link" onclick="openModal('certModal'); return false;">View Certificate</a><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 10 of 116)</span><br>
     <em>Department of Electrical Engineering, NTHU</em>
   </div>
   <div class="job-date">Jun 2023</div>
@@ -110,8 +108,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Cell-Based Digital Chip Design and Implementation</strong> <span class="award-stat">(ADFP - TSMC 16nm)</span>
-    <a href="#" class="cert-link" onclick="openModal('adfpModal'); return false;">View Certificate</a><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('adfpModal'); return false;">Cell-Based Digital Chip Design and Implementation</a></strong> <span class="award-stat">(ADFP - TSMC 16nm)</span><br>
     <em>Taiwan Semiconductor Research Institute (TSRI)</em>
   </div>
 </div>
@@ -144,7 +141,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Affiliate Trainee</strong><br>
+    <strong>Affiliate Trainee (Remote)</strong><br>
     <em><a href="https://a3d3.ai/" target="_blank">A3D3 Institute</a>, <a href="https://www.washington.edu/" target="_blank">University of Washington</a></em>
   </div>
   <div class="job-date">Jun 2024 – Present</div>
