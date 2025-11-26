@@ -29,7 +29,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="https://iais.nycu.edu.tw/en/intro1.html" target="_blank">M.Eng. in Institute of Pioneer Semiconductor Innovation (Chip Design Group)</a></strong><br>
+    <strong><a href="https://iais.nycu.edu.tw/en/intro1.html" target="_blank">M.Eng. in Institute of Pioneer Semiconductor Innovation (ICS &amp; EDA Group)</a></strong><br>
     <em>National Yang Ming Chiao Tung University (NYCU)</em>
   </div>
   <div class="job-date">Sep 2023 – Jun 2025 (Expected)</div>
