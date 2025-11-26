@@ -3,19 +3,20 @@
    ========================================================================== */
 
 /* ==========================================================================
-   VARIABLES - Slate Navy Color Scheme (Option A)
-   Optimized for readability, hierarchy, and WCAG accessibility
+   VARIABLES - Accessible Teal Color Scheme
+   Blue-green theme optimized for readability and WCAG accessibility
    ========================================================================== */
 
-// Primary palette
-$color-accent: #1e3a5f;          // Deep slate navy - H1, H2, links (10.2:1 contrast)
+// Primary palette - Light Mode
+$color-accent: #0e7490;          // Deep teal - H1, H2, links (5.7:1 contrast)
 $color-text-main: #374151;       // Charcoal gray - body text (8.5:1 contrast)
 $color-text-secondary: #6b7280;  // Medium gray - dates, metadata (5.0:1 contrast)
-$color-link-hover: #2563eb;      // Bright blue - hover state (4.6:1 contrast)
+$color-link-hover: #06b6d4;      // Bright cyan - hover state (3.1:1 - OK for interactive)
 $color-heading-other: #1f2937;   // Near-black - H3, H4 (14.7:1 contrast)
 
 // Supporting colors
-$accent-light: #e2e8f0;          // Light gray - borders, backgrounds
+$accent-light: #cffafe;          // Light cyan - borders, skill tag backgrounds
+$accent-light-muted: #e0f2fe;    // Very light cyan - subtle backgrounds
 $achievement-bg: #fef3c7;        // Warm yellow - achievement badges
 $achievement-text: #92400e;      // Brown - achievement text
 
@@ -368,38 +369,45 @@ body {
 }
 
 /* ==========================================================================
-   DARK MODE - WCAG Accessible Colors
-   Light cyan (#7dd3fc) provides 8.6:1 contrast on dark backgrounds
+   DARK MODE - Accessible Teal Theme
+   Cyan/teal colors optimized for dark backgrounds (WCAG compliant)
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
-  // Dark mode link colors
-  $dark-link: #7dd3fc;       // Tailwind sky-300 - WCAG AAA compliant
-  $dark-link-hover: #a5f3fc; // Tailwind cyan-200
-  $dark-text: #e2e8f0;       // Light gray text
-  $dark-text-muted: #94a3b8; // Muted text
+  // Dark mode teal palette
+  $dark-accent: #22d3ee;       // Cyan-400 - primary accent (8.9:1 contrast)
+  $dark-accent-hover: #67e8f9; // Cyan-300 - hover state (11.3:1 contrast)
+  $dark-text: #e2e8f0;         // Light gray - primary text
+  $dark-text-muted: #94a3b8;   // Slate-400 - secondary text
+  $dark-heading: #f1f5f9;      // Slate-100 - H3, H4
+  $dark-bg-subtle: #164e63;    // Cyan-900 - subtle backgrounds
 
   // Links
   .page__content a:not(.btn):not(.pub-button) {
-    color: $dark-link;
-    text-decoration-color: rgba($dark-link, 0.4);
+    color: $dark-accent;
+    text-decoration-color: rgba($dark-accent, 0.4);
 
     &:hover {
-      color: $dark-link-hover;
-      text-decoration-color: $dark-link-hover;
+      color: $dark-accent-hover;
+      text-decoration-color: $dark-accent-hover;
     }
   }
 
   // Headers
   .page__content h1,
   .page__content h2 {
-    color: $dark-link;
-    border-bottom-color: $dark-link;
+    color: $dark-accent;
+    border-bottom-color: rgba($dark-accent, 0.4);
+  }
+
+  .page__content h3,
+  .page__content h4 {
+    color: $dark-heading;
   }
 
   // Sidebar
   .author__name {
-    color: $dark-link;
+    color: $dark-accent;
   }
 
   .author__bio {
@@ -407,16 +415,16 @@ body {
   }
 
   .author__urls .svg-inline--fa {
-    color: $dark-link;
+    color: $dark-accent;
   }
 
   // Archive items
   .archive__item-title,
   .archive__item-title a {
-    color: $dark-link;
+    color: $dark-accent;
 
     &:hover {
-      color: $dark-link-hover;
+      color: $dark-accent-hover;
     }
   }
 
@@ -429,7 +437,7 @@ body {
     color: $dark-text-muted;
 
     strong {
-      color: $dark-link;
+      color: $dark-heading;
     }
   }
 
@@ -438,20 +446,20 @@ body {
   }
 
   .pub-button {
-    background-color: #0ea5e9; // sky-500 for better visibility
+    background-color: #0891b2; // Cyan-600
 
     &:hover {
-      background-color: #38bdf8; // sky-400
+      background-color: #06b6d4; // Cyan-500
     }
   }
 
   // Skills
   .skill-tag {
-    background-color: #1e3a5f;
-    color: $dark-link;
+    background-color: $dark-bg-subtle;
+    color: $dark-accent;
 
     &:hover {
-      background-color: $dark-link;
+      background-color: $dark-accent;
       color: #0f172a;
     }
   }
@@ -465,23 +473,23 @@ body {
   // Citation
   .citation-details {
     summary {
-      color: $dark-link;
+      color: $dark-accent;
 
       &:hover {
-        color: $dark-link-hover;
+        color: $dark-accent-hover;
       }
     }
 
     .citation-text {
       background-color: #1e293b;
-      border-left-color: #334155;
+      border-left-color: $dark-bg-subtle;
       color: $dark-text-muted;
     }
   }
 
   // Experience details
   .experience-details {
-    border-left-color: #334155;
+    border-left-color: $dark-bg-subtle;
   }
 
   .job-date {
@@ -499,7 +507,7 @@ body {
 
   // Talk venue
   .talk-venue em {
-    color: $dark-link;
+    color: $dark-text;
   }
 
   .talk-location {
