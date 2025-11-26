@@ -64,6 +64,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
   </div>
   <div class="job-date">Jun 2023</div>
 </div>
+<p class="award-description">Awarded to top 10 students out of 116 graduates in the department.</p>
 
 </div>
 
