@@ -22,7 +22,7 @@ repository               : "noyaboy/noyaboy.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "profile.jpg"
   name             : "Hao-Chun Liang"
   pronouns         : # example: "she/her"
   bio              : "M.Eng. Student at NYCU | Digital Design Intern | A3D3 Affiliate"
