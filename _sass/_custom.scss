@@ -132,9 +132,9 @@ body {
 
 .cv-header {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5em;
-  margin-top: -1em;
+  justify-content: center;
+  margin-bottom: 1em;
+  margin-top: 0;
 }
 
 .cv-download-btn {
@@ -143,13 +143,9 @@ body {
 }
 
 .cv-section {
-  margin-bottom: 2.5em;
-  padding-bottom: 1.5em;
-  border-bottom: 1px solid $accent-light;
-
-  &:last-child {
-    border-bottom: none;
-  }
+  margin-bottom: 1.5em;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .research-interests {

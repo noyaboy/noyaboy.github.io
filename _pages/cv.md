@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-<div class="cv-header" style="text-align: center;">
+<div class="cv-header">
   <a href="/files/resume.pdf" class="pub-button cv-download-btn">Download CV (PDF)</a>
 </div>
 <div class="cv-section">
@@ -34,7 +34,6 @@ redirect_from:
 </div>
 
 <div class="cv-section">
-
 <h2>Awards &amp; Certificates</h2>
 
 <div class="experience-item">
@@ -100,7 +99,6 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <div class="cv-section">
-
 <h2>Skills</h2>
 
 <p><strong>Languages & Tools:</strong> Python, C/C++, Verilog/SystemVerilog, HLS, CUDA</p>
@@ -109,7 +107,6 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <div class="cv-section">
-
 <h2>Work Experience</h2>
 
 <div class="experience-item">
@@ -150,7 +147,6 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <div class="cv-section">
-
 <h2>Selected Publications &amp; Presentations</h2>
 
 <ul class="cv-publications">{% for post in site.publications reversed limit:4 %}
