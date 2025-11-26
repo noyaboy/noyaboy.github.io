@@ -48,7 +48,6 @@ body {
    ========================================================================== */
 
 .page__content h1 {
-  color: $color-accent;
   border-bottom: none;
   padding-bottom: 0;
   margin-bottom: 0.8em;
@@ -59,48 +58,15 @@ body {
 }
 
 .page__content h2 {
-  color: #000000;  // Pure black in light mode
-  border-bottom: 2px solid #000000;  // Pure black line
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
-}
-
-.page__content h3,
-.page__content h4 {
-  color: $color-heading-other;
 }
 
 /* ==========================================================================
    ACCENT COLOR SYSTEM
    ========================================================================== */
 
-.page__content a:not(.btn) {
-  color: $color-accent;
-
-  &:hover {
-    color: $color-link-hover;
-  }
-}
-
-.author__name {
-  color: #000000;  // Pure black in light mode
-}
-
-.author__bio {
-  color: $color-text-main;
-}
-
-/* Force text visibility in light mode */
-.page__content p,
-.page__content li,
-.page__content td,
-.page__content th {
-  color: $color-text-main;
-}
-
-.archive__item-excerpt {
-  color: $color-text-secondary !important;
-}
+/* Colors are set in light/dark mode sections below */
 
 /* ==========================================================================
    EXPERIENCE LAYOUT - Flexbox for dates
@@ -119,7 +85,6 @@ body {
   }
 
   .job-date {
-    color: $color-text-secondary;
     font-size: 0.9em;
     white-space: nowrap;
     margin-left: 1em;
@@ -165,7 +130,6 @@ body {
 .research-interests {
   font-size: 1.05em;
   line-height: 1.8;
-  color: $color-text-main;
   margin: 0;
 }
 
@@ -182,7 +146,6 @@ body {
   display: block;
   font-weight: 600;
   font-size: 0.9em;
-  color: $color-text-secondary;
   margin-bottom: 0.5em;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -214,22 +177,15 @@ body {
 
 .cv-pub-authors {
   font-size: 0.9em;
-  color: #777777;  // Gray for other authors
   margin-top: 0.25em;
-
-  strong {
-    color: $color-heading-other;  // Near-black for my name
-  }
 }
 
 .cv-pub-venue {
   font-size: 0.85em;
-  color: $color-text-secondary;
 }
 
 .award-stat {
   font-size: 0.85em;
-  color: $color-text-secondary;
   font-weight: 400;
 }
 
@@ -237,11 +193,9 @@ body {
 .cert-link {
   font-size: 0.85em;
   margin-left: 0.5em;
-  color: $color-accent !important;
   text-decoration: none !important;
 
   &:hover {
-    color: $color-link-hover !important;
     text-decoration: underline !important;
   }
 }
@@ -249,10 +203,10 @@ body {
 .cert-title-link {
   color: inherit !important;
   text-decoration: none !important;
-  border-bottom: 1px dashed $color-accent;
+  border-bottom-style: dashed;
+  border-bottom-width: 1px;
 
   &:hover {
-    color: $color-accent !important;
     border-bottom-style: solid;
   }
 }
@@ -305,7 +259,6 @@ body {
 
 .cert-modal-caption {
   text-align: center;
-  color: $color-text-secondary;
   font-size: 0.9em;
   margin-top: 1em;
   margin-bottom: 0;
@@ -336,19 +289,12 @@ body {
 
 .skill-tag {
   display: inline-block;
-  background-color: $accent-light;
-  color: $color-accent;
   padding: 0.35em 0.9em;
   margin: 0.2em;
   border-radius: 9999px;
   font-size: 0.875em;
   font-weight: 500;
   transition: all 0.2s ease;
-
-  &:hover {
-    background-color: $color-accent;
-    color: white;
-  }
 }
 
 /* ==========================================================================
@@ -356,11 +302,9 @@ body {
    ========================================================================== */
 
 .achievement {
-  background-color: $achievement-bg;
   padding: 0.15em 0.5em;
   border-radius: 4px;
   font-weight: 600;
-  color: $achievement-text;
 }
 
 /* ==========================================================================
@@ -369,34 +313,24 @@ body {
 
 .pub-button {
   display: inline-block;
-  background-color: $color-accent;
-  color: white !important;
   padding: 0.25em 0.7em;
   margin: 0.2em;
   border-radius: 4px;
   font-size: 0.8em;
   text-decoration: none !important;
   transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: $color-link-hover;
-    color: white !important;
-  }
 }
 
 .pub-authors {
-  color: #777777;  // Gray for other authors
   font-size: 0.95em;
 
   strong {
-    color: $color-heading-other;  // Near-black for my name
     font-weight: 600;
   }
 }
 
 .pub-venue {
   font-style: italic;
-  color: $color-text-secondary;
 }
 
 /* ==========================================================================
@@ -418,29 +352,13 @@ body {
   object-position: center 50%;
 }
 
-.author__urls .svg-inline--fa {
-  color: $color-accent;
-}
+/* Icon colors are set in light/dark mode sections below */
 
 /* ==========================================================================
    ARCHIVE/LIST IMPROVEMENTS
    ========================================================================== */
 
-.archive__item-title {
-  color: #000000;  // Pure black in light mode
-
-  a {
-    color: #000000;  // Pure black in light mode
-
-    &:hover {
-      color: $color-link-hover;
-    }
-  }
-}
-
-.archive__item-excerpt {
-  color: $color-text-main;
-}
+/* Archive colors are set in light/dark mode sections below */
 
 /* ==========================================================================
    TALK VENUE STYLING
@@ -449,12 +367,10 @@ body {
 .talk-venue {
   em {
     font-style: italic;
-    color: $color-text-main;
   }
 }
 
 .talk-location {
-  color: $color-text-secondary;
   font-style: italic;
 }
 
@@ -467,22 +383,15 @@ body {
 
   summary {
     cursor: pointer;
-    color: $color-accent;
     font-size: 0.9em;
     font-weight: 500;
-
-    &:hover {
-      color: $color-link-hover;
-    }
   }
 
   .citation-text {
-    background-color: #f5f5f5;
-    border-left: 3px solid $accent-light;
+    border-left: 3px solid;
     padding: 0.75em 1em;
     margin-top: 0.5em;
     font-size: 0.85em;
-    color: $color-text-secondary;
     overflow-x: auto;
   }
 }
@@ -530,7 +439,7 @@ body {
 }
 
 .portfolio-item {
-  border: 1px solid $accent-light;
+  border: 1px solid;
   border-radius: 8px;
   padding: 1.25em;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -546,7 +455,6 @@ body {
   }
 
   p {
-    color: $color-text-secondary;
     font-size: 0.9em;
     margin-bottom: 0;
   }
@@ -563,6 +471,214 @@ body {
 
   &:hover {
     text-decoration-color: $color-link-hover;
+  }
+}
+
+/* ==========================================================================
+   LIGHT MODE - Black/White/Gray Theme
+   Monochrome colors optimized for light backgrounds
+   ========================================================================== */
+
+@media (prefers-color-scheme: light) {
+  // Headers
+  .page__content h1 {
+    color: $color-accent;
+  }
+
+  .page__content h2 {
+    color: #000000;
+    border-bottom: 2px solid #000000;
+  }
+
+  .page__content h3,
+  .page__content h4 {
+    color: $color-heading-other;
+  }
+
+  // Links
+  .page__content a:not(.btn):not(.pub-button) {
+    color: $color-accent;
+
+    &:hover {
+      color: $color-link-hover;
+    }
+  }
+
+  // Sidebar
+  .author__name {
+    color: #000000;
+  }
+
+  .author__bio {
+    color: $color-text-main;
+  }
+
+  .author__urls .svg-inline--fa {
+    color: $color-accent;
+  }
+
+  // Text visibility
+  .page__content p,
+  .page__content li,
+  .page__content td,
+  .page__content th {
+    color: $color-text-main;
+  }
+
+  // Archive items
+  .archive__item-title,
+  .archive__item-title a {
+    color: #000000;
+
+    &:hover {
+      color: $color-link-hover;
+    }
+  }
+
+  .archive__item-excerpt {
+    color: $color-text-secondary;
+  }
+
+  // Publication styling
+  .pub-authors {
+    color: #777777;
+
+    strong {
+      color: $color-heading-other;
+    }
+  }
+
+  .pub-venue {
+    color: $color-text-secondary;
+  }
+
+  .pub-button {
+    background-color: $color-accent;
+    color: white;
+
+    &:hover {
+      background-color: $color-link-hover;
+      color: white;
+    }
+  }
+
+  // CV styling
+  .cv-pub-authors {
+    color: #777777;
+
+    strong {
+      color: $color-heading-other;
+    }
+  }
+
+  .cv-pub-venue {
+    color: $color-text-secondary;
+  }
+
+  .research-interests {
+    color: $color-text-main;
+  }
+
+  .job-date {
+    color: $color-text-secondary;
+  }
+
+  .skills-label {
+    color: $color-text-secondary;
+  }
+
+  .award-stat {
+    color: $color-text-secondary;
+  }
+
+  // Skills
+  .skill-tag {
+    background-color: $accent-light;
+    color: $color-accent;
+
+    &:hover {
+      background-color: $color-accent;
+      color: white;
+    }
+  }
+
+  // Achievement
+  .achievement {
+    background-color: $achievement-bg;
+    color: $achievement-text;
+  }
+
+  // Citation
+  .citation-details {
+    summary {
+      color: $color-accent;
+
+      &:hover {
+        color: $color-link-hover;
+      }
+    }
+
+    .citation-text {
+      background-color: #f5f5f5;
+      border-left-color: $accent-light;
+      color: $color-text-secondary;
+    }
+  }
+
+  // Experience
+  .experience-details {
+    border-left-color: $accent-light;
+  }
+
+  // Portfolio
+  .portfolio-item {
+    border-color: $accent-light;
+
+    p {
+      color: $color-text-secondary;
+    }
+  }
+
+  // Talk venue
+  .talk-venue em {
+    color: $color-text-main;
+  }
+
+  .talk-location {
+    color: $color-text-secondary;
+  }
+
+  // Certificate modal
+  .cert-modal-content {
+    background: white;
+  }
+
+  .cert-modal-close {
+    color: #666666;
+
+    &:hover {
+      color: #333333;
+    }
+  }
+
+  .cert-modal-caption {
+    color: $color-text-secondary;
+  }
+
+  .cert-link {
+    color: $color-accent;
+
+    &:hover {
+      color: $color-link-hover;
+    }
+  }
+
+  .cert-title-link {
+    border-bottom-color: $color-accent;
+
+    &:hover {
+      color: $color-accent;
+    }
   }
 }
 
@@ -593,23 +709,23 @@ body {
 
   // Headers - white in dark mode
   .page__content h1 {
-    color: #ffffff !important;
+    color: #ffffff;
     border-bottom-color: rgba(255, 255, 255, 0.4);
   }
 
   .page__content h2 {
-    color: #ffffff !important;
-    border-bottom-color: #ffffff !important;  // Pure white line in dark mode
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
   }
 
   .page__content h3,
   .page__content h4 {
-    color: #ffffff !important;
+    color: #ffffff;
   }
 
   // Sidebar
   .author__name {
-    color: #ffffff !important;  // White in dark mode
+    color: #ffffff;
   }
 
   .author__bio {
@@ -631,15 +747,15 @@ body {
   // Archive items - publication titles white in dark mode
   .archive__item-title,
   .archive__item-title a {
-    color: #ffffff !important;  // White in dark mode
+    color: #ffffff;
 
     &:hover {
-      color: #cccccc !important;
+      color: #cccccc;
     }
   }
 
   .archive__item-excerpt {
-    color: $dark-text-muted !important;
+    color: $dark-text-muted;
   }
 
   // Publication styling
@@ -704,7 +820,7 @@ body {
   }
 
   .job-date {
-    color: $dark-text !important;
+    color: $dark-text;
   }
 
   // Portfolio
@@ -760,10 +876,10 @@ body {
   }
 
   .cert-link {
-    color: $dark-accent !important;
+    color: $dark-accent;
 
     &:hover {
-      color: $dark-accent-hover !important;
+      color: $dark-accent-hover;
     }
   }
 
@@ -771,7 +887,7 @@ body {
     border-bottom-color: $dark-accent;
 
     &:hover {
-      color: $dark-accent !important;
+      color: $dark-accent;
     }
   }
 
