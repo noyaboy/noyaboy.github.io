@@ -20,7 +20,7 @@ citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Chen
 
 An integrated FPGA implementation for complete GNN-based trajectory reconstruction in high-energy physics, designed for the High-Luminosity Large Hadron Collider (HL-LHC) experiments.
 
-<a href="/files/tjcas_gnn_trajectory_reconstruction.pdf" class="pub-button">PDF</a>
+<a href="/files/tjcas_gnn_trajectory_reconstruction.pdf" class="pub-button">Paper</a>
 <a href="/files/tjcas2025-slides.pdf" class="pub-button">Slides</a>
 <a href="/files/tjcas2025-poster.pdf" class="pub-button">Poster</a>
 
