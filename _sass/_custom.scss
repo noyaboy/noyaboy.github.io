@@ -12,6 +12,8 @@ $accent-hover: #2c5282;
 $achievement-bg: #fef3c7;
 $achievement-text: #92400e;
 $date-color: #6c757d;
+$text-color: #1f2937;        // Dark gray for body text
+$heading-color: #111827;     // Near-black for headings
 
 /* ==========================================================================
    TYPOGRAPHY - Google Fonts
@@ -34,15 +36,15 @@ body {
    ========================================================================== */
 
 .page__content h1 {
-  color: $accent-color;
-  border-bottom: 3px solid $accent-color;
+  color: $heading-color;
+  border-bottom: 3px solid $accent-light;
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
 }
 
 .page__content h2 {
-  color: $accent-color;
-  border-bottom: 2px solid $accent-color;
+  color: $heading-color;
+  border-bottom: 2px solid $accent-light;
   padding-bottom: 0.3em;
   margin-bottom: 0.8em;
 }
@@ -60,11 +62,11 @@ body {
 }
 
 .author__name {
-  color: $accent-color;
+  color: $heading-color;
 }
 
 .author__bio {
-  color: #4a5568;
+  color: $text-color;
 }
 
 /* ==========================================================================
@@ -181,17 +183,18 @@ body {
 }
 
 .pub-authors {
-  color: #4a5568;
+  color: $text-color;
   font-size: 0.95em;
 
   strong {
-    color: $accent-color;
+    color: $heading-color;
+    font-weight: 600;
   }
 }
 
 .pub-venue {
   font-style: italic;
-  color: #718096;
+  color: $date-color;
 }
 
 /* ==========================================================================
@@ -223,7 +226,7 @@ body {
 }
 
 .archive__item-excerpt {
-  color: #4a5568;
+  color: $text-color;
 }
 
 /* ==========================================================================
@@ -233,7 +236,7 @@ body {
 .talk-venue {
   em {
     font-style: italic;
-    color: $accent-color;
+    color: $text-color;
   }
 }
 
