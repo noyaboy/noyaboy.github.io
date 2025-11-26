@@ -2,6 +2,7 @@
 title: "HL-LHC Particle Tracking Optimization"
 excerpt: "High-performance GPU algorithm optimization for real-time particle trajectory reconstruction at the High-Luminosity Large Hadron Collider (HL-LHC)."
 collection: portfolio
+github: "https://github.com/noyaboy/traccc-optimization"
 ---
 
 ## Overview

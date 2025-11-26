@@ -2,6 +2,7 @@
 title: "Token Reduction for Vision Transformers"
 excerpt: "A research framework for optimizing Vision Transformers (ViT) by reducing token redundancy. Implements pruning and fine-tuning strategies to accelerate inference."
 collection: portfolio
+github: "https://github.com/noyaboy/TokenReductionPT"
 ---
 
 ## Overview
