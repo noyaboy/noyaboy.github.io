@@ -38,7 +38,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 <div class="experience-item">
   <div class="job-info">
     <strong>B.S. in Electrical Engineering</strong><br>
-    <em>National Tsing Hua University (NTHU)</em> — <span class="achievement">Distinction (Ranked 1st in class)</span>
+    <em>National Tsing Hua University (NTHU)</em> — <span class="achievement">Graduated with Honors</span>
   </div>
   <div class="job-date">Sep 2019 – Jun 2023</div>
 </div>
@@ -59,7 +59,7 @@ Hardware-software co-design for efficient machine learning, real-time particle t
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Ranked 1st in Graduating Class</strong><br>
+    <strong>Graduated with Honors</strong><br>
     <em>Department of Electrical Engineering, NTHU</em>
   </div>
   <div class="job-date">Jun 2023</div>
