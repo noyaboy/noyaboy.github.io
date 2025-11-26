@@ -572,13 +572,13 @@ body {
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
-  // Dark mode black/white/gray palette
+  // Dark mode WCAG optimized palette
   $dark-accent: #ffffff;       // White - headings, links
   $dark-accent-hover: #cccccc; // Light gray - hover state
-  $dark-text: #e5e5e5;         // Light gray - primary text
-  $dark-text-muted: #999999;   // Medium gray - secondary text
+  $dark-text: #e0e0e0;         // Off-white - primary text (reduces glare)
+  $dark-text-muted: #a0a0a0;   // Medium gray - secondary text
   $dark-heading: #ffffff;      // White - headings
-  $dark-bg-subtle: #333333;    // Dark gray - subtle backgrounds
+  $dark-bg-subtle: #1e1e1e;    // Dark gray - subtle backgrounds
 
   // Links
   .page__content a:not(.btn):not(.pub-button) {

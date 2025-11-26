@@ -8,10 +8,12 @@ $dark-gray                  : mix(#000, $gray, 40%);
 $darker-gray                : mix(#000, $gray, 60%);
 $light-gray                 : mix(#fff, $gray, 50%);
 
-$background                 : #474747;
-$background-light           : mix(#fff, $background, 80%);
-$background-lighter         : mix(#fff, $background, 90%);
-$text                       : #ffffff;
+// WCAG optimized: Material Design dark background (not pure black)
+$background                 : #121212;
+$background-light           : #2a2a2a;
+$background-lighter         : #3a3a3a;
+// Off-white text to reduce glare (not pure white)
+$text                       : #e0e0e0;
 $link                       : #ffffff;
 $link-dark                  : #cccccc;
 $link-light                 : #e5e5e5;
@@ -40,8 +42,8 @@ html[data-theme="dark"] {
     --global-footer-bg-color            : #{$background};
     --global-border-color               : #{$light-gray};
     --global-dark-border-color          : #{$background-light};
-    --global-code-background-color      : #fafafa;
-    --global-code-text-color            : #{$darker-gray};
+    --global-code-background-color      : #1e1e1e;
+    --global-code-text-color            : #d4d4d4;
     --global-fig-caption-color          : #{$light-gray};
     --global-link-color                 : #{$link};
     --global-link-color-hover           : #{$link-dark};
