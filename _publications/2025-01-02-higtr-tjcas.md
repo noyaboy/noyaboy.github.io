@@ -9,6 +9,7 @@ venue: 'Taiwan and Japan Conference on Circuits and Systems (TJCAS)'
 paperurl: '/files/tjcas_gnn_trajectory_reconstruction.pdf'
 slidesurl: '/files/tjcas2025-slides.pdf'
 posterurl: '/files/tjcas2025-poster.pdf'
+authors: 'Yun-Chen Yang*, <strong>Hao-Chun Liang</strong>*, Hsuan-Wei Yu*, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey'
 citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey. (2025). &quot;An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction.&quot; <i>TJCAS 2025</i>.'
 ---
 
