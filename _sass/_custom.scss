@@ -90,6 +90,18 @@ body {
   color: $color-text-main;
 }
 
+/* Force text visibility in light mode */
+.page__content p,
+.page__content li,
+.page__content td,
+.page__content th {
+  color: $color-text-main;
+}
+
+.archive__item-excerpt {
+  color: $color-text-secondary !important;
+}
+
 /* ==========================================================================
    EXPERIENCE LAYOUT - Flexbox for dates
    ========================================================================== */
@@ -608,6 +620,14 @@ body {
     color: $dark-accent;
   }
 
+  // Force text visibility in dark mode
+  .page__content p,
+  .page__content li,
+  .page__content td,
+  .page__content th {
+    color: $dark-text;
+  }
+
   // Archive items
   .archive__item-title,
   .archive__item-title a {
@@ -619,7 +639,7 @@ body {
   }
 
   .archive__item-excerpt {
-    color: $dark-text-muted;
+    color: $dark-text-muted !important;
   }
 
   // Publication styling
