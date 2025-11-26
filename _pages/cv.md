@@ -18,7 +18,7 @@ redirect_from:
 <h2>Research Interests</h2>
 
 <p class="research-interests">
-Hardware-software co-design for efficient machine learning, real-time particle tracking algorithms on heterogeneous platforms (FPGA/GPU), and data-driven hardware generation for high-energy physics applications.
+I specialize in the intersection of High-Performance Computing (HPC) and Computer Architecture, targeting the rigorous optimization of CUDA pipelines. My work involves using NVIDIA NSYS and NCU to conduct deep-dive profiling, systematically addressing architectural constraints to minimize data transfer latency and optimize compute resource utilization.
 </p>
 
 </div>
