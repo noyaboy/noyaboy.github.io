@@ -7,11 +7,11 @@ excerpt: 'Abstract: Standard Kalman Filter-based tracking algorithms are computa
 date: 2025-09-03
 venue: 'Fast Machine Learning for Science Conference 2025'
 posterurl: '/files/fastml2025-poster.pdf'
-authors: '<strong>Hao-Chun Liang</strong>, Yuan-Tang Chou†, Bo-Cheng Lai'
+authors: '<strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai'
 citation: '<strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai. (2025). &quot;Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders.&quot; <i>Fast Machine Learning for Science Conference 2025</i>, CERN.'
 ---
 
-<p class="pub-authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou†, Bo-Cheng Lai</p>
+<p class="pub-authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
 
 <p class="pub-venue">Fast Machine Learning for Science Conference 2025, CERN (Hybrid)</p>
 
