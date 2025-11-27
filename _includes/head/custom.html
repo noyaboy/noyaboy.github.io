@@ -14,4 +14,20 @@
 <link rel="icon" href="/images/favicon.ico"/>
 <meta name="theme-color" content="#ffffff"/>
 
+<!-- Expandable excerpt toggle for publications -->
+<script>
+function toggleExcerpt(button) {
+  var excerpt = button.previousElementSibling;
+  if (excerpt.classList.contains('excerpt-collapsed')) {
+    excerpt.classList.remove('excerpt-collapsed');
+    excerpt.classList.add('excerpt-expanded');
+    button.textContent = 'Show less';
+  } else {
+    excerpt.classList.remove('excerpt-expanded');
+    excerpt.classList.add('excerpt-collapsed');
+    button.textContent = 'Show more';
+  }
+}
+</script>
+
 <!-- end custom head snippets -->
