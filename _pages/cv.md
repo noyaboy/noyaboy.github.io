@@ -28,7 +28,7 @@ redirect_from:
   <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
 <ul class="experience-details">
-  <li>Transferred from Dept. of Physics (Rank: 1/65; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
+  <li>Transferred from Dept. of Physics (Top 1 of 65; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
 </ul>
 
 <p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning.</p>
@@ -64,7 +64,7 @@ redirect_from:
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a></strong> <span class="award-stat">(Rank: 1/65)</span><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a></strong> <span class="award-stat">(Top 1 of 65)</span><br>
     <em>National Tsing Hua University (NTHU)</em>
   </div>
   <div class="job-date">Apr 2021</div>
