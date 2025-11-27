@@ -1,0 +1,229 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{center}
+    \textbf{\Huge \scshape Hao-Chun Liang}
+\end{center}
+
+ \begin{center}
+    \vspace{-3mm}
+\small
+\href{mailto:science103555@gmail.com}{\underline{Email}} $|$
+\href{https://www.linkedin.com/in/hao-chun-noah-liang-131348207/}{\underline{Linkedin}} $|$ 0982-955885
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {National Yang Ming Chiao Tung University}{Sep. 2025 -- Jun. 2027 (Exp.)}
+      {M.Eng. in Institute of Pioneer Semiconductor Innovation (ICS \& EDA Group)}{Hsinchu, Taiwan}
+
+
+    \resumeSubheading
+      {National Tsing Hua University}{Sep. 2021 -- Jun. 2024}
+      {B.S. in Electrical Engineering $\vert$ GPA: 4.1/4.3 $\vert$ Distinction Graduation}{Hsinchu, Taiwan}
+
+    \resumeSubheading
+      {National Tsing Hua University}{Sep. 2020 -- Jun. 2021}
+      {B.S. in Physics $\vert$ Transferred to EE (Top 1 of 65; Elite Student Award)}{Hsinchu, Taiwan}
+
+
+  \resumeSubHeadingListEnd
+
+
+%-----------Work Experience-----------
+\section{Work Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Digital IC Design Intern}{Nov. 2024 -- Aug. 2025}
+      {Andes Technology Corporation $\vert$ Acceleration R\&D Division}{Hsinchu, Taiwan}
+
+    \resumeSubheading
+      {Affiliate Trainee (Remote)}{Jun. 2024 -- Present}
+      {A3D3 Institute $\vert$ University of Washington}{Washington, U.S.}
+
+    \resumeSubheading
+      {Graduate Research Assistant}{Sep. 2025 -- Jun. 2027 (Exp.)}
+      {National Yang Ming Chiao Tung University $\vert$ Parallel Computing System Laboratory}{Hsinchu, Taiwan}
+
+  \resumeSubHeadingListEnd
+
+
+%-----------Awards-----------
+\section{Awards \& Certificates}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Excellent Poster Award}{Aug. 2025}
+      {Taiwan and Japan Conference on Circuits and Systems (TJCAS)}{Osaka, Japan}
+
+    \resumeSubheading
+      {Cell-Based Digital Chip Design and Implementation (ADFP - TSMC 16nm)}{Sep. 2024}
+      {Taiwan Semiconductor Research Institute (TSRI)}{Hsinchu, Taiwan}
+
+    \resumeSubheading
+      {Distinction Graduation (Top 5\% of 116 in Professional Elective GPA)}{Jun. 2024}
+      {National Tsing Hua University $\vert$ Electrical Engineering}{Hsinchu, Taiwan}
+
+    \resumeSubheading
+      {College of Science Elite Student Award (Top 1 of 65)}{Apr. 2021}
+      {National Tsing Hua University $\vert$ College of Science}{Hsinchu, Taiwan}
+
+  \resumeSubHeadingListEnd
+
+
+\section{Publications}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates}{}
+      {Fast Machine Learning for Science Conference 2025, CERN $\vert$ \textbf{First Author}}{}
+
+    \resumeSubheading
+      {An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction}{}
+      {Taiwan and Japan Conference on Circuits and Systems (TJCAS) 2025 $\vert$ Second Author}{}
+
+    \resumeSubheading
+      {A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA}{}
+      {VLSI Design/CAD Symposium 2025 $\vert$ Second Author}{}
+
+    \resumeSubheading
+      {Fine-Grained Image Recognition from Scratch with Teacher-Guided Data Augmentation}{}
+      {arXiv $\vert$ Fifth Author}{}
+
+  \resumeSubHeadingListEnd
+
+\section{Projects}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Regfile Automatic Code Generation}{Nov. 2024 -- Present}
+      {Andes Technology Corporation}{Hsinchu, Taiwan}
+
+    \resumeSubheading
+      {CUDA Pipeline Optimization for Particle Tracking at HL-LHC}{Jun. 2024 -- Present}
+      {A3D3 Institute $\vert$ University of Washington}{Washington, U.S.}
+
+    \resumeSubheading
+      {UltraLightweight HDC-CNN for NeurIPS 2025 Weak Lensing Challenge}{2025}
+      {NeurIPS FAIR Universe Challenge}{Top-20 Ranking}
+
+
+  \resumeSubHeadingListEnd
+
+\section{Skills}
+    \textbf{Programming Languages:} Python, C/C++, Verilog/SystemVerilog, HLS, CUDA, Perl, Shell
+
+    \textbf{Profiling Tools:} NVIDIA NSYS, NCU
+
+    \textbf{Domains:} Efficient Machine Learning, Computer Architecture, Digital IC Design, RTL/C++ Codegen
+
+
+
+\end{document}
