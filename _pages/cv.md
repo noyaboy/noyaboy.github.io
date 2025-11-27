@@ -23,7 +23,7 @@ redirect_from:
 <div class="experience-item">
   <div class="job-info">
     <strong><a href="https://dee.site.nthu.edu.tw/index.php?Lang=en" target="_blank">B.S. in Electrical Engineering</a></strong><br>
-    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement"><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></span> <span class="award-stat">(Top 5% in Professional Elective GPA)</span>
+    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement"><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></span>
   </div>
   <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
@@ -56,13 +56,13 @@ redirect_from:
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 5% in Professional Elective GPA)</span><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 5% of 116 in Professional Elective GPA)</span><br>
     <em>National Tsing Hua University (NTHU)</em>
   </div>
   <div class="job-date">Jun 2024</div>
 </div>
 <ul class="experience-details">
-  <li><a href="/files/distinction-rule.pdf" target="_blank">Regulations</a></li>
+  <li><a href="/files/distinction-rule.pdf" target="_blank">Regulation of Distinction Graduation</a></li>
 </ul>
 
 <div class="experience-item">
