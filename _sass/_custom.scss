@@ -333,6 +333,35 @@ body {
   font-style: italic;
 }
 
+/* Expandable excerpt for publications */
+.excerpt-container {
+  position: relative;
+}
+
+.excerpt-collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.excerpt-expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.excerpt-toggle {
+  background: none;
+  border: none;
+  padding: 0.25em 0;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
 /* ==========================================================================
    SIDEBAR ENHANCEMENTS
    ========================================================================== */
@@ -565,6 +594,14 @@ body {
     }
   }
 
+  .excerpt-toggle {
+    color: $color-accent;
+
+    &:hover {
+      color: $color-link-hover;
+    }
+  }
+
   // CV styling
   .cv-pub-authors {
     color: #777777;
@@ -780,6 +817,14 @@ html[data-theme="dark"] {
 
     &:hover {
       background-color: #777777;
+    }
+  }
+
+  .excerpt-toggle {
+    color: $dark-accent;
+
+    &:hover {
+      color: $dark-accent-hover;
     }
   }
 
