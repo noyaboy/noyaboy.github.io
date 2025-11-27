@@ -61,6 +61,9 @@ redirect_from:
   </div>
   <div class="job-date">Jun 2024</div>
 </div>
+<ul class="experience-details">
+  <li><a href="/files/distinction-rule.pdf" target="_blank">Regulations</a></li>
+</ul>
 
 <div class="experience-item">
   <div class="job-info">
