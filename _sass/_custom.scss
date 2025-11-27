@@ -103,6 +103,10 @@ body {
   }
 }
 
+.section-title-muted {
+  // Color set in light/dark mode sections
+}
+
 /* ==========================================================================
    CV LAYOUT ENHANCEMENTS
    ========================================================================== */
@@ -668,6 +672,15 @@ body {
   // Experience
   .experience-details {
     border-left-color: $accent-light;
+
+    li {
+      color: $color-text-secondary;
+    }
+  }
+
+  .section-title-muted {
+    color: $color-text-secondary !important;
+    border-bottom-color: $color-text-secondary !important;
   }
 
   // Portfolio
@@ -865,6 +878,15 @@ html[data-theme="dark"] {
   // Experience details
   .experience-details {
     border-left-color: $dark-bg-subtle;
+
+    li {
+      color: $dark-text-muted;
+    }
+  }
+
+  .section-title-muted {
+    color: $dark-text-muted !important;
+    border-bottom-color: $dark-text-muted !important;
   }
 
   .job-date {

@@ -152,7 +152,7 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <div class="cv-section">
-<h2>Selected Publications &amp; Presentations</h2>
+<h2 class="section-title-muted">Selected Publications &amp; Presentations</h2>
 
 <ul class="cv-publications">{% for post in site.publications reversed limit:4 %}
   <li>
