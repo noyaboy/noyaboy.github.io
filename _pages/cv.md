@@ -27,6 +27,9 @@ redirect_from:
   </div>
   <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
+<ul class="experience-details">
+  <li>Transferred from Dept. of Physics (Rank: 1/65; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
+</ul>
 
 <p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning.</p>
 
@@ -83,6 +86,15 @@ redirect_from:
     <span class="cert-modal-close" onclick="closeModal('adfpModal')">&times;</span>
     <img src="/images/adfp-certificate.jpg" alt="ADFP Certificate">
     <p class="cert-modal-caption">Cell-Based Digital Chip Design and Implementation Certificate - TSRI</p>
+  </div>
+</div>
+
+<!-- Elite Student Award Modal -->
+<div id="eliteModal" class="cert-modal" onclick="closeModal('eliteModal')">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeModal('eliteModal')">&times;</span>
+    <img src="/images/elite-award.png" alt="College of Science Elite Student Award">
+    <p class="cert-modal-caption">College of Science Elite Student Award - NTHU</p>
   </div>
 </div>
 
