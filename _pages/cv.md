@@ -56,13 +56,13 @@ redirect_from:
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 5% of 116 in Professional Elective GPA)</span><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong><br>
     <em>National Tsing Hua University (NTHU)</em>
   </div>
   <div class="job-date">Jun 2024</div>
 </div>
 <ul class="experience-details">
-  <li><a href="/files/distinction-rule.pdf" target="_blank">Regulation of Distinction Graduation</a></li>
+  <li>Top 5% of 116 in Professional Elective GPA with <a href="/files/distinction-rule.pdf" target="_blank">Regulation</a></li>
 </ul>
 
 <div class="experience-item">
