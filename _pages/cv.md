@@ -23,7 +23,7 @@ redirect_from:
 <div class="experience-item">
   <div class="job-info">
     <strong><a href="https://dee.site.nthu.edu.tw/index.php?Lang=en" target="_blank">B.S. in Electrical Engineering</a></strong><br>
-    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement"><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></span> <span class="award-stat">(Top 10 of 116)</span>
+    <em>National Tsing Hua University (NTHU)</em> — GPA: 4.1/4.3, <span class="achievement"><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></span> <span class="award-stat">(Top 5% in Professional Elective GPA)</span>
   </div>
   <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
@@ -56,7 +56,7 @@ redirect_from:
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 10 of 116)</span><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('certModal'); return false;">Distinction Graduation</a></strong> <span class="award-stat">(Top 5% in Professional Elective GPA)</span><br>
     <em>National Tsing Hua University (NTHU)</em>
   </div>
   <div class="job-date">Jun 2024</div>
