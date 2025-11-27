@@ -8,11 +8,11 @@ date: 2025-01-03
 venue: 'VLSI Design / CAD Symposium'
 paperurl: '/files/gnn_trajectory_reconstruction.pdf'
 slidesurl: '/files/vlsicad2025-slides.pdf'
-authors: 'Yun-Chen Yang*, <strong>Hao-Chun Liang*</strong>, Hsuan-Wei Yu*, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey'
-citation: 'Yun-Chen Yang*, <strong>Hao-Chun Liang*</strong>, Hsuan-Wei Yu*, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey. (2025). &quot;A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA.&quot; <i>VLSI Design / CAD Symposium 2025</i>.'
+authors: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey'
+citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey. (2025). &quot;A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA.&quot; <i>VLSI Design / CAD Symposium 2025</i>.'
 ---
 
-<p class="pub-authors">Yun-Chen Yang*, <strong>Hao-Chun Liang*</strong>, Hsuan-Wei Yu*, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
+<p class="pub-authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
 
 <p class="pub-venue">VLSI Design / CAD Symposium, 2025</p>
 
