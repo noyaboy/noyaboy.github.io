@@ -482,7 +482,7 @@ body {
    Monochrome colors optimized for light backgrounds
    ========================================================================== */
 
-@media (prefers-color-scheme: light) {
+:root {
   // Headers
   .page__content h1 {
     color: $color-accent;
@@ -690,7 +690,7 @@ body {
    Monochrome colors optimized for dark backgrounds
    ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
+html[data-theme="dark"] {
   // Dark mode WCAG optimized palette
   $dark-accent: #ffffff;       // White - headings, links
   $dark-accent-hover: #cccccc; // Light gray - hover state
