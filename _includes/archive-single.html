@@ -52,7 +52,7 @@
 
     {% if post.excerpt and post.collection == 'publications' %}
     <div class="excerpt-container">
-      <p class="archive__item-excerpt excerpt-collapsed" itemprop="description">{{ post.excerpt | markdownify }}</p>
+      <p class="archive__item-excerpt excerpt-collapsed" itemprop="description">{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}</p>
       <button class="excerpt-toggle" onclick="toggleExcerpt(this)">Show more</button>
     </div>
     {% elsif post.excerpt and site.read_more != 'enabled' %}
