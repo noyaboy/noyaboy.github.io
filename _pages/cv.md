@@ -62,6 +62,14 @@ redirect_from:
   <div class="job-date">Jun 2024</div>
 </div>
 
+<div class="experience-item">
+  <div class="job-info">
+    <strong><a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a></strong> <span class="award-stat">(Rank: 1/65)</span><br>
+    <em>National Tsing Hua University (NTHU)</em>
+  </div>
+  <div class="job-date">Apr 2021</div>
+</div>
+
 <!-- TJCAS Certificate Modal -->
 <div id="tjcasModal" class="cert-modal" onclick="closeModal('tjcasModal')">
   <div class="cert-modal-content" onclick="event.stopPropagation()">
