@@ -179,6 +179,43 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 <div class="cv-section">
+<h2>Selected Projects</h2>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>Regfile Automatic Code Generation</strong><br>
+    <em><a href="https://www.andestech.com/en/" target="_blank">Andes Technology Corporation</a></em>
+  </div>
+  <div class="job-date">Nov 2024 – Aug 2025</div>
+</div>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>CUDA Pipeline Optimization for Particle Tracking at HL-LHC</strong><br>
+    <em><a href="https://a3d3.ai/" target="_blank">A3D3 Institute</a>, <a href="https://www.washington.edu/" target="_blank">University of Washington</a></em>
+  </div>
+  <div class="job-date">Nov 2024 – Present</div>
+</div>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>UltraLightweight HDC-CNN for NeurIPS 2025 Weak Lensing Challenge</strong> <span class="award-stat">(Top-20 Ranking)</span><br>
+    <em>NeurIPS FAIR Universe Challenge</em>
+  </div>
+  <div class="job-date">Oct 2025 – Nov 2025</div>
+</div>
+
+<div class="experience-item">
+  <div class="job-info">
+    <strong>NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for ViT</strong><br>
+    <em><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/" target="_blank">Parallel Computing System Laboratory</a>, NYCU</em>
+  </div>
+  <div class="job-date">Oct 2025 – Nov 2025</div>
+</div>
+
+</div>
+
+<div class="cv-section">
 <h2 class="section-title-muted">Selected Publications &amp; Presentations</h2>
 
 <ul class="cv-publications">{% for post in site.publications reversed limit:4 %}
