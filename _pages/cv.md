@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-<p style="text-align: center; margin-bottom: 1.5em;"><a href="/files/resume.pdf" class="pub-button" style="font-size: 1em; padding: 0.5em 1.2em;">Download CV (PDF)</a></p>
+<p style="text-align: center; margin: 0 0 0.5em 0;"><a href="/files/resume.pdf" class="pub-button" style="font-size: 0.9em; padding: 0.4em 1em;">Download CV (PDF)</a></p>
 
 <div class="cv-section">
 <h2>Education</h2>
