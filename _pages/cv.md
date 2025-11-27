@@ -183,7 +183,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>Regfile Automatic Code Generation</strong><br>
+    <strong><a href="/portfolio/01-regfile-codegen/">Regfile Automatic Code Generation</a></strong><br>
     <em>Andes Technology Corporation</em>
   </div>
   <div class="job-date">Nov 2024 – Aug 2025</div>
@@ -191,7 +191,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>CUDA Pipeline Optimization for Particle Tracking at HL-LHC</strong><br>
+    <strong><a href="/portfolio/04-traccc-optimization/">CUDA Pipeline Optimization for Particle Tracking at HL-LHC</a></strong><br>
     <em>A3D3 Institute, University of Washington</em>
   </div>
   <div class="job-date">Nov 2024 – Present</div>
@@ -199,7 +199,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>UltraLightweight HDC-CNN for NeurIPS 2025 Weak Lensing Challenge</strong> <span class="award-stat">(Top-20 Ranking)</span><br>
+    <strong><a href="/portfolio/02-cosmology-challenge/">UltraLightweight HDC-CNN for NeurIPS 2025 Weak Lensing Challenge</a></strong> <span class="award-stat">(Top-20 Ranking)</span><br>
     <em>NeurIPS FAIR Universe Challenge</em>
   </div>
   <div class="job-date">Oct 2025 – Nov 2025</div>
@@ -207,7 +207,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong>NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for ViT</strong><br>
+    <strong><a href="/portfolio/03-token-reduction/">NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for ViT</a></strong><br>
     <em>Parallel Computing System Laboratory, NYCU</em>
   </div>
   <div class="job-date">Oct 2025 – Nov 2025</div>
