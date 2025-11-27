@@ -62,7 +62,7 @@ redirect_from:
   <div class="job-date">Jun 2024</div>
 </div>
 <ul class="experience-details">
-  <li>Top 5% of 116 in Professional Elective GPA with <a href="/files/distinction-rule.pdf" target="_blank">Regulation</a></li>
+  <li>Top 5% of 116 in Professional Elective GPA with <a href="/files/distinction-rule.pdf" target="_blank" class="cert-title-link">Regulation</a></li>
 </ul>
 
 <div class="experience-item">
