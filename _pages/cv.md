@@ -28,6 +28,8 @@ redirect_from:
   <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
 
+<p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning.</p>
+
 </div>
 
 <div class="cv-section">
