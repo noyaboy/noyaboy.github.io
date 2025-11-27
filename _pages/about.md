@@ -12,5 +12,3 @@ I am currently pursuing a Master of Engineering at the Institute of Pioneer Semi
 ## Research Interests
 
 I specialize in the intersection of High-Performance Computing (HPC) and Computer Architecture, targeting the rigorous optimization of CUDA pipelines. My work involves using NVIDIA NSYS and NCU to conduct deep-dive profiling, systematically addressing architectural constraints to minimize data transfer latency and optimize compute resource utilization.
-
-<p style="margin-top: 1.5em;"><a href="/files/resume.pdf" class="pub-button" style="font-size: 1em; padding: 0.5em 1.2em;">Download CV (PDF)</a></p>
