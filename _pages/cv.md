@@ -208,7 +208,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="/portfolio/04-traccc-optimization/">CUDA Pipeline Optimization for Particle Tracking at HL-LHC</a></strong><br>
+    <strong><a href="/portfolio/04-traccc-optimization/">Optimization of CUDA Pipeline for Particle Tracking at HL-LHC</a></strong><br>
     <em>A3D3 Institute, University of Washington</em>
   </div>
   <div class="job-date">Nov 2024 – Present</div>
