@@ -224,7 +224,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="/portfolio/03-token-reduction/">NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for ViT</a></strong><br>
+    <strong><a href="/portfolio/03-token-reduction/">NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for Vision Transformers</a></strong><br>
     <em>Parallel Computing System Laboratory, NYCU</em>
   </div>
   <div class="job-date">Oct 2025 – Nov 2025</div>
