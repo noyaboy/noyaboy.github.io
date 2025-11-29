@@ -75,6 +75,14 @@ redirect_from:
   <div class="job-date">Apr 2021</div>
 </div>
 
+<div class="experience-item">
+  <div class="job-info">
+    <strong><a href="#" class="cert-title-link" onclick="openModal('presidentialModal'); return false;">Presidential Award</a></strong> <span class="award-stat">(Received 3 times)</span><br>
+    <em>National Tsing Hua University (NTHU)</em>
+  </div>
+  <div class="job-date">Sep 2020 – Jun 2024</div>
+</div>
+
 <!-- TJCAS Certificate Modal -->
 <div id="tjcasModal" class="cert-modal" onclick="closeModal('tjcasModal')">
   <div class="cert-modal-content" onclick="event.stopPropagation()">
@@ -108,6 +116,15 @@ redirect_from:
     <span class="cert-modal-close" onclick="closeModal('eliteModal')">&times;</span>
     <img src="/images/elite-award.png" alt="College of Science Elite Student Award">
     <p class="cert-modal-caption">College of Science Elite Student Award - NTHU</p>
+  </div>
+</div>
+
+<!-- Presidential Award Modal -->
+<div id="presidentialModal" class="cert-modal" onclick="closeModal('presidentialModal')">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeModal('presidentialModal')">&times;</span>
+    <img src="/images/presidential-award.jpg" alt="Presidential Award">
+    <p class="cert-modal-caption">Presidential Award - NTHU (Received 3 times)</p>
   </div>
 </div>
 
