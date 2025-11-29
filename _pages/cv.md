@@ -174,7 +174,7 @@ document.addEventListener('keydown', function(e) {
     <strong>Affiliate Trainee (Remote)</strong><br>
     <em><a href="https://a3d3.ai/" target="_blank">A3D3 Institute</a>, <a href="https://www.washington.edu/" target="_blank">University of Washington</a></em>
   </div>
-  <div class="job-date">Jun 2024 – Present</div>
+  <div class="job-date">Nov 2024 – Jun 2027 (Expected)</div>
 </div>
 <ul class="experience-details">
   <li>Optimizing CUDA Pipeline for particle trajectory reconstruction in HL-LHC experiments</li>
