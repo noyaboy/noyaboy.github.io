@@ -26,5 +26,6 @@ A processor implementing the RISC-V RV32I instruction set architecture with a cl
 </div>
 
 <p style="margin-top: 1.5em;">
+  <a href="/files/ICLAB_report.pdf" class="pub-button">Paper</a>
   <a href="https://github.com/noyaboy/5-Stage-Pipelined-RISC-V-CPU-Core" class="pub-button">GitHub</a>
 </p>
