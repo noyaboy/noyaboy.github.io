@@ -224,7 +224,7 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="/portfolio/05-riscv-cpu/">5-Stage Pipelined RISC-V CPU Core</a></strong><br>
+    <strong><a href="/portfolio/05-riscv-cpu/">RISC-V 5-Stage Pipelined CPU Core</a></strong><br>
     <em>National Tsing Hua University</em>
   </div>
   <div class="job-date">Dec 2023 – Jan 2024</div>
