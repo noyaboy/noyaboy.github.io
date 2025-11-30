@@ -2,6 +2,7 @@
 title: "RISC-V 5-Stage Pipelined CPU Core"
 excerpt: "A processor implementing the RISC-V RV32I instruction set architecture with a classic five-stage pipeline (IF, ID, EX, MEM, WB), featuring data forwarding and stall units for hazard resolution, dual-bank instruction cache, and single-port data cache. Synthesized at 179.21 MHz on GPDK 45nm."
 collection: portfolio
+paperurl: "/files/ICLAB_report.pdf"
 github: "https://github.com/noyaboy/5-Stage-Pipelined-RISC-V-CPU-Core"
 ---
 
