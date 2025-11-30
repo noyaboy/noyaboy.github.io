@@ -30,7 +30,7 @@ redirect_from:
   <div class="job-date">Sep 2020 – Jun 2024</div>
 </div>
 <ul class="experience-details">
-  <li>Transferred from Dept. of Physics (Top 1 of 65; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
+  <li>Transferred from Dept. of Physics (Top 1 out of 65 students; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
 </ul>
 
 <p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning.</p>
@@ -64,12 +64,12 @@ redirect_from:
   <div class="job-date">Jun 2024</div>
 </div>
 <ul class="experience-details">
-  <li>Top 5% of 116 in Professional Elective GPA with <a href="/files/distinction-rule.pdf" target="_blank" class="cert-title-link">Regulation</a></li>
+  <li>Top 5% out of 116 students in Professional Elective GPA with <a href="/files/distinction-rule.pdf" target="_blank" class="cert-title-link">Regulation</a></li>
 </ul>
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a></strong> <span class="award-stat">(Top 1 of 65)</span><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a></strong> <span class="award-stat">(Top 1 out of 65 students)</span><br>
     <em>National Tsing Hua University (NTHU)</em>
   </div>
   <div class="job-date">Apr 2021</div>
