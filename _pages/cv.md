@@ -224,10 +224,10 @@ document.addEventListener('keydown', function(e) {
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="/portfolio/03-token-reduction/">NVIDIA NSYS/NCU Profile and Analysis of Token Reduction for Vision Transformers</a></strong><br>
-    <em>Parallel Computing System Laboratory, NYCU</em>
+    <strong><a href="/portfolio/05-riscv-cpu/">5-Stage Pipelined RISC-V CPU Core</a></strong><br>
+    <em>National Tsing Hua University</em>
   </div>
-  <div class="job-date">Oct 2025 – Nov 2025</div>
+  <div class="job-date">Sep 2023 – Jan 2024</div>
 </div>
 
 <p style="text-align: center; margin-top: 1em;"><a href="/portfolio/" class="pub-button">View All Projects</a></p>
