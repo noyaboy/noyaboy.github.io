@@ -45,7 +45,7 @@ redirect_from:
     <strong><a href="#" class="cert-title-link" onclick="openModal('eliteGradModal'); return false;">2025 Elite New Graduate Scholarship</a></strong><br>
     <em>Industry Academia Innovation School</em>
   </div>
-  <div class="job-date">2025</div>
+  <div class="job-date">Dec 2025</div>
 </div>
 
 <div class="experience-item">
