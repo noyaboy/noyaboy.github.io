@@ -42,7 +42,7 @@ redirect_from:
 
 <div class="experience-item">
   <div class="job-info">
-    <strong><a href="/files/EliteScholarship.pdf" target="_blank" class="cert-title-link">2025 Elite New Graduate Scholarship</a></strong><br>
+    <strong><a href="#" class="cert-title-link" onclick="openModal('eliteGradModal'); return false;">2025 Elite New Graduate Scholarship</a></strong><br>
     <em>Industry Academia Innovation School</em>
   </div>
   <div class="job-date">2025</div>
@@ -89,6 +89,15 @@ redirect_from:
     <em>National Tsing Hua University (NTHU)</em>
   </div>
   <div class="job-date">Sep 2020 – Jun 2024</div>
+</div>
+
+<!-- Elite New Graduate Scholarship Modal -->
+<div id="eliteGradModal" class="cert-modal" onclick="closeModal('eliteGradModal')">
+  <div class="cert-modal-content" onclick="event.stopPropagation()">
+    <span class="cert-modal-close" onclick="closeModal('eliteGradModal')">&times;</span>
+    <img src="/images/elite-graduate.png" alt="2025 Elite New Graduate Scholarship">
+    <p class="cert-modal-caption">2025 Elite New Graduate Scholarship - Industry Academia Innovation School</p>
+  </div>
 </div>
 
 <!-- TJCAS Certificate Modal -->
