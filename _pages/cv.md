@@ -42,6 +42,14 @@ redirect_from:
 
 <div class="experience-item">
   <div class="job-info">
+    <strong><a href="/files/EliteScholarship.pdf" target="_blank" class="cert-title-link">2025 Elite New Graduate Scholarship</a></strong><br>
+    <em>Industry Academia Innovation School</em>
+  </div>
+  <div class="job-date">2025</div>
+</div>
+
+<div class="experience-item">
+  <div class="job-info">
     <strong><a href="#" class="cert-title-link" onclick="openModal('tjcasModal'); return false;">Excellent Poster Award</a></strong><br>
     <em>Taiwan and Japan Conference on Circuits and Systems (TJCAS)</em>
   </div>
