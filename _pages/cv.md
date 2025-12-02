@@ -43,7 +43,7 @@ redirect_from:
 <div class="experience-item">
   <div class="job-info">
     <strong><a href="#" class="cert-title-link" onclick="openModal('eliteGradModal'); return false;">2025 Elite New Graduate Scholarship</a></strong><br>
-    <em>Industry Academia Innovation School</em>
+    <em>Industry Academia Innovation School, NYCU</em>
   </div>
   <div class="job-date">Dec 2025</div>
 </div>
@@ -96,7 +96,7 @@ redirect_from:
   <div class="cert-modal-content" onclick="event.stopPropagation()">
     <span class="cert-modal-close" onclick="closeModal('eliteGradModal')">&times;</span>
     <img src="/images/elite-graduate.png" alt="2025 Elite New Graduate Scholarship">
-    <p class="cert-modal-caption">2025 Elite New Graduate Scholarship - Industry Academia Innovation School</p>
+    <p class="cert-modal-caption">2025 Elite New Graduate Scholarship - Industry Academia Innovation School, NYCU</p>
   </div>
 </div>
 
