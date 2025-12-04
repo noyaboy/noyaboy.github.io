@@ -18,7 +18,7 @@ tags:
     - [single bit signal](#single-bit-signal)
     - [Multi bit signal](#multi-bit-signal)
   - [Asynchronous FIFO](#asynchronous-fifo)
-    - [Gray code 編碼方式](#gray-code-編碼方式)
+    - [Gray code Encoding Method](#gray-code-encoding-method)
 - [MUX](#mux)
   - [Full adder](#full-adder)
 - [Synthesis](#synthesis)
@@ -32,12 +32,12 @@ tags:
   - [Setup & Hold check](#setup--hold-check)
   - [Delay bound of D flip-flop](#delay-bound-of-d-flip-flop)
   - [Special timing path](#special-timing-path)
-- [除頻電路](#除頻電路)
-  - [除2電路](#除2電路)
+- [Frequency Divider Circuits](#frequency-divider-circuits)
+  - [Divide-by-2 Circuit](#divide-by-2-circuit)
     - [Without cnt](#without-cnt)
     - [With cnt](#with-cnt)
-  - [除N電路](#除n電路)
-- [數位IC面試心得](#數位ic面試心得)
+  - [Divide-by-N Circuit](#divide-by-n-circuit)
+- [Digital IC Interview Experience](#digital-ic-interview-experience)
   - [MTK](#mtk)
   - [RTK](#rtk)
   - [NTK](#ntk)
@@ -57,44 +57,44 @@ tags:
 ![Flip-flop](https://i.imgur.com/tv3FbCD.png)
 
 ### **Metastability**
-metastable會發生在flip-flop的output(Q pin)穩定的時間大於clk-to-q($t_{cq}$)時間 。
+Metastability occurs when the time for the flip-flop's output (Q pin) to stabilize is greater than the clk-to-q ($t_{cq}$) time.
 ![Metastability 1](https://i.imgur.com/y3WG22Q.png)
 ![Metastability 2](https://i.imgur.com/kp5y9dk.png)
 
-`Solution (double flip-flop synchronizer)`:直接在後一級的flip-flop後面再接上由相同clk驅動的flip-flop。
+`Solution (double flip-flop synchronizer)`: Simply add another flip-flop driven by the same clock after the subsequent flip-flop stage.
 
 ### **Clock domain crossing** (CDC)
 
 #### **single bit signal**
-→可用double flip-flop synchronizer解決
-但不適合用於pulse signal，因此使用Pulse synchronizer
+→ Can be solved using double flip-flop synchronizer
+However, it is not suitable for pulse signals, so Pulse synchronizer is used instead.
 
-**Pulse synchronizer**：透過XOR gate將pulse signal轉為level signal，穿過double flip-flop後，再透過XOR gate將level signal轉回pulse signal
+**Pulse synchronizer**: Convert the pulse signal to a level signal through an XOR gate, pass it through a double flip-flop, then convert the level signal back to a pulse signal through another XOR gate.
 ![Pulse synchronizer](https://i.imgur.com/UuK9bvn.png)
-Pulse synchronizer之侷限性：source clk domain的連續兩個pulse之間的間隔要足夠大，滿足destination domain的3個edge要求。
+Limitation of Pulse synchronizer: The interval between two consecutive pulses in the source clock domain must be large enough to satisfy the 3 edge requirement of the destination domain.
 
 #### **Multi bit signal**
-無法使用2F/F synchronizer同步multi-bits的data，因為2F/F synchronizer的delay有隨機性，可能花一個cycle同步，也可能花兩個cycle同步，這會造成multi-bits的每一個不穩定。
+Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 2F/F synchronizer is random - it may take one cycle to synchronize or two cycles, which causes each bit of multi-bits to be unstable.
 
-Three solutions：
-* **Load signal**：使用pulse synchronizer產生load signal
+Three solutions:
+* **Load signal**: Use pulse synchronizer to generate load signal
 ![Load signal](https://i.imgur.com/gDR7VW7.png)
 
-* **額外兩級flip-flop**：利用double flip-flop synchronizer將data同步到destination domain，接著透過兩級flip-flop將data敲2級，接著比較這3級，如果皆相等代表synchronizer同步到的值為穩定的。
+* **Additional two-stage flip-flop**: Use double flip-flop synchronizer to synchronize data to the destination domain, then pass the data through two stages of flip-flops, then compare these 3 stages. If all are equal, it means the value synchronized by the synchronizer is stable.
 * **Asynchronous FIFO**
 
 ### **Asynchronous FIFO**
-處理multi-bit CDC Problem
+Handles multi-bit CDC Problem
 
-將read pointer & write pointer 轉為gray code表示，由於gray code在每個edge只會有一個bit改變，因此可透過2F/F synchronizer將其轉移到destination domain。
+Convert read pointer & write pointer to gray code representation. Since gray code only changes one bit at each edge, it can be transferred to the destination domain through 2F/F synchronizer.
 
-#### Gray code 編碼方式
-1. 相鄰的兩個gray code之間只有其中一個bit不同
-2. 當binary code第N個bit從0變到1的時候，之後gray code的N-1個bits會跟前半段軸對稱，而N bit之前的bits一樣
+#### Gray code Encoding Method
+1. Only one bit differs between two adjacent gray codes
+2. When the Nth bit of binary code changes from 0 to 1, the subsequent N-1 bits of gray code will be symmetrical to the first half, while the bits before the Nth bit remain the same
 ![Gray code 1](https://i.imgur.com/Mfsh1nk.png)
 ![Gray code 2](https://i.imgur.com/CVVPyQy.png)
 
-如果Asynchronous FIFO depth 不是2的冪次方，則利用gray code對稱軸的特性，改變起始點，確保每個相鄰的gray code只有一個bit的變化。
+If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of gray code to change the starting point, ensuring that each adjacent gray code only has one bit change.
 ![Gray code 3](https://i.imgur.com/yBLXnAv.png)
 
 ## **MUX**
@@ -134,7 +134,7 @@ Clock signal arrives only when data is to be switched
 ![Clock gated](https://i.imgur.com/oazpEi2.png)
 
 CG with AND gate may have glitch due to unstable enable signal
-→ **Glitch prevention**：Enable generated by <span style="color:red">latch with negative clk</span>
+→ **Glitch prevention**: Enable generated by <span style="color:red">latch with negative clk</span>
 ![Glitch prevention](https://i.imgur.com/WfrnP41.png)
 
 ## STA
@@ -161,11 +161,11 @@ CG with AND gate may have glitch due to unstable enable signal
 
 ### **Type of STA**
 *  Path-based STA
-    - 真實情況，考慮每個path實際delay
-    - 計算複雜
+    - Real situation, considers actual delay of each path
+    - Complex computation
 *  Block-based STA
-    - 只考慮每個node的best/worst case
-    - 較悲觀
+    - Only considers best/worst case of each node
+    - More pessimistic
 
 ### **Setup & Hold check**
 * `Setup` (Max delay)
@@ -194,27 +194,27 @@ $Slack=AT-RT$
 ![Delay bound 2](https://i.imgur.com/Jd9shRH.png)
 
 ### **Special timing path**
-* `False paths` 會被STA忽略的timing path
+* `False paths` - Timing paths ignored by STA
     1. Unexercised path
-        - 正常情況下不會使用的path
+        - Paths not used under normal conditions
         - e.g., probe for debugging
     2. Irrelevant path
-        - 速度太慢、不在意速度的path
+        - Paths that are too slow or where speed doesn't matter
         - e.g., reset
     3. Asynchronous path
-        - 在不同clock domains的path
+        - Paths in different clock domains
         - clock domain crossing (CDC) : transfer data from clk1 to clk2
-        - CDC 需進階的timing去修正
+        - CDC requires advanced timing correction
     4. Logically impossible path
-        - 存在於電路，但不可能會有data經過
-        - 應該被PrimeTime發現
+        - Exists in the circuit but data cannot possibly pass through
+        - Should be detected by PrimeTime
     5. Combinational loops
 
-* `Multicycle paths` 會花費超過一個cycle的timing path
+* `Multicycle paths` - Timing paths that take more than one cycle
 
-## **除頻電路**
+## **Frequency Divider Circuits**
 
-### **除2電路**
+### **Divide-by-2 Circuit**
 
 #### Without cnt
 
@@ -260,7 +260,7 @@ end
 endmodule
 ```
 
-### **除N電路**
+### **Divide-by-N Circuit**
 ```verilog
 module divn    (
   input  clk,
@@ -310,50 +310,50 @@ end
 endmodule
 ```
 
-除5電路 waveform
-![除5電路 waveform](https://i.imgur.com/AKh5gQR.png)
+Divide-by-5 Circuit Waveform
+![Divide-by-5 Circuit Waveform](https://i.imgur.com/AKh5gQR.png)
 
-## **數位IC面試心得**
+## **Digital IC Interview Experience**
 
 ### **MTK**
-部門：CAI, SPD1, SPD3, ADCT
+Departments: CAI, SPD1, SPD3, ADCT
 
-考題：setup/hold計算, CDC(multi bit), false path & multi cycle差異和設值, input/output delay, 同步非同步差異, gray code, 給Waveform寫出RTL , IC design flow, systemverilog , 用mux組出adder和乘法器, async FIFO, 用NAND拼出OR, 除3電路, pre/post sim差異, 合成需要哪些檔案, 除1.5倍電路, cache如何加速cpu, clock gated
+Interview Questions: setup/hold calculation, CDC (multi bit), false path & multi cycle differences and settings, input/output delay, synchronous vs asynchronous differences, gray code, write RTL from waveform, IC design flow, SystemVerilog, build adder and multiplier using MUX, async FIFO, build OR using NAND, divide-by-3 circuit, pre/post sim differences, files needed for synthesis, divide-by-1.5 circuit, how cache accelerates CPU, clock gated
 
 ### **RTK**
-部門：CN, RDC, MM
+Departments: CN, RDC, MM
 
-考題：blocking/non-blocking, 除頻電路, critical path計算, 用兩個latch組出DFF, low power design, 反向計數器, clock skew對setup/hold影響, setup/hold violation解決方法, 什麼寫法會有latch, 用mux設計出NAND, IC design flow, 合成時clock timing如何決定, hold time可以為0否, pipeline, multicycle值怎麼設定, PVT violation
+Interview Questions: blocking/non-blocking, frequency divider circuit, critical path calculation, build DFF using two latches, low power design, down counter, clock skew effect on setup/hold, setup/hold violation solutions, what coding causes latch, design NAND using MUX, IC design flow, how to determine clock timing during synthesis, can hold time be 0, pipeline, how to set multicycle value, PVT violation
 
 ### **NTK**
-部門：TCON, iHome
+Departments: TCON, iHome
 
-考題：除2電路(不要用cnt處理),給RTL畫出合成電路,解釋metastability, input/output delay作用&設值大小 , pipeline處理, fault coverage, set max/min delay for violation, async rst問題, blocking/non-blocking, 用NAND/NOR組出comb電路, setup/hold有負值情況, 為什麼hold time跟clk沒關係, full adder, 進制轉換
+Interview Questions: divide-by-2 circuit (without using cnt), draw synthesized circuit from RTL, explain metastability, input/output delay purpose & setting values, pipeline handling, fault coverage, set max/min delay for violation, async rst issues, blocking/non-blocking, build combinational circuit using NAND/NOR, setup/hold negative value cases, why hold time is independent of clk, full adder, number base conversion
 
 ### **PHISON**
-部門：SSD, EMMC
+Departments: SSD, EMMC
 
-考題：setup/hold不等式, clock gated, IC design flow, 同步非同步, 除頻電路, 用PMOS和NMOS組NAND & INV, CDC(multi bit), metastability, Xor truth table, multicycle & false path, 用mux設計出XOR, 計數器input到output要多少cycle ,critical path, 如何避免clock skew/latch, cell library的hold time有什麼特色, systemverilog作用
+Interview Questions: setup/hold inequality, clock gated, IC design flow, synchronous vs asynchronous, frequency divider circuit, build NAND & INV using PMOS and NMOS, CDC (multi bit), metastability, XOR truth table, multicycle & false path, design XOR using MUX, how many cycles from counter input to output, critical path, how to avoid clock skew/latch, characteristics of hold time in cell library, SystemVerilog purpose
 
 ### **SMI**
-部門：UFS, SSD
+Departments: UFS, SSD
 
-考題：CDC, FSM, 用and/or畫出mux, low power design, timing violation處理方式, IC design flow, sdf內容, latch/DFF差異, glitch產生原因, 用NOR拼出AND, input/output delay, 說明timing report , 敲兩級DFF就可以解所有CDC否, 畫出clock/data path of setup/hold, MUX怎麼擺才能省面積, 用inv和mux組Xor, 除3電路, edge/level trigger
+Interview Questions: CDC, FSM, draw MUX using AND/OR, low power design, timing violation handling methods, IC design flow, SDF contents, latch/DFF differences, glitch causes, build AND using NOR, input/output delay, explain timing report, can two-stage DFF solve all CDC, draw clock/data path of setup/hold, how to place MUX to save area, build XOR using INV and MUX, divide-by-3 circuit, edge/level trigger
 
 ### **GUC**
-部門：APR, DFT
+Departments: APR, DFT
 
-考題：APR flow, power ring, CTS作用, IR drop, scan chain, test/fault coverage差異, scan reorder, lockup latch, BIST, stuck at fault , Transition delay fault,  cross talk, electromigration, 畫SDFF, Boundary scan, 為什麼需要DFT, DRC/LVS, ATPG, 如何確定APR function和RTL相同, APR command, 先進process在back-end會碰到的問題, LEF和DB檔內容, wire load model
+Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, test/fault coverage differences, scan reorder, lockup latch, BIST, stuck at fault, transition delay fault, cross talk, electromigration, draw SDFF, boundary scan, why DFT is needed, DRC/LVS, ATPG, how to verify APR function matches RTL, APR command, problems encountered in back-end with advanced process, LEF and DB file contents, wire load model
 
 ## **Reference**
 
 ### CDC
 [https://www.zhihu.com/people/li-hong-jiang-54](https://www.zhihu.com/people/li-hong-jiang-54)
 
-### 數位IC面試心得
+### Digital IC Interview Experience
 [https://www.dcard.tw/f/tech_job/p/238023076](https://www.dcard.tw/f/tech_job/p/238023076)
 
-### 除頻器
+### Frequency Divider
 [https://www.cnblogs.com/oomusou/archive/2008/07/31/verilog_clock_divider.html](https://www.cnblogs.com/oomusou/archive/2008/07/31/verilog_clock_divider.html)
 
-###### tags: `工作`
+###### tags: `Work`
