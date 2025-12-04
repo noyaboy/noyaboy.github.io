@@ -68,6 +68,13 @@ tags:
 - [Pipeline Concept](#pipeline-concept)
 - [Division Algorithm](#division-algorithm)
 
+### Backend / Physical Design
+- [CTS & Clock Uncertainty](#cts--clock-uncertainty)
+- [Routing Congestion](#routing-congestion-solutions)
+- [Chip Area Estimation](#chip-area-estimation)
+- [Buffer vs Inverter](#buffer-vs-inverter-in-cts)
+- [ECO Flow](#eco-engineering-change-order)
+
 ### Memory
 - [SRAM vs DRAM](#sram-vs-dram)
 
@@ -1196,6 +1203,131 @@ Result:   quotient=0010(2), remainder=0010(2)
           8 ÷ 3 = 2 remainder 2 ✓
 ```
 
+## **Backend / Physical Design**
+
+### **CTS & Clock Uncertainty**
+
+Clock uncertainty accounts for timing variations in the clock network.
+
+| Stage | Setup Uncertainty | Hold Uncertainty |
+|-------|-------------------|------------------|
+| **Pre-CTS** | PLL jitter + estimated skew | Estimated skew |
+| **Post-CTS** | PLL jitter only | 0 (actual skew known) |
+
+**Why uncertainty changes after CTS:**
+- Pre-CTS: Clock tree doesn't exist, so skew must be estimated
+- Post-CTS: Actual clock tree is built, real skew is calculated
+
+**CTS Optimization Goals:**
+- Minimize clock skew across all flip-flops
+- Balance insertion delay
+- Meet target transition times
+- Minimize power consumption
+
+**CTS Best Practices:**
+- Select appropriate clock root locations
+- Use minimum RC metal layers for clock routing
+- Consider double-width routing for reduced resistance
+- Set reasonable maximum fanout limits
+- Avoid overly tight skew targets (causes over-buffering)
+
+### **Routing Congestion Solutions**
+
+Congestion occurs when routing demand exceeds available tracks.
+
+| Location | Solutions |
+|----------|-----------|
+| **Between memories** | Increase spacing, rotate RAM orientation, align address/data pins |
+| **Around macros** | Add keepout zones, placement blockages, halo regions |
+| **Standard cell areas** | Congestion-driven placement, reduce cell density, avoid pin-dense cells |
+| **Power routing** | Optimize power grid, use wider straps |
+
+**Congestion Analysis:**
+```tcl
+# ICC2 congestion analysis
+report_congestion -routing_stage global
+report_congestion -routing_stage detail
+```
+
+**Prevention Strategies:**
+- Use congestion-driven placement
+- Set cell density limits (e.g., 70-80%)
+- Add routing blockages in congested areas
+- Increase routing resources (more metal layers)
+
+### **Chip Area Estimation**
+
+**Core-limited design:**
+```
+Total Area = Core Area + Power Ring + PAD Ring
+
+Core Area = RAM Area + Macro Area + Standard Cell Area
+
+RAM Area = Self Area + Power Ring + Keepout
+
+Standard Cell Area = (Gate Count × Area per Gate) / Utilization
+```
+
+**Utilization Guidelines:**
+
+| Metal Layers | Typical Utilization |
+|--------------|---------------------|
+| 4-5 layers | 50-60% |
+| 6-7 layers | 60-70% |
+| 8+ layers | 70-80% |
+
+**IO-limited design:**
+- Total area determined by number of IOs, not logic
+- Solutions: staggered IO, flip-chip, narrow IO cells
+
+### **Buffer vs Inverter in CTS**
+
+| Aspect | Buffer | Inverter |
+|--------|--------|----------|
+| **Logic** | Non-inverting | Inverting |
+| **Area** | Larger (2 inverters) | Smaller |
+| **Power** | Higher | Lower |
+| **Delay** | Higher | Lower |
+| **Modification** | Easier to add/remove | Requires pairs |
+
+**When to use each:**
+- **Buffers**: Simpler logic, easier ECO modifications
+- **Inverters**: Better PPA (Power, Performance, Area), but must use in pairs
+
+### **ECO (Engineering Change Order)**
+
+ECO is the process of making late-stage design modifications.
+
+| ECO Type | Description | Constraints |
+|----------|-------------|-------------|
+| **Pre-mask** | Before GDSII tape-out | Any netlist changes allowed |
+| **Post-mask** | After masks fabricated | Limited to spare cells, metal-only changes |
+
+**Pre-mask ECO Flow:**
+1. Modify RTL or netlist
+2. ECO place and route
+3. Incremental verification (DRC, LVS, timing)
+
+**Post-mask ECO Flow:**
+1. Identify available spare cells or gate array cells
+2. Map logic changes to spare cells
+3. Metal-only routing changes
+4. Verify functionality preserved
+
+**Spare Cell Strategy:**
+- Insert spare cells during implementation (~2-5% of design)
+- Distribute evenly across chip
+- Include mix of cell types (INV, NAND, NOR, FF)
+
+**SDC Development:**
+
+| Constraint Type | Source |
+|-----------------|--------|
+| **Clock definitions** | Design specification (frequency, duty cycle) |
+| **IO timing** | System requirements, board-level timing |
+| **False paths** | Design architecture (mutually exclusive modes) |
+| **Multicycle paths** | Design intent (slow paths by design) |
+
 ## **Memory**
 
 ### **SRAM vs DRAM**
@@ -1616,5 +1748,7 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 ### Verilog & ASIC Flow
 - [Digital IC Design Interview Guide (CSDN)](https://blog.csdn.net/qq_36045093/article/details/120302713)
 - [Digital IC Design Fundamentals (CSDN)](https://blog.csdn.net/qq_36045093/article/details/119741748)
+- [Digital IC Classic 100 Questions (CSDN)](https://blog.csdn.net/qq_41394155/article/details/89349935)
+- [Backend 100 Questions Q91-100 (CSDN)](https://blog.csdn.net/weixin_39522408/article/details/112765703)
 
 ###### tags: `Work`
