@@ -466,10 +466,13 @@ body {
 }
 
 /* Code blocks - improved formatting */
-.page__content pre {
-  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace;
-  font-size: 1em !important;
-  line-height: 1.6;
+.page__content pre,
+div.highlighter-rouge pre,
+figure.highlight pre,
+.highlight pre {
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
   padding: 1em 1.25em;
   margin: 1.5em 0;
   overflow-x: auto;
@@ -479,28 +482,29 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.page__content pre code {
-  font-size: 1em !important;
+.page__content pre code,
+div.highlighter-rouge pre code,
+figure.highlight pre code,
+.highlight pre code,
+.highlight code {
+  font-size: 16px !important;
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace !important;
 }
 
 .page__content code {
-  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace;
-  font-size: 1em !important;
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace !important;
+  font-size: 16px !important;
 }
 
 /* Override syntax highlighter font sizes */
-.page__content div.highlighter-rouge,
-.page__content figure.highlight {
-  font-size: 1em !important;
+div.highlighter-rouge,
+figure.highlight {
+  font-size: 16px !important;
 }
 
-.page__content .highlight {
-  font-size: 1em !important;
-}
-
-.page__content div.highlighter-rouge pre,
-.page__content figure.highlight pre {
-  font-size: 1em !important;
+.highlight {
+  font-size: 16px !important;
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace !important;
 }
 
 /* Inline code */
@@ -510,7 +514,7 @@ body {
   background-color: #f0f0f0;
   padding: 0.2em 0.45em;
   border-radius: 3px;
-  font-size: 0.95em !important;
+  font-size: 15px !important;
 }
 
 /* Tables - responsive with horizontal scroll */
