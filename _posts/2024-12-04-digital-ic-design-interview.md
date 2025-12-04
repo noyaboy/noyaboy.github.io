@@ -161,6 +161,19 @@ Tr = Tclk - (Tsu + Tckq + Tpd)
 - With **3 flip-flops**: mandated for space/medical devices
 - With **4 flip-flops**: MTBF can reach 1,000+ years
 
+**Practical MTBF Example:**
+```
+Given: Fclk = 100 MHz, Fdata = 10 MHz, τ = 0.3 ns, T0 = 1 ns
+With Tr = 5 ns (2FF synchronizer at 100 MHz):
+  MTBF = e^(5/0.3) / (1e-9 × 100e6 × 10e6)
+       = e^16.67 / (1e6)
+       ≈ 17.4 million seconds ≈ 201 days
+
+With Tr = 10 ns (3FF synchronizer):
+  MTBF = e^(10/0.3) / (1e6)
+       ≈ 2.8e8 years (effectively infinite)
+```
+
 `Solution (double flip-flop synchronizer)`: Simply add another flip-flop driven by the same clock after the subsequent flip-flop stage. The second flip-flop gives the first flip-flop an entire clock cycle to resolve from any metastable state.
 
 ### **Clock domain crossing** (CDC)
@@ -233,6 +246,19 @@ Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 
 Handles multi-bit CDC Problem
 
 Convert read pointer & write pointer to gray code representation. Since gray code only changes one bit at each edge, it can be transferred to the destination domain through 2F/F synchronizer.
+
+**Why Gray Code is Essential:**
+```
+Binary counter (WRONG for CDC):
+  3 → 4: 011 → 100 (3 bits change simultaneously!)
+  If sampled mid-transition: could read 000, 001, 010, 100, 101, 110, 111
+  → FIFO may incorrectly report full/empty
+
+Gray code counter (SAFE for CDC):
+  3 → 4: 010 → 110 (only 1 bit changes)
+  If sampled mid-transition: either 010 or 110
+  → At worst, pointer is off by 1 (conservative full/empty)
+```
 
 #### Gray code Encoding Method
 1. Only one bit differs between two adjacent gray codes
@@ -669,6 +695,22 @@ Each CLB contains:
 - Any 4-input Boolean function can be implemented
 - Larger functions use multiple LUTs with routing
 
+**LUT Example (2-input AND gate: Y = A·B):**
+```
+Inputs address SRAM locations; stored value is the output.
+
+Address (BA) | SRAM Content | Output Y
+-------------|--------------|----------
+    00       |      0       |    0
+    01       |      0       |    0
+    10       |      0       |    0
+    11       |      1       |    1
+
+The LUT is programmed with: 0001 (binary) = truth table of AND
+```
+
+**Why LUTs are powerful:** Same hardware implements ANY 4-input function by changing SRAM contents. XOR, MUX, comparator - all use identical LUT structure.
+
 #### **I/O Block (IOB)**
 
 Each I/O element contains:
@@ -983,6 +1025,28 @@ Slack = AT - RT  (positive = timing met)
 ```
 
 ![Hold](https://i.imgur.com/ZJxtQoR.png)
+
+**Why Slack Formulas Differ:**
+- **Setup**: Data must arrive BEFORE required time → Slack = RT - AT (positive means early enough)
+- **Hold**: Data must stay AFTER required time → Slack = AT - RT (positive means held long enough)
+
+**Practical Timing Example:**
+```
+Given: Tcycle = 10 ns, Tsetup = 0.5 ns, Thold = 0.3 ns
+       Tcq = 0.4 ns, Tpd = 3.0 ns, Tskew = 0.1 ns
+
+Setup Analysis:
+  Data arrives at: 0 + 0.4 + 3.0 = 3.4 ns
+  Data required by: 10 - 0.5 = 9.5 ns
+  Setup Slack = 9.5 - 3.4 = +6.1 ns ✓ (met)
+
+Hold Analysis:
+  Data changes at: 0 + 0.4 + 3.0 = 3.4 ns (next cycle data)
+  Data must hold until: 0 + 0.3 = 0.3 ns
+  Hold Slack = 3.4 - 0.3 = +3.1 ns ✓ (met)
+```
+
+**Key Insight:** Hold time is independent of clock period. Reducing clock frequency fixes setup violations but NOT hold violations.
 
 ### **Recovery & Removal Time**
 
