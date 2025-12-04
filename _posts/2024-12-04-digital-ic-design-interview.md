@@ -105,6 +105,7 @@ Tr = Tclk - (Tsu + Tckq + Tpd)
 ### **Clock domain crossing** (CDC)
 
 **Types of CDC:**
+
 | Type | Description |
 |------|-------------|
 | **Asynchronous** | Clocks have different frequencies and no phase relationship |
