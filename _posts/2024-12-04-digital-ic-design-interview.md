@@ -33,12 +33,18 @@ tags:
 - [Building Gates Using NAND](#building-gates-using-nand-only)
 
 ### Design Flow
-- [ASIC Design Flow](#design-flow)
-- [ASIC vs FPGA Comparison](#design-flow)
+- [Front-End Design](#front-end-design)
+- [Back-End Design](#back-end-design)
+- [ASIC vs FPGA Comparison](#asic-vs-fpga-comparison)
+
+### FPGA
+- [FPGA Architecture](#fpga-architecture)
+- [FPGA Configuration Modes](#fpga-configuration-modes)
 
 ### Synthesis
 - [Technology Library & PVT](#technology-library)
 - [Delay Models](#delay-models)
+- [SDF File Format](#sdf-file-format)
 - [Clock Gating](#clock-gating)
 
 ### Static Timing Analysis (STA)
@@ -68,6 +74,8 @@ tags:
 - [2-Stage FF CDC Limits](#can-2-stage-ff-solve-all-cdc-problems)
 - [Synthesis Files](#files-needed-for-synthesis)
 - [Glitch Prevention](#glitch-causes-and-prevention)
+- [Dual-Edge Detection](#dual-edge-detection)
+- [Common Protocols](#common-protocols)
 
 ### Interview Experience
 - [MTK](#mtk) | [RTK](#rtk) | [NTK](#ntk) | [PHISON](#phison) | [SMI](#smi) | [GUC](#guc)
@@ -362,26 +370,52 @@ Cout = ab + aCin + bCin
 ## Design Flow
 
 ```
-RTL Design → Functional Simulation → Logic Synthesis → Formal Verification
-     ↓
-   STA → Floorplanning → Placement → CTS → Routing → Physical Verification → Tape-out
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           FRONT-END DESIGN                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Specification → Detailed Design → HDL Coding → Pre-Simulation →         │
+│ Logic Synthesis → STA → Formal Verification                              │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           BACK-END DESIGN                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│ DFT → Floorplanning → Placement → CTS → Routing → Physical Verification │
+│ → Tape-out                                                               │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
+
+### **Front-End Design**
 
 | Stage | Description | Key Tools |
 |-------|-------------|-----------|
-| **RTL Design** | Write Verilog/VHDL code | VS Code, Vim |
-| **Functional Simulation** | Verify logic correctness | VCS, ModelSim, Xcelium |
-| **Logic Synthesis** | Convert RTL to gate-level netlist | Design Compiler, Genus |
-| **Formal Verification** | Prove RTL ≡ Netlist equivalence | Formality, Conformal |
+| **Specification** | Define customer requirements and architecture | Documentation |
+| **Detailed Design** | Module planning, interface definition | Documentation |
+| **HDL Coding** | Write RTL-level Verilog/VHDL | VS Code, Vim, Quartus, Vivado |
+| **Pre-Simulation** | Functional verification against spec | VCS, ModelSim, NC-Verilog, Xcelium |
+| **Logic Synthesis** | Convert RTL to gate-level netlist | Design Compiler, Synplify, Genus |
 | **STA** | Verify timing constraints | PrimeTime, Tempus |
-| **Floorplanning** | Define block placement, power grid | ICC2, Innovus |
-| **Placement** | Place standard cells | ICC2, Innovus |
-| **CTS** | Build clock distribution network | ICC2, Innovus |
-| **Routing** | Connect all signals | ICC2, Innovus |
+| **Formal Verification** | Prove RTL ≡ Netlist equivalence | Formality, Conformal |
+
+**Logic Synthesis**: Translates HDL code into a gate-level netlist. The synthesizer maps RTL constructs to standard cells from the technology library.
+
+### **Back-End Design**
+
+| Stage | Description | Key Tools |
+|-------|-------------|-----------|
+| **DFT (Design For Test)** | Insert scan chains for testability | DFT Compiler, Tessent |
+| **Floorplanning** | Define block placement, power grid, I/O | ICC2, Innovus |
+| **Placement** | Place standard cells optimally | ICC2, Innovus |
+| **CTS (Clock Tree Synthesis)** | Build symmetric clock distribution | ICC2, Innovus |
+| **Routing** | Connect all signals with metal layers | ICC2, Innovus |
 | **Physical Verification** | DRC, LVS, ERC checks | Calibre, ICV |
 | **Tape-out** | Generate GDSII for fabrication | — |
 
-**ASIC vs FPGA Comparison:**
+**CTS Purpose**: Create a balanced clock distribution network to minimize clock skew across all flip-flops.
+
+**DFT Purpose**: Make the design testable after fabrication by inserting scan chains, BIST, and boundary scan logic.
+
+### **ASIC vs FPGA Comparison**
 
 | Aspect | ASIC | FPGA |
 |--------|------|------|
@@ -393,12 +427,127 @@ RTL Design → Functional Simulation → Logic Synthesis → Formal Verification
 | **Power Efficiency** | Best | Higher power consumption |
 | **Application** | Mass production, high performance | Prototyping, low volume, flexibility |
 
-**FPGA Architecture Components:**
-- **Logic Elements**: LUT (Look-Up Table) + Flip-flops
-- **I/O Blocks**: Configurable for multiple electrical standards (LVDS, LVCMOS, etc.)
-- **Embedded RAM**: Configurable as FIFO, dual-port RAM, CAM
-- **Clock Resources**: PLLs, clock trees, global/regional routing
-- **Hard IP**: DSP blocks, SerDes, embedded processors
+## **FPGA**
+
+### **FPGA Architecture**
+
+FPGA consists of 6 main components:
+
+| Component | Description |
+|-----------|-------------|
+| **IOB (I/O Block)** | Programmable I/O units for various electrical standards |
+| **CLB (Configurable Logic Block)** | Basic logic unit = LUT + Register |
+| **Clock Resources** | PLLs, global/regional clock trees |
+| **Routing Resources** | Interconnect for signal routing |
+| **Block RAM** | Embedded memory blocks |
+| **Hard IP** | DSP blocks, SerDes, embedded processors |
+
+#### **CLB (Configurable Logic Block)**
+
+Each CLB contains:
+- **LUT (Look-Up Table)**: Implements combinational logic (typically 4-6 inputs)
+- **Flip-flops/Registers**: Configurable as D, T, JK, or SR types
+- **Carry chain**: Fast arithmetic operations
+- **MUX**: Output selection
+
+**How LUT Works:**
+- A 4-input LUT stores 2⁴ = 16 bits in SRAM
+- Any 4-input Boolean function can be implemented
+- Larger functions use multiple LUTs with routing
+
+#### **I/O Block (IOB)**
+
+Each I/O element contains:
+- Input register
+- Output register
+- Output enable register
+- Programmable pull-up/pull-down
+- Configurable for: LVDS, LVCMOS, SSTL, HSTL, etc.
+
+#### **Routing Resources**
+
+| Type | Description |
+|------|-------------|
+| **Global routing** | Dedicated lines for clock and reset signals |
+| **Long lines** | Inter-bank signal routing |
+| **Short lines** | Adjacent logic unit connections |
+| **Row connections (R4, R24)** | Horizontal routing within rows |
+| **Column connections (C4, C16)** | Vertical routing within columns |
+
+#### **Clock Resources**
+
+Three levels of clock distribution:
+
+| Level | Description |
+|-------|-------------|
+| **Global clock** | Dedicated CLK pins → global clock tree → all FFs |
+| **Regional clock** | BUFR buffers for clock regions |
+| **I/O clock** | Local clocks for SerDes/DDR interfaces |
+
+**PLL (Phase-Locked Loop):**
+- Frequency multiplication/division
+- Phase shifting
+- Duty cycle correction
+- Clock deskewing
+
+#### **Embedded Memory (Block RAM)**
+
+Configurable memory blocks (e.g., M4K = 4608 bits):
+
+| Mode | Description |
+|------|-------------|
+| **Single-port RAM** | One read/write port |
+| **Simple dual-port** | One read port, one write port |
+| **True dual-port** | Two independent read/write ports |
+| **ROM** | Read-only with initialized data |
+| **FIFO** | First-in-first-out buffer |
+| **Shift register** | Serial data storage |
+
+### **FPGA Configuration Modes**
+
+FPGA configuration data must be loaded on every power-up (volatile SRAM-based).
+
+#### **JTAG Configuration**
+
+| Signal | Direction | Description |
+|--------|-----------|-------------|
+| **TDI** | Input | Test Data In |
+| **TDO** | Output | Test Data Out |
+| **TMS** | Input | Test Mode Select |
+| **TCK** | Input | Test Clock |
+| **TRST** | Input | Test Reset (optional, tie to GND if unused) |
+
+**Use case:** Development, debugging, boundary scan testing.
+
+#### **Master Mode**
+
+FPGA controls the configuration process and provides clock to external memory.
+
+| Mode | Description | Speed |
+|------|-------------|-------|
+| **Master Serial (AS)** | FPGA reads bit-by-bit from serial flash | Slower |
+| **Master Parallel** | FPGA reads 8+ bits per cycle from parallel flash | Faster |
+
+#### **Slave Mode**
+
+External processor/controller manages configuration.
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| **Slave Parallel** | Processor writes 8-bit data | Processor-controlled boot |
+| **Slave Serial** | Processor sends serial bitstream | Pin-constrained designs |
+
+#### **Multi-Chip Cascade**
+
+Multiple FPGAs share single configuration memory:
+- First FPGA in **Master** mode
+- Subsequent FPGAs in **Slave** mode
+- Daisy-chain connection via configuration pins
+- Reduces memory chip count
+
+**Mode Selection:**
+- Typically 3 MSEL pins determine configuration mode
+- Set before power-up or during reset
 
 ## **Synthesis**
 
@@ -422,10 +571,54 @@ Can be solved by wire load model
 | **Distributed** | Per-gate delay based on fanout/load | Medium | Early synthesis |
 | **Module-path** | Specify block delays (SDF) | High | Timing-critical designs |
 
-**SDF (Standard Delay Format):**
-- Contains timing information for post-synthesis/post-layout simulation
-- Includes cell delays, interconnect delays, timing checks
-- Used for back-annotation in gate-level simulation
+### **SDF File Format**
+
+**SDF (Standard Delay Format)** contains timing information for post-synthesis/post-layout simulation.
+
+**Delay Format:** `(min:typ:max)`
+
+| Value | Description | Use Case |
+|-------|-------------|----------|
+| **min** | Best-case delay (fast corner) | Hold time analysis |
+| **typ** | Typical delay (nominal corner) | Functional verification |
+| **max** | Worst-case delay (slow corner) | Setup time analysis |
+
+**SDF File Contents:**
+
+```
+(DELAYFILE
+  (SDFVERSION "3.0")
+  (DESIGN "my_design")
+  (INSTANCE top)
+  (CELL
+    (CELLTYPE "AND2")
+    (INSTANCE U1)
+    (DELAY
+      (ABSOLUTE
+        (IOPATH A Y (0.1:0.2:0.3) (0.1:0.2:0.3))  // rise:fall
+        (IOPATH B Y (0.1:0.2:0.3) (0.1:0.2:0.3))
+      )
+    )
+  )
+  (INTERCONNECT net1 net2 (0.05:0.1:0.15))  // wire delay
+)
+```
+
+**Key SDF Constructs:**
+
+| Construct | Description |
+|-----------|-------------|
+| **IOPATH** | Cell input-to-output delay |
+| **INTERCONNECT** | Wire/net delay between cells |
+| **SETUPHOLD** | Setup and hold timing checks |
+| **PERIOD** | Clock period constraint |
+| **WIDTH** | Minimum pulse width |
+
+**Usage in Simulation:**
+```tcl
+# Verilog simulation with SDF back-annotation
+vcs design.v -sdf max:top:timing.sdf
+```
 
 ### **Clock gating**
 Clock signal arrives only when data is to be switched
@@ -455,18 +648,39 @@ CG with AND gate may have glitch due to unstable enable signal
 ## STA
 
 ### **DTA v.s. STA**
-* `DTA (Testbench simulation)`
-    Cons.
-    1. Impossible to do exhaustive analysis.
-    2. Hard to identify the cause of failure.
-    3. Need more resource.
-* `STA`
-    Cons.
-    1. Synchronous only.
-    2. Tricky constraints on some special case.
-        - False path
-        - Multicycle path
-        - Multiple clocks
+
+| Aspect | DTA (Dynamic) | STA (Static) |
+|--------|---------------|--------------|
+| **Method** | Simulation with test vectors + SDF | Traverses all timing paths |
+| **Input required** | Test vectors/stimuli | Constraints only |
+| **Coverage** | Depends on test quality | All paths analyzed |
+| **Speed** | Very slow | Fast |
+| **Memory** | High | Low |
+| **Circuit type** | Any (sync/async) | Synchronous only |
+| **Tools** | VCS, ModelSim, NC-Verilog | PrimeTime, Tempus |
+
+**STA Advantages:**
+- No input stimuli required
+- Finds nearly all critical paths
+- Fast execution, low memory usage
+- Exhaustive path analysis
+
+**STA Disadvantages:**
+- Synchronous circuits only
+- Cannot verify functionality
+- Tricky constraints for special cases:
+  - False paths
+  - Multicycle paths
+  - Multiple clock domains
+
+**DTA Advantages:**
+- Works for any circuit type (including asynchronous)
+- Verifies both timing and functionality
+
+**DTA Disadvantages:**
+- Critical paths may be missed (depends on vectors)
+- Very slow simulation
+- High memory and compute requirements
 
 ### **Pre-simulation vs Post-simulation**
 
@@ -971,6 +1185,82 @@ write_sdc output.sdc
 - Use Gray code for counters crossing domains
 - Add synchronizers for async signals
 - Use glitch-free clock gating cells (latch-based ICG)
+
+### **Dual-Edge Detection**
+
+Detect both rising and falling edges of a signal:
+
+```verilog
+module dual_edge_detect (
+    input  clk,
+    input  rst_n,
+    input  sig_in,
+    output rise_edge,
+    output fall_edge,
+    output any_edge
+);
+
+reg sig_d1, sig_d2;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        sig_d1 <= 1'b0;
+        sig_d2 <= 1'b0;
+    end else begin
+        sig_d1 <= sig_in;
+        sig_d2 <= sig_d1;
+    end
+end
+
+assign rise_edge = sig_d1 & ~sig_d2;   // 0→1 transition
+assign fall_edge = ~sig_d1 & sig_d2;   // 1→0 transition
+assign any_edge  = sig_d1 ^ sig_d2;    // any transition
+
+endmodule
+```
+
+**Timing Diagram:**
+```
+sig_in:   ────┐     ┌─────┐     ┌────
+              └─────┘     └─────┘
+sig_d1:   ─────┐     ┌─────┐     ┌───
+               └─────┘     └─────┘
+sig_d2:   ──────┐     ┌─────┐     ┌──
+                └─────┘     └─────┘
+rise:     ──────╥─────────╥──────────
+                ║         ║
+fall:     ────────────╥─────────╥────
+                      ║         ║
+```
+
+### **Common Protocols**
+
+Key protocols in digital IC design:
+
+| Protocol | Full Name | Description |
+|----------|-----------|-------------|
+| **SPI** | Serial Peripheral Interface | 4-wire synchronous serial (MOSI, MISO, SCLK, CS) |
+| **I2C** | Inter-Integrated Circuit | 2-wire serial (SDA, SCL), multi-master |
+| **UART** | Universal Async Receiver/Transmitter | Asynchronous serial, start/stop bits |
+| **LVDS** | Low-Voltage Differential Signaling | High-speed differential pairs |
+| **DDR** | Double Data Rate | Data on both clock edges |
+| **SerDes** | Serializer/Deserializer | Parallel ↔ serial conversion |
+| **PCIe** | PCI Express | High-speed serial interconnect |
+| **USB** | Universal Serial Bus | Differential serial, multiple speeds |
+| **JTAG** | Joint Test Action Group | Boundary scan, debugging (IEEE 1149.1) |
+| **AXI** | Advanced eXtensible Interface | ARM AMBA bus protocol |
+
+**DDR Concept:**
+- Transfers data on both rising and falling clock edges
+- Effectively doubles data rate without increasing clock frequency
+- Used in DDR SDRAM (DDR3, DDR4, DDR5)
+
+```
+CLK:    ──┐  ┌──┐  ┌──┐  ┌──
+          └──┘  └──┘  └──┘
+SDR:    ──D0────D1────D2────  (1 bit per cycle)
+DDR:    ──D0─D1─D2─D3─D4─D5─  (2 bits per cycle)
+```
 
 ## **Digital IC Interview Experience**
 
