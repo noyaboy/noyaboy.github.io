@@ -2,12 +2,49 @@
 title: "Digital IC Design Interview"
 date: 2024-12-04
 permalink: /blog/digital-ic-design-interview/
-toc: true
-toc_label: "Table of Contents"
-toc_sticky: true
+toc: false
 tags:
   - Interview
   - Digital IC Design
+---
+
+## Table of Contents
+- [ICD Knowledge](#icd-knowledge)
+  - [Latch](#latch)
+  - [Flip-flop](#flip-flop)
+  - [Metastability](#metastability)
+  - [Clock domain crossing (CDC)](#clock-domain-crossing-cdc)
+    - [single bit signal](#single-bit-signal)
+    - [Multi bit signal](#multi-bit-signal)
+  - [Asynchronous FIFO](#asynchronous-fifo)
+    - [Gray code 編碼方式](#gray-code-編碼方式)
+- [MUX](#mux)
+  - [Full adder](#full-adder)
+- [Synthesis](#synthesis)
+  - [Technology library](#technology-library)
+  - [Undefined interconnect](#undefined-interconnect)
+  - [Clock gated](#clock-gated)
+- [STA](#sta)
+  - [DTA v.s. STA](#dta-vs-sta)
+  - [Types of timing path](#types-of-timing-path)
+  - [Type of STA](#type-of-sta)
+  - [Setup & Hold check](#setup--hold-check)
+  - [Delay bound of D flip-flop](#delay-bound-of-d-flip-flop)
+  - [Special timing path](#special-timing-path)
+- [除頻電路](#除頻電路)
+  - [除2電路](#除2電路)
+    - [Without cnt](#without-cnt)
+    - [With cnt](#with-cnt)
+  - [除N電路](#除n電路)
+- [數位IC面試心得](#數位ic面試心得)
+  - [MTK](#mtk)
+  - [RTK](#rtk)
+  - [NTK](#ntk)
+  - [PHISON](#phison)
+  - [SMI](#smi)
+  - [GUC](#guc)
+- [Reference](#reference)
+
 ---
 
 ## ICD Knowledge
