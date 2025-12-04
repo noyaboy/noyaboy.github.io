@@ -436,11 +436,36 @@ body {
    MOBILE RESPONSIVENESS
    ========================================================================== */
 
+/* Tablet and smaller - moderate padding reduction */
+@media (max-width: 768px) {
+  #main {
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+  }
+
+  .breadcrumbs {
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+  }
+}
+
+/* Mobile screens - reduced padding for better content width */
 @media (max-width: 600px) {
+  #main {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-top: 1.5em;
+  }
+
+  .breadcrumbs {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
   .author__avatar img {
-    width: 234px !important;
-    height: 234px !important;
-    max-width: 234px !important;
+    width: 200px !important;
+    height: 200px !important;
+    max-width: 200px !important;
   }
 
   .experience-item {
@@ -458,8 +483,39 @@ body {
 
   .page__content,
   .page__inner-wrap {
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+  }
+
+  /* Certificate modal - better mobile display */
+  .cert-modal-content {
+    max-width: 95%;
+    padding: 1em;
+  }
+}
+
+/* Very small screens - minimal but present padding */
+@media (max-width: 400px) {
+  #main {
+    padding-left: 0.35em;
+    padding-right: 0.35em;
+  }
+
+  .breadcrumbs {
+    padding-left: 0.35em;
+    padding-right: 0.35em;
+  }
+
+  .page__content,
+  .page__inner-wrap {
+    padding-left: 0.15em;
+    padding-right: 0.15em;
+  }
+
+  .author__avatar img {
+    width: 160px !important;
+    height: 160px !important;
+    max-width: 160px !important;
   }
 }
 
