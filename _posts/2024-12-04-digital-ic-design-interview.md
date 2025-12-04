@@ -18,14 +18,19 @@ tags:
     - [Multi bit signal](#multi-bit-signal)
   - [Asynchronous FIFO](#asynchronous-fifo)
     - [Gray code Encoding Method](#gray-code-encoding-method)
+- [Verilog Fundamentals](#verilog-fundamentals)
+  - [Blocking vs Non-blocking Assignments](#blocking-vs-non-blocking-assignments)
 - [MUX](#mux)
   - [Full adder](#full-adder)
+- [ASIC Design Flow](#asic-design-flow)
 - [Synthesis](#synthesis)
   - [Technology library](#technology-library)
   - [Undefined interconnect](#undefined-interconnect)
+  - [Delay Models](#delay-models)
   - [Clock gating](#clock-gating)
 - [STA](#sta)
   - [DTA v.s. STA](#dta-vs-sta)
+  - [Pre-simulation vs Post-simulation](#pre-simulation-vs-post-simulation)
   - [Types of timing path](#types-of-timing-path)
   - [Type of STA](#type-of-sta)
   - [Setup & Hold check](#setup--hold-check)
@@ -118,9 +123,19 @@ However, it is not suitable for pulse signals, so Pulse synchronizer is used ins
 
 **Best Practice:** Avoid combinatorial logic immediately before synchronizer flip-flops. Combinational logic tends to glitch multiple times before settling, increasing metastability risk.
 
+**Types of Single-bit Synchronizers:**
+
+| Synchronizer | Description | Use Case |
+|--------------|-------------|----------|
+| **Level** | 2-FF synchronizer for static signals | Slow-changing control signals |
+| **Edge** | Detects edge transitions across domains | Clock enables, interrupts |
+| **Pulse** | XOR-based, converts pulse→level→pulse | Fast pulses (req/ack) |
+
 **Pulse synchronizer**: Convert the pulse signal to a level signal through an XOR gate, pass it through a double flip-flop, then convert the level signal back to a pulse signal through another XOR gate.
 ![Pulse synchronizer](https://i.imgur.com/UuK9bvn.png)
 Limitation of Pulse synchronizer: The interval between two consecutive pulses in the source clock domain must be large enough to satisfy the 3 edge requirement of the destination domain.
+
+**Edge synchronizer**: Similar to pulse synchronizer but outputs a pulse when detecting rising/falling edge in the destination domain.
 
 #### **Multi bit signal**
 Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 2F/F synchronizer is random - it may take one cycle to synchronize or two cycles, which causes each bit of multi-bits to be unstable.
@@ -162,6 +177,38 @@ assign G[0] = bin[1] ^ bin[0];
 If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of gray code to change the starting point, ensuring that each adjacent gray code only has one bit change.
 ![Gray code 3](https://i.imgur.com/yBLXnAv.png)
 
+## **Verilog Fundamentals**
+
+### **Blocking vs Non-blocking Assignments**
+
+| Assignment | Symbol | Behavior | Use Case |
+|------------|--------|----------|----------|
+| **Blocking** | `=` | Executes sequentially, blocks next statement | Combinational logic |
+| **Non-blocking** | `<=` | Executes concurrently, updates at end of time step | Sequential logic |
+
+**Key Rules:**
+- Use **non-blocking (`<=`)** for sequential logic (flip-flops, registers)
+- Use **blocking (`=`)** for combinational logic
+- Never mix blocking and non-blocking in the same always block
+
+```verilog
+// WRONG - causes race condition
+always @(posedge clk) begin
+    b = a;      // blocking
+    c = b;      // c gets value of a (immediate)
+end
+
+// CORRECT - proper sequential behavior
+always @(posedge clk) begin
+    b <= a;     // non-blocking
+    c <= b;     // c gets OLD value of b
+end
+```
+
+**Why it matters:** Blocking assignments in sequential logic can create unintended combinational paths during synthesis, leading to simulation/synthesis mismatch.
+
+---
+
 ## **MUX**
 
 ### **Full adder**
@@ -185,6 +232,32 @@ Cout = ab + aCin + bCin
 
 ![Full adder](https://i.imgur.com/k9lPhQQ.png)
 
+## **ASIC Design Flow**
+
+```
+RTL Design → Functional Simulation → Logic Synthesis → Formal Verification
+     ↓
+   STA → Floorplanning → Placement → CTS → Routing → Physical Verification → Tape-out
+```
+
+| Stage | Description | Key Tools |
+|-------|-------------|-----------|
+| **RTL Design** | Write Verilog/VHDL code | VS Code, Vim |
+| **Functional Simulation** | Verify logic correctness | VCS, ModelSim, Xcelium |
+| **Logic Synthesis** | Convert RTL to gate-level netlist | Design Compiler, Genus |
+| **Formal Verification** | Prove RTL ≡ Netlist equivalence | Formality, Conformal |
+| **STA** | Verify timing constraints | PrimeTime, Tempus |
+| **Floorplanning** | Define block placement, power grid | ICC2, Innovus |
+| **Placement** | Place standard cells | ICC2, Innovus |
+| **CTS** | Build clock distribution network | ICC2, Innovus |
+| **Routing** | Connect all signals | ICC2, Innovus |
+| **Physical Verification** | DRC, LVS, ERC checks | Calibre, ICV |
+| **Tape-out** | Generate GDSII for fabrication | — |
+
+**FPGA vs ASIC:**
+- FPGA: RTL → Synthesis → P&R → Bitstream generation (programmable)
+- ASIC: Full flow above → GDSII → Mask fabrication (fixed)
+
 ## **Synthesis**
 
 ### **Technology library**
@@ -198,6 +271,19 @@ Technology libraries characterize cells under different PVT (Process, Voltage, T
 
 ### **Undefined interconnect**
 Can be solved by wire load model
+
+### **Delay Models**
+
+| Model | Description | Accuracy | Use Case |
+|-------|-------------|----------|----------|
+| **Lumped** | Single delay value per gate | Low | Quick estimation |
+| **Distributed** | Per-gate delay based on fanout/load | Medium | Early synthesis |
+| **Module-path** | Specify block delays (SDF) | High | Timing-critical designs |
+
+**SDF (Standard Delay Format):**
+- Contains timing information for post-synthesis/post-layout simulation
+- Includes cell delays, interconnect delays, timing checks
+- Used for back-annotation in gate-level simulation
 
 ### **Clock gating**
 Clock signal arrives only when data is to be switched
@@ -239,6 +325,21 @@ CG with AND gate may have glitch due to unstable enable signal
         - False path
         - Multicycle path
         - Multiple clocks
+
+### **Pre-simulation vs Post-simulation**
+
+| Aspect | Pre-simulation | Post-simulation |
+|--------|----------------|-----------------|
+| **Stage** | Before synthesis | After synthesis/P&R |
+| **Netlist** | RTL (behavioral) | Gate-level |
+| **Timing** | Ideal (unit delay or no delay) | Real delays from SDF |
+| **Purpose** | Functional verification | Timing verification |
+| **Speed** | Fast | Slow |
+| **Accuracy** | Logic only | Includes timing effects |
+
+**Post-synthesis simulation:** Uses gate-level netlist + SDF (Standard Delay Format) for timing annotation.
+
+**Post-layout simulation:** Most accurate, includes actual routing delays and parasitics.
 
 ### **Types of timing path**
 * reg (clk) → reg (D) : Register to Register
@@ -513,5 +614,8 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 
 ### Frequency Divider
 - [https://www.cnblogs.com/oomusou/archive/2008/07/31/verilog_clock_divider.html](https://www.cnblogs.com/oomusou/archive/2008/07/31/verilog_clock_divider.html)
+
+### Verilog & ASIC Flow
+- [Digital IC Design Interview Guide (CSDN)](https://blog.csdn.net/qq_36045093/article/details/120302713)
 
 ###### tags: `Work`
