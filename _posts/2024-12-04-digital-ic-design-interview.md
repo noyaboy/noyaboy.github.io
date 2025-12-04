@@ -10,66 +10,70 @@ tags:
 ---
 
 ## Table of Contents
-- [ICD Knowledge](#icd-knowledge)
-  - [Latch vs Flip-flop](#latch-vs-flip-flop)
-  - [Metastability](#metastability)
-  - [Clock domain crossing (CDC)](#clock-domain-crossing-cdc)
-    - [single bit signal](#single-bit-signal)
-    - [Multi bit signal](#multi-bit-signal)
-  - [Asynchronous FIFO](#asynchronous-fifo)
-    - [Gray code Encoding Method](#gray-code-encoding-method)
-  - [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
-- [Verilog Fundamentals](#verilog-fundamentals)
-  - [Blocking vs Non-blocking Assignments](#blocking-vs-non-blocking-assignments)
-  - [FSM (Finite State Machine)](#fsm-finite-state-machine---three-stage-coding)
-- [MUX](#mux)
-  - [Full adder](#full-adder)
-- [ASIC Design Flow](#asic-design-flow)
-- [Synthesis](#synthesis)
-  - [Technology library](#technology-library)
-  - [Undefined interconnect](#undefined-interconnect)
-  - [Delay Models](#delay-models)
-  - [Clock gating](#clock-gating)
-- [STA](#sta)
-  - [DTA v.s. STA](#dta-vs-sta)
-  - [Pre-simulation vs Post-simulation](#pre-simulation-vs-post-simulation)
-  - [Types of timing path](#types-of-timing-path)
-  - [Type of STA](#type-of-sta)
-  - [Setup & Hold check](#setup--hold-check)
-  - [Setup & Hold Violation Solutions](#setup--hold-violation-solutions)
-  - [Delay bound of D flip-flop](#delay-bound-of-d-flip-flop)
-  - [Special timing path](#special-timing-path)
-- [Low Power Design Techniques](#low-power-design-techniques)
-- [Frequency Divider Circuits](#frequency-divider-circuits)
-  - [Divide-by-2 Circuit](#divide-by-2-circuit)
-    - [Without cnt](#without-cnt)
-    - [With cnt](#with-cnt)
-  - [Divide-by-N Circuit](#divide-by-n-circuit)
-- [Common Interview Q&A](#common-interview-qa)
-  - [Input/Output Delay](#inputoutput-delay)
-  - [What Coding Causes Latch Inference?](#what-coding-causes-latch-inference)
-  - [Pipeline Concept](#pipeline-concept)
-  - [Clock Skew Effect on Setup/Hold](#clock-skew-effect-on-setuphold)
-  - [Can Hold Time Be Zero or Negative?](#can-hold-time-be-zero-or-negative)
-  - [SystemVerilog Purpose](#systemverilog-purpose)
-  - [Building Gates Using MUX](#building-gates-using-mux)
-  - [Building Gates Using NAND Only](#building-gates-using-nand-only)
-  - [How Cache Accelerates CPU](#how-cache-accelerates-cpu)
-  - [Can 2-Stage FF Solve All CDC Problems?](#can-2-stage-ff-solve-all-cdc-problems)
-  - [Files Needed for Synthesis](#files-needed-for-synthesis)
-  - [Glitch Causes and Prevention](#glitch-causes-and-prevention)
-- [Digital IC Interview Experience](#digital-ic-interview-experience)
-  - [MTK](#mtk)
-  - [RTK](#rtk)
-  - [NTK](#ntk)
-  - [PHISON](#phison)
-  - [SMI](#smi)
-  - [GUC](#guc)
-- [Reference](#reference)
+
+### Fundamentals
+- [Latch vs Flip-flop](#latch-vs-flip-flop)
+- [Metastability](#metastability)
+- [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
+
+### Clock Domain Crossing (CDC)
+- [CDC Overview](#clock-domain-crossing-cdc)
+- [Single-bit Synchronization](#single-bit-signal)
+- [Multi-bit Synchronization](#multi-bit-signal)
+- [Asynchronous FIFO & Gray Code](#asynchronous-fifo)
+
+### Verilog & RTL Design
+- [Blocking vs Non-blocking](#blocking-vs-non-blocking-assignments)
+- [FSM Three-Stage Coding](#fsm-finite-state-machine---three-stage-coding)
+- [What Causes Latch Inference?](#what-coding-causes-latch-inference)
+
+### Combinational Logic
+- [Full Adder](#full-adder)
+- [Building Gates Using MUX](#building-gates-using-mux)
+- [Building Gates Using NAND](#building-gates-using-nand-only)
+
+### Design Flow
+- [ASIC Design Flow](#design-flow)
+- [ASIC vs FPGA Comparison](#design-flow)
+
+### Synthesis
+- [Technology Library & PVT](#technology-library)
+- [Delay Models](#delay-models)
+- [Clock Gating](#clock-gating)
+
+### Static Timing Analysis (STA)
+- [DTA vs STA](#dta-vs-sta)
+- [Pre-sim vs Post-sim](#pre-simulation-vs-post-simulation)
+- [Timing Path Types](#types-of-timing-path)
+- [Setup & Hold Analysis](#setup--hold-check)
+- [Timing Violation Solutions](#setup--hold-violation-solutions)
+- [Special Timing Paths](#special-timing-path)
+
+### Low Power Design
+- [Power Reduction Techniques](#low-power-design-techniques)
+
+### Circuit Examples
+- [Frequency Dividers](#frequency-divider-circuits)
+- [Pipeline Concept](#pipeline-concept)
+
+### Quick Reference Q&A
+- [Input/Output Delay](#inputoutput-delay)
+- [Clock Skew Effects](#clock-skew-effect-on-setuphold)
+- [Hold Time Zero/Negative?](#can-hold-time-be-zero-or-negative)
+- [SystemVerilog Purpose](#systemverilog-purpose)
+- [Cache & CPU](#how-cache-accelerates-cpu)
+- [2-Stage FF CDC Limits](#can-2-stage-ff-solve-all-cdc-problems)
+- [Synthesis Files](#files-needed-for-synthesis)
+- [Glitch Prevention](#glitch-causes-and-prevention)
+
+### Interview Experience
+- [MTK](#mtk) | [RTK](#rtk) | [NTK](#ntk) | [PHISON](#phison) | [SMI](#smi) | [GUC](#guc)
+
+### [References](#reference)
 
 ---
 
-## ICD Knowledge
+## Fundamentals
 
 ### Latch vs Flip-flop
 
@@ -329,7 +333,7 @@ end
 
 ---
 
-## **MUX**
+## Combinational Logic
 
 ### **Full adder**
 
@@ -352,7 +356,7 @@ Cout = ab + aCin + bCin
 
 ![Full adder](https://i.imgur.com/k9lPhQQ.png)
 
-## **ASIC Design Flow**
+## Design Flow
 
 ```
 RTL Design → Functional Simulation → Logic Synthesis → Formal Verification
