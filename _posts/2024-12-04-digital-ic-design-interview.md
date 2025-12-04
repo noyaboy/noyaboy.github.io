@@ -89,7 +89,7 @@ Three solutions：
 
 #### Gray code 編碼方式
 1. 相鄰的兩個gray code之間只有其中一個bit不同
-2. 當binary code第N個bit從0變到1的時候，之後grap code的N-1個bits會跟前半段軸對稱，而N bit之前的bits一樣
+2. 當binary code第N個bit從0變到1的時候，之後gray code的N-1個bits會跟前半段軸對稱，而N bit之前的bits一樣
 ![Gray code 1](https://i.imgur.com/Mfsh1nk.png)
 ![Gray code 2](https://i.imgur.com/CVVPyQy.png)
 
@@ -127,7 +127,7 @@ $Cout=ab+aCin+bCin$
 ### **Undefined interconnect**
 Can be solved by wire load model
 
-### Clock gated
+### **Clock gated**
 Clock signal arrives only when data is to be switched
 → Reduce dynamic power dissipation
 ![Clock gated](https://i.imgur.com/oazpEi2.png)
@@ -141,7 +141,7 @@ CG with AND gate may have glitch due to unstable enable signal
 ### **DTA v.s. STA**
 * `DTA (Testbench simulation)`
     Cons.
-    1. Imposible to do exhaustive analysis.
+    1. Impossible to do exhaustive analysis.
     2. Hard to identify the cause of failure.
     3. Need more resource.
 * `STA`
@@ -354,3 +354,5 @@ endmodule
 
 ### 除頻器
 [https://www.cnblogs.com/oomusou/archive/2008/07/31/verilog_clock_divider.html](https://www.cnblogs.com/oomusou/archive/2008/07/31/verilog_clock_divider.html)
+
+###### tags: `工作`
