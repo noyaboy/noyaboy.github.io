@@ -45,6 +45,19 @@ tags:
     - [Without cnt](#without-cnt)
     - [With cnt](#with-cnt)
   - [Divide-by-N Circuit](#divide-by-n-circuit)
+- [Common Interview Q&A](#common-interview-qa)
+  - [Input/Output Delay](#inputoutput-delay)
+  - [What Coding Causes Latch Inference?](#what-coding-causes-latch-inference)
+  - [Pipeline Concept](#pipeline-concept)
+  - [Clock Skew Effect on Setup/Hold](#clock-skew-effect-on-setuphold)
+  - [Can Hold Time Be Zero or Negative?](#can-hold-time-be-zero-or-negative)
+  - [SystemVerilog Purpose](#systemverilog-purpose)
+  - [Building Gates Using MUX](#building-gates-using-mux)
+  - [Building Gates Using NAND Only](#building-gates-using-nand-only)
+  - [How Cache Accelerates CPU](#how-cache-accelerates-cpu)
+  - [Can 2-Stage FF Solve All CDC Problems?](#can-2-stage-ff-solve-all-cdc-problems)
+  - [Files Needed for Synthesis](#files-needed-for-synthesis)
+  - [Glitch Causes and Prevention](#glitch-causes-and-prevention)
 - [Digital IC Interview Experience](#digital-ic-interview-experience)
   - [MTK](#mtk)
   - [RTK](#rtk)
@@ -673,6 +686,248 @@ endmodule
 
 Divide-by-5 Circuit Waveform
 ![Divide-by-5 Circuit Waveform](https://i.imgur.com/AKh5gQR.png)
+
+## **Common Interview Q&A**
+
+### **Input/Output Delay**
+
+**Purpose:** Model external delays for timing analysis at chip boundaries.
+
+```tcl
+# Input delay: time from external clock edge to data arriving at input pin
+set_input_delay -clock CLK -max 3.0 [get_ports data_in]
+set_input_delay -clock CLK -min 1.0 [get_ports data_in]
+
+# Output delay: time required for data to be stable at output before external capture
+set_output_delay -clock CLK -max 2.5 [get_ports data_out]
+set_output_delay -clock CLK -min 0.5 [get_ports data_out]
+```
+
+**How to determine values:**
+- Based on external device timing specs (setup/hold of receiving chip)
+- PCB trace delays
+- Typically 30-60% of clock period for conservative design
+
+### **What Coding Causes Latch Inference?**
+
+Incomplete conditional assignments in combinational logic:
+
+```verilog
+// WRONG - creates latch (missing else)
+always @(*) begin
+    if (sel)
+        out = a;
+    // no else → latch inferred to hold previous value
+end
+
+// WRONG - incomplete case
+always @(*) begin
+    case (sel)
+        2'b00: out = a;
+        2'b01: out = b;
+        // missing 2'b10, 2'b11 → latch inferred
+    endcase
+end
+
+// CORRECT - complete assignment
+always @(*) begin
+    if (sel)
+        out = a;
+    else
+        out = b;  // explicit else
+end
+
+// CORRECT - use default
+always @(*) begin
+    case (sel)
+        2'b00: out = a;
+        2'b01: out = b;
+        default: out = 1'b0;  // covers all cases
+    endcase
+end
+```
+
+### **Pipeline Concept**
+
+Pipeline divides a long combinational path into shorter stages with registers, allowing higher clock frequency at the cost of latency.
+
+```
+Without pipeline: Tclk ≥ Tcq + Tlogic_total + Tsetup
+
+With N-stage pipeline: Tclk ≥ Tcq + (Tlogic_total/N) + Tsetup
+```
+
+**Trade-offs:**
+- **Throughput**: Same (1 result per cycle after pipeline fills)
+- **Latency**: Increased by N cycles
+- **Frequency**: Can be ~N× higher
+- **Area**: More registers needed
+
+### **Clock Skew Effect on Setup/Hold**
+
+**Clock skew** = arrival time difference between clocks at launch and capture flip-flops.
+
+```
+Positive skew: Capture clock arrives LATER than launch clock
+Negative skew: Capture clock arrives EARLIER than launch clock
+```
+
+| Skew Type | Setup | Hold |
+|-----------|-------|------|
+| **Positive** (+Tskew) | Helps (more time) | Hurts (less margin) |
+| **Negative** (-Tskew) | Hurts (less time) | Helps (more margin) |
+
+**Useful skew:** Intentionally adding positive skew to fix setup violations (but watch hold!).
+
+### **Can Hold Time Be Zero or Negative?**
+
+**Yes!** Hold time can be zero or even negative.
+
+- **Thold = 0**: Data can change immediately after clock edge
+- **Thold < 0** (negative): Data can change slightly BEFORE clock edge
+
+This occurs in fast flip-flop designs where internal delays ensure data is already captured before the clock edge fully propagates. Common in advanced process nodes.
+
+**Why hold time is independent of clock period:** Hold is measured from the SAME clock edge that captured the data, not the next edge. It only depends on flip-flop internal timing, not clock frequency.
+
+### **SystemVerilog Purpose**
+
+Extensions over Verilog for:
+
+| Feature | Purpose |
+|---------|---------|
+| **Data types** | `logic`, `bit`, `int`, `enum`, `struct`, `union` |
+| **OOP** | Classes, inheritance for testbenches |
+| **Assertions** | `assert`, `assume`, `cover` for formal verification |
+| **Constraints** | `randomize()` for constrained random verification |
+| **Interfaces** | Bundle signals, simplify connections |
+| **Clocking blocks** | Specify timing for testbench sampling |
+| **Covergroups** | Functional coverage collection |
+
+### **Building Gates Using MUX**
+
+**2:1 MUX behavior:** `Y = S ? I1 : I0`
+
+```
+Implement NOT using MUX:
+Y = A ? 0 : 1  →  NOT(A)
+    ┌───┐
+0 ──┤ 1 │
+    │MUX├── Y = NOT(A)
+1 ──┤ 0 │
+    └─┬─┘
+      A
+
+Implement AND using MUX:
+Y = B ? A : 0  →  A AND B
+    ┌───┐
+0 ──┤ 0 │
+    │MUX├── Y = A·B
+A ──┤ 1 │
+    └─┬─┘
+      B
+
+Implement OR using MUX:
+Y = B ? 1 : A  →  A OR B
+    ┌───┐
+A ──┤ 0 │
+    │MUX├── Y = A+B
+1 ──┤ 1 │
+    └─┬─┘
+      B
+
+Implement XOR using MUX:
+Y = B ? NOT(A) : A  →  A XOR B
+    ┌───┐
+A ──┤ 0 │
+    │MUX├── Y = A⊕B
+Ā ──┤ 1 │
+    └─┬─┘
+      B
+
+Implement NAND using MUX:
+Y = B ? NOT(A) : 1  →  NOT(A AND B)
+    ┌───┐
+1 ──┤ 0 │
+    │MUX├── Y = (A·B)'
+Ā ──┤ 1 │
+    └─┬─┘
+      B
+```
+
+### **Building Gates Using NAND Only**
+
+```
+NOT:  Y = (A NAND A) = A'
+AND:  Y = ((A NAND B) NAND (A NAND B)) = A·B
+OR:   Y = ((A NAND A) NAND (B NAND B)) = A+B
+XOR:  Y = ((A NAND (A NAND B)) NAND (B NAND (A NAND B)))
+```
+
+### **How Cache Accelerates CPU**
+
+Cache exploits **temporal** and **spatial locality**:
+
+| Principle | Description |
+|-----------|-------------|
+| **Temporal locality** | Recently accessed data likely accessed again soon |
+| **Spatial locality** | Nearby addresses likely accessed soon (prefetch cache lines) |
+
+**Performance impact:**
+- L1 cache hit: ~1-4 cycles
+- L2 cache hit: ~10-20 cycles
+- L3 cache hit: ~30-50 cycles
+- Main memory: ~100-300 cycles
+
+**Cache reduces average memory access time:**
+```
+AMAT = Hit_time + Miss_rate × Miss_penalty
+```
+
+### **Can 2-Stage FF Solve All CDC Problems?**
+
+**No!** 2-stage synchronizer only works for:
+- ✅ Single-bit signals
+- ✅ Level signals (not pulses shorter than destination clock period)
+
+**Cannot solve:**
+- ❌ Multi-bit buses (bits may sync at different times)
+- ❌ Very short pulses (may be missed entirely)
+- ❌ High-frequency data (MTBF too low)
+
+**Solutions for multi-bit:** Async FIFO, handshake, MCP (multi-cycle path).
+
+### **Files Needed for Synthesis**
+
+| File Type | Description |
+|-----------|-------------|
+| **RTL files** | Verilog/VHDL source code (.v, .vhd) |
+| **Technology library** | .db/.lib files with cell timing/power |
+| **Constraints** | SDC file (clocks, I/O delays, exceptions) |
+| **Floorplan** | DEF file (optional, for physical-aware synthesis) |
+
+```tcl
+# Basic synthesis script
+read_verilog design.v
+read_db slow.db
+source constraints.sdc
+compile_ultra
+write -format verilog -output netlist.v
+write_sdc output.sdc
+```
+
+### **Glitch Causes and Prevention**
+
+**Causes:**
+- Unequal path delays in combinational logic
+- Race conditions
+- Clock domain crossing without synchronization
+
+**Prevention:**
+- Register outputs of combinational blocks
+- Use Gray code for counters crossing domains
+- Add synchronizers for async signals
+- Use glitch-free clock gating cells (latch-based ICG)
 
 ## **Digital IC Interview Experience**
 
