@@ -73,23 +73,27 @@ tags:
 ![Flip-flop](https://i.imgur.com/tv3FbCD.png)
 
 ### **Metastability**
-Metastability occurs when the time for the flip-flop's output (Q pin) to stabilize is greater than the clk-to-q ($t_{cq}$) time. This happens when data transitions near the clock edge, violating setup or hold time requirements.
+Metastability occurs when the time for the flip-flop's output (Q pin) to stabilize is greater than the clk-to-q (Tcq) time. This happens when data transitions near the clock edge, violating setup or hold time requirements.
 
 ![Metastability 1](https://i.imgur.com/y3WG22Q.png)
 ![Metastability 2](https://i.imgur.com/kp5y9dk.png)
 
 **MTBF (Mean Time Between Failures) Formula:**
 
-$$MTBF = \frac{e^{t_r/\tau}}{T_0 \times F_{clk} \times F_{data}}$$
+```
+MTBF = e^(Tr/τ) / (T0 × Fclk × Fdata)
+```
 
 Where:
-- $t_r$ = resolution time (time available for metastability to resolve)
-- $\tau$ = metastability time constant (device dependent)
-- $F_{clk}$ = clock frequency
-- $F_{data}$ = data transition frequency
+- `Tr` = resolution time (time available for metastability to resolve)
+- `τ` (tau) = metastability time constant (device dependent)
+- `Fclk` = clock frequency
+- `Fdata` = data transition frequency
 
 **Resolution time calculation:**
-$$t_r = t_{clk} - (t_{su} + t_{ckq} + t_{pd})$$
+```
+Tr = Tclk - (Tsu + Tckq + Tpd)
+```
 
 **Design Guidelines:**
 - With **2 flip-flops**: adequate MTBF for most designs (10s-100s MHz)
@@ -172,9 +176,11 @@ If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of
 | 1 | 1 | 0 | 0 | 1 |
 | 1 | 1 | 1 | 1 | 1 |
 
-$Sum=a\oplus b \oplus Cin$
-
-$Cout=ab+aCin+bCin$ (can also be written as: $Cout = (a \cdot b) + Cin \cdot (a \oplus b)$)
+```
+Sum = a XOR b XOR Cin
+Cout = ab + aCin + bCin
+     = (a·b) + Cin·(a XOR b)
+```
 
 ![Full adder](https://i.imgur.com/k9lPhQQ.png)
 
@@ -197,9 +203,11 @@ Clock signal arrives only when data is to be switched
 → Reduce dynamic power dissipation (up to 30-50% power savings)
 
 **Power Equation:**
-$$P_{dynamic} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f$$
+```
+P_dynamic = α × C_L × V_DD² × f
+```
 
-Clock gating reduces switching activity ($\alpha$) by disabling clock to inactive registers.
+Clock gating reduces switching activity (α) by disabling clock to inactive registers.
 
 ![Clock gated](https://i.imgur.com/oazpEi2.png)
 
@@ -250,21 +258,21 @@ CG with AND gate may have glitch due to unstable enable signal
 ### **Setup & Hold check**
 * `Setup` (Max delay) - Data must be stable **before** clock edge
 
-$AT=T_0+T_{clk,latency}+T_{cq}+T_{pd}$
-
-$RT=T_0+T_{clk,latency}-T_{skew}+T_{cycle}-T_{setup}$
-
-$Slack=RT-AT$ (positive = timing met)
+```
+Arrival Time (AT) = T0 + Tclk_latency + Tcq + Tpd
+Required Time (RT) = T0 + Tclk_latency - Tskew + Tcycle - Tsetup
+Slack = RT - AT  (positive = timing met)
+```
 
 ![Setup](https://i.imgur.com/MNbkt4s.png)
 
 * `Hold` (Min delay) - Data must be stable **after** clock edge
 
-$AT=T_0+T_{clk,latency}+T_{cq}+T_{pd}$
-
-$RT=T_0+T_{clk,latency}+T_{skew}+T_{hold}$
-
-$Slack=AT-RT$ (positive = timing met)
+```
+Arrival Time (AT) = T0 + Tclk_latency + Tcq + Tpd
+Required Time (RT) = T0 + Tclk_latency + Tskew + Thold
+Slack = AT - RT  (positive = timing met)
+```
 
 ![Hold](https://i.imgur.com/ZJxtQoR.png)
 
@@ -330,8 +338,8 @@ $Slack=AT-RT$ (positive = timing met)
 | **Operand Isolation** | Dynamic | Gate inputs to idle functional units | Extra logic |
 
 **Clock Gating vs Power Gating:**
-- Clock gating: Reduces $\alpha$ (switching activity) → saves dynamic power
-- Power gating: Reduces $V$ to zero → saves both static and dynamic power
+- Clock gating: Reduces α (switching activity) → saves dynamic power
+- Power gating: Reduces V to zero → saves both static and dynamic power
 - Power gating has longer wake-up time and requires isolation cells
 
 **Power Gating Implementation:**
