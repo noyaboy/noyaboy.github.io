@@ -2,6 +2,7 @@
 title: "Digital IC Design Interview"
 date: 2024-12-04
 permalink: /blog/digital-ic-design-interview/
+excerpt: "Comprehensive notes on digital IC design concepts including metastability, CDC, STA, clock gating, frequency dividers, and interview questions from MTK, RTK, NTK, PHISON, SMI, and GUC."
 toc: false
 tags:
   - Interview
