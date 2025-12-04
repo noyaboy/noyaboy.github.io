@@ -15,6 +15,9 @@ tags:
 - [Latch vs Flip-flop](#latch-vs-flip-flop)
 - [Metastability](#metastability)
 - [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
+- [Race and Hazard](#race-and-hazard)
+- [High-Impedance State](#high-impedance-state-tri-state)
+- [NMOS vs PMOS](#nmos-vs-pmos)
 
 ### Clock Domain Crossing (CDC)
 - [CDC Overview](#clock-domain-crossing-cdc)
@@ -52,6 +55,8 @@ tags:
 - [Pre-sim vs Post-sim](#pre-simulation-vs-post-simulation)
 - [Timing Path Types](#types-of-timing-path)
 - [Setup & Hold Analysis](#setup--hold-check)
+- [Recovery & Removal Time](#recovery--removal-time)
+- [OCV (On-Chip Variation)](#ocv-on-chip-variation)
 - [Timing Violation Solutions](#setup--hold-violation-solutions)
 - [Special Timing Paths](#special-timing-path)
 
@@ -61,6 +66,7 @@ tags:
 ### Circuit Examples
 - [Frequency Dividers](#frequency-divider-circuits)
 - [Pipeline Concept](#pipeline-concept)
+- [Division Algorithm](#division-algorithm)
 
 ### Memory
 - [SRAM vs DRAM](#sram-vs-dram)
@@ -269,6 +275,120 @@ always @(posedge clk or negedge rst_n) begin
         rst_n_sync <= rst_n_meta;
     end
 end
+```
+
+### **Race and Hazard**
+
+| Term | Definition |
+|------|------------|
+| **Race** | Different propagation delays cause signals to arrive at different times, leading to unpredictable results |
+| **Hazard** | Temporary glitches (unwanted pulses) in combinational logic output due to unequal path delays |
+
+**Types of Hazards:**
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Static-1** | Output should stay 1, but glitches to 0 | Y = A + A' (momentary 0) |
+| **Static-0** | Output should stay 0, but glitches to 1 | Y = A · A' (momentary 1) |
+| **Dynamic** | Output should change once, but changes multiple times | Multiple transitions |
+
+**Solutions:**
+- Add redundant terms to Boolean expression (consensus term)
+- Insert output register to filter glitches
+- Use Gray code encoding
+- Add delay elements to balance paths
+
+```
+Example: Y = AB + A'C has hazard when B=C=1, A changes
+Fix: Y = AB + A'C + BC (add consensus term BC)
+```
+
+### **High-Impedance State (Tri-state)**
+
+High-impedance (Hi-Z) state is neither logic 0 nor logic 1. The output acts as an open circuit with very high resistance.
+
+**Characteristics:**
+- Output is electrically disconnected from the circuit
+- Allows multiple drivers to share a common bus
+- Controlled by output enable (OE) signal
+
+```verilog
+// Tri-state buffer
+module tristate_buffer (
+    input  data_in,
+    input  oe,        // output enable
+    output data_out
+);
+    assign data_out = oe ? data_in : 1'bz;
+endmodule
+
+// Bidirectional I/O
+module bidir_io (
+    inout  data,
+    input  data_out,
+    input  oe,
+    output data_in
+);
+    assign data = oe ? data_out : 1'bz;
+    assign data_in = data;
+endmodule
+```
+
+**Use Cases:**
+- Shared bus architectures
+- Bidirectional I/O pins
+- Memory data buses
+
+### **NMOS vs PMOS**
+
+| Property | NMOS | PMOS |
+|----------|------|------|
+| **Carrier** | Electrons | Holes |
+| **Mobility** | Higher (~2-3× faster) | Lower |
+| **Conducts when** | Gate = High (VGS > Vth) | Gate = Low (VGS < Vth) |
+| **Passes** | Strong 0, weak 1 | Strong 1, weak 0 |
+| **Pull network** | Pull-down (to GND) | Pull-up (to VDD) |
+| **Size for equal drive** | Smaller | Larger (~2-3×) |
+
+**Why NMOS is faster:**
+- Electron mobility (~1350 cm²/V·s) > Hole mobility (~480 cm²/V·s)
+- For same current drive, NMOS can be smaller than PMOS
+
+**CMOS Inverter:**
+```
+        VDD
+         │
+      ┌──┴──┐
+      │PMOS │←── A (input)
+      └──┬──┘
+         ├────── Y (output) = A'
+      ┌──┴──┐
+      │NMOS │←── A (input)
+      └──┬──┘
+         │
+        GND
+```
+
+**Building gates using NMOS/PMOS:**
+
+```
+NAND using CMOS:           NOR using CMOS:
+    VDD                        VDD
+     │                          │
+  ┌──┴──┐                   ┌──┴──┬──┴──┐
+  │PMOS │ ┌──┐              │PMOS│PMOS │
+  └──┬──┘ │P │              └──┬─┴──┬──┘
+     ├────┤  │                 │    │
+     │    └──┘              ┌──┴────┴──┐
+  ┌──┴──┐                   │   NMOS   │
+  │NMOS │                   └────┬─────┘
+  └──┬──┘                   ┌────┴─────┐
+  ┌──┴──┐                   │   NMOS   │
+  │NMOS │                   └────┬─────┘
+  └──┬──┘                        │
+     │                          GND
+    GND
+(Series NMOS, Parallel PMOS)  (Parallel NMOS, Series PMOS)
 ```
 
 ## **Verilog Fundamentals**
@@ -734,6 +854,71 @@ Slack = AT - RT  (positive = timing met)
 
 ![Hold](https://i.imgur.com/ZJxtQoR.png)
 
+### **Recovery & Removal Time**
+
+These timing checks apply to **asynchronous control signals** (reset, set, clear) relative to the clock.
+
+| Timing Check | Definition |
+|--------------|------------|
+| **Recovery Time** | Minimum time between async signal release and next active clock edge |
+| **Removal Time** | Minimum time between active clock edge and async signal assertion |
+
+```
+Recovery Time Check (similar to setup):
+─────────────────────────────────────────────────────
+          │←─ Recovery ─→│
+          │              │
+RST_N: ───┘              │
+                    ┌────┴────
+CLK:   ─────────────┘
+
+The reset must be released at least Trecovery before clock edge.
+
+Removal Time Check (similar to hold):
+─────────────────────────────────────────────────────
+               │←─ Removal ─→│
+               │             │
+CLK:   ────────┐             │
+               └─────────────┴────
+RST_N: ──────────────────────┘
+
+The reset must remain asserted for at least Tremoval after clock edge.
+```
+
+**Why they matter:**
+- Violation causes metastability in the flip-flop
+- Critical for asynchronous reset with synchronous release design
+- STA tools check these automatically
+
+### **OCV (On-Chip Variation)**
+
+OCV accounts for timing variations within the same chip due to:
+
+| Factor | Description |
+|--------|-------------|
+| **Process (P)** | Manufacturing variations across die (doping, oxide thickness) |
+| **Voltage (V)** | IR drop, power supply noise |
+| **Temperature (T)** | Thermal gradients across chip |
+
+**OCV Derating:**
+
+STA applies OCV derating factors to account for worst-case variations:
+
+```
+Launch path: Use slower cells (max delay) × (1 + OCV_late)
+Capture path: Use faster cells (min delay) × (1 - OCV_early)
+```
+
+**AOCV (Advanced OCV):**
+- Location-aware derating
+- Cells closer together have less variation
+- More accurate than flat OCV
+
+**POCV/SOCV (Parametric/Statistical OCV):**
+- Statistical timing analysis
+- Uses probability distributions instead of fixed derates
+- Most accurate, reduces pessimism
+
 ### **Setup & Hold Violation Solutions**
 
 **⚠️ Important:** Always fix hold violations first! A chip with setup violations can work at lower frequency, but hold violations make the chip unusable ("DUMP the chip").
@@ -787,6 +972,27 @@ Slack = AT - RT  (positive = timing met)
 
 ## **Low Power Design Techniques**
 
+### **Power Components**
+
+**Dynamic Power:**
+```
+P_dynamic = α × C_L × V_DD² × f
+```
+- α = switching activity (0 to 1)
+- C_L = load capacitance
+- V_DD = supply voltage
+- f = clock frequency
+
+**Static Power (Leakage):**
+
+| Leakage Type | Description |
+|--------------|-------------|
+| **Subthreshold** | Current through channel when VGS < Vth (dominant in modern nodes) |
+| **Gate oxide** | Tunneling through thin gate oxide |
+| **Junction** | Reverse-biased PN junction leakage |
+
+### **Power Reduction Techniques**
+
 | Technique | Target Power | Description | Trade-off |
 |-----------|--------------|-------------|-----------|
 | **Clock Gating** | Dynamic | Disable clock to inactive blocks | Minimal overhead |
@@ -794,11 +1000,33 @@ Slack = AT - RT  (positive = timing met)
 | **Multi-Vt** | Static | Use high-Vt cells for non-critical paths | Area |
 | **DVFS** | Both | Dynamic voltage/frequency scaling | Complexity |
 | **Operand Isolation** | Dynamic | Gate inputs to idle functional units | Extra logic |
+| **Multi-VDD** | Both | Different voltage domains per block | Level shifters needed |
 
-**Clock Gating vs Power Gating:**
-- Clock gating: Reduces α (switching activity) → saves dynamic power
-- Power gating: Reduces V to zero → saves both static and dynamic power
-- Power gating has longer wake-up time and requires isolation cells
+### **Multi-Vt Cell Library**
+
+| Cell Type | Threshold | Speed | Leakage | Use Case |
+|-----------|-----------|-------|---------|----------|
+| **HVT** (High-Vt) | High | Slowest | Lowest | Non-critical paths |
+| **SVT/RVT** (Standard) | Medium | Medium | Medium | Default cells |
+| **LVT** (Low-Vt) | Low | Fast | High | Critical timing paths |
+| **SLVT** (Super Low-Vt) | Very Low | Fastest | Highest | Most critical paths |
+
+**Speed vs Leakage:** HVT < SVT < LVT < SLVT
+
+**Multi-Vt Optimization Strategy:**
+1. Start with all HVT cells
+2. Replace cells on critical paths with LVT/SLVT
+3. Balance timing closure with leakage budget
+
+### **Clock Gating vs Power Gating**
+
+| Aspect | Clock Gating | Power Gating |
+|--------|--------------|--------------|
+| **Reduces** | α (switching activity) | V (to zero) |
+| **Saves** | Dynamic power only | Both dynamic + static |
+| **Wake-up** | Instant (next clock) | Slow (μs to ms) |
+| **State** | Preserved | Lost (needs retention) |
+| **Overhead** | ICG cells | Sleep transistors, isolation, retention |
 
 **Power Gating Implementation:**
 - Uses sleep transistors (high-Vt PMOS header or NMOS footer)
@@ -907,6 +1135,66 @@ endmodule
 
 Divide-by-5 Circuit Waveform
 ![Divide-by-5 Circuit Waveform](https://i.imgur.com/AKh5gQR.png)
+
+### **Division Algorithm**
+
+Hardware division using the **shift-subtract** (restoring division) method:
+
+```verilog
+module divider #(
+    parameter WIDTH = 32
+)(
+    input  [WIDTH-1:0] dividend,
+    input  [WIDTH-1:0] divisor,
+    output reg [WIDTH-1:0] quotient,
+    output reg [WIDTH-1:0] remainder
+);
+
+reg [2*WIDTH-1:0] temp_dividend;
+reg [2*WIDTH-1:0] temp_divisor;
+integer i;
+
+always @(*) begin
+    // Initialize: dividend in lower bits, zeros in upper bits
+    temp_dividend = {{WIDTH{1'b0}}, dividend};
+    temp_divisor  = {divisor, {WIDTH{1'b0}}};
+
+    for (i = 0; i < WIDTH; i = i + 1) begin
+        // Shift left by 1
+        temp_dividend = {temp_dividend[2*WIDTH-2:0], 1'b0};
+
+        // Compare and subtract
+        if (temp_dividend[2*WIDTH-1:WIDTH] >= divisor) begin
+            temp_dividend[2*WIDTH-1:WIDTH] = temp_dividend[2*WIDTH-1:WIDTH] - divisor;
+            temp_dividend[0] = 1'b1;  // Set quotient bit
+        end
+    end
+
+    quotient  = temp_dividend[WIDTH-1:0];
+    remainder = temp_dividend[2*WIDTH-1:WIDTH];
+end
+
+endmodule
+```
+
+**Algorithm Steps:**
+1. Place dividend in lower half, zeros in upper half
+2. For each bit position:
+   - Shift combined register left by 1
+   - If upper half ≥ divisor, subtract divisor and set quotient bit = 1
+   - Else quotient bit = 0
+3. After WIDTH iterations: quotient in lower half, remainder in upper half
+
+**Example (8 ÷ 3):**
+```
+Initial:  [0000][1000]  (dividend=8, divisor=3)
+Shift:    [0001][000_]  upper=1 < 3, Q=0
+Shift:    [0010][00_0]  upper=2 < 3, Q=0
+Shift:    [0100][0_00]  upper=4 ≥ 3, subtract: [0001][0_01]
+Shift:    [0010][_010]  upper=2 < 3, Q=0
+Result:   quotient=0010(2), remainder=0010(2)
+          8 ÷ 3 = 2 remainder 2 ✓
+```
 
 ## **Memory**
 
