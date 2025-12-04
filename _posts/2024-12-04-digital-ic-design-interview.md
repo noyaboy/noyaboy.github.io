@@ -56,6 +56,9 @@ tags:
 - [Frequency Dividers](#frequency-divider-circuits)
 - [Pipeline Concept](#pipeline-concept)
 
+### Memory
+- [SRAM vs DRAM](#sram-vs-dram)
+
 ### Quick Reference Q&A
 - [Input/Output Delay](#inputoutput-delay)
 - [Clock Skew Effects](#clock-skew-effect-on-setuphold)
@@ -690,6 +693,42 @@ endmodule
 
 Divide-by-5 Circuit Waveform
 ![Divide-by-5 Circuit Waveform](https://i.imgur.com/AKh5gQR.png)
+
+## **Memory**
+
+### **SRAM vs DRAM**
+
+| Feature | SRAM | DRAM |
+|---------|------|------|
+| **Storage Element** | 6 transistors (flip-flop based) | 1 transistor + 1 capacitor |
+| **Speed** | Fast (~1-10 ns access) | Slower (~50-70 ns access) |
+| **Density** | Lower (6T per bit) | Higher (1T1C per bit) |
+| **Power** | Higher static power | Lower static power |
+| **Refresh** | Not required | Required (capacitor leaks) |
+| **Cost** | More expensive per bit | Cheaper per bit |
+| **Use Case** | Cache (L1, L2, L3), registers | Main memory (DDR) |
+
+**SRAM Architecture:**
+- Uses cross-coupled inverters to store data
+- Data retained as long as power is supplied
+- Faster access due to direct transistor switching
+- Typically used for on-chip memory (caches)
+
+**DRAM Architecture:**
+- Stores data as charge in a capacitor
+- Requires periodic refresh (every ~64 ms) due to capacitor leakage
+- Higher density makes it suitable for large memory arrays
+- Used for off-chip main memory (DDR3, DDR4, DDR5)
+
+**Why use SRAM for cache?**
+- Speed matches CPU clock frequencies
+- No refresh overhead
+- Lower latency for critical path operations
+
+**Why use DRAM for main memory?**
+- Cost-effective for large capacities (GB range)
+- Higher density per chip area
+- Acceptable latency for bulk data storage
 
 ## **Common Interview Q&A**
 
