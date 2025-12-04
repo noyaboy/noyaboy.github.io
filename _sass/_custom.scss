@@ -468,7 +468,7 @@ body {
 /* Code blocks - improved formatting */
 .page__content pre {
   font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace;
-  font-size: 1em;
+  font-size: 1em !important;
   line-height: 1.6;
   padding: 1em 1.25em;
   margin: 1.5em 0;
@@ -480,12 +480,27 @@ body {
 }
 
 .page__content pre code {
-  font-size: 1em;
+  font-size: 1em !important;
 }
 
 .page__content code {
   font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Inconsolata', 'Roboto Mono', Consolas, monospace;
-  font-size: 1em;
+  font-size: 1em !important;
+}
+
+/* Override syntax highlighter font sizes */
+.page__content div.highlighter-rouge,
+.page__content figure.highlight {
+  font-size: 1em !important;
+}
+
+.page__content .highlight {
+  font-size: 1em !important;
+}
+
+.page__content div.highlighter-rouge pre,
+.page__content figure.highlight pre {
+  font-size: 1em !important;
 }
 
 /* Inline code */
@@ -495,7 +510,7 @@ body {
   background-color: #f0f0f0;
   padding: 0.2em 0.45em;
   border-radius: 3px;
-  font-size: 0.95em;
+  font-size: 0.95em !important;
 }
 
 /* Tables - responsive with horizontal scroll */
