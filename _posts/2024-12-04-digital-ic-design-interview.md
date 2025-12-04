@@ -22,6 +22,7 @@ tags:
 ### Clock Domain Crossing (CDC)
 - [CDC Overview](#clock-domain-crossing-cdc)
 - [Single-bit Synchronization](#single-bit-signal)
+- [Pulse Synchronizer](#pulse-synchronizer)
 - [Multi-bit Synchronization](#multi-bit-signal)
 - [Asynchronous FIFO & Gray Code](#asynchronous-fifo)
 
@@ -50,6 +51,7 @@ tags:
 - [Delay Models](#delay-models)
 - [SDF File Format](#sdf-file-format)
 - [Clock Gating](#clock-gating)
+- [Cross Boundary Optimization](#cross-boundary-optimization)
 
 ### Static Timing Analysis (STA)
 - [DTA vs STA](#dta-vs-sta)
@@ -78,11 +80,16 @@ tags:
 - [Chip Area Estimation](#chip-area-estimation)
 - [Buffer vs Inverter](#buffer-vs-inverter-in-cts)
 - [ECO Flow](#eco-engineering-change-order)
+- [Scan Chain / DFT](#scan-chain--dft)
 - [Latch-up Effect](#latch-up-effect)
 - [Antenna Effect](#antenna-effect)
 
-### Memory
+### Memory & Cache
 - [SRAM vs DRAM](#sram-vs-dram)
+- [Write-back vs Write-through](#write-back-vs-write-through-cache)
+
+### Computer Architecture
+- [Branch Predictor](#branch-predictor)
 
 ### Quick Reference Q&A
 - [Input/Output Delay](#inputoutput-delay)
@@ -182,7 +189,30 @@ However, it is not suitable for pulse signals, so Pulse synchronizer is used ins
 
 **Pulse synchronizer**: Convert the pulse signal to a level signal through an XOR gate, pass it through a double flip-flop, then convert the level signal back to a pulse signal through another XOR gate.
 ![Pulse synchronizer](https://i.imgur.com/UuK9bvn.png)
-Limitation of Pulse synchronizer: The interval between two consecutive pulses in the source clock domain must be large enough to satisfy the 3 edge requirement of the destination domain.
+
+```verilog
+module pulse_sync (
+    input  src_clk, src_rst_n, src_pulse,
+    input  dst_clk, dst_rst_n,
+    output dst_pulse
+);
+// Source: toggle on pulse (pulse → level)
+reg src_toggle;
+always @(posedge src_clk or negedge src_rst_n)
+    if (!src_rst_n) src_toggle <= 1'b0;
+    else if (src_pulse) src_toggle <= ~src_toggle;
+
+// 2FF sync + edge detect (level → pulse)
+reg [2:0] sync;
+always @(posedge dst_clk or negedge dst_rst_n)
+    if (!dst_rst_n) sync <= 3'b0;
+    else sync <= {sync[1:0], src_toggle};
+
+assign dst_pulse = sync[2] ^ sync[1];  // XOR detects toggle
+endmodule
+```
+
+**Limitation:** Minimum 3 destination clock cycles between consecutive source pulses.
 
 **Edge synchronizer**: Similar to pulse synchronizer but outputs a pulse when detecting rising/falling edge in the destination domain.
 
@@ -828,6 +858,42 @@ CG with AND gate may have glitch due to unstable enable signal
 **Types of Clock Gating:**
 - **RTL-based (Intent-based)**: Designer explicitly codes clock gating
 - **Tool-generated**: Synthesis tool identifies flip-flops sharing same control logic
+
+### **Cross Boundary Optimization**
+
+Cross boundary optimization allows synthesis tools to optimize logic across hierarchical module boundaries.
+
+| Aspect | Enabled | Disabled |
+|--------|---------|----------|
+| **Optimization** | Better QoR (timing, area) | Limited to module scope |
+| **Hierarchy** | Flattened/modified | Preserved exactly |
+| **Debug** | Harder (structure changed) | Easier (structure intact) |
+| **ECO** | More difficult | Easier |
+| **Runtime** | Longer | Shorter |
+
+**When to Enable:**
+- Performance-critical designs
+- Area-constrained designs
+- Final tape-out synthesis
+
+**When to Disable:**
+- Early design exploration
+- IP blocks (preserve interface)
+- Debug-friendly netlists
+- Hierarchical ECO requirements
+
+```tcl
+# Design Compiler commands
+set_boundary_optimization [get_designs block_A] true   # enable
+set_boundary_optimization [get_designs block_B] false  # disable
+compile_ultra -no_boundary_optimization                 # global disable
+```
+
+**Common Optimizations:**
+- Constant propagation across boundaries
+- Redundant logic removal
+- Buffer/inverter pushing
+- Logic restructuring at interfaces
 
 ## STA
 
@@ -1531,6 +1597,56 @@ ECO is the process of making late-stage design modifications.
 | **False paths** | Design architecture (mutually exclusive modes) |
 | **Multicycle paths** | Design intent (slow paths by design) |
 
+### **Scan Chain / DFT**
+
+DFT (Design for Testability) inserts test structures to enable manufacturing testing.
+
+**Scan Chain Concept:**
+Convert sequential circuit testing into combinational circuit testing by connecting all flip-flops into a shift register chain.
+
+```
+Normal Mode:        Scan Mode:
+   D → [FF] → Q        SI → [FF] → SO
+       ↑                    ↑
+      CLK                  CLK + SE
+```
+
+**Scan Cell Operation:**
+
+| Mode | SE (Scan Enable) | Behavior |
+|------|------------------|----------|
+| **Normal** | 0 | D → Q (functional mode) |
+| **Shift** | 1 | SI → Q (scan data shifts through chain) |
+| **Capture** | 0 | Capture response into scan FFs |
+
+**Scan Test Flow:**
+1. **Shift-in**: SE=1, clock test pattern into scan chain
+2. **Capture**: SE=0, apply one functional clock, capture response
+3. **Shift-out**: SE=1, clock out captured response while shifting in next pattern
+
+**DFT Methods:**
+
+| Method | Description | Use Case |
+|--------|-------------|----------|
+| **Scan Chain** | FF replacement for sequential test | Logic testing |
+| **MBIST** | Memory built-in self-test | RAM/ROM testing |
+| **Boundary Scan** | IEEE 1149.1 (JTAG) | Board-level testing |
+| **ATPG** | Automatic test pattern generation | Fault coverage |
+
+**Scan Insertion Flow (DC):**
+```tcl
+# In Design Compiler
+set_scan_configuration -chain_count 4
+set_dft_signal -view existing_dft -type ScanClock -port clk
+set_dft_signal -view spec -type ScanEnable -port SE
+insert_dft
+```
+
+**Scan Chain Compression:**
+- Full scan requires many test pins and long test time
+- Compression (e.g., DFTMAX) reduces test data volume
+- Uses decompressor (input) and compactor (output)
+
 ### **Latch-up Effect**
 
 Latch-up is a parasitic thyristor (PNPN) effect in CMOS that can cause permanent damage.
@@ -1661,6 +1777,93 @@ Typical limit: Antenna Ratio < 400-1000 (process dependent)
 - Cost-effective for large capacities (GB range)
 - Higher density per chip area
 - Acceptable latency for bulk data storage
+
+### **Write-back vs Write-through Cache**
+
+| Aspect | Write-through | Write-back |
+|--------|---------------|------------|
+| **Write Policy** | Write to cache AND memory | Write to cache only |
+| **Memory Update** | Immediate | When cache line evicted (dirty) |
+| **Consistency** | Always consistent | May be inconsistent |
+| **Write Speed** | Slower (memory latency) | Faster (cache latency) |
+| **Bus Traffic** | Higher | Lower |
+| **Complexity** | Simpler | Needs dirty bit tracking |
+
+**Write-through:**
+```
+CPU Write → Update Cache → Update Memory (immediately)
+```
+- Pros: Simple, memory always up-to-date
+- Cons: Every write incurs memory latency
+- Solution: Write buffer to hide memory latency
+
+**Write-back:**
+```
+CPU Write → Update Cache (set dirty bit)
+Cache Eviction → Write dirty line to memory
+```
+- Pros: Faster writes, less bus traffic
+- Cons: Memory may have stale data, complexity
+
+**MTK Interview Question:** "Write-back & Write-through cache, 各舉一個優點?"
+- Write-through: Memory always consistent (good for multi-processor)
+- Write-back: Higher performance (fewer memory writes)
+
+## **Computer Architecture**
+
+### **Branch Predictor**
+
+Branch predictor predicts the outcome of branch instructions to keep pipeline full.
+
+**Why needed:**
+- Branch instructions cause pipeline stalls
+- Without prediction: wait until branch resolved (waste cycles)
+- With prediction: speculatively fetch predicted path
+
+**Types of Branch Predictors:**
+
+| Type | Description | Accuracy |
+|------|-------------|----------|
+| **Static** | Always predict taken/not-taken | ~60-70% |
+| **1-bit** | Remember last outcome | ~80-85% |
+| **2-bit** | 4-state saturating counter | ~85-90% |
+| **Correlating** | Use history of other branches | ~90-95% |
+| **Tournament** | Combine multiple predictors | ~95%+ |
+
+**2-bit Saturating Counter:**
+```
+                    Taken
+         ┌──────────────────────┐
+         ↓                      │
+    ┌─────────┐  Taken   ┌─────────┐
+    │ Strongly│ ───────→ │ Weakly  │
+    │  Taken  │ ←─────── │  Taken  │
+    └─────────┘ Not Taken└─────────┘
+         │                      ↑
+         │ Not Taken    Taken   │
+         ↓                      │
+    ┌─────────┐ Not Taken┌─────────┐
+    │ Weakly  │ ───────→ │Strongly │
+    │Not Taken│ ←─────── │Not Taken│
+    └─────────┘  Taken   └─────────┘
+```
+
+**States:** 11 (Strongly Taken) → 10 (Weakly Taken) → 01 (Weakly Not Taken) → 00 (Strongly Not Taken)
+
+**Branch Target Buffer (BTB):**
+- Cache storing branch target addresses
+- Indexed by branch instruction PC
+- Provides target address before decode stage
+
+**Misprediction Penalty:**
+- Flush pipeline
+- Restart from correct address
+- Modern CPUs: 10-20 cycle penalty
+
+**MTK Interview Question:** "Branch predictor的實做方式?"
+- Use BTB for target address prediction
+- Use 2-bit counter or correlating predictor for direction
+- Implemented in Fetch stage of pipeline
 
 ## **Common Interview Q&A**
 
