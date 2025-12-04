@@ -14,12 +14,6 @@ tags:
 ### Fundamentals
 - [Latch vs Flip-flop](#latch-vs-flip-flop)
 - [Metastability](#metastability)
-- [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
-- [Race and Hazard](#race-and-hazard)
-- [High-Impedance State](#high-impedance-state-tri-state)
-- [NMOS vs PMOS](#nmos-vs-pmos)
-- [CMOS Inverter VTC](#cmos-inverter-vtc-voltage-transfer-characteristic)
-- [Transmission Gate](#transmission-gate)
 
 ### Clock Domain Crossing (CDC)
 - [CDC Overview](#clock-domain-crossing-cdc)
@@ -30,6 +24,14 @@ tags:
 - [Multi-bit Synchronization](#multi-bit-signal)
 - [Asynchronous FIFO & Gray Code](#asynchronous-fifo)
 - [FIFO Depth Calculation](#fifo-depth-calculation)
+
+### CMOS & Digital Building Blocks
+- [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
+- [Race and Hazard](#race-and-hazard)
+- [High-Impedance State](#high-impedance-state-tri-state)
+- [NMOS vs PMOS](#nmos-vs-pmos)
+- [CMOS Inverter VTC](#cmos-inverter-vtc-voltage-transfer-characteristic)
+- [Transmission Gate](#transmission-gate)
 
 ### Verilog & RTL Design
 - [Blocking vs Non-blocking](#blocking-vs-non-blocking-assignments)
@@ -100,8 +102,7 @@ tags:
 - [MESI Protocol](#mesi-protocol-cache-coherence)
 
 ### Bus Protocols
-- [AXI Protocol](#axi-protocol)
-- [Common Protocols](#common-protocols)
+- [Common Protocols](#common-protocols) (includes AXI, SPI, I2C, UART, DDR)
 
 ### Computer Architecture
 - [Branch Predictor](#branch-predictor)
@@ -109,21 +110,21 @@ tags:
 ### EDA & Scripting
 - [Tcl Scripting](#eda-scripting-tcl)
 
-### Quick Reference Q&A
-- [Input/Output Delay](#inputoutput-delay)
-- [Clock Skew Effects](#clock-skew-effect-on-setuphold)
-- [Hold Time Zero/Negative?](#can-hold-time-be-zero-or-negative)
-- [SystemVerilog Purpose](#systemverilog-purpose)
-- [Cache & CPU](#how-cache-accelerates-cpu)
-- [2-Stage FF CDC Limits](#can-2-stage-ff-solve-all-cdc-problems)
-- [Synthesis Files](#files-needed-for-synthesis)
-- [Glitch Prevention](#glitch-causes-and-prevention)
-- [Dual-Edge Detection](#dual-edge-detection)
+### Frequently Asked Interview Questions
+- [Input/Output Delay](#inputoutput-delay) *(STA)*
+- [Clock Skew Effects](#clock-skew-effect-on-setuphold) *(STA)*
+- [Hold Time Zero/Negative?](#can-hold-time-be-zero-or-negative) *(STA)*
+- [SystemVerilog Purpose](#systemverilog-purpose) *(Verilog)*
+- [Cache & CPU](#how-cache-accelerates-cpu) *(Memory)*
+- [2-Stage FF CDC Limits](#can-2-stage-ff-solve-all-cdc-problems) *(CDC)*
+- [Synthesis Files](#files-needed-for-synthesis) *(Synthesis)*
+- [Glitch Prevention](#glitch-causes-and-prevention) *(Design)*
+- [Dual-Edge Detection](#dual-edge-detection) *(Circuits)*
 
 ### Interview Experience
 - [MTK](#mtk) | [RTK](#rtk) | [NTK](#ntk) | [PHISON](#phison) | [SMI](#smi) | [GUC](#guc)
 
-### [References](#reference)
+### [References](#references)
 
 ---
 
@@ -198,7 +199,11 @@ With Tr = 10 ns (3FF synchronizer):
 
 `Solution (double flip-flop synchronizer)`: Simply add another flip-flop driven by the same clock after the subsequent flip-flop stage. The second flip-flop gives the first flip-flop an entire clock cycle to resolve from any metastable state.
 
-### **Clock domain crossing** (CDC)
+---
+
+## Clock Domain Crossing (CDC)
+
+### **CDC Overview**
 
 Clock domain crossing occurs whenever a signal passes between two different clock domains in a digital system. This is one of the most challenging aspects of multi-clock design because signals crossing asynchronous boundaries can cause metastability—an unstable state where a flip-flop's output is unpredictable for an indeterminate period. Understanding the relationship between the clocks determines the appropriate synchronization strategy.
 
@@ -493,6 +498,10 @@ assign empty = (rd_ptr_gray == wr_ptr_sync);
 
 Note: The extra MSB bit in the pointer allows distinguishing between full (pointers differ only in MSB) and empty (pointers identical) conditions when using Gray code.
 
+---
+
+## CMOS & Digital Building Blocks
+
 ### **Synchronous vs Asynchronous Reset**
 
 Reset signals initialize flip-flops to a known state during power-up or error recovery. The choice between synchronous and asynchronous reset affects timing closure, area, and reliability. Synchronous resets are treated as regular data inputs and only take effect at clock edges, while asynchronous resets act immediately regardless of the clock, which can cause metastability if released near a clock edge.
@@ -738,7 +747,9 @@ NAND using CMOS:           NOR using CMOS:
 (Series NMOS, Parallel PMOS)  (Parallel NMOS, Series PMOS)
 ```
 
-## **Verilog Fundamentals**
+---
+
+## Verilog & RTL Design
 
 ### **Blocking vs Non-blocking Assignments**
 
@@ -1006,7 +1017,9 @@ ASICs (Application-Specific Integrated Circuits) and FPGAs (Field-Programmable G
 | **Power Efficiency** | Best | Higher power consumption |
 | **Application** | Mass production, high performance | Prototyping, low volume, flexibility |
 
-## **FPGA**
+---
+
+## FPGA
 
 ### **FPGA vs CPLD**
 
@@ -1187,7 +1200,9 @@ Multiple FPGAs share single configuration memory:
 - Typically 3 MSEL pins determine configuration mode
 - Set before power-up or during reset
 
-## **Synthesis**
+---
+
+## Synthesis
 
 ### **Technology library**
 
@@ -1622,7 +1637,9 @@ Not all paths in a design require single-cycle timing closure. Correctly identif
 - Must explicitly constrain: `set_multicycle_path 2 -setup`
 - Hold check also affected: typically `set_multicycle_path 1 -hold`
 
-## **Low Power Design Techniques**
+---
+
+## Low Power Design
 
 ### **Power Components**
 
@@ -1692,7 +1709,9 @@ Modern synthesis and optimization tools automatically select cell Vt types to mi
 - Requires isolation cells to prevent floating outputs
 - Requires retention registers if state must be preserved
 
-## **Frequency Divider Circuits**
+---
+
+## Circuit Examples
 
 ### **Divide-by-2 Circuit**
 
@@ -2155,7 +2174,9 @@ Next: mask = 1111, req = 1010
 - Network-on-Chip routing
 - DMA channel scheduling
 
-## **Backend / Physical Design**
+---
+
+## Backend / Physical Design
 
 ### **CTS & Clock Uncertainty**
 
@@ -2453,7 +2474,9 @@ Antenna rules are checked as part of the physical verification flow. The router 
 - Violations flagged for manual or automatic fixing
 - Critical for advanced nodes with thinner gate oxides
 
-## **Memory**
+---
+
+## Memory & Cache
 
 ### **SRAM vs DRAM**
 
@@ -2591,7 +2614,9 @@ All caches monitor (snoop) the shared bus for memory transactions:
 - Intel Core: Uses MESI (or MESIF with Forward state)
 - AMD Opteron: Uses MOESI (Owned state for dirty sharing)
 
-## **Computer Architecture**
+---
+
+## Computer Architecture
 
 ### **Branch Predictor**
 
@@ -2649,7 +2674,9 @@ Branch predictors have evolved from simple static rules to sophisticated learnin
 - Use 2-bit counter or correlating predictor for direction
 - Implemented in Fetch stage of pipeline
 
-## **Common Interview Q&A**
+---
+
+## Frequently Asked Interview Questions
 
 ### **Input/Output Delay**
 
@@ -2977,9 +3004,9 @@ SDR:    ──D0────D1────D2────  (1 bit per cycle)
 DDR:    ──D0─D1─D2─D3─D4─D5─  (2 bits per cycle)
 ```
 
-### **AXI Protocol (AMBA)**
+#### **AXI Protocol (AMBA)**
 
-AXI (Advanced eXtensible Interface) is ARM's high-performance bus protocol for SoC interconnects.
+AXI (Advanced eXtensible Interface) is ARM's high-performance bus protocol for SoC interconnects, widely used in ARM-based SoCs.
 
 **Five Independent Channels:**
 
@@ -3101,7 +3128,9 @@ grep "VIOLATED" timing.rpt | awk '{print $2, $NF}'
 grep "slack" timing.rpt | sort -k2 -n | head -1
 ```
 
-## **Digital IC Interview Experience**
+---
+
+## Interview Experience
 
 ### **MTK**
 Departments: CAI, SPD1, SPD3, ADCT
@@ -3133,7 +3162,9 @@ Departments: APR, DFT
 
 Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, test/fault coverage differences, scan reorder, lockup latch, BIST, stuck at fault, transition delay fault, cross talk, electromigration, draw SDFF, boundary scan, why DFT is needed, DRC/LVS, ATPG, how to verify APR function matches RTL, APR command, problems encountered in back-end with advanced process, LEF and DB file contents, wire load model
 
-## **Reference**
+---
+
+## References
 
 ### CDC
 - [https://www.zhihu.com/people/li-hong-jiang-54](https://www.zhihu.com/people/li-hong-jiang-54)
