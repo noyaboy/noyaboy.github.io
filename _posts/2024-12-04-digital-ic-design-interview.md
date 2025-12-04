@@ -41,6 +41,7 @@ tags:
 - [ASIC vs FPGA Comparison](#asic-vs-fpga-comparison)
 
 ### FPGA
+- [FPGA vs CPLD](#fpga-vs-cpld)
 - [FPGA Architecture](#fpga-architecture)
 - [FPGA Configuration Modes](#fpga-configuration-modes)
 
@@ -56,6 +57,7 @@ tags:
 - [Timing Path Types](#types-of-timing-path)
 - [Setup & Hold Analysis](#setup--hold-check)
 - [Recovery & Removal Time](#recovery--removal-time)
+- [Clock Jitter](#clock-jitter)
 - [OCV (On-Chip Variation)](#ocv-on-chip-variation)
 - [Timing Violation Solutions](#setup--hold-violation-solutions)
 - [Special Timing Paths](#special-timing-path)
@@ -67,6 +69,8 @@ tags:
 - [Frequency Dividers](#frequency-divider-circuits)
 - [Pipeline Concept](#pipeline-concept)
 - [Division Algorithm](#division-algorithm)
+- [Sequence Detector](#sequence-detector)
+- [Johnson Counter](#johnson-counter)
 
 ### Backend / Physical Design
 - [CTS & Clock Uncertainty](#cts--clock-uncertainty)
@@ -74,6 +78,8 @@ tags:
 - [Chip Area Estimation](#chip-area-estimation)
 - [Buffer vs Inverter](#buffer-vs-inverter-in-cts)
 - [ECO Flow](#eco-engineering-change-order)
+- [Latch-up Effect](#latch-up-effect)
+- [Antenna Effect](#antenna-effect)
 
 ### Memory
 - [SRAM vs DRAM](#sram-vs-dram)
@@ -460,8 +466,33 @@ end
 ```
 
 **FSM Types:**
-- **Moore Machine**: Output depends only on current state
-- **Mealy Machine**: Output depends on current state AND inputs (faster response, but glitch-prone)
+
+| Aspect | Moore Machine | Mealy Machine |
+|--------|---------------|---------------|
+| **Output depends on** | Current state only | Current state + inputs |
+| **Output timing** | Changes after state transition | Changes immediately with input |
+| **Latency** | 1 cycle delay | No delay (combinational) |
+| **Glitches** | Glitch-free outputs | Prone to glitches |
+| **States required** | More states | Fewer states |
+| **Use case** | Clean outputs, safety-critical | Fast response, area-constrained |
+
+```verilog
+// Moore: output registered, depends on state only
+always @(posedge clk) begin
+    case (state)
+        IDLE: out <= 1'b0;
+        RUN:  out <= 1'b1;
+    endcase
+end
+
+// Mealy: output combinational, depends on state + input
+always @(*) begin
+    case (state)
+        IDLE: out = start ? 1'b1 : 1'b0;
+        RUN:  out = done ? 1'b0 : 1'b1;
+    endcase
+end
+```
 
 **Coding Tips:**
 - Use `localparam` or `parameter` for state encoding
@@ -555,6 +586,32 @@ Cout = ab + aCin + bCin
 | **Application** | Mass production, high performance | Prototyping, low volume, flexibility |
 
 ## **FPGA**
+
+### **FPGA vs CPLD**
+
+| Aspect | FPGA | CPLD |
+|--------|------|------|
+| **Architecture** | LUT-based (Look-Up Tables) | Product-term based (AND-OR arrays) |
+| **Granularity** | Fine-grained (many small logic blocks) | Coarse-grained (fewer large blocks) |
+| **Density** | High (100K+ logic elements) | Low (up to ~10K gates) |
+| **Storage** | SRAM-based (volatile) | EEPROM/Flash (non-volatile) |
+| **Power-on** | Requires configuration loading | Instant-on operation |
+| **Timing** | Variable (routing-dependent) | Predictable (fixed interconnect) |
+| **Best for** | Complex algorithms, DSP, high-speed | Control logic, glue logic, state machines |
+| **Power** | Higher (SRAM leakage) | Lower |
+| **Cost** | Higher | Lower |
+
+**When to use FPGA:**
+- Complex digital signal processing
+- High-speed interfaces (PCIe, DDR)
+- Prototyping ASIC designs
+- Applications requiring embedded processors
+
+**When to use CPLD:**
+- Simple control logic
+- Boot sequencing
+- Level shifting / voltage translation
+- Applications requiring instant power-on
 
 ### **FPGA Architecture**
 
@@ -897,6 +954,39 @@ The reset must remain asserted for at least Tremoval after clock edge.
 - Critical for asynchronous reset with synchronous release design
 - STA tools check these automatically
 
+### **Clock Jitter**
+
+Clock jitter is the deviation of clock edges from their ideal positions.
+
+| Type | Description |
+|------|-------------|
+| **Period Jitter** | Variation in clock period from cycle to cycle |
+| **Cycle-to-Cycle Jitter** | Difference between adjacent clock periods |
+| **Long-term Jitter** | Accumulated timing error over many cycles |
+
+**Sources of Jitter:**
+- PLL/DLL noise
+- Power supply noise
+- Thermal noise
+- Crosstalk from adjacent signals
+
+**Impact on Timing:**
+```
+Setup check: Tjitter reduces available setup margin
+Hold check: Tjitter can cause hold violations if edges shift
+```
+
+**Jitter in STA:**
+- Modeled as clock uncertainty
+- Added to setup/hold timing budgets
+- Typical values: 50-200 ps for on-chip PLLs
+
+**Reducing Jitter:**
+- Use clean power supplies for PLLs
+- Proper decoupling capacitors
+- Shield clock signals from noisy traces
+- Use dedicated clock routing resources
+
 ### **OCV (On-Chip Variation)**
 
 OCV accounts for timing variations within the same chip due to:
@@ -1203,6 +1293,119 @@ Result:   quotient=0010(2), remainder=0010(2)
           8 ÷ 3 = 2 remainder 2 ✓
 ```
 
+### **Sequence Detector**
+
+Detect a specific bit pattern in a serial input stream (common interview question).
+
+**Example: Detect "1011" (overlapping)**
+
+```
+State Diagram:
+S0 (idle) --1--> S1 (got "1")
+S0        --0--> S0
+S1        --0--> S2 (got "10")
+S1        --1--> S1 (got "1")
+S2        --1--> S3 (got "101")
+S2        --0--> S0
+S3        --1--> S1 + OUTPUT (got "1011", output=1)
+S3        --0--> S2 (got "10")
+```
+
+```verilog
+module seq_detector_1011 (
+    input  clk,
+    input  rst_n,
+    input  din,
+    output reg detected
+);
+
+// State encoding
+localparam S0 = 2'b00;  // Idle
+localparam S1 = 2'b01;  // Got "1"
+localparam S2 = 2'b10;  // Got "10"
+localparam S3 = 2'b11;  // Got "101"
+
+reg [1:0] state, next_state;
+
+// State register
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        state <= S0;
+    else
+        state <= next_state;
+end
+
+// Next state logic
+always @(*) begin
+    case (state)
+        S0: next_state = din ? S1 : S0;
+        S1: next_state = din ? S1 : S2;
+        S2: next_state = din ? S3 : S0;
+        S3: next_state = din ? S1 : S2;  // Overlap: "1011" ends with "1"
+        default: next_state = S0;
+    endcase
+end
+
+// Output logic (Mealy: depends on state + input)
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        detected <= 1'b0;
+    else
+        detected <= (state == S3) && din;  // "1011" detected
+end
+
+endmodule
+```
+
+**Key Points:**
+- **Overlapping detection**: After detecting "1011", can immediately start detecting next sequence
+- **Non-overlapping**: Return to S0 after detection
+- State count = pattern length (for simple patterns)
+
+### **Johnson Counter**
+
+A Johnson counter (twisted ring counter) is a shift register with inverted feedback.
+
+**N-bit Johnson counter cycles through 2N states:**
+
+```
+4-bit Johnson Counter States:
+0000 → 1000 → 1100 → 1110 → 1111 → 0111 → 0011 → 0001 → 0000...
+```
+
+```verilog
+module johnson_counter #(
+    parameter N = 4
+)(
+    input  clk,
+    input  rst_n,
+    output reg [N-1:0] q
+);
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        q <= {N{1'b0}};
+    else
+        q <= {~q[0], q[N-1:1]};  // Shift right, invert LSB to MSB
+end
+
+endmodule
+```
+
+**Johnson vs Ring Counter:**
+
+| Aspect | Ring Counter | Johnson Counter |
+|--------|--------------|-----------------|
+| **States** | N states | 2N states |
+| **Feedback** | Direct (Q[0] → Q[N-1]) | Inverted (~Q[0] → Q[N-1]) |
+| **Self-starting** | No | No |
+| **Decoding** | 1 gate per state | 1 gate per state |
+
+**Applications:**
+- Frequency division by 2N
+- Phase generation (multi-phase clocks)
+- Glitch-free decoding (only 1 bit changes per transition)
+
 ## **Backend / Physical Design**
 
 ### **CTS & Clock Uncertainty**
@@ -1327,6 +1530,101 @@ ECO is the process of making late-stage design modifications.
 | **IO timing** | System requirements, board-level timing |
 | **False paths** | Design architecture (mutually exclusive modes) |
 | **Multicycle paths** | Design intent (slow paths by design) |
+
+### **Latch-up Effect**
+
+Latch-up is a parasitic thyristor (PNPN) effect in CMOS that can cause permanent damage.
+
+**Mechanism:**
+```
+         VDD
+          │
+    ┌─────┴─────┐
+    │   P-well  │←── Parasitic PNP (substrate)
+    │  ┌─────┐  │
+    │  │NMOS │  │
+    │  └──┬──┘  │
+    │     │     │
+    │  ┌──┴──┐  │
+    │  │PMOS │  │
+    │  └─────┘  │←── Parasitic NPN (well)
+    │   N-well  │
+    └─────┬─────┘
+          │
+         GND
+```
+
+The parasitic PNP and NPN transistors form a thyristor (SCR) structure. Once triggered, it creates a low-resistance path from VDD to GND.
+
+**Triggering Conditions:**
+- Voltage spikes on I/O pins
+- ESD events
+- High junction temperature
+- Excessive current injection
+
+**Prevention Methods:**
+
+| Method | Description |
+|--------|-------------|
+| **Guard rings** | Substrate/well contacts surrounding transistors |
+| **Butted contacts** | Source tied directly to well/substrate |
+| **Increase well spacing** | Larger distance between NMOS and PMOS |
+| **ESD protection** | Clamp circuits on I/O pins |
+| **Reduce substrate resistance** | Heavy doping, more substrate contacts |
+
+**Design Rules:**
+- Maximum distance from transistor to well tap
+- Minimum guard ring width
+- I/O cells require robust latch-up protection
+
+### **Antenna Effect**
+
+Antenna effect occurs during fabrication when metal interconnects collect charge during plasma etching, potentially damaging gate oxide.
+
+**Mechanism:**
+```
+During metal etching:
+                    Plasma
+                      ↓ ↓ ↓
+    ┌─────────────────────────────┐
+    │      Long metal wire        │ ← Collects charge
+    └──────────────┬──────────────┘
+                   │
+              ┌────┴────┐
+              │  Gate   │ ← Thin oxide stressed
+              │  Oxide  │
+              └─────────┘
+```
+
+Long metal wires act as "antennas" collecting charge from plasma. This charge accumulates on the gate, creating high voltage that can rupture thin gate oxide.
+
+**Antenna Ratio:**
+```
+Antenna Ratio = Metal Area Connected to Gate / Gate Area
+
+Typical limit: Antenna Ratio < 400-1000 (process dependent)
+```
+
+**Prevention Methods:**
+
+| Method | Description |
+|--------|-------------|
+| **Diode insertion** | Add reverse-biased diode to discharge accumulated charge |
+| **Metal jumpers** | Break long wires using higher metal layers |
+| **Layer hopping** | Route through via to upper layer and back |
+| **Metal slotting** | Add slots to reduce effective antenna area |
+
+**Antenna Diode:**
+```verilog
+// Antenna diode inserted by router
+// Connected between gate node and ground
+// Provides discharge path during fabrication
+```
+
+**DRC Checks:**
+- Tools check antenna ratio at each metal layer
+- Violations flagged for manual or automatic fixing
+- Critical for advanced nodes with thinner gate oxides
 
 ## **Memory**
 
