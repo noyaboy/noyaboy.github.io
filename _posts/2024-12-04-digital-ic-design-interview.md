@@ -18,8 +18,10 @@ tags:
     - [Multi bit signal](#multi-bit-signal)
   - [Asynchronous FIFO](#asynchronous-fifo)
     - [Gray code Encoding Method](#gray-code-encoding-method)
+  - [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
 - [Verilog Fundamentals](#verilog-fundamentals)
   - [Blocking vs Non-blocking Assignments](#blocking-vs-non-blocking-assignments)
+  - [FSM (Finite State Machine)](#fsm-finite-state-machine---three-stage-coding)
 - [MUX](#mux)
   - [Full adder](#full-adder)
 - [ASIC Design Flow](#asic-design-flow)
@@ -171,11 +173,75 @@ assign G[1] = bin[2] ^ bin[1];
 assign G[0] = bin[1] ^ bin[0];
 ```
 
+**Gray to Binary Code Conversion:**
+```verilog
+// Method 1: Cascading XOR from MSB
+assign bin[3] = gray[3];
+assign bin[2] = gray[3] ^ gray[2];
+assign bin[1] = gray[3] ^ gray[2] ^ gray[1];
+assign bin[0] = gray[3] ^ gray[2] ^ gray[1] ^ gray[0];
+
+// Method 2: Using loop
+integer i;
+always @(*) begin
+    bin[WIDTH-1] = gray[WIDTH-1];
+    for (i = WIDTH-2; i >= 0; i = i - 1)
+        bin[i] = bin[i+1] ^ gray[i];
+end
+```
+
 ![Gray code 1](https://i.imgur.com/Mfsh1nk.png)
 ![Gray code 2](https://i.imgur.com/CVVPyQy.png)
 
 If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of gray code to change the starting point, ensuring that each adjacent gray code only has one bit change.
 ![Gray code 3](https://i.imgur.com/yBLXnAv.png)
+
+### **Synchronous vs Asynchronous Reset**
+
+| Aspect | Synchronous Reset | Asynchronous Reset |
+|--------|-------------------|-------------------|
+| **Activation** | At clock edge only | Immediate, clock-independent |
+| **Timing** | Requires setup/hold relative to clock | No timing constraints |
+| **Area** | Smaller (reset in data path) | Larger (extra reset pin on FF) |
+| **Glitch Sensitivity** | Filtered by clock | Susceptible to glitches |
+| **DFT** | Easier to test | May need special handling |
+
+```verilog
+// Synchronous Reset
+always @(posedge clk) begin
+    if (rst)
+        q <= 1'b0;
+    else
+        q <= d;
+end
+
+// Asynchronous Reset
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        q <= 1'b0;
+    else
+        q <= d;
+end
+```
+
+**Asynchronous Reset with Synchronous Release:**
+
+Best practice combining both approaches - reset activates immediately but releases synchronized to clock to avoid metastability.
+
+```verilog
+// Reset synchronizer (async assert, sync deassert)
+reg rst_n_meta, rst_n_sync;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        rst_n_meta <= 1'b0;
+        rst_n_sync <= 1'b0;
+    end else begin
+        rst_n_meta <= 1'b1;
+        rst_n_sync <= rst_n_meta;
+    end
+end
+```
 
 ## **Verilog Fundamentals**
 
@@ -206,6 +272,47 @@ end
 ```
 
 **Why it matters:** Blocking assignments in sequential logic can create unintended combinational paths during synthesis, leading to simulation/synthesis mismatch.
+
+### **FSM (Finite State Machine) - Three-Stage Coding**
+
+Recommended coding style separating sequential and combinational logic:
+
+```verilog
+// Stage 1: State register (sequential)
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        current_state <= IDLE;
+    else
+        current_state <= next_state;
+end
+
+// Stage 2: Next state logic (combinational)
+always @(*) begin
+    case (current_state)
+        IDLE:    next_state = start ? RUN : IDLE;
+        RUN:     next_state = done  ? IDLE : RUN;
+        default: next_state = IDLE;
+    endcase
+end
+
+// Stage 3: Output logic (can be sequential or combinational)
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        output_reg <= 1'b0;
+    else
+        output_reg <= (next_state == RUN);  // Moore: based on state
+end
+```
+
+**FSM Types:**
+- **Moore Machine**: Output depends only on current state
+- **Mealy Machine**: Output depends on current state AND inputs (faster response, but glitch-prone)
+
+**Coding Tips:**
+- Use `localparam` or `parameter` for state encoding
+- Prefer **one-hot encoding** for high-speed designs (faster decode, more FFs)
+- Prefer **binary encoding** for area-constrained designs (fewer FFs)
+- Always include `default` case to avoid latches
 
 ---
 
@@ -254,9 +361,24 @@ RTL Design → Functional Simulation → Logic Synthesis → Formal Verification
 | **Physical Verification** | DRC, LVS, ERC checks | Calibre, ICV |
 | **Tape-out** | Generate GDSII for fabrication | — |
 
-**FPGA vs ASIC:**
-- FPGA: RTL → Synthesis → P&R → Bitstream generation (programmable)
-- ASIC: Full flow above → GDSII → Mask fabrication (fixed)
+**ASIC vs FPGA Comparison:**
+
+| Aspect | ASIC | FPGA |
+|--------|------|------|
+| **Reconfigurability** | Fixed after fabrication | Reprogrammable |
+| **NRE Cost** | High (millions USD for masks) | Low (development tools) |
+| **Unit Cost** | Low at high volume | Higher per unit |
+| **Time-to-market** | Months (fabrication) | Days/weeks |
+| **Performance** | Highest (custom optimization) | Lower (routing overhead) |
+| **Power Efficiency** | Best | Higher power consumption |
+| **Application** | Mass production, high performance | Prototyping, low volume, flexibility |
+
+**FPGA Architecture Components:**
+- **Logic Elements**: LUT (Look-Up Table) + Flip-flops
+- **I/O Blocks**: Configurable for multiple electrical standards (LVDS, LVCMOS, etc.)
+- **Embedded RAM**: Configurable as FIFO, dual-port RAM, CAM
+- **Clock Resources**: PLLs, clock trees, global/regional routing
+- **Hard IP**: DSP blocks, SerDes, embedded processors
 
 ## **Synthesis**
 
@@ -617,5 +739,6 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 
 ### Verilog & ASIC Flow
 - [Digital IC Design Interview Guide (CSDN)](https://blog.csdn.net/qq_36045093/article/details/120302713)
+- [Digital IC Design Fundamentals (CSDN)](https://blog.csdn.net/qq_36045093/article/details/119741748)
 
 ###### tags: `Work`
