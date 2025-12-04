@@ -18,21 +18,28 @@ tags:
 - [Race and Hazard](#race-and-hazard)
 - [High-Impedance State](#high-impedance-state-tri-state)
 - [NMOS vs PMOS](#nmos-vs-pmos)
+- [CMOS Inverter VTC](#cmos-inverter-vtc-voltage-transfer-characteristic)
+- [Transmission Gate](#transmission-gate)
 
 ### Clock Domain Crossing (CDC)
 - [CDC Overview](#clock-domain-crossing-cdc)
 - [Single-bit Synchronization](#single-bit-signal)
 - [Pulse Synchronizer](#pulse-synchronizer)
+- [Toggle Synchronizer](#toggle-synchronizer-slow-to-fast-cdc)
+- [Pulse Extender](#pulse-extender-fast-to-slow-cdc)
 - [Multi-bit Synchronization](#multi-bit-signal)
 - [Asynchronous FIFO & Gray Code](#asynchronous-fifo)
+- [FIFO Depth Calculation](#fifo-depth-calculation)
 
 ### Verilog & RTL Design
 - [Blocking vs Non-blocking](#blocking-vs-non-blocking-assignments)
+- [Verilog Event Queue](#verilog-stratified-event-queue)
 - [FSM Three-Stage Coding](#fsm-finite-state-machine---three-stage-coding)
 - [What Causes Latch Inference?](#what-coding-causes-latch-inference)
 
 ### Combinational Logic
 - [Full Adder](#full-adder)
+- [RCA vs CLA Adder](#ripple-carry-vs-carry-lookahead-adder)
 - [Building Gates Using MUX](#building-gates-using-mux)
 - [Building Gates Using NAND](#building-gates-using-nand-only)
 
@@ -69,6 +76,9 @@ tags:
 
 ### Circuit Examples
 - [Frequency Dividers](#frequency-divider-circuits)
+- [Odd Divider with 50% Duty](#odd-clock-divider---50-duty-cycle)
+- [Glitch-free Clock Mux](#glitch-free-clock-mux)
+- [Round Robin Arbiter](#round-robin-arbiter)
 - [Pipeline Concept](#pipeline-concept)
 - [Division Algorithm](#division-algorithm)
 - [Sequence Detector](#sequence-detector)
@@ -87,9 +97,17 @@ tags:
 ### Memory & Cache
 - [SRAM vs DRAM](#sram-vs-dram)
 - [Write-back vs Write-through](#write-back-vs-write-through-cache)
+- [MESI Protocol](#mesi-protocol-cache-coherence)
+
+### Bus Protocols
+- [AXI Protocol](#axi-protocol)
+- [Common Protocols](#common-protocols)
 
 ### Computer Architecture
 - [Branch Predictor](#branch-predictor)
+
+### EDA & Scripting
+- [Tcl Scripting](#eda-scripting-tcl)
 
 ### Quick Reference Q&A
 - [Input/Output Delay](#inputoutput-delay)
@@ -101,7 +119,6 @@ tags:
 - [Synthesis Files](#files-needed-for-synthesis)
 - [Glitch Prevention](#glitch-causes-and-prevention)
 - [Dual-Edge Detection](#dual-edge-detection)
-- [Common Protocols](#common-protocols)
 
 ### Interview Experience
 - [MTK](#mtk) | [RTK](#rtk) | [NTK](#ntk) | [PHISON](#phison) | [SMI](#smi) | [GUC](#guc)
@@ -236,6 +253,89 @@ endmodule
 
 **Edge synchronizer**: Similar to pulse synchronizer but outputs a pulse when detecting rising/falling edge in the destination domain.
 
+#### **Toggle Synchronizer (Slow-to-Fast CDC)**
+
+When transferring pulses from a slow clock domain to a fast clock domain, the destination can safely sample the signal multiple times. The toggle synchronizer is effective here because the pulse duration from the slow domain spans multiple fast clock cycles.
+
+```verilog
+module toggle_sync_slow_to_fast (
+    input  slow_clk, slow_rst_n, slow_pulse,
+    input  fast_clk, fast_rst_n,
+    output fast_pulse
+);
+// Toggle in slow domain
+reg toggle;
+always @(posedge slow_clk or negedge slow_rst_n)
+    if (!slow_rst_n) toggle <= 1'b0;
+    else if (slow_pulse) toggle <= ~toggle;
+
+// 2FF sync in fast domain (plenty of time to sample)
+reg [1:0] sync;
+always @(posedge fast_clk or negedge fast_rst_n)
+    if (!fast_rst_n) sync <= 2'b0;
+    else sync <= {sync[0], toggle};
+
+// Edge detect
+reg sync_d;
+always @(posedge fast_clk or negedge fast_rst_n)
+    if (!fast_rst_n) sync_d <= 1'b0;
+    else sync_d <= sync[1];
+
+assign fast_pulse = sync[1] ^ sync_d;
+endmodule
+```
+
+#### **Pulse Extender (Fast-to-Slow CDC)**
+
+When transferring pulses from a fast clock domain to a slow clock domain, a single-cycle fast pulse may be missed entirely by the slow clock. The pulse extender stretches the fast pulse to ensure it spans at least 2-3 slow clock cycles.
+
+**Problem:** A 1-cycle pulse at 500 MHz (2ns) transferring to 50 MHz (20ns period) could be entirely missed between two slow clock edges.
+
+**Solution:** Extend the pulse in the source domain using a feedback acknowledgment:
+
+```verilog
+module pulse_extender (
+    input  fast_clk, fast_rst_n, fast_pulse,
+    input  slow_clk, slow_rst_n,
+    output slow_pulse
+);
+// Sync ack back to fast domain
+reg [1:0] ack_sync;
+always @(posedge fast_clk or negedge fast_rst_n)
+    if (!fast_rst_n) ack_sync <= 2'b0;
+    else ack_sync <= {ack_sync[0], slow_sync[1]};
+
+// Extended pulse in fast domain (held until ack received)
+reg extended;
+always @(posedge fast_clk or negedge fast_rst_n)
+    if (!fast_rst_n) extended <= 1'b0;
+    else if (fast_pulse) extended <= 1'b1;
+    else if (ack_sync[1]) extended <= 1'b0;
+
+// 2FF sync + edge detect in slow domain
+reg [1:0] slow_sync;
+always @(posedge slow_clk or negedge slow_rst_n)
+    if (!slow_rst_n) slow_sync <= 2'b0;
+    else slow_sync <= {slow_sync[0], extended};
+
+reg slow_d;
+always @(posedge slow_clk or negedge slow_rst_n)
+    if (!slow_rst_n) slow_d <= 1'b0;
+    else slow_d <= slow_sync[1];
+
+assign slow_pulse = slow_sync[1] & ~slow_d;  // Rising edge detect
+endmodule
+```
+
+**CDC Synchronizer Selection Guide:**
+
+| Source → Dest | Technique | Latency | Notes |
+|--------------|-----------|---------|-------|
+| Slow → Fast | Toggle sync | 2-3 fast cycles | Simple, reliable |
+| Fast → Slow | Pulse extender | 4-6 fast cycles | Uses feedback ack |
+| Same frequency | 2-FF sync | 2 cycles | Simplest approach |
+| Multi-bit | Async FIFO | Variable | Most robust |
+
 #### **Multi bit signal**
 Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 2F/F synchronizer is random - it may take one cycle to synchronize or two cycles, which causes each bit of multi-bits to be unstable.
 
@@ -308,6 +408,90 @@ end
 
 If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of gray code to change the starting point, ensuring that each adjacent gray code only has one bit change.
 ![Gray code 3](https://i.imgur.com/yBLXnAv.png)
+
+### **FIFO Depth Calculation**
+
+Calculating the minimum FIFO depth is critical for asynchronous FIFOs to prevent data loss when the write rate temporarily exceeds the read rate. The "Leaky Bucket" model provides a systematic approach to determine the required depth.
+
+**Leaky Bucket Model:**
+
+Think of the FIFO as a bucket where:
+- Water flows IN at the write rate (f_wr)
+- Water leaks OUT at the read rate (f_rd)
+- The bucket must be large enough to hold the accumulated water during burst periods
+
+**Basic Formula (Continuous Burst):**
+
+When writing B data items in a burst with no idle cycles:
+
+```
+FIFO_Depth ≥ B - B × (f_rd / f_wr)
+           = B × (1 - f_rd / f_wr)
+           = B × (f_wr - f_rd) / f_wr
+```
+
+Where:
+- B = Burst length (number of data items written consecutively)
+- f_wr = Write clock frequency
+- f_rd = Read clock frequency
+
+**Example 1: Simple Burst**
+- Write clock: 80 MHz, Read clock: 50 MHz
+- Burst length: 120 data items (no idle)
+
+```
+Depth ≥ 120 × (1 - 50/80)
+      = 120 × (1 - 0.625)
+      = 120 × 0.375
+      = 45
+```
+
+Minimum FIFO depth = 45 entries
+
+**Idle Cycle Adjustment:**
+
+If there are idle cycles between writes, the effective write rate decreases:
+
+```
+Effective_f_wr = f_wr × (Data_cycles / Total_cycles)
+
+FIFO_Depth ≥ B × (1 - f_rd / Effective_f_wr)
+```
+
+**Example 2: With Idle Cycles**
+- Write: 80 MHz with 1 idle cycle every 4 data cycles (3 data + 1 idle)
+- Read: 50 MHz continuous
+- Burst: 120 data items
+
+```
+Effective_f_wr = 80 × (3/4) = 60 MHz
+
+Depth ≥ 120 × (1 - 50/60)
+      = 120 × (1/6)
+      = 20
+```
+
+**Practical Considerations:**
+
+| Factor | Impact on Depth |
+|--------|----------------|
+| Synchronization latency | Add 2-4 cycles margin |
+| Full/Empty detection delay | Add extra entries |
+| Power-of-2 constraint | Round up to nearest 2^n |
+| Safety margin | Typically add 10-20% |
+
+**Gray Code Full/Empty Detection:**
+
+```verilog
+// Full: MSB different, other bits same (after sync)
+assign full = (wr_ptr_gray[N:N-1] == ~rd_ptr_sync[N:N-1]) &&
+              (wr_ptr_gray[N-2:0] == rd_ptr_sync[N-2:0]);
+
+// Empty: pointers identical (after sync)
+assign empty = (rd_ptr_gray == wr_ptr_sync);
+```
+
+Note: The extra MSB bit in the pointer allows distinguishing between full (pointers differ only in MSB) and empty (pointers identical) conditions when using Gray code.
 
 ### **Synchronous vs Asynchronous Reset**
 
@@ -458,6 +642,80 @@ NMOS and PMOS are the two complementary transistor types in CMOS technology. The
         GND
 ```
 
+### **CMOS Inverter VTC (Voltage Transfer Characteristic)**
+
+The Voltage Transfer Characteristic (VTC) curve plots input voltage vs output voltage and is the key metric for characterizing digital inverter quality. From this curve, we can extract noise margins, gain, and operating logic levels.
+
+**Five Regions of Operation:**
+
+| Region | Vin Range | NMOS State | PMOS State | Vout |
+|--------|-----------|------------|------------|------|
+| **A** | 0 ≤ Vin ≤ VTHn | Cut-off | Linear | VDD |
+| **B** | VTHn < Vin < VM | Saturation | Linear | High |
+| **C** | Vin ≈ VM | Saturation | Saturation | VM |
+| **D** | VM < Vin < VDD-VTHp | Linear | Saturation | Low |
+| **E** | Vin ≥ VDD-VTHp | Linear | Cut-off | 0 |
+
+**Switching Threshold (VM):** At VM, both NMOS and PMOS are in saturation, both conduct, creating **short-circuit current** - an important component of dynamic power.
+
+**Noise Margins:**
+
+Noise margin quantifies how much noise the input can tolerate without affecting the output:
+
+```
+NML = VIL - VOL  (Low Noise Margin)
+NMH = VOH - VIH  (High Noise Margin)
+
+Where:
+  VIL = Maximum input voltage recognized as LOW
+  VIH = Minimum input voltage recognized as HIGH
+  VOL = Maximum output voltage for LOW
+  VOH = Minimum output voltage for HIGH
+```
+
+**Adjusting VM:** The switching threshold can be shifted by changing the β ratio (W/L ratio of PMOS to NMOS). Increasing PMOS width shifts VM higher; increasing NMOS width shifts VM lower.
+
+### **Transmission Gate**
+
+A transmission gate consists of an NMOS and PMOS connected in parallel, enabling **full-swing** signal passing (both strong 0 and strong 1).
+
+```
+           ┌─────┐
+    In ────┤NMOS ├──── Out
+           └──┬──┘
+              │ (parallel)
+           ┌──┴──┐
+    In ────┤PMOS ├──── Out
+           └─────┘
+
+    Control: EN (to NMOS gate), EN' (to PMOS gate)
+```
+
+**Why both transistors?**
+- NMOS passes strong 0 but weak 1 (loses VTHn)
+- PMOS passes strong 1 but weak 0 (loses |VTHp|)
+- Together: full rail-to-rail signal transfer
+
+**D-Latch using Transmission Gates:**
+
+```
+        ┌─────────────────────────────┐
+        │    EN        EN'            │
+        │     │         │             │
+    D ──┼──►[TG1]──┬──►[TG2]──┐       │
+        │         │          │       │
+        │      ┌──┴──┐    ┌──┴──┐    │
+        │      │ INV │◄───│WEAK │◄───┤──► Q
+        │      │  1  │    │ INV │    │
+        │      └─────┘    └─────┘    │
+        └─────────────────────────────┘
+
+    EN=1: TG1 open, TG2 closed → Transparent (Q follows D)
+    EN=0: TG1 closed, TG2 open → Latched (Q holds)
+```
+
+**Why use Weak Inverter in feedback?** To avoid **contention** - when new data is written, the weak inverter's output can be easily overridden by the stronger input signal.
+
 **Building gates using NMOS/PMOS:**
 
 ```
@@ -509,6 +767,52 @@ end
 ```
 
 **Why it matters:** Blocking assignments in sequential logic can create unintended combinational paths during synthesis, leading to simulation/synthesis mismatch.
+
+**Verilog Stratified Event Queue:**
+
+Understanding *why* blocking and non-blocking behave differently requires understanding Verilog's simulation event queue:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              Stratified Event Queue                      │
+├─────────────────────────────────────────────────────────┤
+│ 1. Active Events (current time)                          │
+│    - Blocking assignments (=)                            │
+│    - Continuous assignments                              │
+│    - RHS evaluation of non-blocking                      │
+├─────────────────────────────────────────────────────────┤
+│ 2. Inactive Events                                       │
+│    - #0 blocking assignments                             │
+├─────────────────────────────────────────────────────────┤
+│ 3. NBA (Non-Blocking Assignment) Events                  │
+│    - LHS updates of non-blocking (<=)                    │
+├─────────────────────────────────────────────────────────┤
+│ 4. Monitor Events                                        │
+│    - $monitor, $strobe                                   │
+├─────────────────────────────────────────────────────────┤
+│ 5. Future Events                                         │
+│    - Events scheduled for later time                     │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Key Insight:** Non-blocking assignments evaluate RHS in Active region but update LHS in NBA region. This separation prevents race conditions in sequential logic.
+
+**Interview Trap - Shift Register with Blocking:**
+```verilog
+// WRONG: Using blocking in sequential logic
+always @(posedge clk) begin
+    a = b;  // a updated immediately
+    b = c;  // b updated immediately
+    c = d;  // All shift in ONE cycle!
+end
+
+// CORRECT: Using non-blocking
+always @(posedge clk) begin
+    a <= b;  // All RHS evaluated first
+    b <= c;  // Then all LHS updated
+    c <= d;  // Proper shift register behavior
+end
+```
 
 ### **FSM (Finite State Machine) - Three-Stage Coding**
 
@@ -604,6 +908,41 @@ Cout = ab + aCin + bCin
 ```
 
 ![Full adder](https://i.imgur.com/k9lPhQQ.png)
+
+### **Ripple Carry Adder (RCA) vs Carry Look-ahead Adder (CLA)**
+
+When building multi-bit adders, the choice between RCA and CLA represents a fundamental area-speed trade-off.
+
+| Aspect | Ripple Carry Adder (RCA) | Carry Look-ahead Adder (CLA) |
+|--------|--------------------------|------------------------------|
+| **Delay** | O(N) - linear with bit width | O(log N) - logarithmic |
+| **Area** | Smaller, N full adders | Larger, extra logic for G/P |
+| **Complexity** | Simple cascade | Complex carry computation |
+| **Use Case** | Low-speed, area-critical | High-speed arithmetic |
+
+**RCA Problem:** Carry must ripple through all stages sequentially. For N-bit adder, worst-case delay = N × (carry propagation delay).
+
+**CLA Solution:** Pre-compute carries in parallel using Generate (G) and Propagate (P) functions:
+
+```
+Generate: Gi = Ai · Bi      (bit position i generates carry)
+Propagate: Pi = Ai ⊕ Bi     (bit position i propagates carry)
+
+Carry equations:
+C1 = G0 + P0·C0
+C2 = G1 + P1·G0 + P1·P0·C0
+C3 = G2 + P2·G1 + P2·P1·G0 + P2·P1·P0·C0
+...
+```
+
+**Hybrid Architectures:** For 64-bit adders, pure CLA becomes impractical. Common solutions:
+- **Carry-Select Adder**: Compute both (Cin=0, Cin=1) in parallel, select result
+- **Carry-Skip Adder**: Skip carry through blocks where all Pi=1
+- **Kogge-Stone Adder**: Parallel-prefix network, O(log N) delay, high area
+- **Brent-Kung Adder**: Reduced area variant of Kogge-Stone
+
+**Interview Question:** "For a 64-bit adder, which architecture would you choose?"
+**Answer:** Hybrid approach - hierarchical CLA (4-bit CLA blocks with second-level lookahead) or Kogge-Stone for maximum speed with acceptable area overhead.
 
 ## Design Flow
 
@@ -1456,6 +1795,119 @@ endmodule
 Divide-by-5 Circuit Waveform
 ![Divide-by-5 Circuit Waveform](https://i.imgur.com/AKh5gQR.png)
 
+### **Odd Clock Divider - 50% Duty Cycle**
+
+**Challenge:** Dividing by an even number with 50% duty cycle is trivial (toggle at half count). Odd division (e.g., divide-by-3) is tricky because the output would have 33% or 66% duty cycle.
+
+**Solution:** Use both clock edges and combine with OR/XOR:
+
+```
+Method for Divide-by-3 with 50% Duty Cycle:
+
+1. Create counter (0, 1, 2) on rising edge
+2. Generate clk_p: toggle when cnt reaches threshold (posedge)
+3. Generate clk_n: toggle when cnt reaches threshold (negedge)
+4. Output = clk_p OR clk_n (or XOR for certain patterns)
+
+        clk:    ─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─
+                 └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘
+        cnt:     0   1   2   0   1   2   0   1   2
+        clk_p:  ─────┐     ┌─────────┐     ┌─────────
+                     └─────┘         └─────┘
+        clk_n:  ───────┐     ┌─────────┐     ┌───────
+                       └─────┘         └─────┘
+        output: ─────┐   ┌───────────┐   ┌───────────
+        (OR)         └───┘           └───┘
+
+The negedge signal "fills in" the gap, achieving 50% duty cycle.
+```
+
+**Why this works:** The negative-edge triggered signal is phase-shifted by half a clock period, so when OR'd together, the combined output has equal high and low times.
+
+**FPGA Consideration:** This technique produces a combinational output, which shouldn't drive FPGA clock networks directly. Use PLL/DLL for proper clock generation.
+
+### **Glitch-free Clock Mux**
+
+When dynamically switching between clock sources (e.g., for power management), a standard MUX can produce glitches that cause circuit malfunction.
+
+**Problem with Simple MUX:**
+```
+clk_a:  ──┐ ┌───┐ ┌───┐ ┌──
+          └─┘   └─┘   └─┘
+clk_b:  ┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌
+        └─┘ └─┘ └─┘ └─┘ └─┘
+sel:    ────────┐
+                └───────────
+output: ──┐ ┌───X GLITCH! ──
+          └─┘   ↑
+```
+
+**Solution: Break-Before-Make with Feedback**
+
+```
+                   ┌───────────────────────────────┐
+                   │                               │
+    sel ──────────►│►[SYNC]──┬──►[NEG-FF]──►AND────┼──►
+                   │         │              │      │
+    clk_a ─────────┼─────────┼──────────────┘      │
+                   │         │                     │
+                   │    ◄────┼─────────────────────┤
+                   │    │    │                     │
+    sel' ─────────►│►[SYNC]──┴──►[NEG-FF]──►AND────┼──► OR ──► clk_out
+                   │                        │      │
+    clk_b ─────────┼────────────────────────┘      │
+                   │                               │
+                   └───────────────────────────────┘
+
+Key points:
+1. Negative-edge FFs ensure switching occurs during clock LOW
+2. Feedback ensures "break-before-make" (old clock stops before new starts)
+3. Synchronizers prevent metastability from async select
+```
+
+**Verilog Implementation:**
+```verilog
+module glitch_free_clk_mux (
+    input  clk_a, clk_b,
+    input  sel,           // 0=clk_a, 1=clk_b
+    output clk_out
+);
+
+reg sel_a_sync1, sel_a_sync2, sel_a_neg;
+reg sel_b_sync1, sel_b_sync2, sel_b_neg;
+
+// Synchronize select to clk_a domain
+always @(posedge clk_a) begin
+    sel_a_sync1 <= ~sel & ~sel_b_neg;  // Include feedback
+    sel_a_sync2 <= sel_a_sync1;
+end
+
+// Register on negative edge of clk_a
+always @(negedge clk_a)
+    sel_a_neg <= sel_a_sync2;
+
+// Synchronize select to clk_b domain
+always @(posedge clk_b) begin
+    sel_b_sync1 <= sel & ~sel_a_neg;   // Include feedback
+    sel_b_sync2 <= sel_b_sync1;
+end
+
+// Register on negative edge of clk_b
+always @(negedge clk_b)
+    sel_b_neg <= sel_b_sync2;
+
+// Gated clocks
+wire clk_a_gated = clk_a & sel_a_neg;
+wire clk_b_gated = clk_b & sel_b_neg;
+
+assign clk_out = clk_a_gated | clk_b_gated;
+
+endmodule
+```
+
+**Interview Question:** "Why use negative-edge triggered FFs?"
+**Answer:** To ensure the enable signal changes only when the clock is LOW, preventing any partial clock pulses (glitches) on the output.
+
 ### **Division Algorithm**
 
 Hardware division using the **shift-subtract** (restoring division) method:
@@ -1628,6 +2080,80 @@ endmodule
 - Frequency division by 2N
 - Phase generation (multi-phase clocks)
 - Glitch-free decoding (only 1 bit changes per transition)
+
+### **Round Robin Arbiter**
+
+A round-robin arbiter grants access to multiple requestors in a fair, rotating manner. After each grant, the priority rotates so the last granted requestor has lowest priority.
+
+**Key Requirements:**
+- One-cycle arbitration (grant different requestors each cycle)
+- Wraparound (rotate from last to first requestor)
+- Work-conserving (no idle cycles when requests pending)
+
+**Implementation Using Thermometer Mask:**
+
+```verilog
+module round_robin_arbiter #(
+    parameter N = 4
+)(
+    input  [N-1:0] req,
+    input  clk, rst_n,
+    output reg [N-1:0] grant
+);
+
+reg [N-1:0] mask;  // Thermometer-encoded mask
+
+wire [N-1:0] masked_req = req & mask;
+wire [N-1:0] unmasked_grant, masked_grant;
+
+// Priority encoder for masked requests
+assign masked_grant = masked_req & (~masked_req + 1);  // Isolate lowest set bit
+
+// Priority encoder for all requests (fallback)
+assign unmasked_grant = req & (~req + 1);
+
+// Use masked if any masked request, else use unmasked
+wire [N-1:0] next_grant = |masked_req ? masked_grant : unmasked_grant;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        grant <= 0;
+        mask <= {N{1'b1}};
+    end else if (|req) begin
+        grant <= next_grant;
+        // Update mask: all bits above granted position = 1
+        mask <= ~((next_grant << 1) - 1) | next_grant;
+    end else begin
+        grant <= 0;
+    end
+end
+
+endmodule
+```
+
+**How Thermometer Mask Works:**
+```
+Example with 4 requestors (req[3:0]):
+
+Initial: mask = 1111, req = 1010
+  masked_req = 1010 & 1111 = 1010
+  grant = 0010 (lowest set bit)
+  new mask = 1100 (mask off granted and below)
+
+Next: mask = 1100, req = 1010
+  masked_req = 1010 & 1100 = 1000
+  grant = 1000
+  new mask = 0000 → wraps to 1111
+
+Next: mask = 1111, req = 1010
+  grant = 0010 (back to beginning)
+```
+
+**Applications:**
+- Bus arbitration (AMBA interconnect)
+- Memory controller request handling
+- Network-on-Chip routing
+- DMA channel scheduling
 
 ## **Backend / Physical Design**
 
@@ -1997,6 +2523,73 @@ Cache Eviction → Write dirty line to memory
 **MTK Interview Question:** "Write-back & Write-through cache, 各舉一個優點?"
 - Write-through: Memory always consistent (good for multi-processor)
 - Write-back: Higher performance (fewer memory writes)
+
+### **MESI Protocol (Cache Coherence)**
+
+In multi-core systems, each core has its own cache, creating the cache coherence problem: how to ensure all cores see consistent data. The MESI protocol is the most widely used solution.
+
+**MESI States:**
+
+| State | Description | Ownership | Memory |
+|-------|-------------|-----------|--------|
+| **M (Modified)** | Data modified, only in this cache | Exclusive | Stale |
+| **E (Exclusive)** | Data clean, only in this cache | Exclusive | Up-to-date |
+| **S (Shared)** | Data clean, may be in other caches | Shared | Up-to-date |
+| **I (Invalid)** | Cache line not valid | None | - |
+
+**State Transitions:**
+
+```
+        Read hit (any state except I): Stay in same state
+        Write hit to E/M: Stay in M
+        Write hit to S: Invalidate others → M
+
+              ┌──────────────────────────────────┐
+              │                                  │
+              ▼         Read Miss                │
+         ┌────────┐  (no other cache has it) ┌───┴────┐
+         │   E    │◄─────────────────────────│   I    │
+         │Exclusive│                          │Invalid │
+         └───┬────┘                          └───▲────┘
+             │ Write                              │
+             ▼                                   │ Snoop: Other
+         ┌────────┐                             │ core writes
+         │   M    │──────────────────────────────┘
+         │Modified│        Eviction (write back)
+         └───┬────┘
+             │ Snoop: Other core reads
+             ▼
+         ┌────────┐
+         │   S    │◄──── Read Miss (other cache has it)
+         │ Shared │
+         └────────┘
+```
+
+**Snooping Protocol:**
+
+All caches monitor (snoop) the shared bus for memory transactions:
+- If another core reads an address I have in **M**, supply data & transition to **S**
+- If another core writes an address I have in **M/E/S**, invalidate my copy → **I**
+
+**Interview Scenario:** "Core A reads address X that Core B has in Modified state. What happens?"
+1. Core A issues read request on bus
+2. Core B snoops the request, sees address X
+3. Core B supplies data directly (or via memory writeback)
+4. Both caches transition to **Shared** state
+5. Memory is updated (if writeback)
+
+**Snooping vs Directory-Based:**
+
+| Aspect | Snooping | Directory |
+|--------|----------|-----------|
+| **Mechanism** | Broadcast on shared bus | Centralized directory |
+| **Scalability** | Poor (bus bottleneck) | Good (point-to-point) |
+| **Latency** | Lower (broadcast) | Higher (directory lookup) |
+| **Use Case** | 2-8 cores | Many-core systems |
+
+**Real Implementations:**
+- Intel Core: Uses MESI (or MESIF with Forward state)
+- AMD Opteron: Uses MOESI (Owned state for dirty sharing)
 
 ## **Computer Architecture**
 
@@ -2382,6 +2975,130 @@ CLK:    ──┐  ┌──┐  ┌──┐  ┌──
           └──┘  └──┘  └──┘
 SDR:    ──D0────D1────D2────  (1 bit per cycle)
 DDR:    ──D0─D1─D2─D3─D4─D5─  (2 bits per cycle)
+```
+
+### **AXI Protocol (AMBA)**
+
+AXI (Advanced eXtensible Interface) is ARM's high-performance bus protocol for SoC interconnects.
+
+**Five Independent Channels:**
+
+| Channel | Direction | Purpose |
+|---------|-----------|---------|
+| **AW** (Write Address) | Master → Slave | Write address and control |
+| **W** (Write Data) | Master → Slave | Write data |
+| **B** (Write Response) | Slave → Master | Write completion status |
+| **AR** (Read Address) | Master → Slave | Read address and control |
+| **R** (Read Data) | Slave → Master | Read data and status |
+
+**VALID/READY Handshake:**
+
+Every channel uses the same handshake mechanism:
+
+```
+        ┌─────┐          ┌─────┐
+VALID ──┤     ├── DATA ──┤     ├──
+        │ SRC │          │ DST │
+READY ◄─┤     │◄─────────┤     │◄──
+        └─────┘          └─────┘
+
+Transfer occurs when BOTH VALID and READY are HIGH.
+```
+
+**Critical Rule (Deadlock Prevention):**
+- **VALID must NOT depend on READY** - Source asserts VALID when data is available
+- **READY may depend on VALID** - Destination can wait to see data before asserting READY
+
+```verilog
+// WRONG - causes deadlock
+assign VALID = ready_from_slave;  // Never!
+
+// CORRECT
+always @(posedge clk)
+    if (have_data) VALID <= 1'b1;
+```
+
+**Key AXI Features:**
+
+| Feature | Description |
+|---------|-------------|
+| **Out-of-Order** | Transactions with different IDs can complete out of order |
+| **Interleaving** | Read data from different transactions can be interleaved |
+| **Burst Types** | FIXED (FIFO), INCR (sequential), WRAP (cache line) |
+| **Outstanding** | Multiple pending transactions improve throughput |
+
+**Burst Types:**
+```
+FIXED:  [A][A][A][A]     Same address (FIFO access)
+INCR:   [A][A+1][A+2]... Incrementing address
+WRAP:   [A+2][A+3][A][A+1] Wraps at boundary (cache line fill)
+```
+
+**AXI vs AHB Comparison:**
+
+| Aspect | AXI | AHB |
+|--------|-----|-----|
+| **Topology** | Point-to-point, multi-channel | Shared bus |
+| **Transactions** | Read/Write separated | Multiplexed |
+| **Outstanding** | Multiple outstanding | One at a time |
+| **Ordering** | Out-of-order supported | In-order only |
+| **Complexity** | Higher | Lower |
+| **Performance** | Higher throughput | Lower latency |
+
+**Transaction ID (xID):**
+- AWID/ARID: Transaction identifier
+- Same-ID transactions complete in order
+- Different-ID transactions can complete out of order
+- Enables efficient memory controller pipelining
+
+### **EDA Scripting (Tcl)**
+
+Tcl (Tool Command Language) is the standard scripting language for EDA tools (Design Compiler, PrimeTime, ICC).
+
+**Essential Tcl Commands:**
+
+```tcl
+# Get collections
+get_cells *reg*              # All cells matching pattern
+get_pins U1/D                # Specific pin
+get_nets clk                 # Clock net
+get_ports data_in            # I/O port
+get_clocks sys_clk           # Defined clocks
+
+# Iterate over collections
+foreach_in_collection cell [get_cells *] {
+    set name [get_attribute $cell full_name]
+    puts "Cell: $name"
+}
+
+# Get attributes
+get_attribute [get_cells U1] ref_name    # Cell type
+get_attribute [get_pins U1/Q] direction  # Pin direction
+
+# Reporting
+report_timing -from [get_pins */D] -to [get_pins */Q]
+report_area
+report_power
+
+# Constraints
+set_max_delay 5.0 -from A -to B
+set_false_path -from [get_clocks clk_a] -to [get_clocks clk_b]
+```
+
+**Log Analysis (Shell/Perl/Python):**
+
+```bash
+# Find all errors in log
+grep -i "error" synthesis.log
+
+# Count warnings
+grep -c "Warning" synthesis.log
+
+# Extract timing violations
+grep "VIOLATED" timing.rpt | awk '{print $2, $NF}'
+
+# Find worst slack
+grep "slack" timing.rpt | sort -k2 -n | head -1
 ```
 
 ## **Digital IC Interview Experience**
