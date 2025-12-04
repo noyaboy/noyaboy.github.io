@@ -114,6 +114,8 @@ tags:
 
 ### Latch vs Flip-flop
 
+Latches and flip-flops are fundamental storage elements in digital design, each storing a single bit of data. The critical distinction lies in their triggering mechanism: a latch is **level-triggered**, meaning its output follows the input while the enable signal is active (transparent), whereas a flip-flop is **edge-triggered**, capturing input only at the rising or falling edge of the clock signal. This makes flip-flops more predictable for synchronous design, while latches offer speed advantages but complicate timing analysis.
+
 | Feature | Latch | Flip-Flop |
 |---------|-------|-----------|
 | **Triggering** | Level-triggered (transparent when enabled) | Edge-triggered (changes only at clock edge) |
@@ -157,6 +159,9 @@ Tr = Tclk - (Tsu + Tckq + Tpd)
 ```
 
 **Design Guidelines:**
+
+The number of synchronizer stages directly affects MTBF through the exponential term in the formula. Each additional stage roughly squares the MTBF, making the choice of synchronizer depth a critical design decision based on reliability requirements.
+
 - With **2 flip-flops**: adequate MTBF for most designs (10s-100s MHz)
 - With **3 flip-flops**: mandated for space/medical devices
 - With **4 flip-flops**: MTBF can reach 1,000+ years
@@ -178,13 +183,15 @@ With Tr = 10 ns (3FF synchronizer):
 
 ### **Clock domain crossing** (CDC)
 
+Clock domain crossing occurs whenever a signal passes between two different clock domains in a digital system. This is one of the most challenging aspects of multi-clock design because signals crossing asynchronous boundaries can cause metastability—an unstable state where a flip-flop's output is unpredictable for an indeterminate period. Understanding the relationship between the clocks determines the appropriate synchronization strategy.
+
 **Types of CDC:**
 
 | Type | Description |
 |------|-------------|
-| **Asynchronous** | Clocks have different frequencies and no phase relationship |
-| **Mesochronous** | Same frequency, different phase |
-| **Plesiochronous** | Almost same frequency, gradual drift |
+| **Asynchronous** | Clocks have different frequencies and no phase relationship—most challenging, requires robust synchronization |
+| **Mesochronous** | Same frequency, different phase—phase offset is fixed, needs one-time compensation |
+| **Plesiochronous** | Almost same frequency, gradual drift—requires continuous phase tracking and compensation |
 
 #### **single bit signal**
 → Can be solved using double flip-flop synchronizer
@@ -232,7 +239,10 @@ endmodule
 #### **Multi bit signal**
 Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 2F/F synchronizer is random - it may take one cycle to synchronize or two cycles, which causes each bit of multi-bits to be unstable.
 
-**Three solutions:**
+**Solutions for Multi-bit CDC:**
+
+Synchronizing multi-bit data requires ensuring all bits are captured coherently. Several techniques exist, each with different trade-offs between latency, throughput, and complexity.
+
 * **Load signal (MCP - Multi-Cycle Path)**: Use pulse synchronizer to generate load signal. The qualifier pulse enables sampling of the multi-bit bus. Source data must remain stable long enough for safe synchronization.
 ![Load signal](https://i.imgur.com/gDR7VW7.png)
 
@@ -240,7 +250,7 @@ Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 
 
 * **Additional two-stage flip-flop**: Use double flip-flop synchronizer to synchronize data to the destination domain, then pass the data through two stages of flip-flops, then compare these 3 stages. If all are equal, it means the value synchronized by the synchronizer is stable.
 
-* **Asynchronous FIFO**
+* **Asynchronous FIFO**: The most robust solution for continuous data streams, using Gray-coded pointers to safely transfer read/write addresses between domains.
 
 ### **Asynchronous FIFO**
 Handles multi-bit CDC Problem
@@ -300,6 +310,8 @@ If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of
 ![Gray code 3](https://i.imgur.com/yBLXnAv.png)
 
 ### **Synchronous vs Asynchronous Reset**
+
+Reset signals initialize flip-flops to a known state during power-up or error recovery. The choice between synchronous and asynchronous reset affects timing closure, area, and reliability. Synchronous resets are treated as regular data inputs and only take effect at clock edges, while asynchronous resets act immediately regardless of the clock, which can cause metastability if released near a clock edge.
 
 | Aspect | Synchronous Reset | Asynchronous Reset |
 |--------|-------------------|-------------------|
@@ -362,6 +374,9 @@ end
 | **Dynamic** | Output should change once, but changes multiple times | Multiple transitions |
 
 **Solutions:**
+
+Hazards can be eliminated at the logic design level or masked through sequential elements. The choice depends on whether glitch-free combinational output is required or if registered outputs are acceptable.
+
 - Add redundant terms to Boolean expression (consensus term)
 - Insert output register to filter glitches
 - Use Gray code encoding
@@ -404,11 +419,16 @@ endmodule
 ```
 
 **Use Cases:**
-- Shared bus architectures
-- Bidirectional I/O pins
-- Memory data buses
+
+Tri-state outputs are essential when multiple devices need to drive a common signal line. Without tri-state capability, connecting multiple outputs together would cause contention and potential damage. The high-impedance state allows inactive drivers to electrically disconnect.
+
+- Shared bus architectures (e.g., CPU data bus)
+- Bidirectional I/O pins (GPIO, memory interfaces)
+- Memory data buses (SRAM, DRAM data lines)
 
 ### **NMOS vs PMOS**
+
+NMOS and PMOS are the two complementary transistor types in CMOS technology. Their fundamental difference lies in charge carriers: NMOS uses electrons while PMOS uses holes. Since electron mobility in silicon (~1350 cm²/V·s) is approximately 2-3× higher than hole mobility (~480 cm²/V·s), NMOS transistors switch faster and can be smaller for equivalent drive strength. This is why PMOS transistors in a balanced CMOS inverter are typically sized 2-3× wider than their NMOS counterparts.
 
 | Property | NMOS | PMOS |
 |----------|------|------|
@@ -523,6 +543,8 @@ end
 
 **FSM Types:**
 
+Finite state machines are classified by how their outputs are generated. Moore machines produce outputs based solely on the current state, resulting in glitch-free registered outputs but potentially requiring more states. Mealy machines generate outputs based on both current state and inputs, enabling faster response with fewer states but potentially introducing glitches on output transitions.
+
 | Aspect | Moore Machine | Mealy Machine |
 |--------|---------------|---------------|
 | **Output depends on** | Current state only | Current state + inputs |
@@ -561,6 +583,8 @@ end
 ## Combinational Logic
 
 ### **Full adder**
+
+A full adder is the fundamental building block for arithmetic circuits, adding three single-bit inputs (two operands and a carry-in) to produce a sum and carry-out. Multiple full adders can be cascaded to create ripple-carry adders for multi-bit addition, though more advanced architectures like carry-lookahead or carry-select adders are used for higher performance.
 
 | a | b | Cin | Sum | Cout |
 |:---:|:---:|:---:|:---:|:----:|
@@ -631,6 +655,8 @@ Cout = ab + aCin + bCin
 
 ### **ASIC vs FPGA Comparison**
 
+ASICs (Application-Specific Integrated Circuits) and FPGAs (Field-Programmable Gate Arrays) represent different trade-offs in digital design. ASICs offer maximum performance and lowest unit cost at high volumes but require expensive mask fabrication and cannot be modified after manufacturing. FPGAs provide flexibility and rapid prototyping but sacrifice performance and power efficiency due to programmable routing overhead. The choice depends on volume, time-to-market, and whether the design may need future updates.
+
 | Aspect | ASIC | FPGA |
 |--------|------|------|
 | **Reconfigurability** | Fixed after fabrication | Reprogrammable |
@@ -658,12 +684,18 @@ Cout = ab + aCin + bCin
 | **Cost** | Higher | Lower |
 
 **When to use FPGA:**
+
+FPGAs excel in applications requiring high logic density, complex algorithms, or frequent design updates. Their LUT-based architecture efficiently implements any combinational function, while abundant registers and embedded blocks support sophisticated designs.
+
 - Complex digital signal processing
 - High-speed interfaces (PCIe, DDR)
 - Prototyping ASIC designs
 - Applications requiring embedded processors
 
 **When to use CPLD:**
+
+CPLDs are ideal for simpler applications where deterministic timing and instant-on operation are critical. Their non-volatile storage means the design is ready immediately after power-up without configuration loading.
+
 - Simple control logic
 - Boot sequencing
 - Level shifting / voltage translation
@@ -671,7 +703,7 @@ Cout = ab + aCin + bCin
 
 ### **FPGA Architecture**
 
-FPGA consists of 6 main components:
+Modern FPGAs are organized as a sea of configurable logic blocks surrounded by programmable I/O and interconnected by a hierarchical routing network. This architecture enables implementation of virtually any digital circuit by programming the logic functions, memory contents, and routing connections. The key to understanding FPGA capabilities is knowing how each component type contributes to the overall design.
 
 | Component | Description |
 |-----------|-------------|
@@ -683,6 +715,8 @@ FPGA consists of 6 main components:
 | **Hard IP** | DSP blocks, SerDes, embedded processors |
 
 #### **CLB (Configurable Logic Block)**
+
+The Configurable Logic Block is the fundamental computational element in an FPGA. Each CLB can implement arbitrary combinational logic through its Look-Up Tables (LUTs) and sequential logic through its flip-flops. The combination of programmable logic and storage in a single block enables efficient implementation of both datapath and control logic.
 
 Each CLB contains:
 - **LUT (Look-Up Table)**: Implements combinational logic (typically 4-6 inputs)
@@ -713,6 +747,8 @@ The LUT is programmed with: 0001 (binary) = truth table of AND
 
 #### **I/O Block (IOB)**
 
+I/O Blocks provide the interface between the FPGA's internal logic and the external world. Each IOB can be configured to support various voltage levels and signaling standards, enabling direct connection to diverse external devices without level-shifting circuitry. The registered I/O paths improve timing by placing flip-flops at the chip boundary.
+
 Each I/O element contains:
 - Input register
 - Output register
@@ -721,6 +757,8 @@ Each I/O element contains:
 - Configurable for: LVDS, LVCMOS, SSTL, HSTL, etc.
 
 #### **Routing Resources**
+
+The programmable interconnect consumes the majority of FPGA silicon area and significantly impacts timing. Routing is organized hierarchically: fast local connections for adjacent blocks, longer segmented lines for medium distances, and dedicated global networks for clocks and resets. The routing architecture determines how efficiently logic can be interconnected and often limits achievable clock frequencies.
 
 | Type | Description |
 |------|-------------|
@@ -732,7 +770,7 @@ Each I/O element contains:
 
 #### **Clock Resources**
 
-Three levels of clock distribution:
+Clock distribution is critical for FPGA performance and reliability. FPGAs provide dedicated low-skew clock networks separate from general routing to ensure all flip-flops see clock edges within tight timing bounds. Multiple clock network levels allow designers to balance between global reach (all logic) and local performance (specific regions).
 
 | Level | Description |
 |-------|-------------|
@@ -741,6 +779,9 @@ Three levels of clock distribution:
 | **I/O clock** | Local clocks for SerDes/DDR interfaces |
 
 **PLL (Phase-Locked Loop):**
+
+PLLs are essential clock management resources that manipulate input clock signals to generate precisely controlled output clocks. They use feedback loops to lock onto an input reference and can synthesize multiple derived clocks from a single input.
+
 - Frequency multiplication/division
 - Phase shifting
 - Duty cycle correction
@@ -748,7 +789,7 @@ Three levels of clock distribution:
 
 #### **Embedded Memory (Block RAM)**
 
-Configurable memory blocks (e.g., M4K = 4608 bits):
+Block RAMs are dedicated memory resources embedded throughout the FPGA fabric. Unlike distributed RAM (implemented in LUTs), Block RAMs provide larger, more power-efficient storage with dedicated read/write ports. They can be configured in various widths and depths to match application requirements, from narrow deep FIFOs to wide shallow register files.
 
 | Mode | Description |
 |------|-------------|
@@ -764,6 +805,8 @@ Configurable memory blocks (e.g., M4K = 4608 bits):
 FPGA configuration data must be loaded on every power-up (volatile SRAM-based).
 
 #### **JTAG Configuration**
+
+JTAG (IEEE 1149.1) is a standard interface originally designed for board-level testing but widely used for FPGA configuration and debugging. It provides direct access to the configuration memory through a simple 4-wire interface, making it ideal for development environments where rapid iteration is more important than configuration speed.
 
 | Signal | Direction | Description |
 |--------|-----------|-------------|
@@ -808,7 +851,8 @@ Multiple FPGAs share single configuration memory:
 ## **Synthesis**
 
 ### **Technology library**
-Technology libraries characterize cells under different PVT (Process, Voltage, Temperature) corners:
+
+Technology libraries (.lib/.db files) contain timing, power, and area characterization data for standard cells. Since transistor behavior varies with manufacturing process, supply voltage, and operating temperature, cells are characterized across multiple PVT (Process, Voltage, Temperature) corners. Using appropriate libraries for different analysis scenarios ensures designs work under all operating conditions.
 
 | Library | Process | Voltage | Temperature | Use Case |
 |---------|---------|---------|-------------|----------|
@@ -820,6 +864,8 @@ Technology libraries characterize cells under different PVT (Process, Voltage, T
 Can be solved by wire load model
 
 ### **Delay Models**
+
+Delay models represent how signal propagation time is calculated during timing analysis. The choice of model affects both accuracy and runtime. Early in the design flow, simpler models provide quick feedback; as the design matures and layout information becomes available, more accurate models ensure reliable timing closure.
 
 | Model | Description | Accuracy | Use Case |
 |-------|-------------|----------|----------|
@@ -898,6 +944,9 @@ CG with AND gate may have glitch due to unstable enable signal
 ![Glitch prevention](https://i.imgur.com/WfrnP41.png)
 
 **Types of Clock Gating:**
+
+Clock gating can be inserted explicitly by the designer or automatically by the synthesis tool. Automatic clock gating typically achieves 20-40% power savings with minimal area overhead.
+
 - **RTL-based (Intent-based)**: Designer explicitly codes clock gating
 - **Tool-generated**: Synthesis tool identifies flip-flops sharing same control logic
 
@@ -952,12 +1001,18 @@ compile_ultra -no_boundary_optimization                 # global disable
 | **Tools** | VCS, ModelSim, NC-Verilog | PrimeTime, Tempus |
 
 **STA Advantages:**
+
+Static timing analysis mathematically computes all possible timing paths without requiring simulation vectors. This makes it both exhaustive and efficient, catching timing violations that might be missed by simulation.
+
 - No input stimuli required
 - Finds nearly all critical paths
 - Fast execution, low memory usage
 - Exhaustive path analysis
 
 **STA Disadvantages:**
+
+STA's static nature means it cannot handle asynchronous logic or verify functional correctness. Designers must carefully specify exceptions for paths that don't follow normal timing rules.
+
 - Synchronous circuits only
 - Cannot verify functionality
 - Tricky constraints for special cases:
@@ -966,15 +1021,23 @@ compile_ultra -no_boundary_optimization                 # global disable
   - Multiple clock domains
 
 **DTA Advantages:**
+
+Dynamic timing analysis simulates actual circuit behavior with real delays, making it suitable for verifying asynchronous logic and confirming that functionality is preserved under timing constraints.
+
 - Works for any circuit type (including asynchronous)
 - Verifies both timing and functionality
 
 **DTA Disadvantages:**
+
+The simulation-based approach means DTA is only as good as its test vectors. Achieving full path coverage is practically impossible, and runtime grows significantly with design complexity.
+
 - Critical paths may be missed (depends on vectors)
 - Very slow simulation
 - High memory and compute requirements
 
 ### **Pre-simulation vs Post-simulation**
+
+Digital designs undergo simulation at multiple stages, with each stage revealing different types of issues. Pre-simulation (RTL) verifies logical correctness quickly, while post-simulation (gate-level with SDF) confirms the design meets timing requirements with actual delays. Both are essential: pre-simulation catches functional bugs early, post-simulation catches timing-related failures.
 
 | Aspect | Pre-simulation | Post-simulation |
 |--------|----------------|-----------------|
@@ -990,12 +1053,18 @@ compile_ultra -no_boundary_optimization                 # global disable
 **Post-layout simulation:** Most accurate, includes actual routing delays and parasitics.
 
 ### **Types of timing path**
-* reg (clk) → reg (D) : Register to Register
-* reg (clk) → OUTPUT : Register to Output
-* INPUT → reg (D) : Input to Register
-* INPUT (clk) → OUTPUT : Input to Output (combinational)
+
+STA analyzes timing along all possible signal paths in the design. Understanding path types helps in setting appropriate constraints and interpreting timing reports. Each path type has different characteristics and constraint requirements.
+
+* reg (clk) → reg (D) : Register to Register (most common, constrained by clock period)
+* reg (clk) → OUTPUT : Register to Output (constrained by output delay)
+* INPUT → reg (D) : Input to Register (constrained by input delay)
+* INPUT (clk) → OUTPUT : Input to Output (combinational path, constrained by max delay)
 
 ### **Type of STA**
+
+Two fundamental approaches exist for propagating delays through a design. Path-based analysis tracks each unique path separately for maximum accuracy, while block-based analysis uses arrival time windows at each node for computational efficiency. Most commercial tools use block-based STA with path enumeration only for critical paths.
+
 *  Path-based STA
     - Real situation, considers actual delay of each path
     - Complex computation
@@ -1006,6 +1075,9 @@ compile_ultra -no_boundary_optimization                 # global disable
     - Faster computation
 
 ### **Setup & Hold check**
+
+Setup and hold are the fundamental timing constraints for flip-flops. Setup time defines how early data must arrive before the clock edge, while hold time defines how long data must remain stable after the clock edge. Violating either causes the flip-flop to potentially enter a metastable state, producing unpredictable outputs.
+
 * `Setup` (Max delay) - Data must be stable **before** clock edge
 
 ```
@@ -1086,7 +1158,7 @@ The reset must remain asserted for at least Tremoval after clock edge.
 
 ### **Clock Jitter**
 
-Clock jitter is the deviation of clock edges from their ideal positions.
+Clock jitter is the deviation of clock edges from their ideal positions, caused by noise in clock generation and distribution circuits. Jitter effectively reduces the available timing margin because the actual clock edge may arrive earlier or later than expected. In high-speed designs, jitter can consume a significant portion of the timing budget.
 
 | Type | Description |
 |------|-------------|
@@ -1095,9 +1167,12 @@ Clock jitter is the deviation of clock edges from their ideal positions.
 | **Long-term Jitter** | Accumulated timing error over many cycles |
 
 **Sources of Jitter:**
-- PLL/DLL noise
-- Power supply noise
-- Thermal noise
+
+Multiple noise sources contribute to clock jitter, with power supply noise typically being the dominant factor in on-chip PLLs.
+
+- PLL/DLL noise (phase detector, VCO non-idealities)
+- Power supply noise (IR drop, switching noise)
+- Thermal noise (random electron motion)
 - Crosstalk from adjacent signals
 
 **Impact on Timing:**
@@ -1112,14 +1187,17 @@ Hold check: Tjitter can cause hold violations if edges shift
 - Typical values: 50-200 ps for on-chip PLLs
 
 **Reducing Jitter:**
-- Use clean power supplies for PLLs
-- Proper decoupling capacitors
-- Shield clock signals from noisy traces
-- Use dedicated clock routing resources
+
+Jitter reduction focuses on minimizing noise sources and providing clean reference signals to clock generation circuits. Power supply noise is often the dominant contributor to PLL jitter.
+
+- Use clean power supplies for PLLs (dedicated LDO regulators)
+- Proper decoupling capacitors (multiple values for different frequencies)
+- Shield clock signals from noisy traces (guard rings, spacing)
+- Use dedicated clock routing resources (global clock networks in FPGAs)
 
 ### **OCV (On-Chip Variation)**
 
-OCV accounts for timing variations within the same chip due to:
+On-Chip Variation accounts for the fact that identical cells on the same chip can have different delays due to local manufacturing variations, voltage drops, and temperature gradients. Traditional corner-based analysis assumes all cells see the same conditions, but OCV provides more realistic analysis by applying derating factors to account for within-die variation.
 
 | Factor | Description |
 |--------|-------------|
@@ -1177,29 +1255,39 @@ Capture path: Use faster cells (min delay) × (1 - OCV_early)
 ![Delay bound 2](https://i.imgur.com/Jd9shRH.png)
 
 ### **Special timing path**
-* `False paths` - Timing paths ignored by STA
-    1. Unexercised path
-        - Paths not used under normal conditions
-        - e.g., probe for debugging
-    2. Irrelevant path
-        - Paths that are too slow or where speed doesn't matter
-        - e.g., reset
-    3. Asynchronous path
-        - Paths in different clock domains
-        - clock domain crossing (CDC) : transfer data from clk1 to clk2
-        - CDC requires advanced timing correction
-    4. Logically impossible path
-        - Exists in the circuit but data cannot possibly pass through
-        - Should be detected by PrimeTime
-    5. Combinational loops
 
-* `Multicycle paths` - Timing paths that take more than one cycle
-    - Example: A slow multiplier that takes 2 clock cycles
-    - Must explicitly constrain: `set_multicycle_path 2 -setup`
+Not all paths in a design require single-cycle timing closure. Correctly identifying and constraining special paths prevents over-design and enables realistic timing optimization.
+
+**False paths** are timing paths that STA should ignore because they cannot affect actual operation. Incorrectly timing false paths wastes optimization effort and may prevent timing closure on real critical paths.
+
+1. **Unexercised path**
+    - Paths not used under normal conditions
+    - e.g., probe for debugging, test-only logic
+2. **Irrelevant path**
+    - Paths that are too slow or where speed doesn't matter
+    - e.g., reset paths, static configuration signals
+3. **Asynchronous path**
+    - Paths in different clock domains
+    - Clock domain crossing (CDC): transfer data from clk1 to clk2
+    - CDC requires special synchronization, not timing constraints
+4. **Logically impossible path**
+    - Exists in the circuit but data cannot possibly pass through
+    - Example: mutually exclusive MUX select conditions
+    - Should be detected by PrimeTime
+5. **Combinational loops**
+    - Should be broken with `set_disable_timing`
+
+**Multicycle paths** are timing paths intentionally designed to take more than one clock cycle. These occur when a slow operation's result isn't needed until multiple cycles later.
+
+- Example: A slow multiplier that takes 2 clock cycles
+- Must explicitly constrain: `set_multicycle_path 2 -setup`
+- Hold check also affected: typically `set_multicycle_path 1 -hold`
 
 ## **Low Power Design Techniques**
 
 ### **Power Components**
+
+Power consumption in CMOS circuits consists of two main components: dynamic power (consumed during switching) and static power (consumed even when idle). As process technology scales to smaller nodes, static power becomes increasingly significant due to higher leakage currents through thinner gate oxides and reduced threshold voltages.
 
 **Dynamic Power:**
 ```
@@ -1219,6 +1307,8 @@ P_dynamic = α × C_L × V_DD² × f
 | **Junction** | Reverse-biased PN junction leakage |
 
 ### **Power Reduction Techniques**
+
+Multiple techniques exist to reduce power consumption, each targeting different power components and applicable at different design stages. The choice of technique depends on power budget requirements, performance constraints, and implementation complexity.
 
 | Technique | Target Power | Description | Trade-off |
 |-----------|--------------|-------------|-----------|
@@ -1241,7 +1331,10 @@ P_dynamic = α × C_L × V_DD² × f
 **Speed vs Leakage:** HVT < SVT < LVT < SLVT
 
 **Multi-Vt Optimization Strategy:**
-1. Start with all HVT cells
+
+Modern synthesis and optimization tools automatically select cell Vt types to minimize leakage while meeting timing. The general approach is conservative: use slow, low-leakage cells by default and selectively upgrade only where needed.
+
+1. Start with all HVT cells (minimize leakage baseline)
 2. Replace cells on critical paths with LVT/SLVT
 3. Balance timing closure with leakage budget
 
@@ -1558,6 +1651,9 @@ Clock uncertainty accounts for timing variations in the clock network.
 - Minimize power consumption
 
 **CTS Best Practices:**
+
+Effective CTS requires balancing multiple competing goals. Aggressive skew targets increase buffer count and power, while relaxed targets may cause hold violations. Start with realistic constraints and iterate.
+
 - Select appropriate clock root locations
 - Use minimum RC metal layers for clock routing
 - Consider double-width routing for reduced resistance
@@ -1583,6 +1679,9 @@ report_congestion -routing_stage detail
 ```
 
 **Prevention Strategies:**
+
+Routing congestion is best addressed early in the design flow. Fixing congestion after detailed routing is expensive and may require floorplan changes that ripple through timing closure.
+
 - Use congestion-driven placement
 - Set cell density limits (e.g., 70-80%)
 - Add routing blockages in congested areas
@@ -1648,6 +1747,9 @@ ECO is the process of making late-stage design modifications.
 4. Verify functionality preserved
 
 **Spare Cell Strategy:**
+
+Spare cells are pre-placed logic elements that can be connected via metal-only ECO after mask fabrication. Proper spare cell planning can save weeks of schedule and millions in mask costs.
+
 - Insert spare cells during implementation (~2-5% of design)
 - Distribute evenly across chip
 - Include mix of cell types (INV, NAND, NOR, FF)
@@ -1684,6 +1786,9 @@ Normal Mode:        Scan Mode:
 | **Capture** | 0 | Capture response into scan FFs |
 
 **Scan Test Flow:**
+
+The scan test process converts sequential testing into a three-phase operation. By controlling scan enable (SE), the tester can load any desired state, observe one clock cycle of functional behavior, and read out results.
+
 1. **Shift-in**: SE=1, clock test pattern into scan chain
 2. **Capture**: SE=0, apply one functional clock, capture response
 3. **Shift-out**: SE=1, clock out captured response while shifting in next pattern
@@ -1707,6 +1812,9 @@ insert_dft
 ```
 
 **Scan Chain Compression:**
+
+As designs grow larger, full scan chains become impractical due to test time and tester memory limitations. Compression techniques maintain fault coverage while dramatically reducing test data volume.
+
 - Full scan requires many test pins and long test time
 - Compression (e.g., DFTMAX) reduces test data volume
 - Uses decompressor (input) and compactor (output)
@@ -1737,12 +1845,17 @@ Latch-up is a parasitic thyristor (PNPN) effect in CMOS that can cause permanent
 The parasitic PNP and NPN transistors form a thyristor (SCR) structure. Once triggered, it creates a low-resistance path from VDD to GND.
 
 **Triggering Conditions:**
-- Voltage spikes on I/O pins
-- ESD events
-- High junction temperature
-- Excessive current injection
+
+Latch-up is triggered when sufficient current flows through the parasitic BJT base regions to turn on the thyristor structure. Once triggered, the positive feedback loop sustains conduction even after the trigger is removed.
+
+- Voltage spikes on I/O pins (exceeding VDD or below GND)
+- ESD events (sudden charge injection)
+- High junction temperature (increases leakage, reduces trigger threshold)
+- Excessive current injection (from external circuits)
 
 **Prevention Methods:**
+
+Prevention strategies aim to reduce parasitic BJT gain and provide low-resistance paths for charge dissipation before the thyristor can trigger.
 
 | Method | Description |
 |--------|-------------|
@@ -1753,6 +1866,9 @@ The parasitic PNP and NPN transistors form a thyristor (SCR) structure. Once tri
 | **Reduce substrate resistance** | Heavy doping, more substrate contacts |
 
 **Design Rules:**
+
+Foundries provide specific design rules to ensure latch-up immunity. These rules are mandatory for tape-out and verified during DRC (Design Rule Check).
+
 - Maximum distance from transistor to well tap
 - Minimum guard ring width
 - I/O cells require robust latch-up protection
@@ -1787,6 +1903,8 @@ Typical limit: Antenna Ratio < 400-1000 (process dependent)
 
 **Prevention Methods:**
 
+Antenna violations are fixed by providing discharge paths or reducing the metal area connected to gates during fabrication. Modern place-and-route tools automatically detect and fix most antenna violations.
+
 | Method | Description |
 |--------|-------------|
 | **Diode insertion** | Add reverse-biased diode to discharge accumulated charge |
@@ -1802,6 +1920,9 @@ Typical limit: Antenna Ratio < 400-1000 (process dependent)
 ```
 
 **DRC Checks:**
+
+Antenna rules are checked as part of the physical verification flow. The router can be configured to automatically insert diodes or adjust routing to fix violations.
+
 - Tools check antenna ratio at each metal layer
 - Violations flagged for manual or automatic fixing
 - Critical for advanced nodes with thinner gate oxides
@@ -1809,6 +1930,8 @@ Typical limit: Antenna Ratio < 400-1000 (process dependent)
 ## **Memory**
 
 ### **SRAM vs DRAM**
+
+SRAM (Static RAM) and DRAM (Dynamic RAM) represent fundamental trade-offs in memory design. SRAM uses cross-coupled inverters to store each bit, providing fast access but requiring 6 transistors per cell. DRAM stores charge in a capacitor, achieving much higher density with just 1 transistor and 1 capacitor per cell, but requiring periodic refresh due to charge leakage. This explains why CPUs use SRAM for fast caches and DRAM for large main memory.
 
 | Feature | SRAM | DRAM |
 |---------|------|------|
@@ -1843,6 +1966,8 @@ Typical limit: Antenna Ratio < 400-1000 (process dependent)
 - Acceptable latency for bulk data storage
 
 ### **Write-back vs Write-through Cache**
+
+Cache write policies determine how modifications are propagated to main memory. Write-through immediately updates both cache and memory, ensuring consistency but incurring memory latency on every write. Write-back only updates the cache, deferring memory writes until the cache line is evicted, improving performance but requiring dirty bit tracking and more complex coherence handling.
 
 | Aspect | Write-through | Write-back |
 |--------|---------------|------------|
@@ -1885,6 +2010,8 @@ Branch predictor predicts the outcome of branch instructions to keep pipeline fu
 - With prediction: speculatively fetch predicted path
 
 **Types of Branch Predictors:**
+
+Branch predictors have evolved from simple static rules to sophisticated learning-based approaches. Modern processors use multiple predictors in parallel, selecting the best prediction based on branch history and program context.
 
 | Type | Description | Accuracy |
 |------|-------------|----------|
@@ -2007,6 +2134,8 @@ With N-stage pipeline: Tclk ≥ Tcq + (Tlogic_total/N) + Tsetup
 
 ### **Clock Skew Effect on Setup/Hold**
 
+Clock skew is the difference in arrival time of the clock signal at different flip-flops. While often considered harmful, skew can be deliberately used ("useful skew") to fix timing violations. Understanding how skew affects setup and hold margins is crucial for both timing analysis and optimization.
+
 **Clock skew** = arrival time difference between clocks at launch and capture flip-flops.
 
 ```
@@ -2034,7 +2163,7 @@ This occurs in fast flip-flop designs where internal delays ensure data is alrea
 
 ### **SystemVerilog Purpose**
 
-Extensions over Verilog for:
+SystemVerilog (IEEE 1800) extends Verilog with features for both design and verification. It adds hardware description enhancements like interfaces and always_ff/always_comb blocks, plus powerful verification constructs including classes, constrained random generation, and assertions. Modern verification methodologies (UVM) are built entirely on SystemVerilog.
 
 | Feature | Purpose |
 |---------|---------|
@@ -2047,6 +2176,8 @@ Extensions over Verilog for:
 | **Covergroups** | Functional coverage collection |
 
 ### **Building Gates Using MUX**
+
+A 2:1 multiplexer is functionally complete—any Boolean function can be implemented using only MUXes. This principle underlies FPGA LUT architecture, where N-input LUTs are essentially 2^N:1 MUXes with programmable truth tables. Understanding MUX-based gate implementation is a common interview question.
 
 **2:1 MUX behavior:** `Y = S ? I1 : I0`
 
@@ -2099,6 +2230,8 @@ Y = B ? NOT(A) : 1  →  NOT(A AND B)
 
 ### **Building Gates Using NAND Only**
 
+NAND gates are universal—any Boolean function can be implemented using only NAND gates. This is why NAND-based standard cell libraries were historically common (though modern libraries include optimized cells for each function). The same universality applies to NOR gates.
+
 ```
 NOT:  Y = (A NAND A) = A'
 AND:  Y = ((A NAND B) NAND (A NAND B)) = A·B
@@ -2107,6 +2240,8 @@ XOR:  Y = ((A NAND (A NAND B)) NAND (B NAND (A NAND B)))
 ```
 
 ### **How Cache Accelerates CPU**
+
+Caches bridge the speed gap between fast CPUs and slow main memory by keeping frequently-accessed data close to the processor. The effectiveness of caching depends on program behavior exhibiting locality—the tendency to access the same or nearby memory locations repeatedly.
 
 Cache exploits **temporal** and **spatial locality**:
 
@@ -2140,6 +2275,8 @@ AMAT = Hit_time + Miss_rate × Miss_penalty
 **Solutions for multi-bit:** Async FIFO, handshake, MCP (multi-cycle path).
 
 ### **Files Needed for Synthesis**
+
+Logic synthesis requires the design source code, timing/power characterization of target cells, and constraints specifying timing requirements. Missing or incorrect files result in synthesis failures or designs that don't meet specifications.
 
 | File Type | Description |
 |-----------|-------------|
