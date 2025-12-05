@@ -25,7 +25,7 @@
   }
 
   @include breakpoint($large) {
-    @include span(2 of 12);
+    width: 200px;  // Fixed width instead of percentage
     opacity: 1;
     -webkit-transition: opacity 0.2s ease-in-out;
             transition: opacity 0.2s ease-in-out;
@@ -36,7 +36,10 @@
   }
 
   @include breakpoint($x-large) {
-    max-width: $sidebar-link-max-width;
+    // Calculate left position to align with centered container
+    // (viewport - container) / 2 + padding
+    left: calc((100vw - #{$x-large}) / 2 + 1em);
+    width: 220px;
     padding-right: 0;
   }
 
