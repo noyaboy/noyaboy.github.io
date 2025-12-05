@@ -11,6 +11,9 @@ tags:
 
 ## 目錄
 
+### 📋 [面試準備指南](#-面試準備指南)
+- [高頻考點排行榜](#-高頻考點排行榜) | [答題策略](#-面試答題策略) | [常見陷阱](#️-常見陷阱與追問) | [複習順序](#-建議的複習順序) | [白板題準備](#-白板題手寫程式準備)
+
 ### 基礎概念
 - [Latch vs Flip-flop](#latch-vs-flip-flop)
 - [Metastability](#metastability)
@@ -142,7 +145,140 @@ tags:
 ### 面試經驗
 - [MTK](#mtk) | [RTK](#rtk) | [NTK](#ntk) | [PHISON](#phison) | [SMI](#smi) | [GUC](#guc)
 
-### [參考資料](#references)
+### 📌 [面試前最後提醒](#-面試前最後提醒)
+- [面試前一天 Checklist](#-面試前一天-checklist) | [面試中的關鍵技巧](#-面試中的關鍵技巧) | [常見扣分行為](#️-常見扣分行為) | [加分技巧](#-加分技巧) | [必背公式速記](#-必背公式速記)
+
+### [參考資料](#參考資料)
+
+---
+
+## 📋 面試準備指南
+
+> **如何使用這份筆記準備面試？** 這份筆記涵蓋了數位 IC 設計面試的核心主題。根據 MTK、RTK、NTK、PHISON、SMI、GUC 等公司的面試經驗，以下是高頻考點和準備建議。
+
+### 🎯 高頻考點排行榜
+
+根據實際面試經驗統計，以下主題出現頻率最高：
+
+| 排名 | 主題 | 出現頻率 | 必備程度 |
+|------|------|----------|----------|
+| 1 | **Setup/Hold 時序分析** | ⭐⭐⭐⭐⭐ | 必考 |
+| 2 | **CDC（跨時脈域）** | ⭐⭐⭐⭐⭐ | 必考 |
+| 3 | **Blocking vs Non-blocking** | ⭐⭐⭐⭐⭐ | 必考 |
+| 4 | **Metastability** | ⭐⭐⭐⭐ | 必考 |
+| 5 | **Clock Gating / 低功耗** | ⭐⭐⭐⭐ | 高頻 |
+| 6 | **除頻電路設計** | ⭐⭐⭐⭐ | 高頻 |
+| 7 | **用 MUX/NAND 建構邏輯閘** | ⭐⭐⭐⭐ | 高頻 |
+| 8 | **IC 設計流程** | ⭐⭐⭐ | 中頻 |
+| 9 | **Gray Code / Async FIFO** | ⭐⭐⭐ | 中頻 |
+| 10 | **FSM 設計** | ⭐⭐⭐ | 中頻 |
+
+### 📝 面試答題策略
+
+**技術問題的回答框架：**
+
+1. **先說「是什麼」（What）**：用一句話定義概念
+2. **再說「為什麼」（Why）**：解釋這個概念為何重要
+3. **最後說「怎麼做」（How）**：給出實際應用或解決方案
+4. **準備追問**：面試官通常會根據你的回答深入追問
+
+**範例：「請解釋什麼是 metastability？」**
+
+> ✅ 好的回答：
+> 「Metastability 是當 flip-flop 的 setup 或 hold time 被違反時，輸出可能進入不穩定狀態的現象（What）。這在 CDC 設計中特別重要，因為非同步訊號必然會在某個時刻違反 destination flip-flop 的時序要求（Why）。解決方案是使用 2-FF 或 3-FF synchronizer，給第一級 flip-flop 足夠時間從 metastable 狀態恢復（How）。」
+
+### ⚠️ 常見陷阱與追問
+
+| 主題 | 常見追問 | 陷阱提醒 |
+|------|----------|----------|
+| **Setup/Hold** | 「Hold time 可以是負的嗎？」「Hold 與 clock period 有關嗎？」 | Hold time 與 clock period 無關！ |
+| **CDC** | 「2-FF synchronizer 能解決所有 CDC 問題嗎？」 | 不能！Multi-bit 需要 Gray code 或 Async FIFO |
+| **Clock Gating** | 「為何要用 latch-based ICG？」 | 避免 enable 訊號產生 glitch |
+| **Blocking/Non-blocking** | 「混用會怎樣？」 | 可能造成 simulation/synthesis 不一致 |
+| **除頻電路** | 「如何做到 50% duty cycle 的奇數除頻？」 | 需要同時使用 posedge 和 negedge |
+
+### 🔄 建議的複習順序
+
+```
+第一輪（基礎觀念，1-2天）：
+  基礎概念 → CMOS 基礎 → Verilog/RTL → 組合邏輯
+
+第二輪（核心主題，2-3天）：
+  CDC → STA → 低功耗設計 → 合成
+
+第三輪（進階主題，1-2天）：
+  後端設計 → FPGA → 電路範例
+
+第四輪（面試衝刺，1天）：
+  常見面試問題 → 面試經驗 → 本指南的高頻考點
+```
+
+### 💡 白板題/手寫程式準備
+
+面試常要求手寫 Verilog，以下是必須熟練的電路：
+
+1. **2-FF Synchronizer** — CDC 基礎
+2. **Divide-by-2, Divide-by-3** — 除頻電路
+3. **Dual-edge detection** — 邊緣偵測
+4. **FSM (Mealy/Moore)** — 狀態機
+5. **Sequence detector** — 序列偵測器
+6. **Async FIFO pointer logic** — Gray code 轉換
+
+**手寫程式碼的注意事項：**
+- 使用 `always @(posedge clk or negedge rst_n)` 標準寫法
+- Sequential logic 用 `<=`（non-blocking）
+- Combinational logic 用 `=`（blocking）
+- 記得處理 reset 條件
+- 變數命名要清楚（如 `sync_ff1`, `sync_ff2`）
+
+### 📊 核心概念速查表
+
+**⏱️ STA 速查：**
+```
+Setup Check: Data 必須在 clock edge 「之前」穩定
+  Slack = Required Time - Arrival Time（正值 = PASS）
+  修復：加速 data path 或減慢 capture clock
+
+Hold Check: Data 必須在 clock edge 「之後」保持穩定
+  Slack = Arrival Time - Required Time（正值 = PASS）
+  修復：減慢 data path（加 buffer）
+  ⚠️ Hold 與 clock period 無關！降頻無法修復 hold violation
+```
+
+**🔄 CDC 速查：**
+```
+Single-bit level signal → 2-FF Synchronizer
+Single-bit pulse (slow→fast) → Toggle Synchronizer
+Single-bit pulse (fast→slow) → Pulse Extender
+Multi-bit data → Async FIFO with Gray Code
+
+Gray Code 重點：相鄰值只有 1 bit 不同
+  Binary to Gray: gray = bin ^ (bin >> 1)
+```
+
+**⚡ 低功耗速查：**
+```
+Dynamic Power: P = α × C × V² × f
+  ↓ α：Clock gating, operand isolation
+  ↓ V：DVFS, multi-VDD
+  ↓ f：降頻
+
+Static Power (Leakage):
+  ↓ Multi-Vt：非關鍵路徑用 HVT
+  ↓ Power gating：關閉整個電源域
+```
+
+**🔧 Verilog 速查：**
+```
+Blocking (=)     → Combinational logic
+Non-blocking (<=) → Sequential logic
+絕對不要混用！
+
+產生 Latch 的寫法：
+  - if 沒有 else
+  - case 沒有 default
+  - sensitivity list 不完整（用 always @(*)）
+```
 
 ---
 
@@ -253,6 +389,16 @@ Synchronizer 階段數透過公式中的指數項直接影響 MTBF。每增加�
 **製程節點趨勢：** 在先進製程（28nm 及以下），τ 值約 10ps，T0 約 20ps 是典型的。在 1 GHz 下，資料每 10 個 cycle 變化一次，有一個 clock cycle 用於解決，MTBF 可超過 10^29 年——實際上無限大。
 
 **Altera/Intel 建議：** 使用三個 synchronizer flip-flop 作為標準做法以獲得更好的 metastability 保護，而非僅兩個。
+
+**🎯 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「Metastability 是什麼？什麼時候會發生？」** | 當 flip-flop 的 setup/hold time 被違反時，輸出可能進入不穩定狀態。在 CDC 設計中必然會發生 |
+| **「如何解決 Metastability？」** | 使用 2-FF 或 3-FF synchronizer，給第一級 FF 整個 clock cycle 從 metastable 狀態恢復 |
+| **「為何不用 1 個 FF 就好？」** | 1 個 FF 可能將 metastable 狀態直接傳給下游邏輯，造成功能錯誤。第二個 FF 提供 resolution time |
+| **「什麼情況需要 3-FF？」** | 高可靠性應用（太空、醫療）或高頻設計，3-FF 可使 MTBF 指數級提升 |
+| **「MTBF 公式中哪個參數影響最大？」** | Resolution time (Tr)！因為它在指數項中，Tr 加倍可使 MTBF 提升數個數量級 |
 
 ---
 
@@ -407,6 +553,16 @@ endmodule
 | 快 → 慢 | Pulse extender | 4-6 快速 cycle | 使用 feedback ack |
 | 相同頻率 | 2-FF sync | 2 cycle | 最簡單的方法 |
 | Multi-bit | Async FIFO | 可變 | 最穩健 |
+
+**🎯 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「2-FF synchronizer 能解決所有 CDC 問題嗎？」** | 不能！只能處理 single-bit level signals。Multi-bit 需要 Gray code/FIFO，短 pulse 需要 extender |
+| **「為何用 2 個 FF 而不是 1 個？」** | 第一個 FF 可能進入 metastable，需要給它一個完整 cycle 恢復穩定 |
+| **「可以用 3 個 FF 嗎？」** | 可以！3-FF 用於高可靠性應用（太空、醫療），MTBF 指數級提升 |
+| **「synchronizer FF 前面可以放組合邏輯嗎？」** | 不建議！組合邏輯可能產生 glitch，增加 metastability 風險 |
+| **「快到慢 CDC，pulse 會被錯過嗎？」** | 會！如果 pulse 寬度 < slow clock period，可能完全被錯過，需用 pulse extender |
 
 #### **Multi bit signal**
 
@@ -731,13 +887,18 @@ wire [PTR_WIDTH-1:0] count = wr_ptr_bin_sync - rd_ptr_bin_sync;
 // Almost_full may assert slightly early (safe, but reduced effective depth)
 ```
 
-**常見面試問題:**
+**🎯 Async FIFO 常見面試追問：**
 
-**Q: 為何不直接用 full flag 做 flow control？**
-A: 當 writer 看到 FULL 時，可能已經發出更多寫入。almost_full 提供預先警告，允許優雅地停止。
-
-**Q: 如何選擇 almost_full threshold？**
-A: DEPTH 減去（max_burst_size + synchronization_latency + safety_margin）。
+| 問題 | 答案重點 |
+|------|----------|
+| **「為何 Async FIFO 要用 Gray Code？」** | 因為 Gray code 每次只變 1 bit，即使跨時脈域同步時採樣到轉換中的值，最多只差 1，不會產生錯誤的 pointer 值 |
+| **「Binary to Gray 轉換公式？」** | `gray = bin ^ (bin >> 1)` — 面試常要求手寫 |
+| **「如何判斷 FIFO Full/Empty？」** | Empty: `rd_ptr_gray == wr_ptr_sync`；Full: MSB 相反，其他 bits 相同 |
+| **「FIFO 深度不是 2 的冪次怎麼辦？」** | 利用 Gray code 的對稱性，改變起始點使其仍只有 1 bit 變化 |
+| **「Fast-to-slow CDC，Gray code 還有效嗎？」** | 有效！Slow domain 可能跳過一些值，但不會看到無效值，只會讓 FIFO 報告「比實際更滿/空」（保守行為） |
+| **「FIFO Depth 如何計算？」** | `Depth ≥ B × (1 - f_rd/f_wr)`，B 是 burst 長度，還要加上 sync latency 的 margin |
+| **「為何不直接用 full flag 做 flow control？」** | Writer 可能已發出更多寫入，almost_full 提供預先警告，避免 overrun |
+| **「Almost_full threshold 如何選擇？」** | DEPTH 減去（max_burst_size + synchronization_latency + safety_margin） |
 
 ---
 
@@ -1080,6 +1241,16 @@ always @(posedge clk) begin
     c <= d;  // Proper shift register behavior
 end
 ```
+
+**🎯 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「Blocking 和 Non-blocking 可以混用嗎？」** | 絕對不行！混用會導致 simulation/synthesis 結果不一致，是最常見的 RTL bug 來源 |
+| **「為何 sequential logic 要用 Non-blocking？」** | 因為 Non-blocking 在 NBA region 才更新 LHS，確保所有 RHS 在同一時間點被評估，模擬真實 FF 的並行行為 |
+| **「Blocking 在 sequential logic 中會產生什麼問題？」** | 會產生 race condition，因為 assignments 立即生效，後面的語句會讀到已更新的值，而非原始值 |
+| **「如何快速判斷用哪種？」** | 記住：`always @(posedge clk)` → `<=`；`always @(*)` → `=` |
+| **「Verilog Event Queue 有幾個 region？」** | 5 個：Active → Inactive → NBA → Monitor → Future。Blocking 在 Active 執行，Non-blocking 在 NBA 更新 |
 
 ### **FSM (Finite State Machine) - 三段式寫法**
 
@@ -1965,6 +2136,15 @@ Clock gating 可由設計師明確插入或由合成工具自動插入。自動 
 - **RTL-based（Intent-based）**: 設計師明確編寫 clock gating
 - **Tool-generated**: 合成工具識別共享相同控制邏輯的 flip-flops
 
+**🎯 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「為何用 latch-based ICG 而非 AND gate？」** | AND gate 會產生 glitch！Enable 在 clock high 時變化會產生短脈衝。Latch 在 clock low 時透明，確保 enable 只在 clock low 時改變 |
+| **「Clock gating 節省什麼功耗？」** | 主要節省 dynamic power（降低 switching activity α），對 static/leakage power 無影響 |
+| **「Power gating 和 clock gating 差在哪？」** | Clock gating 只關 clock（省 dynamic power），power gating 關掉整個電源（省 dynamic + static），但需要 isolation cells 和 retention |
+| **「ICG cell 為何用 negative-edge latch？」** | 確保 enable 在 clock 為 low 時被 sample，使 gated clock 只會有完整的 high pulse 或完整的 low，不會有 glitch |
+
 ### **Cross Boundary Optimization**
 
 Cross boundary optimization 允許合成工具跨階層模組邊界最佳化邏輯。
@@ -2142,6 +2322,15 @@ Hold Analysis:
 ```
 
 **關鍵洞見:** Hold time 與 clock period 無關。降低 clock 頻率可修復 setup violations，但無法修復 hold violations。
+
+**🎯 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「Setup 和 Hold 哪個更難修？」** | Hold 更難修！因為 (1) Hold 與 clock period 無關，降頻沒用；(2) 加 buffer 會影響 setup；(3) 必須優先修 hold，否則晶片無法運作 |
+| **「Hold time 可以是負的嗎？」** | 可以！負的 hold time 表示 data 可以在 clock edge 之前就開始變化。這在快速 flip-flop 設計中常見 |
+| **「Clock skew 如何影響 setup/hold？」** | Positive skew（capture 晚到）→ 幫助 setup，傷害 hold。這就是 useful skew 的原理 |
+| **「Setup violation 的晶片還能用嗎？」** | 可以降頻使用。但 Hold violation 的晶片就是報廢（"DUMP the chip"） |
 
 ### **Recovery & Removal Time**
 
@@ -2864,6 +3053,17 @@ negedge 訊號「填補」了間隙，達到 50% duty cycle。
 **原理：** Negative-edge triggered 訊號相位偏移了半個 clock period，因此當 OR 在一起時，組合輸出具有相等的 high 和 low 時間。
 
 **FPGA 考量：** 此技術產生 combinational 輸出，不應直接驅動 FPGA clock 網路。請使用 PLL/DLL 進行正確的 clock 產生。
+
+**🎯 除頻電路常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「如何實現 Divide-by-2？」** | 最簡單：`always @(posedge clk) o_clk <= ~o_clk;`，每個 rising edge toggle 一次 |
+| **「Divide-by-N 電路需要多少 bits 的 counter？」** | `⌈log₂(N)⌉` bits，例如 divide-by-5 需要 3 bits |
+| **「奇數除頻如何達到 50% duty cycle？」** | 同時用 posedge 和 negedge counters，用 OR 結合兩者的輸出，negedge 訊號「填補」間隙 |
+| **「為何不能只用一個 counter 做奇數除頻 50% duty cycle？」** | 因為奇數無法平均分成兩半，單一 counter 只能產生 (N-1)/2N 或 (N+1)/2N 的 duty cycle |
+| **「Divide-by-1.5 可能嗎？」** | 不能直接用數位電路實現分數除頻，需用 PLL 或特殊技巧（如 divide-by-3 配合 DDR） |
+| **「手寫 Divide-by-3 的 Verilog？」** | 關鍵：兩個 counters（posedge/negedge）、threshold 比較、OR 結合輸出 |
 
 ### **Glitch-free Clock Mux**
 
@@ -4670,6 +4870,19 @@ OR:   Y = ((A NAND A) NAND (B NAND B)) = A+B
 XOR:  Y = ((A NAND (A NAND B)) NAND (B NAND (A NAND B)))
 ```
 
+**🎯 MUX/NAND 建構邏輯閘常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「用 2:1 MUX 實現 AND gate？」** | `Y = B ? A : 0`，B 為 select，A 和 0 為輸入 |
+| **「用 2:1 MUX 實現 OR gate？」** | `Y = B ? 1 : A`，B 為 select，1 和 A 為輸入 |
+| **「用 2:1 MUX 實現 XOR gate？」** | `Y = B ? ~A : A`，需要 A 的反相（需另一個 MUX 或 inverter） |
+| **「為何 NAND 和 NOR 稱為 universal gates？」** | 因為只用 NAND（或只用 NOR）就能實現任何 Boolean function |
+| **「用 NAND 實現 NOT？」** | `Y = A NAND A = A'`，兩個輸入接同一訊號 |
+| **「用 NAND 實現 AND？」** | 需要 2 個 NAND：`Y = (A NAND B) NAND (A NAND B)` |
+| **「用 NAND 實現 OR？」** | `Y = (A NAND A) NAND (B NAND B)` = A' NAND B' = A + B |
+| **「為何 FPGA 用 LUT 實現邏輯？」** | N 輸入 LUT 本質上是 2^N:1 MUX + SRAM，可實現任何 N 輸入 Boolean function |
+
 ### **How Cache Accelerates CPU**
 
 Caches bridge the speed gap between fast CPUs and slow main memory by keeping frequently-accessed data close to the processor. The effectiveness of caching depends on program behavior exhibiting locality—the tendency to access the same or nearby memory locations repeatedly.
@@ -5122,6 +5335,66 @@ grep "slack" timing.rpt | sort -k2 -n | head -1
 部門：APR、DFT
 
 面試題目：APR flow、power ring、CTS purpose、IR drop、scan chain、test/fault coverage differences、scan reorder、lockup latch、BIST、stuck at fault、transition delay fault、cross talk、electromigration、draw SDFF、boundary scan、why DFT is needed、DRC/LVS、ATPG、how to verify APR function matches RTL、APR command、problems encountered in back-end with advanced process、LEF and DB file contents、wire load model
+
+---
+
+## 📌 面試前最後提醒
+
+> **讀完這份筆記後，你已經掌握了數位 IC 設計面試的核心知識。以下是面試當天的關鍵提醒。**
+
+### ✅ 面試前一天 Checklist
+
+- [ ] 複習「核心概念速查表」（STA、CDC、低功耗、Verilog）
+- [ ] 確認能手寫：2-FF Synchronizer、Divide-by-3、Dual-edge detector
+- [ ] 複習 Setup/Hold 公式，確認 Hold 與 clock period 無關
+- [ ] 準備「為何選擇數位 IC 設計」的回答
+- [ ] 查詢該公司的主要產品線和技術方向
+
+### 🎯 面試中的關鍵技巧
+
+**回答問題的黃金框架：**
+1. **What**：一句話定義（展示你知道這是什麼）
+2. **Why**：為何重要（展示你理解背後的動機）
+3. **How**：如何解決/實現（展示你有實作能力）
+4. **Trade-off**：提及權衡考量（展示你有深度思考）
+
+**範例：** 當被問到「什麼是 Clock Gating？」
+
+> ❌ 差的回答：「Clock gating 就是用 gate 控制 clock。」
+>
+> ✅ 好的回答：「Clock gating 是一種低功耗技術（What），透過在非活動模組關閉 clock 來降低動態功耗（Why）。實作上通常用 latch-based ICG cell 而非簡單的 AND gate，因為 AND gate 在 enable 變化時可能產生 glitch（How）。權衡是會增加少量面積和 clock tree 複雜度，但通常能節省 30-50% 的動態功耗（Trade-off）。」
+
+### ⚠️ 常見扣分行為
+
+| 行為 | 為何扣分 | 正確做法 |
+|------|----------|----------|
+| **回答「不知道」就結束** | 顯示缺乏思考能力 | 說出你知道的相關知識，展示推理過程 |
+| **只背誦定義** | 顯示缺乏理解 | 連結到實際應用場景 |
+| **忽略追問** | 錯失展示深度的機會 | 追問是加分機會，要認真回答 |
+| **手寫程式太慢** | 顯示不夠熟練 | 事前多練習，記住 template |
+| **Setup/Hold 混淆** | 這是基礎中的基礎 | 確保公式和概念完全清楚 |
+
+### 🏆 加分技巧
+
+- **主動提及 trade-offs**：每個設計決策都有權衡，展示你理解這點
+- **連結到實際經驗**：提及你做過的專案如何應用這些概念
+- **問好問題**：面試最後問關於技術方向、團隊文化的問題
+- **展示學習能力**：若不會，說明你會如何去學習
+
+### 📝 必背公式速記
+
+```
+Setup Slack = Required Time - Arrival Time  (正 = PASS)
+Hold Slack  = Arrival Time - Required Time  (正 = PASS)
+
+Dynamic Power: P = α × C × V² × f
+Gray Code: gray = bin ^ (bin >> 1)
+
+FIFO Depth ≥ Burst × (1 - f_rd/f_wr)
+MTBF = e^(Tr/τ) / (T0 × Fclk × Fdata)
+```
+
+**祝面試順利！🎉**
 
 ---
 
