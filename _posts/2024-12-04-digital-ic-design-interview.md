@@ -5535,13 +5535,6 @@ All caches monitor (snoop) the shared bus for memory transactions:
 | **MOESI** (AMD) | **Owned** | Allows dirty data sharing without writeback to memory |
 | **MERSI** | **Recent** | Similar to Forward, for cache-to-cache transfers |
 
-**Common Interview Scenario:** "Core A reads address X that Core B has in Modified state. What happens?"
-1. Core A issues read miss on bus
-2. Core B snoops the request, recognizes the address
-3. Core B intervenes: supplies data directly (or writes back to memory first)
-4. Both caches transition to **Shared** state
-5. Memory is now up-to-date (if writeback occurred)
-
 ---
 
 ## 電腦架構
