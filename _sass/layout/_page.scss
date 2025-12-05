@@ -18,9 +18,13 @@
 
 .page {
   @include breakpoint($large) {
-    @include span(10 of 12 last);
-    @include prefix(0 of 12);
-    @include suffix(0 of 12);
+    float: right;
+    width: calc(100% - 220px);  // Full width minus sidebar
+    padding-left: 20px;
+  }
+
+  @include breakpoint($x-large) {
+    width: calc(100% - 240px);  // Slightly more space at larger screens
   }
 
   .page__inner-wrap {
@@ -385,7 +389,7 @@
   float: left;
 
   @include breakpoint($large) {
-    @include pre(2.5 of 12);
+    margin-left: 240px;  // Align with content area
   }
 
   a {
