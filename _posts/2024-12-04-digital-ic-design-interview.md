@@ -59,6 +59,7 @@ tags:
 - [Technology Library & PVT](#technology-library)
 - [Delay Models](#delay-models)
 - [SDF File Format](#sdf-file-format)
+- [SDC Constraints](#sdc-constraints)
 - [Clock Gating](#clock-gating)
 - [Cross Boundary Optimization](#cross-boundary-optimization)
 
@@ -75,6 +76,8 @@ tags:
 
 ### Low Power Design
 - [Power Reduction Techniques](#low-power-design-techniques)
+- [Power Intent (UPF/CPF)](#power-intent-upfcpf)
+- [Level Shifters & Isolation Cells](#level-shifters--isolation-cells)
 
 ### Circuit Examples
 - [Frequency Dividers](#frequency-divider-circuits)
@@ -93,18 +96,23 @@ tags:
 - [Buffer vs Inverter](#buffer-vs-inverter-in-cts)
 - [ECO Flow](#eco-engineering-change-order)
 - [Scan Chain / DFT](#scan-chain--dft)
+- [MBIST (Memory BIST)](#mbist-memory-built-in-self-test)
+- [IR Drop Analysis](#ir-drop-analysis)
+- [Electromigration](#electromigration)
 - [Latch-up Effect](#latch-up-effect)
 - [Antenna Effect](#antenna-effect)
 
 ### Memory & Cache
 - [SRAM vs DRAM](#sram-vs-dram)
 - [Write-back vs Write-through](#write-back-vs-write-through-cache)
+- [Cache Associativity](#cache-associativity)
 - [MESI Protocol](#mesi-protocol-cache-coherence)
 
 ### Bus Protocols
 - [Common Protocols](#common-protocols) (includes AXI, SPI, I2C, UART, DDR)
 
 ### Computer Architecture
+- [Pipeline Hazards](#pipeline-hazards)
 - [Branch Predictor](#branch-predictor)
 
 ### EDA & Scripting
@@ -148,6 +156,25 @@ Latches and flip-flops are fundamental storage elements in digital design, each 
 - A flip-flop is built from two back-to-back latches with opposite polarity clocks (master-slave topology)
 - Latches allow **time borrowing**: if one half-cycle path is slow and another is fast, the slow path can borrow time from the fast path
 - Latches are typically avoided in synchronous designs due to complex timing analysis
+
+**Time Borrowing Deep Dive:**
+
+Time borrowing is a powerful technique in latch-based designs that flip-flops cannot achieve. The key insight is that latches are transparent during the entire enable phase, not just at an edge.
+
+```
+Example: 4-stage pipeline with latches vs flip-flops
+
+Flip-flop based (each stage limited to half-period):
+  Stage delays: 8ns, 12ns, 6ns, 10ns (max = 12ns)
+  Required period: 2 × 12ns = 24ns → Fmax = 41.7 MHz
+
+Latch-based (time borrowing allowed):
+  Total delay: 8 + 12 + 6 + 10 = 36ns
+  Average per stage: 36/4 = 9ns
+  Required period: 2 × 9ns = 18ns → Fmax = 55.6 MHz (33% faster!)
+```
+
+**Why latches are more variation-tolerant:** When process variation causes some paths to be slow and others fast, latch-based designs automatically compensate through time borrowing. This makes them dramatically more yield-friendly in advanced nodes where variation is significant.
 
 ![Latch](https://i.imgur.com/E6NY4ca.png)
 
@@ -198,6 +225,19 @@ With Tr = 10 ns (3FF synchronizer):
 ```
 
 `Solution (double flip-flop synchronizer)`: Simply add another flip-flop driven by the same clock after the subsequent flip-flop stage. The second flip-flop gives the first flip-flop an entire clock cycle to resolve from any metastable state.
+
+**Advanced MTBF Considerations:**
+
+| Factor | Impact on MTBF | Recommendation |
+|--------|----------------|----------------|
+| **Heavy load on sync output** | Reduces resolution time → worse MTBF | Keep synchronizer output lightly loaded |
+| **Faster flip-flop family** | Lower setup/hold times → better MTBF | Use fast cells for synchronizers |
+| **Multiple sync locations** | Each adds failure probability | Synchronize signal only once, distribute the synchronized version |
+| **Temperature/voltage variation** | τ varies with conditions | Characterize at worst-case corner |
+
+**Process Node Trends:** In advanced nodes (28nm and below), τ values around 10ps with T0 around 20ps are typical. At 1 GHz with data changing every 10 cycles and one clock cycle for resolution, MTBF can exceed 10^29 years—essentially infinite.
+
+**Altera/Intel Recommendation:** Use three synchronizer flip-flops as standard practice for better metastability protection, not just two.
 
 ---
 
@@ -498,6 +538,28 @@ assign empty = (rd_ptr_gray == wr_ptr_sync);
 
 Note: The extra MSB bit in the pointer allows distinguishing between full (pointers differ only in MSB) and empty (pointers identical) conditions when using Gray code.
 
+**Why Gray Code Works for CDC (Even Fast-to-Slow):**
+
+A common misconception is that Gray code fails when crossing from a fast to slow clock domain because multiple increments may occur between slow clock samples. However, the key insight is:
+
+```
+Fast-to-slow crossing concern:
+  Fast domain increments: 5 → 6 → 7 → 8 (Gray: 111 → 101 → 100 → 110)
+  Slow domain samples: may only see 5 and 8
+
+Why this is SAFE:
+  - Only ONE bit is changing at any instant in the fast domain
+  - The slow domain sees a monotonically increasing sequence
+  - At worst, the slow domain may skip values, but never sees an invalid value
+  - This means the FIFO may report "more full" or "less empty" than reality
+  - Conservative (safe) behavior: prevents overflow/underflow
+```
+
+**Real-World FIFO Considerations:**
+- Real FIFOs have CDC synchronizers that consume 2-4 entries of usable depth
+- Always verify your specific FIFO IP's behavior at corner cases
+- Consider back-pressure latency when sizing for streaming applications
+
 ---
 
 ## CMOS & Digital Building Blocks
@@ -779,6 +841,17 @@ end
 
 **Why it matters:** Blocking assignments in sequential logic can create unintended combinational paths during synthesis, leading to simulation/synthesis mismatch.
 
+**Cliff Cummings' Golden Guidelines** (from "Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!"):
+
+1. **Guideline #1:** When modeling sequential logic, use **non-blocking** assignments
+2. **Guideline #2:** When modeling latches, use **non-blocking** assignments
+3. **Guideline #3:** When modeling combinational logic with an always block, use **blocking** assignments
+4. **Guideline #4:** When modeling both sequential and combinational logic in the same always block, use **non-blocking** assignments
+5. **Guideline #5:** Do **not mix** blocking and non-blocking in the same always block
+6. **Guideline #6:** Do not make assignments to the same variable from more than one always block
+
+Following these guidelines eliminates 90-100% of the most common Verilog race conditions.
+
 **Verilog Stratified Event Queue:**
 
 Understanding *why* blocking and non-blocking behave differently requires understanding Verilog's simulation event queue:
@@ -891,7 +964,22 @@ end
 - Use `localparam` or `parameter` for state encoding
 - Prefer **one-hot encoding** for high-speed designs (faster decode, more FFs)
 - Prefer **binary encoding** for area-constrained designs (fewer FFs)
+- Prefer **Gray code encoding** for sequential state machines (minimal switching)
 - Always include `default` case to avoid latches
+
+**State Encoding Comparison:**
+
+| Encoding | Flip-Flops (N states) | Decode Logic | Best For |
+|----------|----------------------|--------------|----------|
+| **Binary** | ⌈log₂N⌉ | Complex (N-bit comparison) | ASIC, area-constrained |
+| **One-Hot** | N | Simple (single bit check) | FPGA, high-speed |
+| **Gray** | ⌈log₂N⌉ | Moderate | Sequential cycling, low power |
+
+**FPGA vs ASIC Trade-off:**
+- **FPGA**: Flip-flops are abundant (in CLBs); combinational logic is expensive (consumes LUTs). One-hot is typically faster and often uses fewer resources overall.
+- **ASIC**: Flip-flops require ~25 transistors each plus clock distribution; 2-input gates need ~4 transistors. Binary encoding usually wins on area.
+
+**Synthesis Tool Behavior:** Modern tools (Vivado, DC) often re-encode FSMs automatically. Vivado defaults to one-hot for FSMs with ≤32 states. To preserve your encoding, use synthesis attributes like `(* fsm_encoding = "one_hot" *)` or `(* fsm_encoding = "sequential" *)`.
 
 ---
 
@@ -1276,6 +1364,75 @@ Delay models represent how signal propagation time is calculated during timing a
 vcs design.v -sdf max:top:timing.sdf
 ```
 
+### **SDC Constraints**
+
+**SDC (Synopsys Design Constraints)** is the industry-standard format for specifying timing, power, and area constraints. SDC files guide synthesis and place-and-route tools to meet design specifications.
+
+**Essential Clock Definition:**
+
+```tcl
+# Basic clock definition
+create_clock -name sys_clk -period 10.0 [get_ports clk]
+
+# Clock with specific waveform (rise at 0, fall at 4ns)
+create_clock -name fast_clk -period 8.0 -waveform {0 4} [get_ports clk2]
+
+# Virtual clock (for I/O constraints, no physical port)
+create_clock -name virt_clk -period 10.0
+```
+
+**Clock Uncertainty:**
+
+```tcl
+# Setup and hold uncertainty
+set_clock_uncertainty -setup 0.3 [get_clocks sys_clk]
+set_clock_uncertainty -hold 0.1 [get_clocks sys_clk]
+
+# Inter-clock uncertainty
+set_clock_uncertainty -from [get_clocks clk_a] -to [get_clocks clk_b] 0.5
+```
+
+**Common SDC Commands:**
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `create_clock` | Define clock source and period | `create_clock -period 10 [get_ports clk]` |
+| `create_generated_clock` | Define derived clocks | `create_generated_clock -divide_by 2 -source clk` |
+| `set_input_delay` | Constrain input arrival time | `set_input_delay -clock clk 3.0 [get_ports din]` |
+| `set_output_delay` | Constrain output required time | `set_output_delay -clock clk 2.5 [get_ports dout]` |
+| `set_false_path` | Mark path as don't-time | `set_false_path -from clkA -to clkB` |
+| `set_multicycle_path` | Allow multiple cycles | `set_multicycle_path 2 -setup -from [get_pins */Q]` |
+| `set_max_delay` | Constrain combinational path | `set_max_delay 5.0 -from A -to B` |
+
+**Generated Clock Example:**
+
+```tcl
+# Divide-by-2 clock
+create_generated_clock -name clk_div2 \
+    -source [get_ports clk] \
+    -divide_by 2 \
+    [get_pins div_reg/Q]
+
+# PLL output clock
+create_generated_clock -name pll_clk \
+    -source [get_pins pll/CLKIN] \
+    -multiply_by 3 -divide_by 2 \
+    [get_pins pll/CLKOUT]
+```
+
+**CDC Constraints:**
+
+```tcl
+# Mark asynchronous clock domains as false paths
+set_false_path -from [get_clocks clk_a] -to [get_clocks clk_b]
+set_false_path -from [get_clocks clk_b] -to [get_clocks clk_a]
+
+# Or use clock groups for bidirectional exclusion
+set_clock_groups -asynchronous \
+    -group [get_clocks clk_a] \
+    -group [get_clocks clk_b]
+```
+
 ### **Clock gating**
 Clock signal arrives only when data is to be switched
 → Reduce dynamic power dissipation (up to 30-50% power savings)
@@ -1575,8 +1732,20 @@ Capture path: Use faster cells (min delay) × (1 - OCV_early)
 
 **POCV/SOCV (Parametric/Statistical OCV):**
 - Statistical timing analysis
-- Uses probability distributions instead of fixed derates
+- Uses probability distributions instead of fixed derates (uses delay σ from Monte-Carlo HSPICE)
 - Most accurate, reduces pessimism
+- Assumes delay follows normal distribution; uses 3σ by default for sign-off
+
+**Technology Node Recommendations:**
+
+| Technology Node | Recommended Variation Method | Rationale |
+|----------------|------------------------------|-----------|
+| **Above 90nm** | OCV (flat derates) | Sufficient accuracy at older nodes |
+| **65nm - 40nm** | AOCV (depth/distance aware) | Depth reduces random variation impact |
+| **28nm - 20nm** | AOCV or POCV | Transition zone, POCV gaining adoption |
+| **16nm and below** | POCV/SOCV/LVF | Essential for sign-off; significantly reduces pessimism |
+
+**Why Flat OCV is Overly Pessimistic:** Fixed derates assume all cells in a path are simultaneously fast or slow. In reality, random variations tend to cancel out in deep paths—some cells are fast, others slow. AOCV and POCV model this statistical reality.
 
 ### **Setup & Hold Violation Solutions**
 
@@ -1708,6 +1877,140 @@ Modern synthesis and optimization tools automatically select cell Vt types to mi
 - Uses sleep transistors (high-Vt PMOS header or NMOS footer)
 - Requires isolation cells to prevent floating outputs
 - Requires retention registers if state must be preserved
+
+### **Power Intent (UPF/CPF)**
+
+Power intent files describe how power should be managed in a design—which blocks can be shut down, which voltages they use, and how signals cross power domain boundaries.
+
+**UPF vs CPF:**
+
+| Aspect | UPF (Unified Power Format) | CPF (Common Power Format) |
+|--------|---------------------------|---------------------------|
+| **Standard** | IEEE 1801 | Si2 |
+| **Backed by** | Synopsys, Mentor, Cadence | Originally Cadence |
+| **Industry adoption** | More widely used | Legacy designs |
+| **Syntax** | Tcl-based | Tcl-based |
+
+**Key UPF Concepts:**
+
+| Concept | Description |
+|---------|-------------|
+| **Power Domain** | Group of cells sharing same power supply |
+| **Power State** | Operating mode (ON, OFF, RETENTION) |
+| **Power Switch** | Header/footer transistor for power gating |
+| **Isolation Cell** | Clamps outputs when domain is OFF |
+| **Level Shifter** | Converts voltage between domains |
+| **Retention Register** | Preserves state during power-down |
+
+**Basic UPF Example:**
+
+```tcl
+# Define power domains
+create_power_domain PD_TOP -include_scope
+create_power_domain PD_CPU -elements {cpu_inst}
+
+# Define power supplies
+create_supply_net VDD
+create_supply_net VSS
+create_supply_net VDD_CPU
+
+# Connect supplies to domains
+create_supply_set SS_TOP -function {power VDD} -function {ground VSS}
+create_supply_set SS_CPU -function {power VDD_CPU} -function {ground VSS}
+
+# Add power switch
+create_power_switch SW_CPU \
+    -domain PD_CPU \
+    -input_supply_port {vin VDD} \
+    -output_supply_port {vout VDD_CPU} \
+    -control_port {sleep sleep_cpu} \
+    -on_state {on_state vin {!sleep}}
+
+# Add isolation
+set_isolation ISO_CPU \
+    -domain PD_CPU \
+    -applies_to outputs \
+    -clamp_value 0 \
+    -isolation_signal iso_en
+```
+
+**Power Intent in Design Flow:**
+
+```
+RTL + UPF → Synthesis → Power-aware netlist
+         → Verification (formal + simulation)
+         → P&R with power planning
+         → Sign-off with power analysis
+```
+
+### **Level Shifters & Isolation Cells**
+
+In multi-voltage designs, signals crossing between power domains require special cells to ensure correct operation and prevent damage or malfunction.
+
+**Level Shifters:**
+
+Level shifters convert signal voltage levels when crossing between domains operating at different voltages.
+
+| Type | Direction | Complexity | Use Case |
+|------|-----------|------------|----------|
+| **L2H** (Low-to-High) | 0.8V → 1.0V | Complex (needs boost circuit) | Most common |
+| **H2L** (High-to-Low) | 1.0V → 0.8V | Simple (buffer with lower VDD) | Less common |
+| **Bidirectional** | Either direction | Most complex | DVFS designs |
+
+```
+Level Shifter Circuit (L2H):
+                    VDD_HIGH
+                       │
+              ┌────────┴────────┐
+        ┌─────┤ PMOS cross-coupled│
+        │     └────────┬────────┘
+        │              │
+   IN ──┼──►[INV]──────┤──────► OUT
+(VDD_LOW)              │      (VDD_HIGH)
+        │     ┌────────┴────────┐
+        └─────┤    NMOS pair    │
+              └────────┬────────┘
+                       │
+                      VSS
+```
+
+**Isolation Cells:**
+
+Isolation cells prevent undefined (floating) values from propagating when a power domain is shut down.
+
+| Clamp Value | Cell Type | Behavior |
+|-------------|-----------|----------|
+| **0** | AND-based | Output = 0 when isolated |
+| **1** | OR-based | Output = 1 when isolated |
+| **Hold** | Latch-based | Output = last value |
+
+```verilog
+// AND-based isolation (clamp to 0)
+// iso_en = 1 means isolated (output clamped)
+assign isolated_out = data_in & ~iso_en;
+
+// OR-based isolation (clamp to 1)
+assign isolated_out = data_in | iso_en;
+```
+
+**Enable Level Shifter (ELS):**
+
+Combines level shifting and isolation in a single cell—saves area when both are needed.
+
+```
+Typical cell insertion order:
+  [Power-gated domain] → [Isolation] → [Level Shifter] → [Always-on domain]
+
+With ELS:
+  [Power-gated domain] → [Enable Level Shifter] → [Always-on domain]
+```
+
+**Physical Design Considerations:**
+
+- Level shifters placed at power domain boundaries
+- Must have access to both voltage rails
+- Often double-height cells (span two standard cell rows)
+- Tool automatically inserts based on UPF/CPF specifications
 
 ---
 
@@ -2363,8 +2666,246 @@ insert_dft
 As designs grow larger, full scan chains become impractical due to test time and tester memory limitations. Compression techniques maintain fault coverage while dramatically reducing test data volume.
 
 - Full scan requires many test pins and long test time
-- Compression (e.g., DFTMAX) reduces test data volume
+- Compression (e.g., DFTMAX, Tessent) reduces test data volume by 10-100×
 - Uses decompressor (input) and compactor (output)
+
+**Fault Coverage Targets:**
+
+| Coverage Level | Application | Notes |
+|----------------|-------------|-------|
+| **85-90%** | Partial scan, cost-sensitive | Acceptable for some consumer products |
+| **95%+** | Industry standard | Required by most foundries as policy |
+| **98-99%** | High-reliability | Automotive, aerospace, medical |
+
+**Fault Models:**
+
+| Model | What It Detects | Test Type |
+|-------|-----------------|-----------|
+| **Stuck-at** | Permanent shorts to VDD/GND | Static patterns |
+| **Transition** | Slow-to-rise/fall delays | At-speed patterns |
+| **Path Delay** | Timing failures on specific paths | At-speed patterns |
+| **IDDQ** | Bridging faults via quiescent current | Current measurement |
+
+**ATPG Strategy:** Apply random patterns until new pattern detects <0.5% of undetected faults, then apply deterministic tests for remaining faults—this minimizes test time while maximizing coverage.
+
+### **MBIST (Memory Built-In Self-Test)**
+
+MBIST adds test and repair circuitry directly to on-chip memories, enabling autonomous testing without external test equipment. Since memories constitute 50-70% of modern SoC area, memory testing is critical for yield.
+
+**MBIST Architecture:**
+
+```
+┌──────────────────────────────────────────────────┐
+│                  MBIST Controller                 │
+│  ┌─────────┐  ┌──────────┐  ┌────────────────┐   │
+│  │ Address │  │  Data    │  │  Comparator    │   │
+│  │Generator│  │Generator │  │  (Pass/Fail)   │   │
+│  └────┬────┘  └────┬─────┘  └───────┬────────┘   │
+└───────┼────────────┼────────────────┼────────────┘
+        │            │                │
+        ▼            ▼                ▼
+┌──────────────────────────────────────────────────┐
+│                    Memory                         │
+│   Address Bus ──►  SRAM/DRAM  ──► Data Out       │
+└──────────────────────────────────────────────────┘
+```
+
+**March Test Algorithms:**
+
+March algorithms systematically write and read patterns while "marching" through memory addresses. They're designed to detect specific fault types efficiently.
+
+| Algorithm | Complexity | Faults Detected |
+|-----------|------------|-----------------|
+| **MATS** | 4n | Stuck-at faults (SAF) |
+| **March C-** | 10n | SAF, address decoder faults (AF), transition faults |
+| **March LR** | 14n | SAF, AF, realistic linked faults |
+| **SMarchCKBD** | Variable | SAF, coupling faults, neighborhood pattern sensitivity |
+
+**March C- Algorithm Notation:**
+
+```
+⇑(w0); ⇑(r0,w1); ⇑(r1,w0); ⇓(r0,w1); ⇓(r1,w0); ⇕(r0)
+
+⇑ = Ascending address order
+⇓ = Descending address order
+⇕ = Either direction
+w0/w1 = Write 0/1
+r0/r1 = Read (expect 0/1)
+```
+
+**Fault Types Targeted:**
+
+| Fault Type | Description | Detection Method |
+|------------|-------------|------------------|
+| **Stuck-at (SAF)** | Cell stuck at 0 or 1 | Write opposite, read back |
+| **Transition (TF)** | Cannot transition 0→1 or 1→0 | Write, read, write opposite, read |
+| **Coupling (CF)** | One cell affects another | Pattern with aggressor/victim cells |
+| **Address Decoder (AF)** | Wrong address accessed | March with address uniqueness check |
+
+**Memory Repair (BISR):**
+
+Built-In Self-Repair uses redundant rows/columns to replace faulty cells:
+
+```
+┌────────────────────────────────────┐
+│        Memory Array                │
+│  ┌─────┬─────┬─────┬─────┐        │
+│  │     │     │ ✗   │     │ ← Faulty cell
+│  ├─────┼─────┼─────┼─────┤        │
+│  │     │     │     │     │        │
+│  ├─────┼─────┼─────┼─────┤        │
+│  │ Spare Row                │ ← Replacement
+│  └─────┴─────┴─────┴─────┘        │
+└────────────────────────────────────┘
+```
+
+**MBIST vs Logic Scan:**
+
+| Aspect | MBIST | Scan Chain |
+|--------|-------|------------|
+| **Target** | Memories (SRAM, ROM, RF) | Sequential logic (flip-flops) |
+| **Test generation** | On-chip algorithm | External ATPG |
+| **Pattern storage** | None (generated on-chip) | Tester memory |
+| **Test time** | Fast | Depends on scan chain length |
+| **Area overhead** | 3-5% of memory | ~15% of logic |
+
+### **IR Drop Analysis**
+
+IR drop is the voltage difference between power source and circuit elements due to resistance in the power distribution network. Excessive IR drop causes timing failures and functional errors.
+
+**Static vs Dynamic IR Drop:**
+
+| Aspect | Static IR Drop | Dynamic IR Drop |
+|--------|----------------|-----------------|
+| **Cause** | Average current through resistive PDN | Sudden current spikes during switching |
+| **Analysis** | Vector-less (average power) | Vector-based (worst-case switching) |
+| **Frequency** | Steady-state | Transient (within clock cycle) |
+| **Effect** | Uniform voltage reduction | Localized voltage dips (hot spots) |
+
+**IR Drop Mechanism:**
+
+```
+VDD (1.0V)
+    │
+    R_wire = 0.1Ω
+    │
+    ├──► Cell 1 (I = 1mA) → V_drop = 0.1mV
+    │
+    R_wire = 0.1Ω
+    │
+    ├──► Cell 2 (I = 10mA) → V_drop = 1mV
+    │
+    R_wire = 0.1Ω
+    │
+    └──► Cell N (cumulative drop)
+
+Cells far from VDD pad see lower voltage!
+```
+
+**Impact on Timing:**
+
+```
+Cell delay ∝ 1 / (VDD - Vth)
+
+If VDD drops from 1.0V to 0.9V and Vth = 0.3V:
+  Original delay factor: 1 / (1.0 - 0.3) = 1.43
+  With IR drop:          1 / (0.9 - 0.3) = 1.67
+
+  Delay increase: ~17% slower!
+```
+
+**Typical IR Drop Budgets:**
+
+| Application | Max Static IR Drop | Max Dynamic IR Drop |
+|-------------|-------------------|---------------------|
+| **Mobile SoC** | 3-5% of VDD | 8-10% of VDD |
+| **High-performance** | 5-8% of VDD | 10-12% of VDD |
+| **Automotive** | 2-3% of VDD | 5-7% of VDD |
+
+**Fixing IR Drop Violations:**
+
+| Issue | Static IR Drop Fix | Dynamic IR Drop Fix |
+|-------|-------------------|---------------------|
+| **Power grid** | Wider straps, more layers | Same + mesh density |
+| **Decaps** | N/A | Add decoupling capacitors |
+| **Placement** | Spread high-power cells | Avoid switching hot spots |
+| **Pads** | Add VDD/VSS bumps/pads | Same, near hot spots |
+
+### **Electromigration**
+
+Electromigration (EM) is the gradual movement of metal atoms in interconnects due to momentum transfer from current-carrying electrons. Over time, this causes voids (opens) or hillocks (shorts), leading to circuit failure.
+
+**Black's Equation (MTTF):**
+
+```
+MTTF = A × J^(-n) × exp(Ea / kT)
+
+Where:
+  A  = Material constant
+  J  = Current density (A/cm²)
+  n  = Current exponent (typically 1-2)
+  Ea = Activation energy (~0.7-0.9 eV for Cu)
+  k  = Boltzmann constant
+  T  = Temperature (Kelvin)
+```
+
+**Key Insight:** Doubling current density reduces MTTF by 2x to 4x (depending on n).
+
+**Failure Mechanisms:**
+
+```
+Electron flow →  →  →  →  →  →
+                ↓     ↓
+           ┌────────────────────┐
+           │ █████    ░░░  █████│ ← Void formation
+           │ Metal interconnect │
+           │ █████████████  ░░░ │ ← Hillock formation
+           └────────────────────┘
+```
+
+**Current Density Limits:**
+
+| Metal Layer | Typical Jmax (DC) | Typical Jmax (AC/RMS) |
+|-------------|------------------|----------------------|
+| **M1-M3** | 1-2 mA/μm | 3-5 mA/μm |
+| **M4-M6** | 2-4 mA/μm | 5-8 mA/μm |
+| **Top metals** | 4-8 mA/μm | 10-15 mA/μm |
+
+**EM Prevention Techniques:**
+
+| Technique | Description |
+|-----------|-------------|
+| **Wire widening** | Increase cross-section to reduce J |
+| **Via doubling** | Multiple vias reduce current per via |
+| **Avoid 90° bends** | Current crowding at sharp corners |
+| **Cu capping layers** | CoWP, Ta barrier improve EM resistance |
+| **Blech length** | Short wires (<~10μm) are "EM immortal" |
+
+**Blech Length Effect:**
+
+Below a critical length (Blech length), mechanical back-stress prevents void formation:
+
+```
+Blech length ≈ Ω·σ_crit / (e·ρ·J)
+
+For typical Cu interconnects: ~10-50 μm
+
+If wire length < Blech length → No EM failure!
+```
+
+**EM Verification Flow:**
+
+```
+Post-route netlist + Spice simulation
+           ↓
+Current extraction (DC + AC/RMS)
+           ↓
+EM rule checking against PDK limits
+           ↓
+Fix violations: widen wires, add vias
+           ↓
+Re-verify until clean
+```
 
 ### **Latch-up Effect**
 
@@ -2420,6 +2961,21 @@ Foundries provide specific design rules to ensure latch-up immunity. These rules
 - Minimum guard ring width
 - I/O cells require robust latch-up protection
 
+**How Guard Rings Work:**
+
+Guard rings are diffusions that decouple the parasitic bipolar transistors:
+- **Minority carrier guard rings**: Collect minority carriers before they reach the parasitic collector junction
+- **Majority carrier guard rings**: Connected to VDD/VSS to reduce effective well/substrate resistance
+
+The key is that guard rings act as "collectors" that intercept diffusing carriers and shunt them to the supply rails before they can trigger the thyristor.
+
+**ESD and Latch-up Relationship:** ESD protection cells are common latch-up trigger sources. When ESD enters through an I/O pad, the protection circuit can inject minority carriers into the substrate. Guard rings around ESD cells are critical.
+
+**Advanced Techniques:**
+- Deep trench isolation blocks minority carrier diffusion
+- Heavily doped substrates reduce parasitic BJT gain
+- SOI (Silicon-On-Insulator) substrates eliminate the thyristor structure entirely
+
 ### **Antenna Effect**
 
 Antenna effect occurs during fabrication when metal interconnects collect charge during plasma etching, potentially damaging gate oxide.
@@ -2473,6 +3029,16 @@ Antenna rules are checked as part of the physical verification flow. The router 
 - Tools check antenna ratio at each metal layer
 - Violations flagged for manual or automatic fixing
 - Critical for advanced nodes with thinner gate oxides
+
+**Surprising Property of Thin Oxides:**
+
+Counterintuitively, very thin gate oxides in advanced nodes are **less** susceptible to antenna damage than thick oxides. Why?
+- Thin oxides are "leaky"—they conduct small tunneling currents
+- This leakage provides a natural discharge path, preventing charge buildup
+- As oxide thickness decreases, leakage increases exponentially, but breakdown voltage only decreases linearly
+- Result: The discharge rate outpaces the damage threshold
+
+**Why "Antenna" is a Misnomer:** The effect has nothing to do with electromagnetic wave reception (the usual meaning of antenna). The term refers only to the charge-collecting behavior of long metal conductors during plasma processing. A more accurate name is "Plasma-Induced Gate Oxide Damage" (PID).
 
 ---
 
@@ -2547,6 +3113,102 @@ Cache Eviction → Write dirty line to memory
 - Write-through: Memory always consistent (good for multi-processor)
 - Write-back: Higher performance (fewer memory writes)
 
+### **Cache Associativity**
+
+Cache associativity determines how memory addresses map to cache locations. Higher associativity reduces conflict misses but increases hardware complexity and access latency.
+
+**Cache Mapping Strategies:**
+
+| Type | Description | Conflict Misses | Hardware Cost |
+|------|-------------|-----------------|---------------|
+| **Direct-Mapped** | Each address maps to exactly one cache line | Highest | Lowest |
+| **N-way Set Associative** | Address maps to one set, any of N lines | Moderate | Moderate |
+| **Fully Associative** | Address can map to any cache line | Lowest | Highest |
+
+**Address Breakdown:**
+
+```
+For a 32KB, 4-way set associative cache with 64-byte lines:
+
+Address bits: |----Tag----|--Index--|--Offset--|
+              |   20 bits |  7 bits |  6 bits  |
+
+Cache organization:
+  - 32KB / 64B = 512 cache lines total
+  - 512 lines / 4 ways = 128 sets
+  - Index bits: log₂(128) = 7 bits
+  - Offset bits: log₂(64) = 6 bits
+  - Tag bits: 32 - 7 - 6 = 19 bits
+```
+
+**Set-Associative Cache Structure:**
+
+```
+           Set 0      Set 1      Set 2      ...    Set N-1
+         ┌─────────┬─────────┬─────────┬───────┬─────────┐
+Way 0    │ Tag|Data│ Tag|Data│ Tag|Data│  ...  │ Tag|Data│
+         ├─────────┼─────────┼─────────┼───────┼─────────┤
+Way 1    │ Tag|Data│ Tag|Data│ Tag|Data│  ...  │ Tag|Data│
+         ├─────────┼─────────┼─────────┼───────┼─────────┤
+Way 2    │ Tag|Data│ Tag|Data│ Tag|Data│  ...  │ Tag|Data│
+         ├─────────┼─────────┼─────────┼───────┼─────────┤
+Way 3    │ Tag|Data│ Tag|Data│ Tag|Data│  ...  │ Tag|Data│
+         └─────────┴─────────┴─────────┴───────┴─────────┘
+```
+
+**Replacement Policies:**
+
+When a cache set is full and a new line must be loaded, the replacement policy determines which existing line to evict.
+
+| Policy | Description | Implementation | Performance |
+|--------|-------------|----------------|-------------|
+| **LRU** | Evict least recently used | Track access order | Best, expensive |
+| **Pseudo-LRU** | Approximate LRU with tree | 1 bit per 2 ways | Good, practical |
+| **FIFO** | Evict oldest inserted | Queue per set | Moderate |
+| **Random** | Evict random line | Counter | Simple, ~same as LRU for high N |
+
+**LRU Implementation (2-way):**
+
+```verilog
+// Simple 2-way LRU: 1 bit per set
+// mru[set] = 0 → Way 0 was most recently used
+// mru[set] = 1 → Way 1 was most recently used
+
+// On access to way:
+mru[set] <= accessed_way;
+
+// On replacement:
+evict_way = ~mru[set];  // Evict least recently used
+```
+
+**Pseudo-LRU (4-way) Tree:**
+
+```
+        [B0]         ← Root bit: which half was LRU?
+       /    \
+    [B1]    [B2]     ← Which quarter was LRU?
+    /  \    /  \
+  W0   W1  W2   W3   ← Ways
+
+On access to W2: Set B0=1 (right half used), B2=0 (left of right)
+On replacement:  Follow LRU path: B0=0→left, B1=1→W1 evicted
+```
+
+**Associativity Trade-offs:**
+
+| Associativity | Miss Rate | Access Time | Power | Typical Use |
+|---------------|-----------|-------------|-------|-------------|
+| **Direct** | Higher | Fastest | Lowest | L1 instruction cache |
+| **2-way** | -15-20% | +5-10% | Moderate | L1 data cache |
+| **4-way** | -5-10% | +10-15% | Moderate | L2 cache |
+| **8+ way** | Diminishing | +15-25% | Higher | L3 cache |
+
+**Interview Question:** "Why not use fully associative caches?"
+- Requires comparing tag against ALL entries simultaneously
+- N comparators needed for N entries
+- Impractical for large caches (64KB+ with 64B lines = 1000+ comparators)
+- Used only for small structures: TLBs, victim caches
+
 ### **MESI Protocol (Cache Coherence)**
 
 In multi-core systems, each core has its own cache, creating the cache coherence problem: how to ensure all cores see consistent data. The MESI protocol is the most widely used solution.
@@ -2614,9 +3276,140 @@ All caches monitor (snoop) the shared bus for memory transactions:
 - Intel Core: Uses MESI (or MESIF with Forward state)
 - AMD Opteron: Uses MOESI (Owned state for dirty sharing)
 
+**MESI Extensions:**
+
+| Protocol | Extra State | Purpose |
+|----------|-------------|---------|
+| **MESIF** (Intel) | **Forward** | Designates one sharer to respond to requests, reducing bus traffic |
+| **MOESI** (AMD) | **Owned** | Allows dirty data sharing without writeback to memory |
+| **MERSI** | **Recent** | Similar to Forward, for cache-to-cache transfers |
+
+**Common Interview Scenario:** "Core A reads address X that Core B has in Modified state. What happens?"
+1. Core A issues read miss on bus
+2. Core B snoops the request, recognizes the address
+3. Core B intervenes: supplies data directly (or writes back to memory first)
+4. Both caches transition to **Shared** state
+5. Memory is now up-to-date (if writeback occurred)
+
 ---
 
 ## Computer Architecture
+
+### **Pipeline Hazards**
+
+Pipeline hazards are conditions that prevent the next instruction from executing in its designated clock cycle. Understanding and mitigating hazards is fundamental to achieving high instruction throughput in pipelined processors.
+
+**Types of Hazards:**
+
+| Type | Cause | Example |
+|------|-------|---------|
+| **Structural** | Hardware resource conflict | Single memory port for fetch + data access |
+| **Data** | Instruction depends on result of previous | `ADD R1,R2,R3; SUB R4,R1,R5` (R1 dependency) |
+| **Control** | Branch outcome unknown | `BEQ` instruction: which path to fetch? |
+
+**Data Hazard Types (RAW, WAR, WAW):**
+
+| Hazard | Full Name | Description | In-Order Pipeline? |
+|--------|-----------|-------------|-------------------|
+| **RAW** | Read After Write | Read before write completes | Yes (most common) |
+| **WAR** | Write After Read | Write before read completes | Only in OoO |
+| **WAW** | Write After Write | Second write before first | Only in OoO |
+
+**RAW Hazard Example:**
+
+```
+Cycle:        1   2   3   4   5   6   7
+ADD R1,R2,R3: IF  ID  EX  MEM WB
+SUB R4,R1,R5:     IF  ID  EX  MEM WB
+                      ↑
+                  R1 not yet written!
+                  (R1 available at cycle 5, needed at cycle 3)
+```
+
+**Solutions to Data Hazards:**
+
+| Technique | Description | Latency | Hardware Cost |
+|-----------|-------------|---------|---------------|
+| **Stalling** | Insert NOPs until data ready | 1-3 cycles | Hazard detection unit |
+| **Forwarding** | Bypass result from later stage | 0 cycles (usually) | Forwarding paths + MUXes |
+| **Code reordering** | Compiler moves independent instructions | 0 cycles | Smart compiler |
+
+**Forwarding (Bypassing):**
+
+```
+Without forwarding:
+  ADD R1,R2,R3: IF─ID─EX─MEM─WB
+  SUB R4,R1,R5:    IF─ID─stall─stall─EX─MEM─WB
+                         (wait for R1)
+
+With forwarding:
+  ADD R1,R2,R3: IF─ID─EX─MEM─WB
+  SUB R4,R1,R5:    IF─ID─EX─MEM─WB
+                      ↑
+                      R1 forwarded from EX stage output
+```
+
+**Forwarding Paths in 5-Stage Pipeline:**
+
+```
+┌─────┐   ┌─────┐   ┌─────┐   ┌─────┐   ┌─────┐
+│ IF  │──►│ ID  │──►│ EX  │──►│ MEM │──►│ WB  │
+└─────┘   └─────┘   └──┬──┘   └──┬──┘   └─────┘
+                       │         │
+                       │    ┌────┘ EX/MEM forward
+                       │    │
+                       ▼    ▼
+                    ┌─────────┐
+                    │Forwarding│
+                    │  MUX    │
+                    └─────────┘
+                         │
+                    To EX inputs
+```
+
+**Load-Use Hazard (Cannot be fully forwarded):**
+
+```
+LW  R1, 0(R2):  IF─ID─EX─MEM─WB
+                           ↑
+ADD R3, R1, R4:    IF─ID─stall─EX─MEM─WB
+                           ↑
+                   Data available HERE (end of MEM)
+                   but needed HERE (start of EX)
+                   → Must stall 1 cycle
+```
+
+**Control Hazards:**
+
+Control hazards occur when the processor doesn't know which instruction to fetch next due to branches.
+
+| Solution | Description | Penalty |
+|----------|-------------|---------|
+| **Stall** | Wait until branch resolved | 1-3 cycles |
+| **Predict not-taken** | Always fetch next sequential | Mispredict penalty |
+| **Predict taken** | Always fetch branch target | Mispredict penalty |
+| **Branch prediction** | Use history to predict | ~5-15% mispredict |
+| **Delayed branch** | Execute instruction after branch | Compiler fills slot |
+
+**Branch Prediction vs Speculation:**
+
+```
+Prediction: Guess which path to fetch
+Speculation: Actually EXECUTE the predicted path
+
+If wrong:
+  - Prediction: Just fetch correct path (small penalty)
+  - Speculation: Must FLUSH pipeline and rollback state (large penalty)
+```
+
+**Modern CPU Hazard Handling:**
+
+| Technique | Purpose |
+|-----------|---------|
+| **Register renaming** | Eliminate WAR/WAW hazards |
+| **Out-of-order execution** | Hide latency by executing ready instructions |
+| **Speculative execution** | Execute past unresolved branches |
+| **Memory disambiguation** | Detect/handle load-store conflicts |
 
 ### **Branch Predictor**
 
@@ -2668,6 +3461,25 @@ Branch predictors have evolved from simple static rules to sophisticated learnin
 - Flush pipeline
 - Restart from correct address
 - Modern CPUs: 10-20 cycle penalty
+
+**Why 2-bit Beats 1-bit:**
+```
+Consider a loop that executes 10 times:
+  Branch pattern: TTTTTTTTTN (9 taken, 1 not-taken)
+
+1-bit predictor:
+  Misses: First iteration (was N→predict N, actual T)
+          Last iteration (was T→predict T, actual N)
+          First iteration next time (was N→predict N, actual T)
+  = 2-3 misses per loop execution
+
+2-bit predictor:
+  Misses: Only the last iteration (strongly taken→still predict T)
+          Takes 2 not-takens to flip prediction
+  = 1 miss per loop execution
+```
+
+**Tournament Predictor:** Uses a "choice predictor" (another 2-bit counter) to select between a local predictor (branch-specific history) and a global predictor (correlated branch history). The Alpha 21264 used this approach with 4K entries.
 
 **MTK Interview Question:** "Branch predictor的實做方式?"
 - Use BTB for target address prediction
@@ -3036,14 +3848,34 @@ Transfer occurs when BOTH VALID and READY are HIGH.
 - **VALID must NOT depend on READY** - Source asserts VALID when data is available
 - **READY may depend on VALID** - Destination can wait to see data before asserting READY
 
+This asymmetric rule is fundamental to preventing deadlock in AXI systems.
+
 ```verilog
-// WRONG - causes deadlock
+// WRONG - causes deadlock (circular dependency)
 assign VALID = ready_from_slave;  // Never!
 
-// CORRECT
+// CORRECT - VALID independent of READY
 always @(posedge clk)
     if (have_data) VALID <= 1'b1;
 ```
+
+**Why Deadlock Occurs:**
+```
+Deadlock scenario:
+  Master: "I'll assert VALID when I see READY"
+  Slave:  "I'll assert READY when I see VALID"
+  Result: Both wait forever → DEADLOCK
+
+Safe scenario:
+  Master: "I have data, asserting VALID" (no wait for READY)
+  Slave:  Can assert READY anytime (before, with, or after VALID)
+  Result: Transfer completes when both are high → SUCCESS
+```
+
+**Additional AXI Protocol Rules:**
+- Once VALID is asserted, it must remain asserted until handshake completes
+- VALID/READY cannot be de-asserted in the same cycle they are both high
+- A master must not wait for AWREADY before driving WVALID (prevents write channel deadlock)
 
 **Key AXI Features:**
 
@@ -3183,8 +4015,10 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 - [What is Low Power Design? - Synopsys](https://www.synopsys.com/glossary/what-is-low-power-design.html)
 - [The Ultimate Guide to Clock Gating - AnySilicon](https://anysilicon.com/the-ultimate-guide-to-clock-gating/)
 
-### Latch vs Flip-Flop
+### Latch vs Flip-Flop & Time Borrowing
 - [Difference Between Latch and Flip-Flop - GeeksforGeeks](https://www.geeksforgeeks.org/gate/difference-between-flip-flop-and-latch/)
+- [Time Borrowing in Latch-Based Designs - LogicMadness](https://logicmadness.com/time-borrowing/)
+- [Time Borrowing Concept in STA - PhysicalDesign4U](https://www.physicaldesign4u.com/2020/05/time-borrowing-concept-in-sta.html)
 
 ### Gray Code Conversion
 - [Verilog Binary to Gray - ChipVerify](https://www.chipverify.com/verilog/verilog-binary-to-gray)
@@ -3200,5 +4034,86 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 - [Digital IC Design Fundamentals (CSDN)](https://blog.csdn.net/qq_36045093/article/details/119741748)
 - [Digital IC Classic 100 Questions (CSDN)](https://blog.csdn.net/qq_41394155/article/details/89349935)
 - [Backend 100 Questions Q91-100 (CSDN)](https://blog.csdn.net/weixin_39522408/article/details/112765703)
+- [Nonblocking Assignments in Verilog Synthesis - Cliff Cummings (SNUG)](http://www.sunburst-design.com/papers/CummingsSNUG2000SJ_NBA.pdf)
+
+### On-Chip Variation (OCV)
+- [OCV, AOCV, and POCV - SignOff Semiconductors](https://signoffsemiconductors.com/ocv-aocv-and-pocv/)
+- [OCV, AOCV and POCV Comparative Analysis - Team VLSI](https://teamvlsi.com/2020/07/ocv-aocv-and-pocv-in-vlsi-comparative.html)
+- [On-Chip Variation for Timing Closure - Tech Design Forum](https://www.techdesignforums.com/practice/guides/on-chip-variation-ocv/)
+
+### DFT & Scan Chain
+- [Design for Testability - Synopsys](https://www.synopsys.com/glossary/what-is-design-for-test.html)
+- [DFT, Scan and ATPG - VLSI Tutorials](https://vlsitutorials.com/dft-scan-and-atpg/)
+- [Scan Chain Architectures - Medium](https://medium.com/@ranaumarnadeem/design-for-testability-scan-chain-architectures-and-variants-623ea712fa52)
+
+### Physical Design Effects
+- [Antenna Effect in VLSI - Team VLSI](https://teamvlsi.com/2020/05/antenna-effect-in-vlsi-design.html)
+- [Antenna Prevention Techniques - Team VLSI](https://teamvlsi.com/2020/06/antenna-prevention-techniques-in-vlsi.html)
+- [Latch-up Prevention in CMOS - ResearchGate](https://www.researchgate.net/publication/366552018_Overview_on_Latch-up_Prevention_in_CMOS_Integrated_Circuits_by_Circuit_Solutions)
+
+### AXI Protocol
+- [AXI Channel Handshake Deadlock Prevention - System on Chips](https://www.systemonchips.com/axi-channel-handshake-deadlock-prevention-and-protocol-compliance/)
+- [AMBA AXI Protocol Specification - ARM](https://developer.arm.com/documentation/ihi0022/e/)
+- [Ready/Valid Handshake Rules - FPGA CPU](https://fpgacpu.ca/fpga/handshake.html)
+
+### Cache Coherence
+- [MESI Protocol - Wikipedia](https://en.wikipedia.org/wiki/MESI_protocol)
+- [Cache Coherence Protocols - Eureka](https://eureka.patsnap.com/article/cache-coherence-protocols-mesi-moesi-and-directory-based-systems)
+- [MESI and MOESI Protocols - ARM Developer](https://developer.arm.com/documentation/den0013/latest/Multi-core-processors/Cache-coherency/MESI-and-MOESI-protocols)
+
+### FSM & State Encoding
+- [FSM Encoding: Binary, One-Hot, and Others - Sigasi](https://www.sigasi.com/tech/vhdl-onehot-fsm/)
+- [Comparing Binary, Gray, and One-Hot Encoding - All About Circuits](https://www.allaboutcircuits.com/technical-articles/comparing-binary-gray-one-hot-encoding/)
+
+### FPGA Metastability
+- [Understanding Metastability in FPGAs - Intel](https://cdrdv2-public.intel.com/650346/wp-01082-quartus-ii-metastability.pdf)
+- [Synchronization and Metastability - Steve Golson](https://trilobyte.com/pdf/golson_snug14.pdf)
+
+### Power Intent (UPF/CPF)
+- [UPF - VLSI Tutorials](https://vlsitutorials.com/upf-low-power-vlsi/)
+- [UPF in VLSI: The Smartest Way Forward - ChipEdge](https://chipedge.com/resources/upf-in-vlsi-the-smartest-way-forward/)
+- [Unified Power Format Expands Low-Power IC Design - Synopsys Blog](https://www.synopsys.com/blogs/chip-design/unified-power-format-low-power-ic-design.html)
+- [Low Power Design and UPF Flow in IC Design - VLSI-Design](https://funrtl.wordpress.com/2023/03/05/low-power-design-and-upf-flow-in-ic-design/)
+
+### Level Shifters & Isolation Cells
+- [Isolation Cells and Level Shifter Cells - VLSI Tutorials](https://vlsitutorials.com/isolation-cells-level-shifter-cells-low-power-vlsi/)
+- [Level Shifter Cells - Logic Madness](https://logicmadness.com/level-shifter-cells-in-multi-voltage-designs/)
+- [Different Cells for Low Power Design - LMR](https://lmr.fi/int/different-cells-used-for-low-power/)
+- [Synthesis: Level Shifters - Medium](https://medium.com/@ranaumarnadeem/synthesis-level-shifters-a9b2273c4ccf)
+
+### IR Drop Analysis
+- [IR Drop Analysis in Physical Design - Team VLSI](https://teamvlsi.com/2020/07/ir-analysis-in-asic-design-effects-and.html)
+- [IR Drop in VLSI - Eletimes](https://www.eletimes.com/ir-drop-in-vlsi-static-and-dynamic-ir-drop-in-vlsi)
+- [How to Fix Dynamic IR Drop - SiliconVLSI](https://siliconvlsi.com/how-to-fix-dynamic-ir-drop/)
+
+### Electromigration
+- [Electromigration Effect in VLSI - Team VLSI](https://teamvlsi.com/2020/08/electromigration-effect-in-vlsi.html)
+- [What is Electromigration? - Synopsys](https://www.synopsys.com/glossary/what-is-electromigration.html)
+- [Electromigration (EM) Analysis in VLSI - Cadence](https://resources.pcb.cadence.com/blog/2020-electromigration-em-analysis-in-vlsi-may-your-chips-live-forever)
+- [Understanding Electromigration in VLSI Physical Design - Cadence](https://resources.system-analysis.cadence.com/blog/msa2021-understanding-electromigration-in-vlsi-physical-design)
+
+### MBIST & Memory Testing
+- [Memory Testing: MBIST, BIRA & BISR - eInfochips](https://www.einfochips.com/blog/memory-testing-an-insight-into-algorithms-and-self-repair-mechanism/)
+- [Memory Built-In Self-Test Basic Concepts - VLSI4Freshers](https://www.vlsi4freshers.com/2019/12/memory-built-in-self-test-mbist-basic.html)
+- [Basics of Memory Testing in VLSI - VLSI Universe](https://www.vlsiuniverse.com/basics-of-memory-testing-in-vlsi-memory/)
+- [What is Memory Test & Repair in VLSI? - Maven Silicon](https://www.maven-silicon.com/blog/what-is-memory-test/)
+
+### SDC Constraints
+- [SDC Design Constraint Examples - Centennial Software](https://www.centennialsoftwaresolutions.com/help/sdc-design-constraint-examples-and-explanations/)
+- [SDC File in VLSI - Team VLSI](https://teamvlsi.com/2020/05/sdc-synopsys-design-constraint-file-in.html)
+- [Clock Constraints - Intel](https://www.intel.com/content/www/us/en/docs/programmable/683243/24-1/clock-constraints.html)
+
+### Pipeline Hazards & CPU Architecture
+- [Hazard (Computer Architecture) - Wikipedia](https://en.wikipedia.org/wiki/Hazard_(computer_architecture))
+- [Handling Data Hazards - UMD Computer Architecture](https://www.cs.umd.edu/~meesh/411/CA-online/chapter/handling-data-hazards/index.html)
+- [Data Hazards and Forwarding - Fiveable](https://fiveable.me/advanced-computer-architecture/unit-3/data-hazards-forwarding/study-guide/UEfsh4VI6bvLQ7dl)
+- [Pipeline Hazards - Witscad](https://witscad.com/course/computer-architecture/chapter/pipeline-hazards)
+- [Data Hazards and Handling Methods - GeeksforGeeks](https://www.geeksforgeeks.org/computer-organization-architecture/data-hazards-and-its-handling-methods/)
+
+### Cache Architecture
+- [Set-Associative Cache - ScienceDirect](https://www.sciencedirect.com/topics/computer-science/set-associative-cache)
+- [Cache Associativity - Algorithmica](https://en.algorithmica.org/hpc/cpu-cache/associativity/)
+- [Cache Placement Policies - Wikipedia](https://en.wikipedia.org/wiki/Cache_placement_policies)
+- [Notes on Caches - University of Toronto](https://www.eecg.utoronto.ca/~enright/teaching/ece243S/notes/l26-caches.html)
 
 ###### tags: `Work`
