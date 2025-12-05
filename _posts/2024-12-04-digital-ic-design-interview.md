@@ -1,146 +1,154 @@
 ---
-title: "Digital IC Design Interview"
+title: "Digital IC Design 面試筆記"
 date: 2024-12-04
 permalink: /blog/digital-ic-design-interview/
-excerpt: "Comprehensive notes on digital IC design concepts including metastability, CDC, STA, clock gating, frequency dividers, and interview questions from MTK, RTK, NTK, PHISON, SMI, and GUC."
+excerpt: "數位 IC 設計完整筆記，涵蓋 metastability、CDC、STA、clock gating、frequency dividers，以及 MTK、RTK、NTK、PHISON、SMI、GUC 面試題目。"
 toc: false
 tags:
-  - Interview
+  - 面試
   - Digital IC Design
 ---
 
-## Table of Contents
+## 目錄
 
-### Fundamentals
+### 基礎概念
 - [Latch vs Flip-flop](#latch-vs-flip-flop)
 - [Metastability](#metastability)
 
-### Clock Domain Crossing (CDC)
-- [CDC Overview](#clock-domain-crossing-cdc)
-- [Single-bit Synchronization](#single-bit-signal)
+### 跨時脈域 (CDC)
+- [CDC 概述](#clock-domain-crossing-cdc)
+- [Single-bit 同步](#single-bit-signal)
 - [Pulse Synchronizer](#pulse-synchronizer)
 - [Toggle Synchronizer](#toggle-synchronizer-slow-to-fast-cdc)
 - [Pulse Extender](#pulse-extender-fast-to-slow-cdc)
-- [Multi-bit Synchronization](#multi-bit-signal)
-- [Asynchronous FIFO & Gray Code](#asynchronous-fifo)
-- [FIFO Depth Calculation](#fifo-depth-calculation)
+- [Multi-bit 同步](#multi-bit-signal)
+- [Asynchronous FIFO 與 Gray Code](#asynchronous-fifo)
+- [FIFO Depth 計算](#fifo-depth-calculation)
+- [FIFO Almost Full/Empty](#fifo-almost-fullempty)
 
-### CMOS & Digital Building Blocks
-- [Synchronous vs Asynchronous Reset](#synchronous-vs-asynchronous-reset)
-- [Race and Hazard](#race-and-hazard)
+### CMOS 與數位基礎元件
+- [Synchronous 與 Asynchronous Reset](#synchronous-vs-asynchronous-reset)
+- [Race 與 Hazard](#race-and-hazard)
 - [High-Impedance State](#high-impedance-state-tri-state)
-- [NMOS vs PMOS](#nmos-vs-pmos)
+- [NMOS 與 PMOS](#nmos-vs-pmos)
 - [CMOS Inverter VTC](#cmos-inverter-vtc-voltage-transfer-characteristic)
 - [Transmission Gate](#transmission-gate)
 
-### Verilog & RTL Design
-- [Blocking vs Non-blocking](#blocking-vs-non-blocking-assignments)
+### Verilog 與 RTL 設計
+- [Blocking 與 Non-blocking](#blocking-vs-non-blocking-assignments)
 - [Verilog Event Queue](#verilog-stratified-event-queue)
-- [FSM Three-Stage Coding](#fsm-finite-state-machine---three-stage-coding)
-- [What Causes Latch Inference?](#what-coding-causes-latch-inference)
+- [FSM 三段式寫法](#fsm-finite-state-machine---three-stage-coding)
+- [什麼寫法會產生 Latch？](#what-coding-causes-latch-inference)
+- [SystemVerilog Assertions (SVA)](#systemverilog-assertions-sva)
 
-### Combinational Logic
+### 組合邏輯
 - [Full Adder](#full-adder)
-- [RCA vs CLA Adder](#ripple-carry-vs-carry-lookahead-adder)
-- [Building Gates Using MUX](#building-gates-using-mux)
-- [Building Gates Using NAND](#building-gates-using-nand-only)
+- [RCA 與 CLA Adder](#ripple-carry-vs-carry-lookahead-adder)
+- [用 MUX 建構邏輯閘](#building-gates-using-mux)
+- [用 NAND 建構邏輯閘](#building-gates-using-nand-only)
 
-### Design Flow
-- [Front-End Design](#front-end-design)
-- [Back-End Design](#back-end-design)
-- [ASIC vs FPGA Comparison](#asic-vs-fpga-comparison)
+### 設計流程
+- [前端設計](#front-end-design)
+- [後端設計](#back-end-design)
+- [ASIC 與 FPGA 比較](#asic-vs-fpga-comparison)
 
 ### FPGA
-- [FPGA vs CPLD](#fpga-vs-cpld)
-- [FPGA Architecture](#fpga-architecture)
-- [FPGA Configuration Modes](#fpga-configuration-modes)
+- [FPGA 與 CPLD](#fpga-vs-cpld)
+- [FPGA 架構](#fpga-architecture)
+- [FPGA 組態模式](#fpga-configuration-modes)
 
-### Synthesis
-- [Technology Library & PVT](#technology-library)
+### 合成
+- [Technology Library 與 PVT](#technology-library)
+- [Liberty File Format (.lib)](#liberty-file-format-lib)
 - [Delay Models](#delay-models)
-- [SDF File Format](#sdf-file-format)
+- [SDF 檔案格式](#sdf-file-format)
 - [SDC Constraints](#sdc-constraints)
 - [Clock Gating](#clock-gating)
 - [Cross Boundary Optimization](#cross-boundary-optimization)
 
-### Static Timing Analysis (STA)
-- [DTA vs STA](#dta-vs-sta)
-- [Pre-sim vs Post-sim](#pre-simulation-vs-post-simulation)
-- [Timing Path Types](#types-of-timing-path)
-- [Setup & Hold Analysis](#setup--hold-check)
-- [Recovery & Removal Time](#recovery--removal-time)
+### 靜態時序分析 (STA)
+- [DTA 與 STA](#dta-vs-sta)
+- [Pre-sim 與 Post-sim](#pre-simulation-vs-post-simulation)
+- [Timing Path 類型](#types-of-timing-path)
+- [Setup 與 Hold 分析](#setup--hold-check)
+- [Recovery 與 Removal Time](#recovery--removal-time)
 - [Clock Jitter](#clock-jitter)
 - [OCV (On-Chip Variation)](#ocv-on-chip-variation)
-- [Timing Violation Solutions](#setup--hold-violation-solutions)
-- [Special Timing Paths](#special-timing-path)
+- [CPPR/CRPR (Pessimism Removal)](#cpprcrpr-clock-path-pessimism-removal)
+- [Multi-Corner Multi-Mode (MCMM)](#multi-corner-multi-mode-mcmm)
+- [Timing Violation 解決方法](#setup--hold-violation-solutions)
+- [特殊 Timing Path](#special-timing-path)
 
-### Low Power Design
-- [Power Reduction Techniques](#low-power-design-techniques)
+### 低功耗設計
+- [功耗降低技術](#low-power-design-techniques)
 - [Power Intent (UPF/CPF)](#power-intent-upfcpf)
-- [Level Shifters & Isolation Cells](#level-shifters--isolation-cells)
+- [Level Shifters 與 Isolation Cells](#level-shifters--isolation-cells)
 
-### Circuit Examples
+### 電路範例
 - [Frequency Dividers](#frequency-divider-circuits)
-- [Odd Divider with 50% Duty](#odd-clock-divider---50-duty-cycle)
+- [奇數除頻 50% Duty Cycle](#odd-clock-divider---50-duty-cycle)
 - [Glitch-free Clock Mux](#glitch-free-clock-mux)
 - [Round Robin Arbiter](#round-robin-arbiter)
-- [Pipeline Concept](#pipeline-concept)
-- [Division Algorithm](#division-algorithm)
+- [Pipeline 概念](#pipeline-concept)
+- [除法演算法](#division-algorithm)
 - [Sequence Detector](#sequence-detector)
 - [Johnson Counter](#johnson-counter)
 
-### Backend / Physical Design
-- [CTS & Clock Uncertainty](#cts--clock-uncertainty)
-- [Routing Congestion](#routing-congestion-solutions)
-- [Chip Area Estimation](#chip-area-estimation)
-- [Buffer vs Inverter](#buffer-vs-inverter-in-cts)
-- [ECO Flow](#eco-engineering-change-order)
+### 後端 / 實體設計
+- [CTS 與 Clock Uncertainty](#cts--clock-uncertainty)
+- [Routing Congestion 解決方法](#routing-congestion-solutions)
+- [晶片面積估算](#chip-area-estimation)
+- [CTS 中 Buffer 與 Inverter](#buffer-vs-inverter-in-cts)
+- [ECO 流程](#eco-engineering-change-order)
 - [Scan Chain / DFT](#scan-chain--dft)
 - [MBIST (Memory BIST)](#mbist-memory-built-in-self-test)
-- [IR Drop Analysis](#ir-drop-analysis)
+- [IR Drop 分析](#ir-drop-analysis)
 - [Electromigration](#electromigration)
-- [Latch-up Effect](#latch-up-effect)
-- [Antenna Effect](#antenna-effect)
+- [Signal Integrity (Crosstalk)](#signal-integrity-crosstalk)
+- [Latch-up 效應](#latch-up-effect)
+- [Antenna 效應](#antenna-effect)
 
-### Memory & Cache
-- [SRAM vs DRAM](#sram-vs-dram)
-- [Write-back vs Write-through](#write-back-vs-write-through-cache)
+### 記憶體與 Cache
+- [SRAM 與 DRAM](#sram-vs-dram)
+- [Write-back 與 Write-through](#write-back-vs-write-through-cache)
 - [Cache Associativity](#cache-associativity)
 - [MESI Protocol](#mesi-protocol-cache-coherence)
 
-### Bus Protocols
-- [Common Protocols](#common-protocols) (includes AXI, SPI, I2C, UART, DDR)
+### 匯流排協定
+- [常見協定](#common-protocols)（包含 AXI、SPI、I2C、UART、DDR）
+- [DDR Memory Timing](#ddr-memory-timing)
 
-### Computer Architecture
+### 電腦架構
 - [Pipeline Hazards](#pipeline-hazards)
 - [Branch Predictor](#branch-predictor)
+- [Virtual Memory 與 TLB](#virtual-memory--tlb)
 
-### EDA & Scripting
-- [Tcl Scripting](#eda-scripting-tcl)
+### EDA 與腳本
+- [Tcl 腳本](#eda-scripting-tcl)
 
-### Frequently Asked Interview Questions
+### 常見面試問題
 - [Input/Output Delay](#inputoutput-delay) *(STA)*
-- [Clock Skew Effects](#clock-skew-effect-on-setuphold) *(STA)*
-- [Hold Time Zero/Negative?](#can-hold-time-be-zero-or-negative) *(STA)*
-- [SystemVerilog Purpose](#systemverilog-purpose) *(Verilog)*
-- [Cache & CPU](#how-cache-accelerates-cpu) *(Memory)*
-- [2-Stage FF CDC Limits](#can-2-stage-ff-solve-all-cdc-problems) *(CDC)*
-- [Synthesis Files](#files-needed-for-synthesis) *(Synthesis)*
-- [Glitch Prevention](#glitch-causes-and-prevention) *(Design)*
-- [Dual-Edge Detection](#dual-edge-detection) *(Circuits)*
+- [Clock Skew 影響](#clock-skew-effect-on-setuphold) *(STA)*
+- [Hold Time 可為零或負？](#can-hold-time-be-zero-or-negative) *(STA)*
+- [SystemVerilog 用途](#systemverilog-purpose) *(Verilog)*
+- [Cache 如何加速 CPU](#how-cache-accelerates-cpu) *(記憶體)*
+- [2-Stage FF CDC 限制](#can-2-stage-ff-solve-all-cdc-problems) *(CDC)*
+- [合成所需檔案](#files-needed-for-synthesis) *(合成)*
+- [Glitch 預防](#glitch-causes-and-prevention) *(設計)*
+- [雙邊緣偵測](#dual-edge-detection) *(電路)*
 
-### Interview Experience
+### 面試經驗
 - [MTK](#mtk) | [RTK](#rtk) | [NTK](#ntk) | [PHISON](#phison) | [SMI](#smi) | [GUC](#guc)
 
-### [References](#references)
+### [參考資料](#references)
 
 ---
 
-## Fundamentals
+## 基礎概念
 
 ### Latch vs Flip-flop
 
-Latches and flip-flops are fundamental storage elements in digital design, each storing a single bit of data. The critical distinction lies in their triggering mechanism: a latch is **level-triggered**, meaning its output follows the input while the enable signal is active (transparent), whereas a flip-flop is **edge-triggered**, capturing input only at the rising or falling edge of the clock signal. This makes flip-flops more predictable for synchronous design, while latches offer speed advantages but complicate timing analysis.
+Latch 與 flip-flop 是數位設計中的基本儲存元件，各自儲存一個位元的資料。關鍵區別在於觸發機制：latch 是 **level-triggered**（位準觸發），表示當 enable 訊號為 active 時，輸出會跟隨輸入（transparent）；而 flip-flop 是 **edge-triggered**（邊緣觸發），僅在 clock 訊號的上升或下降邊緣時擷取輸入。這使得 flip-flop 在同步設計中更為可預測，而 latch 雖有速度優勢但會使時序分析變複雜。
 
 | Feature | Latch | Flip-Flop |
 |---------|-------|-----------|
@@ -241,11 +249,11 @@ With Tr = 10 ns (3FF synchronizer):
 
 ---
 
-## Clock Domain Crossing (CDC)
+## 跨時脈域 (CDC)
 
-### **CDC Overview**
+### **CDC 概述**
 
-Clock domain crossing occurs whenever a signal passes between two different clock domains in a digital system. This is one of the most challenging aspects of multi-clock design because signals crossing asynchronous boundaries can cause metastability—an unstable state where a flip-flop's output is unpredictable for an indeterminate period. Understanding the relationship between the clocks determines the appropriate synchronization strategy.
+當訊號在數位系統中從一個 clock domain 傳遞到另一個 clock domain 時，就會發生 clock domain crossing。這是多時脈設計中最具挑戰性的部分，因為跨越非同步邊界的訊號可能導致 metastability——一種 flip-flop 輸出在不確定期間內不可預測的不穩定狀態。了解 clock 之間的關係決定了適當的同步策略。
 
 **Types of CDC:**
 
@@ -560,13 +568,146 @@ Why this is SAFE:
 - Always verify your specific FIFO IP's behavior at corner cases
 - Consider back-pressure latency when sizing for streaming applications
 
+### **FIFO Almost Full/Empty**
+
+Beyond basic full/empty flags, FIFOs often implement programmable threshold flags (almost_full, almost_empty) to support burst transfers and provide early warnings for flow control.
+
+**Why Almost Full/Empty is Needed:**
+
+```
+Problem: Writer cannot instantly stop
+  Writer sees: FULL flag (too late!)
+  Writer already has data in flight
+  Result: FIFO overrun!
+
+Solution: Early warning with Almost Full
+  Writer sees: ALMOST_FULL flag
+  Writer stops sending new data
+  Writer's in-flight data fills remaining slots
+  Result: No overrun, FULL reached gracefully
+
+The gap between ALMOST_FULL and FULL is called a "skid buffer"
+```
+
+**Flag Thresholds:**
+
+```
+FIFO Depth = 16
+                                 Write
+                                   ↓
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │10 │11 │12 │13 │14 │15 │
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+  ↑                               ↑                           ↑
+EMPTY                        ALMOST_FULL                    FULL
+(count=0)                    (count≥12)                  (count=16)
+
+  ↑           ↑
+ALMOST_EMPTY  HALF_FULL
+(count≤4)    (count=8)
+```
+
+**Common Flag Definitions:**
+
+| Flag | Condition | Typical Use |
+|------|-----------|-------------|
+| **EMPTY** | rd_ptr == wr_ptr | Block read operations |
+| **FULL** | wr_ptr - rd_ptr == DEPTH | Block write operations |
+| **ALMOST_EMPTY** | count ≤ AE_threshold | Trigger DMA refill |
+| **ALMOST_FULL** | count ≥ AF_threshold | Apply back-pressure |
+| **HALF_FULL** | count == DEPTH/2 | Flow control switching |
+
+**Implementation Approaches:**
+
+```verilog
+// Method 1: Direct threshold comparison
+// (Requires Gray-to-binary conversion for async FIFO)
+wire [PTR_WIDTH-1:0] fifo_count = wr_ptr_bin - rd_ptr_bin;
+assign almost_full  = (fifo_count >= AF_THRESHOLD);
+assign almost_empty = (fifo_count <= AE_THRESHOLD);
+
+// Method 2: Separate counters per domain (more common)
+// Write domain: decrement count when read acknowledged
+// Read domain: increment count when write acknowledged
+```
+
+**Programmable Thresholds:**
+
+Many FIFO IPs allow runtime configuration of thresholds:
+
+```verilog
+module async_fifo #(
+    parameter DEPTH = 16,
+    parameter WIDTH = 8,
+    parameter AF_THRESH = 12,  // Static threshold
+    parameter AE_THRESH = 4
+)(
+    input  [PTR_WIDTH-1:0] prog_af_thresh,  // Programmable
+    input  [PTR_WIDTH-1:0] prog_ae_thresh,  // Programmable
+    output almost_full,
+    output almost_empty,
+    ...
+);
+// Use prog_*_thresh for dynamic configuration
+```
+
+**Threshold Selection Guidelines:**
+
+| Parameter | Consideration | Typical Value |
+|-----------|---------------|---------------|
+| **AF_THRESH** | Max burst size + CDC latency | DEPTH - 4 to DEPTH - 8 |
+| **AE_THRESH** | Min read burst before underrun | 2 to 4 |
+| **CDC Latency** | 2-3 clock cycles per synchronizer | Account for in timing |
+
+**Burst Transfer Example:**
+
+```
+Scenario: USB packet reception (max 64 bytes)
+  - FIFO depth: 128 bytes
+  - Read clock slower than write clock
+
+AF_THRESHOLD calculation:
+  Max burst: 64 bytes
+  CDC latency: 3 write cycles
+  Safety margin: 1 byte
+
+  AF_THRESH = 128 - 64 - 3 - 1 = 60
+
+When count ≥ 60:
+  - Assert almost_full
+  - Tell USB controller to NAK next packet
+  - Remaining 68 slots absorb in-flight data
+```
+
+**Gray Code Consideration:**
+
+In async FIFOs, full/empty flags use synchronized Gray code pointers. For almost_full/empty, you need the actual distance between pointers:
+
+```verilog
+// Option 1: Convert to binary after synchronization
+wire [PTR_WIDTH-1:0] wr_ptr_bin_sync = gray_to_bin(wr_ptr_gray_sync);
+wire [PTR_WIDTH-1:0] rd_ptr_bin_sync = gray_to_bin(rd_ptr_gray_sync);
+wire [PTR_WIDTH-1:0] count = wr_ptr_bin_sync - rd_ptr_bin_sync;
+
+// Option 2: Use conservative thresholds (account for sync uncertainty)
+// Almost_full may assert slightly early (safe, but reduced effective depth)
+```
+
+**Common Interview Questions:**
+
+**Q: Why not just use full flag for flow control?**
+A: By the time the writer sees FULL, it may have already issued more writes. The almost_full gives advance warning, allowing graceful stopping.
+
+**Q: How do you choose almost_full threshold?**
+A: DEPTH minus (max_burst_size + synchronization_latency + safety_margin).
+
 ---
 
-## CMOS & Digital Building Blocks
+## CMOS 與數位基礎元件
 
 ### **Synchronous vs Asynchronous Reset**
 
-Reset signals initialize flip-flops to a known state during power-up or error recovery. The choice between synchronous and asynchronous reset affects timing closure, area, and reliability. Synchronous resets are treated as regular data inputs and only take effect at clock edges, while asynchronous resets act immediately regardless of the clock, which can cause metastability if released near a clock edge.
+Reset 訊號在開機或錯誤恢復時將 flip-flop 初始化至已知狀態。選擇 synchronous 或 asynchronous reset 會影響 timing closure、面積和可靠性。Synchronous reset 被視為一般資料輸入，僅在 clock edge 時生效；而 asynchronous reset 會立即作用，不受 clock 影響，但若在 clock edge 附近釋放可能導致 metastability。
 
 | Aspect | Synchronous Reset | Asynchronous Reset |
 |--------|-------------------|-------------------|
@@ -811,7 +952,7 @@ NAND using CMOS:           NOR using CMOS:
 
 ---
 
-## Verilog & RTL Design
+## Verilog 與 RTL 設計
 
 ### **Blocking vs Non-blocking Assignments**
 
@@ -981,9 +1122,199 @@ end
 
 **Synthesis Tool Behavior:** Modern tools (Vivado, DC) often re-encode FSMs automatically. Vivado defaults to one-hot for FSMs with ≤32 states. To preserve your encoding, use synthesis attributes like `(* fsm_encoding = "one_hot" *)` or `(* fsm_encoding = "sequential" *)`.
 
+### **SystemVerilog Assertions (SVA)**
+
+SystemVerilog Assertions（SVA）是強大的驗證功能，允許設計師直接在 RTL 或 testbench 中嵌入檢查。Assertion 可透過 simulation 動態驗證，或透過 formal verification 工具靜態驗證。
+
+**Two Types of Assertions:**
+
+| Type | Syntax | Evaluation | Use Case |
+|------|--------|------------|----------|
+| **Immediate** | `assert (expression)` | Procedural, instant | Simple checks, procedural code |
+| **Concurrent** | `assert property (...)` | Clock-based, temporal | Protocol checking, multi-cycle behavior |
+
+**Immediate Assertions:**
+
+Immediate assertions execute like procedural statements and check a condition at the current simulation time.
+
+```systemverilog
+// Immediate assertion in procedural block
+always @(posedge clk) begin
+    assert (data_valid |-> data != 0)
+        else $error("Valid data cannot be zero!");
+end
+
+// Immediate assertion with action blocks
+always_comb begin
+    assert (state != ILLEGAL)
+        else $fatal(1, "FSM entered illegal state!");
+end
+
+// Simple form (like if statement)
+assert (fifo_count <= FIFO_DEPTH);
+```
+
+**Concurrent Assertions:**
+
+Concurrent assertions are clock-based and can express temporal relationships spanning multiple cycles.
+
+```systemverilog
+// Basic concurrent assertion
+property p_req_ack;
+    @(posedge clk) disable iff (!rst_n)
+    req |-> ##[1:3] ack;  // ack within 1-3 cycles after req
+endproperty
+assert property (p_req_ack);
+
+// Assertion with implication
+property p_valid_data;
+    @(posedge clk)
+    valid |-> !$isunknown(data);  // No X/Z when valid
+endproperty
+assert property (p_valid_data);
+```
+
+**Implication Operators:**
+
+| Operator | Name | Meaning |
+|----------|------|---------|
+| `\|->` | Overlapping | If antecedent true, check consequent same cycle |
+| `\|=>` | Non-overlapping | If antecedent true, check consequent next cycle |
+
+```systemverilog
+// Overlapping: check starts same cycle
+req |-> gnt;           // When req=1, gnt must be 1 (same cycle)
+
+// Non-overlapping: check starts next cycle
+req |=> gnt;           // When req=1, gnt must be 1 (next cycle)
+// Equivalent to:
+req |-> ##1 gnt;
+```
+
+**Sequence Operators:**
+
+```systemverilog
+// ##N: delay by N cycles
+a ##2 b;               // a, then 2 cycles later, b
+
+// ##[min:max]: delay range
+a ##[1:3] b;           // b occurs 1-3 cycles after a
+
+// [*N]: repetition
+a ##1 b[*3] ##1 c;     // a, then b for 3 consecutive cycles, then c
+
+// [*min:max]: repetition range
+a[*2:4];               // a repeats 2-4 times
+
+// [->N]: goto repetition (non-consecutive)
+start ##1 data[->3] ##1 done;  // 3 data cycles (not necessarily consecutive)
+```
+
+**Common SVA Patterns:**
+
+```systemverilog
+// Request-acknowledge handshake
+property p_handshake;
+    @(posedge clk) disable iff (!rst_n)
+    req && !ack |-> ##[1:$] ack;  // Eventually get ack
+endproperty
+
+// FIFO never overflows
+property p_no_overflow;
+    @(posedge clk)
+    (wr_en && full) |-> 0;  // Never write when full
+endproperty
+
+// Data stability during valid
+property p_data_stable;
+    @(posedge clk)
+    (valid && !ready) |=> $stable(data);  // Hold data until accepted
+endproperty
+
+// One-hot encoding check
+property p_onehot;
+    @(posedge clk)
+    $onehot(state);  // Exactly one bit set
+endproperty
+```
+
+**Built-in Functions:**
+
+| Function | Description |
+|----------|-------------|
+| `$rose(signal)` | True if signal transitioned 0→1 |
+| `$fell(signal)` | True if signal transitioned 1→0 |
+| `$stable(signal)` | True if signal unchanged |
+| `$past(signal, N)` | Value of signal N cycles ago |
+| `$onehot(vector)` | True if exactly one bit is set |
+| `$onehot0(vector)` | True if zero or one bit is set |
+| `$isunknown(signal)` | True if signal contains X or Z |
+
+**Cover Property:**
+
+Besides checking violations, assertions can measure coverage:
+
+```systemverilog
+// Cover: check that scenario occurs
+cover property (@(posedge clk)
+    req ##[1:5] gnt ##1 done
+);  // Verify this sequence happens in simulation
+
+// Covergroup for functional coverage
+covergroup cg_fifo @(posedge clk);
+    cp_level: coverpoint fifo_count {
+        bins empty = {0};
+        bins low   = {[1:3]};
+        bins mid   = {[4:12]};
+        bins high  = {[13:15]};
+        bins full  = {16};
+    }
+endgroup
+```
+
+**Assume Property (Formal Verification):**
+
+```systemverilog
+// Assume: constrain inputs (for formal tools)
+assume property (@(posedge clk)
+    $onehot0(sel)  // Assume select is one-hot or zero
+);
+
+// Difference from assert:
+// assert: Check that design satisfies property
+// assume: Tell formal tool to assume input satisfies property
+```
+
+**Binding Assertions to Design:**
+
+```systemverilog
+// Bind assertions to module without modifying RTL
+module fifo_assertions (
+    input clk, rst_n, wr_en, rd_en, full, empty
+);
+    property p_no_write_when_full;
+        @(posedge clk) disable iff (!rst_n)
+        full |-> !wr_en;
+    endproperty
+    assert property (p_no_write_when_full);
+endmodule
+
+// Bind to DUT
+bind fifo fifo_assertions u_fifo_asserts (.*);
+```
+
+**Assertion Severity Levels:**
+
+```systemverilog
+assert property (...) else $info("Info message");
+assert property (...) else $warning("Warning message");
+assert property (...) else $error("Error message");
+assert property (...) else $fatal(1, "Fatal error!");
+```
+
 ---
 
-## Combinational Logic
+## 組合邏輯
 
 ### **Full adder**
 
@@ -1043,7 +1374,7 @@ C3 = G2 + P2·G1 + P2·P1·G0 + P2·P1·P0·C0
 **Interview Question:** "For a 64-bit adder, which architecture would you choose?"
 **Answer:** Hybrid approach - hierarchical CLA (4-bit CLA blocks with second-level lookahead) or Kogge-Stone for maximum speed with acceptable area overhead.
 
-## Design Flow
+## 設計流程
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -1290,17 +1621,137 @@ Multiple FPGAs share single configuration memory:
 
 ---
 
-## Synthesis
+## 合成
 
 ### **Technology library**
 
-Technology libraries (.lib/.db files) contain timing, power, and area characterization data for standard cells. Since transistor behavior varies with manufacturing process, supply voltage, and operating temperature, cells are characterized across multiple PVT (Process, Voltage, Temperature) corners. Using appropriate libraries for different analysis scenarios ensures designs work under all operating conditions.
+Technology library（.lib/.db 檔案）包含 standard cell 的 timing、power 和面積特性資料。由於 transistor 行為會隨製程、供應電壓和操作溫度而變化，cell 需在多個 PVT（Process、Voltage、Temperature）corner 下進行特性化。針對不同分析情境使用適當的 library，可確保設計在所有操作條件下正常運作。
 
 | Library | Process | Voltage | Temperature | Use Case |
 |---------|---------|---------|-------------|----------|
 | **fast.db** | Fast | High | Low | Hold time analysis (best case) |
 | **slow.db** | Slow | Low | High | Setup time analysis (worst case) |
 | **typical.db** | Typical | Nominal | Nominal | Functional verification |
+
+### **Liberty File Format (.lib)**
+
+Liberty format 是由 Synopsys 開發的業界標準 ASCII 格式，描述 standard cell 的特性化 timing、power 和 noise 資料。它對 synthesis 和 place-and-route 工具都是必要的。
+
+**What Liberty Files Contain:**
+
+| Category | Information |
+|----------|-------------|
+| **Cell Information** | Area, function, pin definitions |
+| **Timing Data** | Delay, transition time, setup/hold, recovery/removal |
+| **Power Data** | Dynamic power, leakage power, internal power |
+| **Noise Data** | Output noise, noise immunity |
+| **Operating Conditions** | Process, voltage, temperature (PVT) corners |
+
+**Multiple Liberty Files per Library:**
+
+It is common to have multiple liberty files for the same cell library—one for each PVT corner:
+
+| Library | Process | Voltage | Temperature | Use Case |
+|---------|---------|---------|-------------|----------|
+| **ss_0p9v_125c.lib** | Slow | 0.9V | 125°C | Setup analysis (worst) |
+| **ff_1p1v_m40c.lib** | Fast | 1.1V | -40°C | Hold analysis (best) |
+| **tt_1p0v_25c.lib** | Typical | 1.0V | 25°C | Nominal analysis |
+
+**Delay Models: NLDM vs CCS**
+
+| Model | Description | Accuracy | Runtime |
+|-------|-------------|----------|---------|
+| **NLDM** | Non-Linear Delay Model (voltage source) | Good | Fast |
+| **CCS** | Composite Current Source model | Higher | Slower |
+
+CCS models current waveforms more accurately than NLDM voltage-based models, which is critical for advanced nodes where waveform effects significantly impact timing.
+
+**Liberty File Structure:**
+
+```
+library (my_lib) {
+  /* Library attributes */
+  delay_model : table_lookup;
+  time_unit : "1ns";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  capacitive_load_unit (1, pf);
+
+  /* Operating conditions */
+  operating_conditions (slow) {
+    process : 1.0;
+    voltage : 0.9;
+    temperature : 125;
+  }
+
+  /* Cell definition */
+  cell (INV_X1) {
+    area : 1.2;
+    cell_leakage_power : 0.05;
+
+    pin (A) {
+      direction : input;
+      capacitance : 0.002;
+    }
+
+    pin (Y) {
+      direction : output;
+      function : "!A";
+
+      timing () {
+        related_pin : "A";
+        timing_sense : negative_unate;
+
+        /* 2D lookup table: input_transition x output_load */
+        cell_rise (delay_template_7x7) {
+          index_1 ("0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0");  /* slew */
+          index_2 ("0.001, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2"); /* load */
+          values ( \
+            "0.02, 0.03, 0.04, ...", \
+            "0.03, 0.04, 0.05, ...", \
+            ...
+          );
+        }
+      }
+    }
+  }
+}
+```
+
+**Key Timing Measurements:**
+
+```
+Delay measurement points (default):
+  - Input:  50% of transition
+  - Output: 50% of transition
+
+Transition (slew) measurement:
+  - Rise: 10% to 90% of VDD
+  - Fall: 90% to 10% of VDD
+  (Can be 20%-80% or 30%-70% depending on foundry)
+```
+
+**Look-Up Table (LUT) Interpolation:**
+
+Cell delay is characterized as a function of input transition time (slew) and output capacitive load:
+
+```
+delay = f(input_slew, output_load)
+
+The LUT provides discrete values; tools interpolate for actual conditions:
+- If actual values fall within table range: interpolation
+- If actual values exceed table range: extrapolation (less accurate)
+```
+
+**Timing Arcs:**
+
+| Arc Type | Description |
+|----------|-------------|
+| **Combinational** | Input-to-output delay through logic cell |
+| **Sequential Setup** | Setup time check at clock edge |
+| **Sequential Hold** | Hold time check at clock edge |
+| **Recovery** | Async signal release to clock edge |
+| **Removal** | Clock edge to async signal assertion |
 
 ### **Undefined interconnect**
 Can be solved by wire load model
@@ -1497,7 +1948,7 @@ compile_ultra -no_boundary_optimization                 # global disable
 - Buffer/inverter pushing
 - Logic restructuring at interfaces
 
-## STA
+## 靜態時序分析 (STA)
 
 ### **DTA v.s. STA**
 
@@ -1747,6 +2198,199 @@ Capture path: Use faster cells (min delay) × (1 - OCV_early)
 
 **Why Flat OCV is Overly Pessimistic:** Fixed derates assume all cells in a path are simultaneously fast or slow. In reality, random variations tend to cancel out in deep paths—some cells are fast, others slow. AOCV and POCV model this statistical reality.
 
+### **CPPR/CRPR (Clock Path Pessimism Removal)**
+
+當 STA 對 launch 和 capture clock 的相同實體 clock path 套用不同的 derating factor 時，就會產生 clock path pessimism。CPPR（Common Path Pessimism Removal）會自動修正這種人為的 pessimism。
+
+**Why CPPR is Needed:**
+
+In OCV mode, STA applies late derating to the launch clock path and early derating to the capture clock path. However, part of these paths is physically the same—the common clock path from the clock source to where the tree branches.
+
+```
+                    Clock Source
+                         │
+                    ┌────┴────┐
+                    │ Common  │ ← Same physical path!
+                    │  Path   │    But derated differently:
+                    └────┬────┘    - Late for launch (setup)
+                         │         - Early for capture (setup)
+                    ┌────┴────┐
+            ┌───────┘         └───────┐
+            │                         │
+      Launch FF                 Capture FF
+```
+
+**The Pessimism Problem:**
+
+```
+Without CPPR:
+  Common path delay (late derate):  1.0 ns × 1.2 = 1.20 ns
+  Common path delay (early derate): 1.0 ns × 0.8 = 0.80 ns
+  Artificial skew added: 1.20 - 0.80 = 0.40 ns pessimism!
+
+With CPPR:
+  CPPR adjustment removes 0.40 ns from the skew calculation
+  More realistic timing without unnecessary margin
+```
+
+**CPPR vs CRPR:**
+
+| Term | Full Name | Cause | Correction |
+|------|-----------|-------|------------|
+| **CPPR** | Common Path Pessimism Removal | OCV derating on common clock path | Remove delta from common path |
+| **CRPR** | Clock Reconvergence Pessimism Removal | Clock paths through different logic that reconverge | Remove unrealistic path combinations |
+
+**CRPR Example (Clock Reconvergence):**
+
+```
+        ┌──────┐
+CLK ────┤ MUX  ├──── To FF
+        │      │
+sel ────┤      │
+        └──────┘
+          │  │
+       Path A  Path B
+       (short) (long)
+
+If sel=0 always active, but STA considers both paths:
+  - Launch through short path
+  - Capture through long path
+  → Unrealistic pessimism that CRPR removes
+```
+
+**Tool Commands:**
+
+```tcl
+# PrimeTime
+set timing_remove_clock_reconvergence_pessimism true
+set timing_crpr_mode same_transition  # or other_transition
+
+# Tempus
+set_global timing_cppr true
+```
+
+**When CPPR/CRPR Matters:**
+
+| Scenario | Impact |
+|----------|--------|
+| **Deep clock trees** | More common path → larger adjustment |
+| **Tight timing margins** | Small adjustment can mean pass/fail |
+| **Multi-corner analysis** | CPPR calculated per-corner |
+| **Hold analysis** | Often more critical than setup |
+
+**Practical Impact Example:**
+
+```
+Timing Report (without CPPR):
+  Data Path Delay:     3.50 ns
+  Clock Skew:          0.60 ns (pessimistic)
+  Setup Slack:        -0.10 ns (FAIL)
+
+Timing Report (with CPPR):
+  Data Path Delay:     3.50 ns
+  Clock Skew:          0.20 ns (realistic)
+  CPPR Adjustment:     0.40 ns
+  Setup Slack:         0.30 ns (PASS)
+```
+
+### **Multi-Corner Multi-Mode (MCMM)**
+
+現代 SoC 在各種條件（PVT corner）和不同功能模式下運作。Multi-Corner Multi-Mode（MCMM）分析同時驗證所有相關組合的 timing。
+
+**Why MCMM is Essential:**
+
+As process technology scales below 28nm, timing sensitivity to PVT variations increases dramatically. A design that passes timing at one corner may fail at another. MCMM ensures comprehensive coverage.
+
+**Definitions:**
+
+| Term | Definition | Examples |
+|------|------------|----------|
+| **Corner** | PVT condition (Process, Voltage, Temperature) | SS/0.9V/125°C, FF/1.1V/-40°C |
+| **Mode** | Functional operating mode | Functional, Scan, Low-power, Retention |
+| **Scenario** | One Mode + One Corner combination | Functional @ SS corner |
+
+**Common Corners:**
+
+| Corner | Process | Voltage | Temperature | Primary Use |
+|--------|---------|---------|-------------|-------------|
+| **SS (Slow-Slow)** | Slow NMOS, Slow PMOS | Low | Hot | Setup analysis |
+| **FF (Fast-Fast)** | Fast NMOS, Fast PMOS | High | Cold | Hold analysis |
+| **TT (Typical)** | Typical | Nominal | 25°C | Functional verification |
+| **SF/FS** | Skewed (one fast, one slow) | Varies | Varies | Noise margin |
+
+**Common Modes:**
+
+| Mode | Description | Typical Constraints |
+|------|-------------|---------------------|
+| **Functional** | Normal operation | Highest frequency, tightest timing |
+| **Scan/Test** | DFT scan mode | Lower frequency, shift clock constraints |
+| **Low-power** | Reduced activity | Clock gating active, some domains off |
+| **Retention** | State retention | Isolation/retention timing |
+
+**Scenario Matrix Example:**
+
+```
+                    Corners
+           ┌──────┬──────┬──────┬──────┐
+           │  SS  │  FF  │  TT  │  SF  │
+     ┌─────┼──────┼──────┼──────┼──────┤
+     │Func │ S,H  │ S,H  │  -   │  -   │
+Modes│Scan │  S   │  H   │  -   │  -   │
+     │LowP │  S   │  H   │  -   │  -   │
+     └─────┴──────┴──────┴──────┴──────┘
+
+S = Setup critical, H = Hold critical
+```
+
+**MCMM vs Traditional Flow:**
+
+| Aspect | Traditional | MCMM |
+|--------|-------------|------|
+| **Analysis** | One corner at a time | All scenarios simultaneously |
+| **Optimization** | Per-corner, may conflict | Unified optimization |
+| **Runtime** | Multiple runs | Single (longer) run |
+| **Convergence** | Fix one → break another | Global convergence |
+
+**MCMM in Tools:**
+
+```tcl
+# PrimeTime MCMM setup
+create_scenario -name func_ss
+read_sdc functional.sdc
+set_operating_conditions -library slow.db -analysis_type on_chip_variation
+
+create_scenario -name scan_ff
+read_sdc scan.sdc
+set_operating_conditions -library fast.db -analysis_type on_chip_variation
+
+# Analyze all scenarios
+set_active_scenarios {func_ss scan_ff}
+report_timing -scenarios all
+```
+
+**Dominant Corners:**
+
+Not all corners need full analysis. ML-based approaches can predict timing at non-dominant corners from dominant corner results:
+
+```
+Dominant corners (must analyze):
+  - SS/hot/lowV → Setup-critical
+  - FF/cold/highV → Hold-critical
+
+Non-dominant (can predict):
+  - TT, SF, FS → Usually not worst-case
+
+Prediction accuracy: 95-98% with 2× runtime reduction
+```
+
+**Sign-off Requirements:**
+
+| Analysis | Required Corners | Typical Count |
+|----------|------------------|---------------|
+| **Setup** | All slow corners | 3-5 |
+| **Hold** | All fast corners | 2-3 |
+| **Total scenarios** | Modes × Corners | 10-30+ |
+
 ### **Setup & Hold Violation Solutions**
 
 **⚠️ Important:** Always fix hold violations first! A chip with setup violations can work at lower frequency, but hold violations make the chip unusable ("DUMP the chip").
@@ -1808,7 +2452,7 @@ Not all paths in a design require single-cycle timing closure. Correctly identif
 
 ---
 
-## Low Power Design
+## 低功耗設計
 
 ### **Power Components**
 
@@ -2014,7 +2658,7 @@ With ELS:
 
 ---
 
-## Circuit Examples
+## 電路範例
 
 ### **Divide-by-2 Circuit**
 
@@ -2479,7 +3123,7 @@ Next: mask = 1111, req = 1010
 
 ---
 
-## Backend / Physical Design
+## 後端 / 實體設計
 
 ### **CTS & Clock Uncertainty**
 
@@ -2907,6 +3551,134 @@ Fix violations: widen wires, add vias
 Re-verify until clean
 ```
 
+### **Signal Integrity (Crosstalk)**
+
+Signal integrity（SI）指電氣訊號在 interconnect 中傳播時的品質。不良的 SI 會導致 timing 錯誤、資料損壞和矽片失效。在先進製程（28nm 及以下），SI 問題佔 post-silicon bug 的 30% 以上。
+
+**Types of Crosstalk:**
+
+| Type | Mechanism | Description |
+|------|-----------|-------------|
+| **Capacitive (Electrostatic)** | Mutual capacitance | Changing voltage couples to adjacent net via electric field |
+| **Inductive** | Mutual inductance | Changing current creates magnetic field coupling |
+
+Capacitive crosstalk dominates in most digital designs due to close wire spacing.
+
+**Crosstalk Effects:**
+
+```
+Aggressor: The switching net that causes interference
+Victim: The affected net that receives noise
+
+Two main effects:
+1. Crosstalk Glitch (Functional): Noise pulse on static victim
+2. Crosstalk Delay (Timing): Speed up or slow down victim transition
+```
+
+**Crosstalk Glitch:**
+
+```
+                Aggressor
+               ┌────────────────┐
+    ─────────┐ │                │ ┌─────────
+             └─┘                └─┘
+                    │
+              Coupling Cap (Cc)
+                    │
+                Victim (stable)
+    ──────────────╱╲─────────────────────
+                 noise pulse (glitch)
+```
+
+**Crosstalk Delay:**
+
+| Transition Direction | Effect on Victim | Result |
+|---------------------|------------------|--------|
+| **Same direction** (↑↑ or ↓↓) | Miller effect reduces Cc | Faster victim (speed-up) |
+| **Opposite direction** (↑↓ or ↓↑) | Miller effect increases Cc | Slower victim (slow-down) |
+
+```
+Same direction (both rise):
+  Aggressor: ───┐ ┌───
+               └─┘
+  Victim:    ───┐ ┌─── (faster!)
+               └─┘
+
+Opposite direction (aggressor rises, victim falls):
+  Aggressor: ───┐ ┌───
+               └─┘
+  Victim:    ┌───┐    (slower!)
+             └───┴───
+```
+
+**Worst Case for Timing:**
+
+```
+Crosstalk delay worst case:
+  - Slow corner (max base delay)
+  - Opposite switching direction
+  - Maximum coupling capacitance
+  - Overlapping switching windows
+
+Setup violation risk: Victim slows down
+Hold violation risk: Victim speeds up
+```
+
+**Crosstalk Mitigation Techniques:**
+
+| Technique | Description | Trade-off |
+|-----------|-------------|-----------|
+| **Spacing** | Increase wire separation | Routing resources |
+| **Shielding** | Insert ground wire between aggressor/victim | Metal density, routing |
+| **Buffer insertion** | Strengthen victim driver | Area, power |
+| **Net ordering** | Route timing-critical nets first | Tool runtime |
+| **Layer assignment** | Use different layers for crossing nets | Via count |
+
+**Shielding Example:**
+
+```
+Without shielding:      With shielding:
+  Aggressor               Aggressor
+     ║                       ║
+     ║ ← Cc                 ═══ ← Ground shield
+     ║                       ║
+  Victim                  Victim
+```
+
+**Crosstalk Analysis Flow:**
+
+```
+1. Extract parasitics (RC + Coupling C)
+           ↓
+2. Identify aggressor-victim pairs
+           ↓
+3. Calculate noise/delay impact
+           ↓
+4. Check against thresholds
+           ↓
+5. Fix violations (shield, space, buffer)
+```
+
+**SI Analysis in Tools:**
+
+```tcl
+# PrimeTime SI
+set_noise_parameters -enable_propagation true
+report_noise -above 0.2 -all_nets
+
+# SI in P&R (ICC2)
+check_routes -type open_nets -type electrical_violations
+route_detail -crosstalk_optimization true
+```
+
+**Design Guidelines:**
+
+| Rule | Threshold | Purpose |
+|------|-----------|---------|
+| **Max coupling length** | <1000× wire width | Limit capacitive coupling |
+| **Noise margin** | Glitch < 10-20% VDD | Prevent functional failure |
+| **Timing margin** | SI delta < 5% of slack | Prevent timing closure issues |
+
 ### **Latch-up Effect**
 
 Latch-up is a parasitic thyristor (PNPN) effect in CMOS that can cause permanent damage.
@@ -3042,11 +3814,11 @@ Counterintuitively, very thin gate oxides in advanced nodes are **less** suscept
 
 ---
 
-## Memory & Cache
+## 記憶體與 Cache
 
 ### **SRAM vs DRAM**
 
-SRAM (Static RAM) and DRAM (Dynamic RAM) represent fundamental trade-offs in memory design. SRAM uses cross-coupled inverters to store each bit, providing fast access but requiring 6 transistors per cell. DRAM stores charge in a capacitor, achieving much higher density with just 1 transistor and 1 capacitor per cell, but requiring periodic refresh due to charge leakage. This explains why CPUs use SRAM for fast caches and DRAM for large main memory.
+SRAM（Static RAM）與 DRAM（Dynamic RAM）代表記憶體設計中的基本權衡。SRAM 使用交叉耦合 inverter 儲存每個位元，提供快速存取但每個 cell 需要 6 個 transistor。DRAM 將電荷儲存在電容中，僅需 1 個 transistor 和 1 個電容即可達到更高密度，但由於電荷洩漏需要定期 refresh。這解釋了為何 CPU 使用 SRAM 作為快速 cache，而使用 DRAM 作為大容量主記憶體。
 
 | Feature | SRAM | DRAM |
 |---------|------|------|
@@ -3293,11 +4065,11 @@ All caches monitor (snoop) the shared bus for memory transactions:
 
 ---
 
-## Computer Architecture
+## 電腦架構
 
 ### **Pipeline Hazards**
 
-Pipeline hazards are conditions that prevent the next instruction from executing in its designated clock cycle. Understanding and mitigating hazards is fundamental to achieving high instruction throughput in pipelined processors.
+Pipeline hazard 是導致下一條指令無法在其指定 clock cycle 執行的情況。理解並減輕 hazard 是在 pipelined processor 中達到高指令吞吐量的基礎。
 
 **Types of Hazards:**
 
@@ -3486,9 +4258,140 @@ Consider a loop that executes 10 times:
 - Use 2-bit counter or correlating predictor for direction
 - Implemented in Fetch stage of pipeline
 
+### **Virtual Memory & TLB**
+
+Virtual memory 提供程序間的記憶體隔離，並允許程式使用超過實體可用的記憶體。Translation Lookaside Buffer（TLB）是加速 virtual-to-physical address translation 的關鍵 cache。
+
+**Virtual Memory Concepts:**
+
+| Concept | Description |
+|---------|-------------|
+| **Virtual Address** | Address used by program (per-process unique) |
+| **Physical Address** | Actual hardware memory location |
+| **Page** | Fixed-size memory block (typically 4KB) |
+| **Page Table** | Maps virtual pages to physical frames |
+| **Page Fault** | Access to page not in physical memory |
+
+**Address Translation:**
+
+```
+Virtual Address:
+┌──────────────────────┬─────────────┐
+│  Virtual Page Number │ Page Offset │
+│       (VPN)         │             │
+└──────────┬───────────┴─────────────┘
+           │
+           ▼ Page Table Lookup
+┌──────────────────────┬─────────────┐
+│ Physical Frame Number│ Page Offset │
+│       (PFN)         │   (same)    │
+└──────────────────────┴─────────────┘
+Physical Address
+```
+
+**Why TLB is Needed:**
+
+Without TLB, every memory access requires two memory accesses:
+1. Access page table to get physical address
+2. Access actual data
+
+This doubles memory latency—unacceptable for performance.
+
+**TLB Organization:**
+
+```
+┌───────────────────────────────────────────────────┐
+│                      TLB                           │
+├─────────┬─────────┬───────┬───────────────────────┤
+│   VPN   │  ASID   │ Valid │  PFN + Permissions    │
+├─────────┼─────────┼───────┼───────────────────────┤
+│  0x1234 │   5     │   1   │ 0x5678, RWX           │
+│  0x2000 │   5     │   1   │ 0x3000, R--           │
+│  0x3456 │   7     │   1   │ 0x7890, RW-           │
+│   ...   │  ...    │  ...  │  ...                  │
+└─────────┴─────────┴───────┴───────────────────────┘
+
+ASID = Address Space Identifier (for process isolation)
+```
+
+**TLB Hit/Miss:**
+
+| Event | Action | Latency |
+|-------|--------|---------|
+| **TLB Hit** | Use cached translation | 0.5-1 cycle |
+| **TLB Miss (HW)** | Hardware walks page table | 10-100 cycles |
+| **TLB Miss (SW)** | OS handles page table walk | 100-1000 cycles |
+| **Page Fault** | OS loads page from disk | Millions of cycles |
+
+**TLB Types:**
+
+| Type | Structure | Pros | Cons |
+|------|-----------|------|------|
+| **Fully Associative** | Any VPN → any entry | Best hit rate | Expensive comparison |
+| **Set Associative** | VPN → specific set | Balance cost/performance | Common choice |
+| **Separate I/D TLB** | Instruction + Data TLBs | Parallel access | More hardware |
+
+**TLB Reach:**
+
+```
+TLB Reach = TLB_entries × Page_size
+
+Example:
+  64-entry TLB with 4KB pages:
+  TLB Reach = 64 × 4KB = 256KB
+
+With 2MB huge pages:
+  TLB Reach = 64 × 2MB = 128MB (much larger working set!)
+```
+
+**Context Switch and TLB:**
+
+On context switch between processes, TLB entries become invalid because virtual addresses map differently.
+
+**Solutions:**
+
+| Method | Description | Trade-off |
+|--------|-------------|-----------|
+| **TLB Flush** | Invalidate all entries | Simple, but loses cached translations |
+| **ASID (Address Space ID)** | Tag entries with process ID | Entries preserved, hardware cost |
+| **PCID (Process Context ID)** | x86 extension of ASID | 12-bit ID, avoids most flushes |
+
+**Typical TLB Hierarchy:**
+
+```
+CPU Core
+    │
+    ▼
+┌─────────────────┐
+│   L1 ITLB       │ ← Instruction TLB (small, fast)
+│   (32 entries)  │
+├─────────────────┤
+│   L1 DTLB       │ ← Data TLB (small, fast)
+│   (64 entries)  │
+├─────────────────┤
+│   L2 STLB       │ ← Shared TLB (larger, slower)
+│   (512 entries) │
+└─────────────────┘
+         │
+         ▼
+    Page Table
+    (in memory)
+```
+
+**Modern TLB Characteristics:**
+
+| Processor | L1 DTLB | L1 ITLB | L2 TLB |
+|-----------|---------|---------|--------|
+| Intel Skylake | 64 entries, 4-way | 128 entries, 8-way | 1536 entries, 12-way |
+| ARM Cortex-A72 | 48 entries, FA | 48 entries, FA | 1024 entries, 4-way |
+
+**Interview Question:** "Why is TLB miss expensive?"
+
+A TLB miss triggers a page table walk, which requires multiple memory accesses (one per page table level). Modern systems use 4-5 level page tables for 48-bit virtual addresses, potentially requiring 4-5 memory accesses—hundreds of cycles.
+
 ---
 
-## Frequently Asked Interview Questions
+## 常見面試問題
 
 ### **Input/Output Delay**
 
@@ -3910,6 +4813,136 @@ WRAP:   [A+2][A+3][A][A+1] Wraps at boundary (cache line fill)
 - Different-ID transactions can complete out of order
 - Enables efficient memory controller pipelining
 
+### **DDR Memory Timing**
+
+DDR（Double Data Rate）SDRAM 在 clock 的兩個邊緣傳輸資料，有效地將頻寬加倍。理解 DDR timing 參數對於 memory controller 設計和系統 timing closure 至關重要。
+
+**DDR vs SDR:**
+
+```
+         CLK
+SDR:     ──┐  ┌──┐  ┌──┐  ┌──
+           └──┘  └──┘  └──┘
+Data:    ──D0────D1────D2────  (1 transfer per cycle)
+
+DDR:     ──┐  ┌──┐  ┌──┐  ┌──
+           └──┘  └──┘  └──┘
+Data:    ──D0─D1─D2─D3─D4─D5─  (2 transfers per cycle)
+```
+
+**Key Timing Parameters:**
+
+| Parameter | Full Name | Description |
+|-----------|-----------|-------------|
+| **CL** | CAS Latency | Clock cycles from READ command to first data |
+| **tRCD** | RAS to CAS Delay | Time to activate row before column access |
+| **tRP** | Row Precharge Time | Time to close (precharge) a row |
+| **tRAS** | Row Active Time | Minimum time row must be active |
+| **tRC** | Row Cycle Time | Minimum time between row activations (tRAS + tRP) |
+
+**Memory Timing Notation:**
+
+DDR memory is often specified as CL-tRCD-tRP-tRAS (e.g., "16-18-18-36"):
+
+```
+DDR4-3200 CL16-18-18-36:
+  CL   = 16 clocks → 16 × 0.625ns = 10.0ns (CAS latency)
+  tRCD = 18 clocks → 18 × 0.625ns = 11.25ns
+  tRP  = 18 clocks → 18 × 0.625ns = 11.25ns
+  tRAS = 36 clocks → 36 × 0.625ns = 22.5ns
+
+Clock period at DDR4-3200: 1 / 1600MHz = 0.625ns
+```
+
+**Read Operation Timing:**
+
+```
+        tRCD            CL
+    ◄──────────► ◄────────────────►
+CLK:  │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │
+      ┌─┐       ┌─┐
+CMD:  │ACT│     │RD │
+      └─┘       └─┘
+                              ┌─┬─┬─┬─┐
+DQ:   ─────────────────────────│D0│D1│D2│D3│ (burst)
+                              └─┴─┴─┴─┘
+      │←────── tAA (Access time) ──────→│
+
+tAA = tRCD + CL (total access latency from row activation)
+```
+
+**Write Operation Timing:**
+
+```
+      tRCD            CWL         tWR
+    ◄──────► ◄──────────► ◄───────────►
+CLK: │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │
+     ┌─┐     ┌─┐
+CMD: │ACT│   │WR │            ┌───┐
+     └─┘     └─┘              │PRE│
+                ┌─┬─┬─┬─┐     └───┘
+DQ:  ───────────│D0│D1│D2│D3│
+                └─┴─┴─┴─┘
+                        │←─tWR→│ Write recovery
+
+CWL = CAS Write Latency (typically CL - 1 or CL - 2)
+tWR = Write Recovery time (data to precharge)
+```
+
+**Absolute vs Clock Cycle Latency:**
+
+| DDR Type | Frequency | Clock Period | CL (cycles) | CL (ns) |
+|----------|-----------|--------------|-------------|---------|
+| DDR3-1600 | 800 MHz | 1.25 ns | 11 | 13.75 ns |
+| DDR4-2400 | 1200 MHz | 0.833 ns | 16 | 13.3 ns |
+| DDR4-3200 | 1600 MHz | 0.625 ns | 16 | 10.0 ns |
+| DDR5-4800 | 2400 MHz | 0.417 ns | 40 | 16.7 ns |
+
+Note: Higher frequency DDR has more CL cycles but similar absolute latency.
+
+**Memory Access Scenarios:**
+
+| Scenario | Description | Latency |
+|----------|-------------|---------|
+| **Page Hit** | Row already open, same row | CL |
+| **Page Miss** | Different row, need precharge + activate | tRP + tRCD + CL |
+| **Page Empty** | No row open | tRCD + CL |
+
+**DQS (Data Strobe):**
+
+DDR uses source-synchronous clocking with DQS signal:
+
+```
+Write (DQS edge-aligned with DQ):
+DQS:  ────┐  ┌──┐  ┌──┐  ┌────
+          └──┘  └──┘  └──┘
+DQ:   ────│D0│D1│D2│D3│D4│D5│D6│D7│────
+         ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑
+      Data valid at DQS edges
+
+Read (DQS center-aligned with DQ):
+DQS:  ──────┐  ┌──┐  ┌──┐  ┌────
+            └──┘  └──┘  └──┘
+DQ:   ────│D0│D1│D2│D3│D4│D5│D6│D7│────
+            ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑
+         Sample at DQS center
+```
+
+**Training and Calibration:**
+
+Modern DDR controllers perform training to find optimal timing:
+
+| Training | Purpose |
+|----------|---------|
+| **Write Leveling** | Align DQS to CK at memory |
+| **Read DQS Gate** | Find when DQS is valid |
+| **Write/Read DQ** | Optimize data eye centering |
+| **VREF Training** | Calibrate voltage reference |
+
+**Interview Question:** "What determines DDR access latency?"
+
+For a page miss: tRP (close old row) + tRCD (open new row) + CL (column access). For DDR4-3200: ~11ns + 11ns + 10ns = ~32ns. This is why keeping rows open (page hit) dramatically improves performance.
+
 ### **EDA Scripting (Tcl)**
 
 Tcl (Tool Command Language) is the standard scripting language for EDA tools (Design Compiler, PrimeTime, ICC).
@@ -3962,41 +4995,41 @@ grep "slack" timing.rpt | sort -k2 -n | head -1
 
 ---
 
-## Interview Experience
+## 面試經驗
 
 ### **MTK**
-Departments: CAI, SPD1, SPD3, ADCT
+部門：CAI、SPD1、SPD3、ADCT
 
-Interview Questions: setup/hold calculation, CDC (multi bit), false path & multi cycle differences and settings, input/output delay, synchronous vs asynchronous differences, gray code, write RTL from waveform, IC design flow, SystemVerilog, build adder and multiplier using MUX, async FIFO, build OR using NAND, divide-by-3 circuit, pre/post sim differences, files needed for synthesis, divide-by-1.5 circuit, how cache accelerates CPU, clock gated
+面試題目： setup/hold calculation, CDC (multi bit), false path & multi cycle differences and settings, input/output delay, synchronous vs asynchronous differences, gray code, write RTL from waveform, IC design flow, SystemVerilog, build adder and multiplier using MUX, async FIFO, build OR using NAND, divide-by-3 circuit, pre/post sim differences, files needed for synthesis, divide-by-1.5 circuit, how cache accelerates CPU, clock gated
 
 ### **RTK**
-Departments: CN, RDC, MM
+部門：CN、RDC、MM
 
-Interview Questions: blocking/non-blocking, frequency divider circuit, critical path calculation, build DFF using two latches, low power design, down counter, clock skew effect on setup/hold, setup/hold violation solutions, what coding causes latch, design NAND using MUX, IC design flow, how to determine clock timing during synthesis, can hold time be 0, pipeline, how to set multicycle value, PVT violation
+面試題目：blocking/non-blocking、frequency divider circuit、critical path calculation、build DFF using two latches、low power design、down counter、clock skew effect on setup/hold、setup/hold violation solutions、what coding causes latch、design NAND using MUX、IC design flow、how to determine clock timing during synthesis、can hold time be 0、pipeline、how to set multicycle value、PVT violation
 
 ### **NTK**
-Departments: TCON, iHome
+部門：TCON、iHome
 
-Interview Questions: divide-by-2 circuit (without using cnt), draw synthesized circuit from RTL, explain metastability, input/output delay purpose & setting values, pipeline handling, fault coverage, set max/min delay for violation, async rst issues, blocking/non-blocking, build combinational circuit using NAND/NOR, setup/hold negative value cases, why hold time is independent of clk, full adder, number base conversion
+面試題目：divide-by-2 circuit (without using cnt)、draw synthesized circuit from RTL、explain metastability、input/output delay purpose & setting values、pipeline handling、fault coverage、set max/min delay for violation、async rst issues、blocking/non-blocking、build combinational circuit using NAND/NOR、setup/hold negative value cases、why hold time is independent of clk、full adder、number base conversion
 
 ### **PHISON**
-Departments: SSD, EMMC
+部門：SSD、EMMC
 
-Interview Questions: setup/hold inequality, clock gated, IC design flow, synchronous vs asynchronous, frequency divider circuit, build NAND & INV using PMOS and NMOS, CDC (multi bit), metastability, XOR truth table, multicycle & false path, design XOR using MUX, how many cycles from counter input to output, critical path, how to avoid clock skew/latch, characteristics of hold time in cell library, SystemVerilog purpose
+面試題目：setup/hold inequality、clock gated、IC design flow、synchronous vs asynchronous、frequency divider circuit、build NAND & INV using PMOS and NMOS、CDC (multi bit)、metastability、XOR truth table、multicycle & false path、design XOR using MUX、how many cycles from counter input to output、critical path、how to avoid clock skew/latch、characteristics of hold time in cell library、SystemVerilog purpose
 
 ### **SMI**
-Departments: UFS, SSD
+部門：UFS、SSD
 
-Interview Questions: CDC, FSM, draw MUX using AND/OR, low power design, timing violation handling methods, IC design flow, SDF contents, latch/DFF differences, glitch causes, build AND using NOR, input/output delay, explain timing report, can two-stage DFF solve all CDC, draw clock/data path of setup/hold, how to place MUX to save area, build XOR using INV and MUX, divide-by-3 circuit, edge/level trigger
+面試題目：CDC、FSM、draw MUX using AND/OR、low power design、timing violation handling methods、IC design flow、SDF contents、latch/DFF differences、glitch causes、build AND using NOR、input/output delay、explain timing report、can two-stage DFF solve all CDC、draw clock/data path of setup/hold、how to place MUX to save area、build XOR using INV and MUX、divide-by-3 circuit、edge/level trigger
 
 ### **GUC**
-Departments: APR, DFT
+部門：APR、DFT
 
-Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, test/fault coverage differences, scan reorder, lockup latch, BIST, stuck at fault, transition delay fault, cross talk, electromigration, draw SDFF, boundary scan, why DFT is needed, DRC/LVS, ATPG, how to verify APR function matches RTL, APR command, problems encountered in back-end with advanced process, LEF and DB file contents, wire load model
+面試題目：APR flow、power ring、CTS purpose、IR drop、scan chain、test/fault coverage differences、scan reorder、lockup latch、BIST、stuck at fault、transition delay fault、cross talk、electromigration、draw SDFF、boundary scan、why DFT is needed、DRC/LVS、ATPG、how to verify APR function matches RTL、APR command、problems encountered in back-end with advanced process、LEF and DB file contents、wire load model
 
 ---
 
-## References
+## 參考資料
 
 ### CDC
 - [https://www.zhihu.com/people/li-hong-jiang-54](https://www.zhihu.com/people/li-hong-jiang-54)
@@ -4011,7 +5044,7 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 - [16 Ways To Fix Setup and Hold Time Violations - EDN](https://www.edn.com/ways-to-solve-the-setup-and-hold-time-violation-in-digital-logic/)
 - [10 Ways to Fix Setup and Hold Violations](https://www.vlsi-expert.com/2014/01/10-ways-to-fix-setup-and-hold-violation.html)
 
-### Low Power Design
+### 低功耗設計
 - [What is Low Power Design? - Synopsys](https://www.synopsys.com/glossary/what-is-low-power-design.html)
 - [The Ultimate Guide to Clock Gating - AnySilicon](https://anysilicon.com/the-ultimate-guide-to-clock-gating/)
 
@@ -4115,5 +5148,60 @@ Interview Questions: APR flow, power ring, CTS purpose, IR drop, scan chain, tes
 - [Cache Associativity - Algorithmica](https://en.algorithmica.org/hpc/cpu-cache/associativity/)
 - [Cache Placement Policies - Wikipedia](https://en.wikipedia.org/wiki/Cache_placement_policies)
 - [Notes on Caches - University of Toronto](https://www.eecg.utoronto.ca/~enright/teaching/ece243S/notes/l26-caches.html)
+
+### Liberty File Format & Characterization
+- [Liberty File - VLSI Master](https://vlsimaster.com/liberty-file/)
+- [What is Library Characterization? - Synopsys](https://www.synopsys.com/glossary/what-is-library-characterization.html)
+- [LIB File in Physical Design - Team VLSI](https://teamvlsi.com/2020/05/lib-and-lef-file-in-asic-design.html)
+- [Timing Library (.lib) in VLSI - iVLSI](https://ivlsi.com/timing-library-lib-in-vlsi-physical-design/)
+- [Liberty Timing File Lecture - UMBC](https://courses.cs.umbc.edu/graduate/CMPE641/Fall08/cpatel2/slides/lect05_LIB.pdf)
+
+### CPPR/CRPR (Clock Path Pessimism Removal)
+- [Common Path & Clock Reconvergence Pessimism Removal - VLSI Pro](https://vlsi.pro/common-path-clock-reconvergence-pessimism-removal/)
+- [Clock Reconvergence Pessimism Basic - VLSI Expert](https://www.vlsi-expert.com/2011/02/clock-reconvergence-pessimism-crp-basic.html)
+- [Common Clock Path Pessimism Removal - VLSI System Design](https://www.vlsisystemdesign.com/common-clock-path-pessimism-removal-cppr-part-1/)
+- [OCV and CRPR - Physical Design 4U](https://www.physicaldesign4u.com/2020/07/ocv-on-chip-variation-and-crpr-clock.html)
+- [Removing Pessimism and Optimism in Timing Analysis - EE Times](https://www.eetimes.com/removing-pessimism-and-optimism-in-timing-analysis/)
+
+### Multi-Corner Multi-Mode (MCMM)
+- [Multi-Corner Multi-Mode Analysis - Semiconductor Engineering](https://semiengineering.com/knowledge_centers/eda-design/methodologies-and-flows/multi-corner-multi-mode-analysis/)
+- [MCMM Timing Optimization - Ondevtra](https://ondevtra.com/mcmm-optimization.html)
+- [How to Close Timing with Hundreds of Views - EE Journal](https://www.eejournal.com/article/20121206-cadence/)
+- [Machine-Learning-Based Multi-Corner Timing Prediction - MDPI](https://www.mdpi.com/2079-9292/11/10/1571)
+
+### Signal Integrity & Crosstalk
+- [Signal Integrity and Crosstalk in VLSI - iVLSI](https://ivlsi.com/signal-integrity-and-crosstalk-vlsi-physical-design/)
+- [Signal Integrity and Crosstalk - Team VLSI](https://teamvlsi.com/2020/06/signal-integrity-and-crosstalk-in-vlsi.html)
+- [How to Deal with Noise/Crosstalk - Chipress](https://chipress.online/2024/11/05/how-to-deal-with-noise-crosstalk-in-physical-design/)
+- [Signal Integrity Issues - SiliconVLSI](https://siliconvlsi.com/signal-integrity-issues/)
+- [Signal Integrity in VLSI - Mosart Labs](https://mosartlabs.com/why-signal-integrity-is-crucial-in-vlsi-how-to-improve-it/)
+
+### SystemVerilog Assertions (SVA)
+- [SystemVerilog Assertions Basics - systemverilog.io](https://www.systemverilog.io/verification/sva-basics/)
+- [SystemVerilog Assertions Tutorial - Doulos](https://www.doulos.com/knowhow/systemverilog/systemverilog-tutorials/systemverilog-assertions-tutorial/)
+- [Assertions in SystemVerilog - Verification Guide](https://verificationguide.com/systemverilog/systemverilog-assertions/)
+- [SystemVerilog Assertions Simplified - eInfochips](https://www.einfochips.com/blog/system-verilog-assertions-simplified/)
+- [Using SVA in RTL Code - Design Reuse](https://www.design-reuse.com/articles/10907/using-systemverilog-assertions-in-rtl-code.html)
+
+### Virtual Memory & TLB
+- [Translation Lookaside Buffer - Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
+- [Translation Lookaside Buffer (TLB) in Paging - GeeksforGeeks](https://www.geeksforgeeks.org/operating-systems/translation-lookaside-buffer-tlb-in-paging/)
+- [Virtual Memory and TLBs - Fiveable](https://fiveable.me/advanced-computer-architecture/unit-7/virtual-memory-translation-lookaside-buffers-tlbs/study-guide/i40ByaEgASybukOQ)
+- [What is a TLB? - TechTarget](https://www.techtarget.com/whatis/definition/translation-look-aside-buffer-TLB)
+- [Paging: Faster Translations (TLBs) - OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/vm-tlbs.pdf)
+
+### FIFO Almost Full/Empty
+- [Need for Almost Empty and Almost Full Flags - Stack Exchange](https://electronics.stackexchange.com/questions/573847/need-for-almost-empty-and-almost-full-flags-in-a-fifo-buffer)
+- [FIFO Architecture, Functions, and Applications - Texas Instruments](https://www.ti.com/lit/an/scaa042a/scaa042a.pdf)
+- [Asynchronous FIFO - VLSI Verify](https://vlsiverify.com/verilog/verilog-codes/asynchronous-fifo/)
+- [Async FIFO Design - GitHub](https://github.com/ujjwal-2001/Async_FIFO_Design)
+
+### DDR Memory Timing
+- [Memory Timings - Wikipedia](https://en.wikipedia.org/wiki/Memory_timings)
+- [CAS Latency - Wikipedia](https://en.wikipedia.org/wiki/CAS_latency)
+- [Understanding DDR4 Timing Parameters - systemverilog.io](https://www.systemverilog.io/design/understanding-ddr4-timing-parameters/)
+- [What Are Memory Timings? - GamersNexus](https://gamersnexus.net/guides/3333-memory-timings-defined-cas-latency-trcd-trp-tras)
+- [Understanding DDR SDRAM Timing Parameters - EE Times](https://www.eetimes.com/understanding-ddr-sdram-timing-parameters/)
+- [What is CAS Latency? DDR5 Latencies Explained - Corsair](https://www.corsair.com/us/en/explorer/diy-builder/memory/what-is-cas-latency-ddr5-latencies-explained/)
 
 ###### tags: `Work`
