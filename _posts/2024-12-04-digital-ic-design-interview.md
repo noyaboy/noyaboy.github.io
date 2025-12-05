@@ -80,33 +80,35 @@ tags:
 - [特殊 Timing Path](#special-timing-path)
 
 ### 低功耗設計
-- [功耗降低技術](#low-power-design-techniques)
-- [Power Intent (UPF/CPF)](#power-intent-upfcpf)
-- [Level Shifters 與 Isolation Cells](#level-shifters--isolation-cells)
+- [功耗組成](#功耗組成)
+- [功耗降低技術](#功耗降低技術)
+- [Multi-Vt Cell Library](#multi-vt-cell-library)
+- [Clock Gating vs Power Gating](#clock-gating-vs-power-gating)
+- [Power Intent (UPF/CPF)](#power-intentupfcpf)
+- [Level Shifters 與 Isolation Cells](#level-shifters-與-isolation-cells)
 
 ### 電路範例
-- [Frequency Dividers](#frequency-divider-circuits)
-- [奇數除頻 50% Duty Cycle](#odd-clock-divider---50-duty-cycle)
+- [Frequency Dividers](#divide-by-2-circuit)
+- [奇數除頻 50% Duty Cycle](#奇數除頻---50-duty-cycle)
 - [Glitch-free Clock Mux](#glitch-free-clock-mux)
-- [Round Robin Arbiter](#round-robin-arbiter)
-- [Pipeline 概念](#pipeline-concept)
-- [除法演算法](#division-algorithm)
-- [Sequence Detector](#sequence-detector)
+- [除法演算法](#除法演算法)
+- [序列偵測器](#序列偵測器)
 - [Johnson Counter](#johnson-counter)
+- [Round Robin Arbiter](#round-robin-arbiter)
 
 ### 後端 / 實體設計
-- [CTS 與 Clock Uncertainty](#cts--clock-uncertainty)
-- [Routing Congestion 解決方法](#routing-congestion-solutions)
-- [晶片面積估算](#chip-area-estimation)
-- [CTS 中 Buffer 與 Inverter](#buffer-vs-inverter-in-cts)
-- [ECO 流程](#eco-engineering-change-order)
+- [CTS 與 Clock Uncertainty](#cts-與-clock-uncertainty)
+- [Routing Congestion 解決方案](#routing-congestion-解決方案)
+- [晶片面積估算](#晶片面積估算)
+- [CTS 中的 Buffer vs Inverter](#cts-中的-buffer-vs-inverter)
+- [ECO 流程](#ecoengineering-change-order)
 - [Scan Chain / DFT](#scan-chain--dft)
-- [MBIST (Memory BIST)](#mbist-memory-built-in-self-test)
-- [IR Drop 分析](#ir-drop-analysis)
+- [MBIST](#mbistmemory-built-in-self-test)
+- [IR Drop 分析](#ir-drop-分析)
 - [Electromigration](#electromigration)
 - [Signal Integrity (Crosstalk)](#signal-integrity-crosstalk)
-- [Latch-up 效應](#latch-up-effect)
-- [Antenna 效應](#antenna-effect)
+- [Latch-up 效應](#latch-up-效應)
+- [Antenna 效應](#antenna-效應)
 
 ### 記憶體與 Cache
 - [SRAM 與 DRAM](#sram-vs-dram)
@@ -2454,115 +2456,115 @@ Not all paths in a design require single-cycle timing closure. Correctly identif
 
 ## 低功耗設計
 
-### **Power Components**
+### **功耗組成**
 
-Power consumption in CMOS circuits consists of two main components: dynamic power (consumed during switching) and static power (consumed even when idle). As process technology scales to smaller nodes, static power becomes increasingly significant due to higher leakage currents through thinner gate oxides and reduced threshold voltages.
+CMOS 電路的功耗由兩個主要部分組成：動態功耗（switching 時消耗）和靜態功耗（idle 時也會消耗）。隨著製程技術縮小到更小節點，由於更薄的 gate oxide 和降低的 threshold voltage 導致更高的 leakage current，靜態功耗變得越來越重要。
 
-**Dynamic Power:**
+**動態功耗：**
 ```
 P_dynamic = α × C_L × V_DD² × f
 ```
-- α = switching activity (0 to 1)
+- α = switching activity（0 到 1）
 - C_L = load capacitance
 - V_DD = supply voltage
-- f = clock frequency
+- f = clock 頻率
 
-**Static Power (Leakage):**
+**靜態功耗（Leakage）：**
 
-| Leakage Type | Description |
+| Leakage 類型 | 描述 |
 |--------------|-------------|
-| **Subthreshold** | Current through channel when VGS < Vth (dominant in modern nodes) |
-| **Gate oxide** | Tunneling through thin gate oxide |
-| **Junction** | Reverse-biased PN junction leakage |
+| **Subthreshold** | VGS < Vth 時通過 channel 的電流（現代製程節點的主導因素）|
+| **Gate oxide** | 通過薄 gate oxide 的穿隧電流 |
+| **Junction** | 反向偏壓 PN junction 的 leakage |
 
-### **Power Reduction Techniques**
+### **功耗降低技術**
 
-Multiple techniques exist to reduce power consumption, each targeting different power components and applicable at different design stages. The choice of technique depends on power budget requirements, performance constraints, and implementation complexity.
+存在多種降低功耗的技術，每種技術針對不同的功耗組成，並適用於不同的設計階段。技術的選擇取決於功耗預算需求、效能限制和實現複雜度。
 
-| Technique | Target Power | Description | Trade-off |
+| 技術 | 目標功耗 | 描述 | 權衡 |
 |-----------|--------------|-------------|-----------|
-| **Clock Gating** | Dynamic | Disable clock to inactive blocks | Minimal overhead |
-| **Power Gating** | Static (Leakage) | Shut off power supply completely | Wake-up latency |
-| **Multi-Vt** | Static | Use high-Vt cells for non-critical paths | Area |
-| **DVFS** | Both | Dynamic voltage/frequency scaling | Complexity |
-| **Operand Isolation** | Dynamic | Gate inputs to idle functional units | Extra logic |
-| **Multi-VDD** | Both | Different voltage domains per block | Level shifters needed |
+| **Clock Gating** | 動態功耗 | 關閉非活動區塊的 clock | 開銷最小 |
+| **Power Gating** | 靜態功耗（Leakage）| 完全關閉電源供應 | Wake-up 延遲 |
+| **Multi-Vt** | 靜態功耗 | 非關鍵路徑使用 high-Vt cells | 面積 |
+| **DVFS** | 兩者 | 動態電壓/頻率調整 | 複雜度 |
+| **Operand Isolation** | 動態功耗 | 閘控 idle 功能單元的輸入 | 額外邏輯 |
+| **Multi-VDD** | 兩者 | 每個區塊使用不同電壓域 | 需要 level shifters |
 
 ### **Multi-Vt Cell Library**
 
-| Cell Type | Threshold | Speed | Leakage | Use Case |
+| Cell 類型 | Threshold | 速度 | Leakage | 使用情境 |
 |-----------|-----------|-------|---------|----------|
-| **HVT** (High-Vt) | High | Slowest | Lowest | Non-critical paths |
-| **SVT/RVT** (Standard) | Medium | Medium | Medium | Default cells |
-| **LVT** (Low-Vt) | Low | Fast | High | Critical timing paths |
-| **SLVT** (Super Low-Vt) | Very Low | Fastest | Highest | Most critical paths |
+| **HVT**（High-Vt）| 高 | 最慢 | 最低 | 非關鍵路徑 |
+| **SVT/RVT**（Standard）| 中等 | 中等 | 中等 | 預設 cells |
+| **LVT**（Low-Vt）| 低 | 快速 | 高 | 關鍵時序路徑 |
+| **SLVT**（Super Low-Vt）| 極低 | 最快 | 最高 | 最關鍵路徑 |
 
-**Speed vs Leakage:** HVT < SVT < LVT < SLVT
+**速度 vs Leakage：** HVT < SVT < LVT < SLVT
 
-**Multi-Vt Optimization Strategy:**
+**Multi-Vt 最佳化策略：**
 
-Modern synthesis and optimization tools automatically select cell Vt types to minimize leakage while meeting timing. The general approach is conservative: use slow, low-leakage cells by default and selectively upgrade only where needed.
+現代合成和最佳化工具會自動選擇 cell Vt 類型，以在滿足時序的同時最小化 leakage。一般做法是保守的：預設使用較慢、低 leakage 的 cells，僅在需要時選擇性地升級。
 
-1. Start with all HVT cells (minimize leakage baseline)
-2. Replace cells on critical paths with LVT/SLVT
-3. Balance timing closure with leakage budget
+1. 從全部 HVT cells 開始（最小化 leakage 基準）
+2. 將關鍵路徑上的 cells 替換為 LVT/SLVT
+3. 在 timing closure 和 leakage 預算之間取得平衡
 
 ### **Clock Gating vs Power Gating**
 
-| Aspect | Clock Gating | Power Gating |
+| 面向 | Clock Gating | Power Gating |
 |--------|--------------|--------------|
-| **Reduces** | α (switching activity) | V (to zero) |
-| **Saves** | Dynamic power only | Both dynamic + static |
-| **Wake-up** | Instant (next clock) | Slow (μs to ms) |
-| **State** | Preserved | Lost (needs retention) |
-| **Overhead** | ICG cells | Sleep transistors, isolation, retention |
+| **降低** | α（switching activity）| V（降至零）|
+| **節省** | 僅動態功耗 | 動態 + 靜態功耗 |
+| **喚醒時間** | 即時（下個 clock）| 慢（μs 至 ms）|
+| **狀態** | 保留 | 遺失（需要 retention）|
+| **開銷** | ICG cells | Sleep transistors、isolation、retention |
 
-**Power Gating Implementation:**
-- Uses sleep transistors (high-Vt PMOS header or NMOS footer)
-- Requires isolation cells to prevent floating outputs
-- Requires retention registers if state must be preserved
+**Power Gating 實現：**
+- 使用 sleep transistors（high-Vt PMOS header 或 NMOS footer）
+- 需要 isolation cells 以防止 floating outputs
+- 若需保留狀態則需要 retention registers
 
-### **Power Intent (UPF/CPF)**
+### **Power Intent（UPF/CPF）**
 
-Power intent files describe how power should be managed in a design—which blocks can be shut down, which voltages they use, and how signals cross power domain boundaries.
+Power intent 檔案描述設計中如何管理電源——哪些區塊可以關閉、使用什麼電壓，以及訊號如何跨越 power domain 邊界。
 
-**UPF vs CPF:**
+**UPF vs CPF：**
 
-| Aspect | UPF (Unified Power Format) | CPF (Common Power Format) |
+| 面向 | UPF（Unified Power Format）| CPF（Common Power Format）|
 |--------|---------------------------|---------------------------|
-| **Standard** | IEEE 1801 | Si2 |
-| **Backed by** | Synopsys, Mentor, Cadence | Originally Cadence |
-| **Industry adoption** | More widely used | Legacy designs |
-| **Syntax** | Tcl-based | Tcl-based |
+| **標準** | IEEE 1801 | Si2 |
+| **支持廠商** | Synopsys、Mentor、Cadence | 最初為 Cadence |
+| **業界採用度** | 更廣泛使用 | Legacy 設計 |
+| **語法** | 基於 Tcl | 基於 Tcl |
 
-**Key UPF Concepts:**
+**關鍵 UPF 概念：**
 
-| Concept | Description |
+| 概念 | 描述 |
 |---------|-------------|
-| **Power Domain** | Group of cells sharing same power supply |
-| **Power State** | Operating mode (ON, OFF, RETENTION) |
-| **Power Switch** | Header/footer transistor for power gating |
-| **Isolation Cell** | Clamps outputs when domain is OFF |
-| **Level Shifter** | Converts voltage between domains |
-| **Retention Register** | Preserves state during power-down |
+| **Power Domain** | 共享相同電源供應的 cells 群組 |
+| **Power State** | 操作模式（ON、OFF、RETENTION）|
+| **Power Switch** | 用於 power gating 的 header/footer transistor |
+| **Isolation Cell** | 當 domain 為 OFF 時將輸出 clamp |
+| **Level Shifter** | 在 domains 之間轉換電壓 |
+| **Retention Register** | 在 power-down 期間保留狀態 |
 
-**Basic UPF Example:**
+**基本 UPF 範例：**
 
 ```tcl
-# Define power domains
+# 定義 power domains
 create_power_domain PD_TOP -include_scope
 create_power_domain PD_CPU -elements {cpu_inst}
 
-# Define power supplies
+# 定義電源供應
 create_supply_net VDD
 create_supply_net VSS
 create_supply_net VDD_CPU
 
-# Connect supplies to domains
+# 將供應連接到 domains
 create_supply_set SS_TOP -function {power VDD} -function {ground VSS}
 create_supply_set SS_CPU -function {power VDD_CPU} -function {ground VSS}
 
-# Add power switch
+# 新增 power switch
 create_power_switch SW_CPU \
     -domain PD_CPU \
     -input_supply_port {vin VDD} \
@@ -2570,7 +2572,7 @@ create_power_switch SW_CPU \
     -control_port {sleep sleep_cpu} \
     -on_state {on_state vin {!sleep}}
 
-# Add isolation
+# 新增 isolation
 set_isolation ISO_CPU \
     -domain PD_CPU \
     -applies_to outputs \
@@ -2578,31 +2580,31 @@ set_isolation ISO_CPU \
     -isolation_signal iso_en
 ```
 
-**Power Intent in Design Flow:**
+**Power Intent 在設計流程中的角色：**
 
 ```
 RTL + UPF → Synthesis → Power-aware netlist
-         → Verification (formal + simulation)
+         → Verification（formal + simulation）
          → P&R with power planning
          → Sign-off with power analysis
 ```
 
-### **Level Shifters & Isolation Cells**
+### **Level Shifters 與 Isolation Cells**
 
-In multi-voltage designs, signals crossing between power domains require special cells to ensure correct operation and prevent damage or malfunction.
+在多電壓設計中，跨越 power domains 的訊號需要特殊 cells 以確保正確操作並防止損壞或故障。
 
-**Level Shifters:**
+**Level Shifters：**
 
-Level shifters convert signal voltage levels when crossing between domains operating at different voltages.
+Level shifters 在跨越不同電壓 domains 時轉換訊號電壓位準。
 
-| Type | Direction | Complexity | Use Case |
+| 類型 | 方向 | 複雜度 | 使用情境 |
 |------|-----------|------------|----------|
-| **L2H** (Low-to-High) | 0.8V → 1.0V | Complex (needs boost circuit) | Most common |
-| **H2L** (High-to-Low) | 1.0V → 0.8V | Simple (buffer with lower VDD) | Less common |
-| **Bidirectional** | Either direction | Most complex | DVFS designs |
+| **L2H**（Low-to-High）| 0.8V → 1.0V | 複雜（需要 boost circuit）| 最常見 |
+| **H2L**（High-to-Low）| 1.0V → 0.8V | 簡單（使用較低 VDD 的 buffer）| 較少見 |
+| **Bidirectional** | 任一方向 | 最複雜 | DVFS 設計 |
 
 ```
-Level Shifter Circuit (L2H):
+Level Shifter 電路（L2H）：
                     VDD_HIGH
                        │
               ┌────────┴────────┐
@@ -2618,43 +2620,43 @@ Level Shifter Circuit (L2H):
                       VSS
 ```
 
-**Isolation Cells:**
+**Isolation Cells：**
 
-Isolation cells prevent undefined (floating) values from propagating when a power domain is shut down.
+Isolation cells 在 power domain 關閉時防止未定義（floating）值傳播。
 
-| Clamp Value | Cell Type | Behavior |
+| Clamp 值 | Cell 類型 | 行為 |
 |-------------|-----------|----------|
-| **0** | AND-based | Output = 0 when isolated |
-| **1** | OR-based | Output = 1 when isolated |
-| **Hold** | Latch-based | Output = last value |
+| **0** | AND-based | isolated 時 Output = 0 |
+| **1** | OR-based | isolated 時 Output = 1 |
+| **Hold** | Latch-based | Output = 最後一個值 |
 
 ```verilog
-// AND-based isolation (clamp to 0)
-// iso_en = 1 means isolated (output clamped)
+// AND-based isolation（clamp 到 0）
+// iso_en = 1 表示 isolated（output 被 clamped）
 assign isolated_out = data_in & ~iso_en;
 
-// OR-based isolation (clamp to 1)
+// OR-based isolation（clamp 到 1）
 assign isolated_out = data_in | iso_en;
 ```
 
-**Enable Level Shifter (ELS):**
+**Enable Level Shifter（ELS）：**
 
-Combines level shifting and isolation in a single cell—saves area when both are needed.
+在單一 cell 中結合 level shifting 和 isolation——當兩者都需要時可節省面積。
 
 ```
-Typical cell insertion order:
+典型 cell 插入順序：
   [Power-gated domain] → [Isolation] → [Level Shifter] → [Always-on domain]
 
-With ELS:
+使用 ELS：
   [Power-gated domain] → [Enable Level Shifter] → [Always-on domain]
 ```
 
-**Physical Design Considerations:**
+**實體設計考量：**
 
-- Level shifters placed at power domain boundaries
-- Must have access to both voltage rails
-- Often double-height cells (span two standard cell rows)
-- Tool automatically inserts based on UPF/CPF specifications
+- Level shifters 放置在 power domain 邊界
+- 必須能存取兩個電壓 rails
+- 通常是 double-height cells（跨越兩列 standard cells）
+- 工具根據 UPF/CPF 規格自動插入
 
 ---
 
@@ -2761,19 +2763,19 @@ endmodule
 Divide-by-5 Circuit Waveform
 ![Divide-by-5 Circuit Waveform](https://i.imgur.com/AKh5gQR.png)
 
-### **Odd Clock Divider - 50% Duty Cycle**
+### **奇數除頻 - 50% Duty Cycle**
 
-**Challenge:** Dividing by an even number with 50% duty cycle is trivial (toggle at half count). Odd division (e.g., divide-by-3) is tricky because the output would have 33% or 66% duty cycle.
+**挑戰：** 偶數除頻達到 50% duty cycle 很簡單（在計數一半時 toggle）。奇數除頻（如 divide-by-3）較為棘手，因為輸出會有 33% 或 66% duty cycle。
 
-**Solution:** Use both clock edges and combine with OR/XOR:
+**解決方案：** 同時使用 clock 的上升和下降邊緣，並以 OR/XOR 結合：
 
 ```
-Method for Divide-by-3 with 50% Duty Cycle:
+Divide-by-3 達到 50% Duty Cycle 的方法：
 
-1. Create counter (0, 1, 2) on rising edge
-2. Generate clk_p: toggle when cnt reaches threshold (posedge)
-3. Generate clk_n: toggle when cnt reaches threshold (negedge)
-4. Output = clk_p OR clk_n (or XOR for certain patterns)
+1. 在 rising edge 建立 counter（0、1、2）
+2. 產生 clk_p：當 cnt 達到 threshold 時 toggle（posedge）
+3. 產生 clk_n：當 cnt 達到 threshold 時 toggle（negedge）
+4. Output = clk_p OR clk_n（或某些模式使用 XOR）
 
         clk:    ─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─
                  └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘
@@ -2785,18 +2787,18 @@ Method for Divide-by-3 with 50% Duty Cycle:
         output: ─────┐   ┌───────────┐   ┌───────────
         (OR)         └───┘           └───┘
 
-The negedge signal "fills in" the gap, achieving 50% duty cycle.
+negedge 訊號「填補」了間隙，達到 50% duty cycle。
 ```
 
-**Why this works:** The negative-edge triggered signal is phase-shifted by half a clock period, so when OR'd together, the combined output has equal high and low times.
+**原理：** Negative-edge triggered 訊號相位偏移了半個 clock period，因此當 OR 在一起時，組合輸出具有相等的 high 和 low 時間。
 
-**FPGA Consideration:** This technique produces a combinational output, which shouldn't drive FPGA clock networks directly. Use PLL/DLL for proper clock generation.
+**FPGA 考量：** 此技術產生 combinational 輸出，不應直接驅動 FPGA clock 網路。請使用 PLL/DLL 進行正確的 clock 產生。
 
 ### **Glitch-free Clock Mux**
 
-When dynamically switching between clock sources (e.g., for power management), a standard MUX can produce glitches that cause circuit malfunction.
+動態切換 clock 來源時（例如用於電源管理），標準 MUX 可能產生 glitches 導致電路故障。
 
-**Problem with Simple MUX:**
+**簡單 MUX 的問題：**
 ```
 clk_a:  ──┐ ┌───┐ ┌───┐ ┌──
           └─┘   └─┘   └─┘
@@ -2808,7 +2810,7 @@ output: ──┐ ┌───X GLITCH! ──
           └─┘   ↑
 ```
 
-**Solution: Break-Before-Make with Feedback**
+**解決方案：Break-Before-Make with Feedback**
 
 ```
                    ┌───────────────────────────────┐
@@ -2825,13 +2827,13 @@ output: ──┐ ┌───X GLITCH! ──
                    │                               │
                    └───────────────────────────────┘
 
-Key points:
-1. Negative-edge FFs ensure switching occurs during clock LOW
-2. Feedback ensures "break-before-make" (old clock stops before new starts)
-3. Synchronizers prevent metastability from async select
+關鍵重點：
+1. Negative-edge FFs 確保切換發生在 clock LOW 時
+2. Feedback 確保「break-before-make」（舊 clock 停止後新 clock 才開始）
+3. Synchronizers 防止 async select 造成的 metastability
 ```
 
-**Verilog Implementation:**
+**Verilog 實現：**
 ```verilog
 module glitch_free_clk_mux (
     input  clk_a, clk_b,
@@ -2842,23 +2844,23 @@ module glitch_free_clk_mux (
 reg sel_a_sync1, sel_a_sync2, sel_a_neg;
 reg sel_b_sync1, sel_b_sync2, sel_b_neg;
 
-// Synchronize select to clk_a domain
+// 同步 select 到 clk_a domain
 always @(posedge clk_a) begin
-    sel_a_sync1 <= ~sel & ~sel_b_neg;  // Include feedback
+    sel_a_sync1 <= ~sel & ~sel_b_neg;  // 包含 feedback
     sel_a_sync2 <= sel_a_sync1;
 end
 
-// Register on negative edge of clk_a
+// 在 clk_a 的 negative edge 暫存
 always @(negedge clk_a)
     sel_a_neg <= sel_a_sync2;
 
-// Synchronize select to clk_b domain
+// 同步 select 到 clk_b domain
 always @(posedge clk_b) begin
-    sel_b_sync1 <= sel & ~sel_a_neg;   // Include feedback
+    sel_b_sync1 <= sel & ~sel_a_neg;   // 包含 feedback
     sel_b_sync2 <= sel_b_sync1;
 end
 
-// Register on negative edge of clk_b
+// 在 clk_b 的 negative edge 暫存
 always @(negedge clk_b)
     sel_b_neg <= sel_b_sync2;
 
@@ -2871,12 +2873,12 @@ assign clk_out = clk_a_gated | clk_b_gated;
 endmodule
 ```
 
-**Interview Question:** "Why use negative-edge triggered FFs?"
-**Answer:** To ensure the enable signal changes only when the clock is LOW, preventing any partial clock pulses (glitches) on the output.
+**面試問題：** 「為何使用 negative-edge triggered FFs？」
+**回答：** 確保 enable 訊號僅在 clock 為 LOW 時變化，防止輸出產生任何 partial clock pulses（glitches）。
 
-### **Division Algorithm**
+### **除法演算法**
 
-Hardware division using the **shift-subtract** (restoring division) method:
+使用 **shift-subtract**（restoring division）方法的硬體除法：
 
 ```verilog
 module divider #(
@@ -2893,18 +2895,18 @@ reg [2*WIDTH-1:0] temp_divisor;
 integer i;
 
 always @(*) begin
-    // Initialize: dividend in lower bits, zeros in upper bits
+    // 初始化：dividend 在低位元，高位元為零
     temp_dividend = {{WIDTH{1'b0}}, dividend};
     temp_divisor  = {divisor, {WIDTH{1'b0}}};
 
     for (i = 0; i < WIDTH; i = i + 1) begin
-        // Shift left by 1
+        // 左移 1 位
         temp_dividend = {temp_dividend[2*WIDTH-2:0], 1'b0};
 
-        // Compare and subtract
+        // 比較並相減
         if (temp_dividend[2*WIDTH-1:WIDTH] >= divisor) begin
             temp_dividend[2*WIDTH-1:WIDTH] = temp_dividend[2*WIDTH-1:WIDTH] - divisor;
-            temp_dividend[0] = 1'b1;  // Set quotient bit
+            temp_dividend[0] = 1'b1;  // 設定 quotient bit
         end
     end
 
@@ -2915,41 +2917,41 @@ end
 endmodule
 ```
 
-**Algorithm Steps:**
-1. Place dividend in lower half, zeros in upper half
-2. For each bit position:
-   - Shift combined register left by 1
-   - If upper half ≥ divisor, subtract divisor and set quotient bit = 1
-   - Else quotient bit = 0
-3. After WIDTH iterations: quotient in lower half, remainder in upper half
+**演算法步驟：**
+1. 將 dividend 放在低半部，高半部為零
+2. 對於每個 bit 位置：
+   - 將組合暫存器左移 1 位
+   - 若高半部 ≥ divisor，減去 divisor 並設定 quotient bit = 1
+   - 否則 quotient bit = 0
+3. 經過 WIDTH 次迭代後：quotient 在低半部，remainder 在高半部
 
-**Example (8 ÷ 3):**
+**範例（8 ÷ 3）：**
 ```
-Initial:  [0000][1000]  (dividend=8, divisor=3)
-Shift:    [0001][000_]  upper=1 < 3, Q=0
-Shift:    [0010][00_0]  upper=2 < 3, Q=0
-Shift:    [0100][0_00]  upper=4 ≥ 3, subtract: [0001][0_01]
-Shift:    [0010][_010]  upper=2 < 3, Q=0
-Result:   quotient=0010(2), remainder=0010(2)
-          8 ÷ 3 = 2 remainder 2 ✓
+初始：    [0000][1000]  (dividend=8, divisor=3)
+左移：    [0001][000_]  upper=1 < 3, Q=0
+左移：    [0010][00_0]  upper=2 < 3, Q=0
+左移：    [0100][0_00]  upper=4 ≥ 3, 相減: [0001][0_01]
+左移：    [0010][_010]  upper=2 < 3, Q=0
+結果：    quotient=0010(2), remainder=0010(2)
+          8 ÷ 3 = 2 餘 2 ✓
 ```
 
-### **Sequence Detector**
+### **序列偵測器**
 
-Detect a specific bit pattern in a serial input stream (common interview question).
+在串列輸入流中偵測特定 bit pattern（常見面試題）。
 
-**Example: Detect "1011" (overlapping)**
+**範例：偵測 "1011"（overlapping）**
 
 ```
-State Diagram:
-S0 (idle) --1--> S1 (got "1")
+狀態圖：
+S0 (idle) --1--> S1 (得到 "1")
 S0        --0--> S0
-S1        --0--> S2 (got "10")
-S1        --1--> S1 (got "1")
-S2        --1--> S3 (got "101")
+S1        --0--> S2 (得到 "10")
+S1        --1--> S1 (得到 "1")
+S2        --1--> S3 (得到 "101")
 S2        --0--> S0
-S3        --1--> S1 + OUTPUT (got "1011", output=1)
-S3        --0--> S2 (got "10")
+S3        --1--> S1 + OUTPUT (得到 "1011", output=1)
+S3        --0--> S2 (得到 "10")
 ```
 
 ```verilog
@@ -2998,19 +3000,19 @@ end
 endmodule
 ```
 
-**Key Points:**
-- **Overlapping detection**: After detecting "1011", can immediately start detecting next sequence
-- **Non-overlapping**: Return to S0 after detection
-- State count = pattern length (for simple patterns)
+**關鍵重點：**
+- **Overlapping 偵測**：偵測到 "1011" 後，可立即開始偵測下一個序列
+- **Non-overlapping**：偵測後返回 S0
+- 狀態數 = pattern 長度（對於簡單 patterns）
 
 ### **Johnson Counter**
 
-A Johnson counter (twisted ring counter) is a shift register with inverted feedback.
+Johnson counter（twisted ring counter）是一個具有反相回授的 shift register。
 
-**N-bit Johnson counter cycles through 2N states:**
+**N-bit Johnson counter 循環經過 2N 個狀態：**
 
 ```
-4-bit Johnson Counter States:
+4-bit Johnson Counter 狀態：
 0000 → 1000 → 1100 → 1110 → 1111 → 0111 → 0011 → 0001 → 0000...
 ```
 
@@ -3027,36 +3029,36 @@ always @(posedge clk or negedge rst_n) begin
     if (!rst_n)
         q <= {N{1'b0}};
     else
-        q <= {~q[0], q[N-1:1]};  // Shift right, invert LSB to MSB
+        q <= {~q[0], q[N-1:1]};  // 右移，將反相 LSB 移至 MSB
 end
 
 endmodule
 ```
 
-**Johnson vs Ring Counter:**
+**Johnson vs Ring Counter：**
 
-| Aspect | Ring Counter | Johnson Counter |
+| 面向 | Ring Counter | Johnson Counter |
 |--------|--------------|-----------------|
-| **States** | N states | 2N states |
-| **Feedback** | Direct (Q[0] → Q[N-1]) | Inverted (~Q[0] → Q[N-1]) |
-| **Self-starting** | No | No |
-| **Decoding** | 1 gate per state | 1 gate per state |
+| **狀態數** | N 個狀態 | 2N 個狀態 |
+| **回授** | 直接（Q[0] → Q[N-1]）| 反相（~Q[0] → Q[N-1]）|
+| **自啟動** | 否 | 否 |
+| **解碼** | 每狀態 1 個 gate | 每狀態 1 個 gate |
 
-**Applications:**
-- Frequency division by 2N
-- Phase generation (multi-phase clocks)
-- Glitch-free decoding (only 1 bit changes per transition)
+**應用：**
+- 2N 除頻
+- 多相位 clock 產生
+- 無 glitch 解碼（每次轉換只有 1 bit 變化）
 
 ### **Round Robin Arbiter**
 
-A round-robin arbiter grants access to multiple requestors in a fair, rotating manner. After each grant, the priority rotates so the last granted requestor has lowest priority.
+Round-robin arbiter 以公平、輪替的方式授予多個請求者存取權。每次授權後，優先權輪轉，使最後被授權的請求者具有最低優先權。
 
-**Key Requirements:**
-- One-cycle arbitration (grant different requestors each cycle)
-- Wraparound (rotate from last to first requestor)
-- Work-conserving (no idle cycles when requests pending)
+**關鍵需求：**
+- 單週期仲裁（每個 cycle 授權不同請求者）
+- 環繞（從最後一個請求者輪轉到第一個）
+- Work-conserving（有 pending requests 時無 idle cycles）
 
-**Implementation Using Thermometer Mask:**
+**使用 Thermometer Mask 實現：**
 
 ```verilog
 module round_robin_arbiter #(
@@ -3072,13 +3074,13 @@ reg [N-1:0] mask;  // Thermometer-encoded mask
 wire [N-1:0] masked_req = req & mask;
 wire [N-1:0] unmasked_grant, masked_grant;
 
-// Priority encoder for masked requests
-assign masked_grant = masked_req & (~masked_req + 1);  // Isolate lowest set bit
+// 對 masked requests 的 priority encoder
+assign masked_grant = masked_req & (~masked_req + 1);  // 隔離最低設定位元
 
-// Priority encoder for all requests (fallback)
+// 對所有 requests 的 priority encoder（fallback）
 assign unmasked_grant = req & (~req + 1);
 
-// Use masked if any masked request, else use unmasked
+// 若有 masked request 則使用 masked，否則使用 unmasked
 wire [N-1:0] next_grant = |masked_req ? masked_grant : unmasked_grant;
 
 always @(posedge clk or negedge rst_n) begin
@@ -3087,7 +3089,7 @@ always @(posedge clk or negedge rst_n) begin
         mask <= {N{1'b1}};
     end else if (|req) begin
         grant <= next_grant;
-        // Update mask: all bits above granted position = 1
+        // 更新 mask：所有高於授權位置的位元 = 1
         mask <= ~((next_grant << 1) - 1) | next_grant;
     end else begin
         grant <= 0;
@@ -3097,172 +3099,172 @@ end
 endmodule
 ```
 
-**How Thermometer Mask Works:**
+**Thermometer Mask 運作原理：**
 ```
-Example with 4 requestors (req[3:0]):
+4 個 requestors 的範例（req[3:0]）：
 
-Initial: mask = 1111, req = 1010
+初始：mask = 1111, req = 1010
   masked_req = 1010 & 1111 = 1010
-  grant = 0010 (lowest set bit)
-  new mask = 1100 (mask off granted and below)
+  grant = 0010（最低設定位元）
+  new mask = 1100（遮蔽已授權及以下位元）
 
-Next: mask = 1100, req = 1010
+下一次：mask = 1100, req = 1010
   masked_req = 1010 & 1100 = 1000
   grant = 1000
-  new mask = 0000 → wraps to 1111
+  new mask = 0000 → 環繞至 1111
 
-Next: mask = 1111, req = 1010
-  grant = 0010 (back to beginning)
+下一次：mask = 1111, req = 1010
+  grant = 0010（回到開始）
 ```
 
-**Applications:**
-- Bus arbitration (AMBA interconnect)
-- Memory controller request handling
+**應用：**
+- Bus 仲裁（AMBA interconnect）
+- Memory controller 請求處理
 - Network-on-Chip routing
-- DMA channel scheduling
+- DMA channel 排程
 
 ---
 
 ## 後端 / 實體設計
 
-### **CTS & Clock Uncertainty**
+### **CTS 與 Clock Uncertainty**
 
-Clock uncertainty accounts for timing variations in the clock network.
+Clock uncertainty 考量 clock 網路中的時序變異。
 
-| Stage | Setup Uncertainty | Hold Uncertainty |
+| 階段 | Setup Uncertainty | Hold Uncertainty |
 |-------|-------------------|------------------|
-| **Pre-CTS** | PLL jitter + estimated skew | Estimated skew |
-| **Post-CTS** | PLL jitter only | 0 (actual skew known) |
+| **Pre-CTS** | PLL jitter + 估計的 skew | 估計的 skew |
+| **Post-CTS** | 僅 PLL jitter | 0（實際 skew 已知）|
 
-**Why uncertainty changes after CTS:**
-- Pre-CTS: Clock tree doesn't exist, so skew must be estimated
-- Post-CTS: Actual clock tree is built, real skew is calculated
+**為何 uncertainty 在 CTS 後改變：**
+- Pre-CTS：Clock tree 尚不存在，因此 skew 必須估計
+- Post-CTS：實際 clock tree 已建立，計算真實 skew
 
-**CTS Optimization Goals:**
-- Minimize clock skew across all flip-flops
-- Balance insertion delay
-- Meet target transition times
-- Minimize power consumption
+**CTS 最佳化目標：**
+- 最小化所有 flip-flops 之間的 clock skew
+- 平衡 insertion delay
+- 達到目標 transition times
+- 最小化功耗
 
-**CTS Best Practices:**
+**CTS 最佳實踐：**
 
-Effective CTS requires balancing multiple competing goals. Aggressive skew targets increase buffer count and power, while relaxed targets may cause hold violations. Start with realistic constraints and iterate.
+有效的 CTS 需要平衡多個相互競爭的目標。過於激進的 skew 目標會增加 buffer 數量和功耗，而過於寬鬆的目標可能導致 hold violations。從實際可行的 constraints 開始並迭代。
 
-- Select appropriate clock root locations
-- Use minimum RC metal layers for clock routing
-- Consider double-width routing for reduced resistance
-- Set reasonable maximum fanout limits
-- Avoid overly tight skew targets (causes over-buffering)
+- 選擇適當的 clock root 位置
+- 使用最小 RC 的金屬層進行 clock routing
+- 考慮使用雙倍寬度 routing 以降低電阻
+- 設定合理的最大 fanout 限制
+- 避免過於緊密的 skew 目標（導致過度 buffering）
 
-### **Routing Congestion Solutions**
+### **Routing Congestion 解決方案**
 
-Congestion occurs when routing demand exceeds available tracks.
+當 routing 需求超過可用 tracks 時會發生 congestion。
 
-| Location | Solutions |
+| 位置 | 解決方案 |
 |----------|-----------|
-| **Between memories** | Increase spacing, rotate RAM orientation, align address/data pins |
-| **Around macros** | Add keepout zones, placement blockages, halo regions |
-| **Standard cell areas** | Congestion-driven placement, reduce cell density, avoid pin-dense cells |
-| **Power routing** | Optimize power grid, use wider straps |
+| **記憶體之間** | 增加間距、旋轉 RAM 方向、對齊 address/data pins |
+| **Macro 周圍** | 新增 keepout zones、placement blockages、halo regions |
+| **Standard cell 區域** | Congestion-driven placement、降低 cell density、避免 pin-dense cells |
+| **Power routing** | 最佳化 power grid、使用較寬的 straps |
 
-**Congestion Analysis:**
+**Congestion 分析：**
 ```tcl
-# ICC2 congestion analysis
+# ICC2 congestion 分析
 report_congestion -routing_stage global
 report_congestion -routing_stage detail
 ```
 
-**Prevention Strategies:**
+**預防策略：**
 
-Routing congestion is best addressed early in the design flow. Fixing congestion after detailed routing is expensive and may require floorplan changes that ripple through timing closure.
+Routing congestion 最好在設計流程早期處理。在 detailed routing 後修復 congestion 代價高昂，可能需要 floorplan 變更而影響 timing closure。
 
-- Use congestion-driven placement
-- Set cell density limits (e.g., 70-80%)
-- Add routing blockages in congested areas
-- Increase routing resources (more metal layers)
+- 使用 congestion-driven placement
+- 設定 cell density 限制（例如 70-80%）
+- 在 congested 區域新增 routing blockages
+- 增加 routing 資源（更多金屬層）
 
-### **Chip Area Estimation**
+### **晶片面積估算**
 
-**Core-limited design:**
+**Core-limited 設計：**
 ```
-Total Area = Core Area + Power Ring + PAD Ring
+總面積 = Core Area + Power Ring + PAD Ring
 
 Core Area = RAM Area + Macro Area + Standard Cell Area
 
-RAM Area = Self Area + Power Ring + Keepout
+RAM Area = 本身面積 + Power Ring + Keepout
 
-Standard Cell Area = (Gate Count × Area per Gate) / Utilization
+Standard Cell Area = (Gate Count × 每個 Gate 的面積) / Utilization
 ```
 
-**Utilization Guidelines:**
+**Utilization 指南：**
 
-| Metal Layers | Typical Utilization |
+| 金屬層數 | 典型 Utilization |
 |--------------|---------------------|
-| 4-5 layers | 50-60% |
-| 6-7 layers | 60-70% |
-| 8+ layers | 70-80% |
+| 4-5 層 | 50-60% |
+| 6-7 層 | 60-70% |
+| 8+ 層 | 70-80% |
 
-**IO-limited design:**
-- Total area determined by number of IOs, not logic
-- Solutions: staggered IO, flip-chip, narrow IO cells
+**IO-limited 設計：**
+- 總面積由 IOs 數量決定，而非邏輯
+- 解決方案：staggered IO、flip-chip、窄 IO cells
 
-### **Buffer vs Inverter in CTS**
+### **CTS 中的 Buffer vs Inverter**
 
-| Aspect | Buffer | Inverter |
+| 面向 | Buffer | Inverter |
 |--------|--------|----------|
-| **Logic** | Non-inverting | Inverting |
-| **Area** | Larger (2 inverters) | Smaller |
-| **Power** | Higher | Lower |
-| **Delay** | Higher | Lower |
-| **Modification** | Easier to add/remove | Requires pairs |
+| **邏輯** | Non-inverting | Inverting |
+| **面積** | 較大（2 個 inverters）| 較小 |
+| **功耗** | 較高 | 較低 |
+| **延遲** | 較高 | 較低 |
+| **修改** | 較容易新增/移除 | 需成對使用 |
 
-**When to use each:**
-- **Buffers**: Simpler logic, easier ECO modifications
-- **Inverters**: Better PPA (Power, Performance, Area), but must use in pairs
+**何時使用：**
+- **Buffers**：邏輯較簡單，ECO 修改較容易
+- **Inverters**：PPA（Power、Performance、Area）較佳，但必須成對使用
 
-### **ECO (Engineering Change Order)**
+### **ECO（Engineering Change Order）**
 
-ECO is the process of making late-stage design modifications.
+ECO 是進行後期設計修改的流程。
 
-| ECO Type | Description | Constraints |
+| ECO 類型 | 描述 | 限制 |
 |----------|-------------|-------------|
-| **Pre-mask** | Before GDSII tape-out | Any netlist changes allowed |
-| **Post-mask** | After masks fabricated | Limited to spare cells, metal-only changes |
+| **Pre-mask** | GDSII tape-out 之前 | 允許任何 netlist 變更 |
+| **Post-mask** | Masks 製造之後 | 僅限 spare cells、metal-only 變更 |
 
-**Pre-mask ECO Flow:**
-1. Modify RTL or netlist
+**Pre-mask ECO 流程：**
+1. 修改 RTL 或 netlist
 2. ECO place and route
-3. Incremental verification (DRC, LVS, timing)
+3. 增量驗證（DRC、LVS、timing）
 
-**Post-mask ECO Flow:**
-1. Identify available spare cells or gate array cells
-2. Map logic changes to spare cells
-3. Metal-only routing changes
-4. Verify functionality preserved
+**Post-mask ECO 流程：**
+1. 識別可用的 spare cells 或 gate array cells
+2. 將邏輯變更映射到 spare cells
+3. Metal-only routing 變更
+4. 驗證功能保持不變
 
-**Spare Cell Strategy:**
+**Spare Cell 策略：**
 
-Spare cells are pre-placed logic elements that can be connected via metal-only ECO after mask fabrication. Proper spare cell planning can save weeks of schedule and millions in mask costs.
+Spare cells 是預先放置的邏輯元件，可在 mask 製造後透過 metal-only ECO 連接。適當的 spare cell 規劃可節省數週時程和數百萬 mask 成本。
 
-- Insert spare cells during implementation (~2-5% of design)
-- Distribute evenly across chip
-- Include mix of cell types (INV, NAND, NOR, FF)
+- 在實現階段插入 spare cells（約佔設計的 2-5%）
+- 均勻分布在晶片各處
+- 包含混合的 cell 類型（INV、NAND、NOR、FF）
 
-**SDC Development:**
+**SDC 開發：**
 
-| Constraint Type | Source |
+| Constraint 類型 | 來源 |
 |-----------------|--------|
-| **Clock definitions** | Design specification (frequency, duty cycle) |
-| **IO timing** | System requirements, board-level timing |
-| **False paths** | Design architecture (mutually exclusive modes) |
-| **Multicycle paths** | Design intent (slow paths by design) |
+| **Clock 定義** | 設計規格（頻率、duty cycle）|
+| **IO timing** | 系統需求、板級時序 |
+| **False paths** | 設計架構（互斥模式）|
+| **Multicycle paths** | 設計意圖（刻意較慢的路徑）|
 
 ### **Scan Chain / DFT**
 
-DFT (Design for Testability) inserts test structures to enable manufacturing testing.
+DFT（Design for Testability）插入測試結構以實現製造測試。
 
-**Scan Chain Concept:**
-Convert sequential circuit testing into combinational circuit testing by connecting all flip-flops into a shift register chain.
+**Scan Chain 概念：**
+透過將所有 flip-flops 連接成 shift register chain，將循序電路測試轉換為組合電路測試。
 
 ```
 Normal Mode:        Scan Mode:
@@ -3271,72 +3273,72 @@ Normal Mode:        Scan Mode:
       CLK                  CLK + SE
 ```
 
-**Scan Cell Operation:**
+**Scan Cell 操作：**
 
-| Mode | SE (Scan Enable) | Behavior |
+| 模式 | SE（Scan Enable）| 行為 |
 |------|------------------|----------|
-| **Normal** | 0 | D → Q (functional mode) |
-| **Shift** | 1 | SI → Q (scan data shifts through chain) |
-| **Capture** | 0 | Capture response into scan FFs |
+| **Normal** | 0 | D → Q（functional mode）|
+| **Shift** | 1 | SI → Q（scan data 通過 chain 移位）|
+| **Capture** | 0 | 擷取回應到 scan FFs |
 
-**Scan Test Flow:**
+**Scan Test 流程：**
 
-The scan test process converts sequential testing into a three-phase operation. By controlling scan enable (SE), the tester can load any desired state, observe one clock cycle of functional behavior, and read out results.
+Scan test 流程將循序測試轉換為三階段操作。透過控制 scan enable（SE），測試機可載入任何所需狀態、觀察一個 clock cycle 的功能行為，並讀出結果。
 
-1. **Shift-in**: SE=1, clock test pattern into scan chain
-2. **Capture**: SE=0, apply one functional clock, capture response
-3. **Shift-out**: SE=1, clock out captured response while shifting in next pattern
+1. **Shift-in**：SE=1，將 test pattern clock 進 scan chain
+2. **Capture**：SE=0，施加一個 functional clock，擷取回應
+3. **Shift-out**：SE=1，clock 出擷取的回應，同時 shift 進下一個 pattern
 
-**DFT Methods:**
+**DFT 方法：**
 
-| Method | Description | Use Case |
+| 方法 | 描述 | 使用情境 |
 |--------|-------------|----------|
-| **Scan Chain** | FF replacement for sequential test | Logic testing |
+| **Scan Chain** | 用於 sequential test 的 FF 替換 | Logic testing |
 | **MBIST** | Memory built-in self-test | RAM/ROM testing |
-| **Boundary Scan** | IEEE 1149.1 (JTAG) | Board-level testing |
+| **Boundary Scan** | IEEE 1149.1（JTAG）| Board-level testing |
 | **ATPG** | Automatic test pattern generation | Fault coverage |
 
-**Scan Insertion Flow (DC):**
+**Scan Insertion 流程（DC）：**
 ```tcl
-# In Design Compiler
+# 在 Design Compiler 中
 set_scan_configuration -chain_count 4
 set_dft_signal -view existing_dft -type ScanClock -port clk
 set_dft_signal -view spec -type ScanEnable -port SE
 insert_dft
 ```
 
-**Scan Chain Compression:**
+**Scan Chain Compression：**
 
-As designs grow larger, full scan chains become impractical due to test time and tester memory limitations. Compression techniques maintain fault coverage while dramatically reducing test data volume.
+隨著設計規模增大，由於測試時間和測試機記憶體限制，full scan chains 變得不切實際。壓縮技術在大幅減少測試資料量的同時維持 fault coverage。
 
-- Full scan requires many test pins and long test time
-- Compression (e.g., DFTMAX, Tessent) reduces test data volume by 10-100×
-- Uses decompressor (input) and compactor (output)
+- Full scan 需要許多測試 pins 和長測試時間
+- Compression（如 DFTMAX、Tessent）將測試資料量減少 10-100 倍
+- 使用 decompressor（輸入）和 compactor（輸出）
 
-**Fault Coverage Targets:**
+**Fault Coverage 目標：**
 
-| Coverage Level | Application | Notes |
+| Coverage 等級 | 應用 | 備註 |
 |----------------|-------------|-------|
-| **85-90%** | Partial scan, cost-sensitive | Acceptable for some consumer products |
-| **95%+** | Industry standard | Required by most foundries as policy |
-| **98-99%** | High-reliability | Automotive, aerospace, medical |
+| **85-90%** | Partial scan，成本敏感 | 某些消費性產品可接受 |
+| **95%+** | 業界標準 | 大多數 foundries 的政策要求 |
+| **98-99%** | 高可靠度 | 汽車、航太、醫療 |
 
-**Fault Models:**
+**Fault Models：**
 
-| Model | What It Detects | Test Type |
+| 模型 | 偵測內容 | 測試類型 |
 |-------|-----------------|-----------|
-| **Stuck-at** | Permanent shorts to VDD/GND | Static patterns |
-| **Transition** | Slow-to-rise/fall delays | At-speed patterns |
-| **Path Delay** | Timing failures on specific paths | At-speed patterns |
-| **IDDQ** | Bridging faults via quiescent current | Current measurement |
+| **Stuck-at** | 永久性短路到 VDD/GND | Static patterns |
+| **Transition** | Slow-to-rise/fall 延遲 | At-speed patterns |
+| **Path Delay** | 特定路徑的 timing failures | At-speed patterns |
+| **IDDQ** | 透過靜態電流偵測 bridging faults | Current measurement |
 
-**ATPG Strategy:** Apply random patterns until new pattern detects <0.5% of undetected faults, then apply deterministic tests for remaining faults—this minimizes test time while maximizing coverage.
+**ATPG 策略：** 施加隨機 patterns 直到新 pattern 偵測 <0.5% 的未偵測 faults，然後對剩餘 faults 施加 deterministic tests——這在最大化 coverage 的同時最小化測試時間。
 
-### **MBIST (Memory Built-In Self-Test)**
+### **MBIST（Memory Built-In Self-Test）**
 
-MBIST adds test and repair circuitry directly to on-chip memories, enabling autonomous testing without external test equipment. Since memories constitute 50-70% of modern SoC area, memory testing is critical for yield.
+MBIST 直接在晶片內記憶體中加入測試和修復電路，實現無需外部測試設備的自主測試。由於記憶體佔現代 SoC 面積的 50-70%，記憶體測試對良率至關重要。
 
-**MBIST Architecture:**
+**MBIST 架構：**
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -3354,79 +3356,79 @@ MBIST adds test and repair circuitry directly to on-chip memories, enabling auto
 └──────────────────────────────────────────────────┘
 ```
 
-**March Test Algorithms:**
+**March Test 演算法：**
 
-March algorithms systematically write and read patterns while "marching" through memory addresses. They're designed to detect specific fault types efficiently.
+March 演算法系統性地在「行進」通過記憶體位址時寫入和讀取 patterns。它們被設計來有效偵測特定 fault 類型。
 
-| Algorithm | Complexity | Faults Detected |
+| 演算法 | 複雜度 | 偵測的 Faults |
 |-----------|------------|-----------------|
-| **MATS** | 4n | Stuck-at faults (SAF) |
-| **March C-** | 10n | SAF, address decoder faults (AF), transition faults |
-| **March LR** | 14n | SAF, AF, realistic linked faults |
-| **SMarchCKBD** | Variable | SAF, coupling faults, neighborhood pattern sensitivity |
+| **MATS** | 4n | Stuck-at faults（SAF）|
+| **March C-** | 10n | SAF、address decoder faults（AF）、transition faults |
+| **March LR** | 14n | SAF、AF、realistic linked faults |
+| **SMarchCKBD** | 可變 | SAF、coupling faults、neighborhood pattern sensitivity |
 
-**March C- Algorithm Notation:**
+**March C- 演算法表示法：**
 
 ```
 ⇑(w0); ⇑(r0,w1); ⇑(r1,w0); ⇓(r0,w1); ⇓(r1,w0); ⇕(r0)
 
-⇑ = Ascending address order
-⇓ = Descending address order
-⇕ = Either direction
-w0/w1 = Write 0/1
-r0/r1 = Read (expect 0/1)
+⇑ = 位址遞增順序
+⇓ = 位址遞減順序
+⇕ = 任一方向
+w0/w1 = 寫入 0/1
+r0/r1 = 讀取（預期 0/1）
 ```
 
-**Fault Types Targeted:**
+**目標 Fault 類型：**
 
-| Fault Type | Description | Detection Method |
+| Fault 類型 | 描述 | 偵測方法 |
 |------------|-------------|------------------|
-| **Stuck-at (SAF)** | Cell stuck at 0 or 1 | Write opposite, read back |
-| **Transition (TF)** | Cannot transition 0→1 or 1→0 | Write, read, write opposite, read |
-| **Coupling (CF)** | One cell affects another | Pattern with aggressor/victim cells |
-| **Address Decoder (AF)** | Wrong address accessed | March with address uniqueness check |
+| **Stuck-at（SAF）** | Cell stuck 在 0 或 1 | 寫入相反值，讀回 |
+| **Transition（TF）** | 無法 transition 0→1 或 1→0 | 寫入、讀取、寫入相反、讀取 |
+| **Coupling（CF）** | 一個 cell 影響另一個 | 使用 aggressor/victim cells 的 pattern |
+| **Address Decoder（AF）** | 存取錯誤位址 | 帶位址唯一性檢查的 March |
 
-**Memory Repair (BISR):**
+**記憶體修復（BISR）：**
 
-Built-In Self-Repair uses redundant rows/columns to replace faulty cells:
+Built-In Self-Repair 使用冗餘 rows/columns 替換故障 cells：
 
 ```
 ┌────────────────────────────────────┐
 │        Memory Array                │
 │  ┌─────┬─────┬─────┬─────┐        │
-│  │     │     │ ✗   │     │ ← Faulty cell
+│  │     │     │ ✗   │     │ ← 故障 cell
 │  ├─────┼─────┼─────┼─────┤        │
 │  │     │     │     │     │        │
 │  ├─────┼─────┼─────┼─────┤        │
-│  │ Spare Row                │ ← Replacement
+│  │ Spare Row                │ ← 替換用
 │  └─────┴─────┴─────┴─────┘        │
 └────────────────────────────────────┘
 ```
 
-**MBIST vs Logic Scan:**
+**MBIST vs Logic Scan：**
 
-| Aspect | MBIST | Scan Chain |
+| 面向 | MBIST | Scan Chain |
 |--------|-------|------------|
-| **Target** | Memories (SRAM, ROM, RF) | Sequential logic (flip-flops) |
-| **Test generation** | On-chip algorithm | External ATPG |
-| **Pattern storage** | None (generated on-chip) | Tester memory |
-| **Test time** | Fast | Depends on scan chain length |
-| **Area overhead** | 3-5% of memory | ~15% of logic |
+| **目標** | 記憶體（SRAM、ROM、RF）| Sequential logic（flip-flops）|
+| **測試產生** | 晶片內演算法 | 外部 ATPG |
+| **Pattern 儲存** | 無（晶片內產生）| 測試機記憶體 |
+| **測試時間** | 快速 | 取決於 scan chain 長度 |
+| **面積開銷** | 記憶體的 3-5% | 邏輯的 ~15% |
 
-### **IR Drop Analysis**
+### **IR Drop 分析**
 
-IR drop is the voltage difference between power source and circuit elements due to resistance in the power distribution network. Excessive IR drop causes timing failures and functional errors.
+IR drop 是由於 power distribution network 中的電阻，造成電源與電路元件之間的電壓差。過大的 IR drop 會導致 timing failures 和功能錯誤。
 
-**Static vs Dynamic IR Drop:**
+**Static vs Dynamic IR Drop：**
 
-| Aspect | Static IR Drop | Dynamic IR Drop |
+| 面向 | Static IR Drop | Dynamic IR Drop |
 |--------|----------------|-----------------|
-| **Cause** | Average current through resistive PDN | Sudden current spikes during switching |
-| **Analysis** | Vector-less (average power) | Vector-based (worst-case switching) |
-| **Frequency** | Steady-state | Transient (within clock cycle) |
-| **Effect** | Uniform voltage reduction | Localized voltage dips (hot spots) |
+| **原因** | 通過電阻性 PDN 的平均電流 | Switching 時的突發電流尖峰 |
+| **分析** | 無向量（平均功耗）| 基於向量（最差 switching 情況）|
+| **頻率** | 穩態 | 暫態（在 clock cycle 內）|
+| **影響** | 均勻電壓降低 | 局部電壓下降（hot spots）|
 
-**IR Drop Mechanism:**
+**IR Drop 機制：**
 
 ```
 VDD (1.0V)
@@ -3441,138 +3443,138 @@ VDD (1.0V)
     │
     R_wire = 0.1Ω
     │
-    └──► Cell N (cumulative drop)
+    └──► Cell N（累積下降）
 
-Cells far from VDD pad see lower voltage!
+距離 VDD pad 較遠的 cells 看到較低電壓！
 ```
 
-**Impact on Timing:**
+**對 Timing 的影響：**
 
 ```
 Cell delay ∝ 1 / (VDD - Vth)
 
-If VDD drops from 1.0V to 0.9V and Vth = 0.3V:
-  Original delay factor: 1 / (1.0 - 0.3) = 1.43
-  With IR drop:          1 / (0.9 - 0.3) = 1.67
+若 VDD 從 1.0V 降至 0.9V 且 Vth = 0.3V：
+  原始 delay 因子：1 / (1.0 - 0.3) = 1.43
+  有 IR drop 時：1 / (0.9 - 0.3) = 1.67
 
-  Delay increase: ~17% slower!
+  Delay 增加：慢約 17%！
 ```
 
-**Typical IR Drop Budgets:**
+**典型 IR Drop 預算：**
 
-| Application | Max Static IR Drop | Max Dynamic IR Drop |
+| 應用 | 最大 Static IR Drop | 最大 Dynamic IR Drop |
 |-------------|-------------------|---------------------|
-| **Mobile SoC** | 3-5% of VDD | 8-10% of VDD |
-| **High-performance** | 5-8% of VDD | 10-12% of VDD |
-| **Automotive** | 2-3% of VDD | 5-7% of VDD |
+| **Mobile SoC** | VDD 的 3-5% | VDD 的 8-10% |
+| **高效能** | VDD 的 5-8% | VDD 的 10-12% |
+| **車用** | VDD 的 2-3% | VDD 的 5-7% |
 
-**Fixing IR Drop Violations:**
+**修復 IR Drop Violations：**
 
-| Issue | Static IR Drop Fix | Dynamic IR Drop Fix |
+| 問題 | Static IR Drop 修復 | Dynamic IR Drop 修復 |
 |-------|-------------------|---------------------|
-| **Power grid** | Wider straps, more layers | Same + mesh density |
-| **Decaps** | N/A | Add decoupling capacitors |
-| **Placement** | Spread high-power cells | Avoid switching hot spots |
-| **Pads** | Add VDD/VSS bumps/pads | Same, near hot spots |
+| **Power grid** | 更寬的 straps、更多層 | 相同 + mesh 密度 |
+| **Decaps** | N/A | 新增 decoupling capacitors |
+| **Placement** | 分散高功耗 cells | 避免 switching hot spots |
+| **Pads** | 新增 VDD/VSS bumps/pads | 相同，靠近 hot spots |
 
 ### **Electromigration**
 
-Electromigration (EM) is the gradual movement of metal atoms in interconnects due to momentum transfer from current-carrying electrons. Over time, this causes voids (opens) or hillocks (shorts), leading to circuit failure.
+Electromigration（EM）是由於載流電子的動量轉移，造成 interconnects 中金屬原子逐漸移動的現象。隨時間推移，這會造成 voids（開路）或 hillocks（短路），導致電路失效。
 
-**Black's Equation (MTTF):**
+**Black's Equation（MTTF）：**
 
 ```
 MTTF = A × J^(-n) × exp(Ea / kT)
 
-Where:
-  A  = Material constant
-  J  = Current density (A/cm²)
-  n  = Current exponent (typically 1-2)
-  Ea = Activation energy (~0.7-0.9 eV for Cu)
-  k  = Boltzmann constant
-  T  = Temperature (Kelvin)
+其中：
+  A  = 材料常數
+  J  = 電流密度（A/cm²）
+  n  = 電流指數（通常為 1-2）
+  Ea = 活化能（Cu 約為 ~0.7-0.9 eV）
+  k  = Boltzmann 常數
+  T  = 溫度（Kelvin）
 ```
 
-**Key Insight:** Doubling current density reduces MTTF by 2x to 4x (depending on n).
+**關鍵洞見：** 電流密度加倍會使 MTTF 降低 2 到 4 倍（取決於 n）。
 
-**Failure Mechanisms:**
+**失效機制：**
 
 ```
-Electron flow →  →  →  →  →  →
+電子流 →  →  →  →  →  →
                 ↓     ↓
            ┌────────────────────┐
-           │ █████    ░░░  █████│ ← Void formation
+           │ █████    ░░░  █████│ ← Void 形成
            │ Metal interconnect │
-           │ █████████████  ░░░ │ ← Hillock formation
+           │ █████████████  ░░░ │ ← Hillock 形成
            └────────────────────┘
 ```
 
-**Current Density Limits:**
+**電流密度限制：**
 
-| Metal Layer | Typical Jmax (DC) | Typical Jmax (AC/RMS) |
+| 金屬層 | 典型 Jmax（DC）| 典型 Jmax（AC/RMS）|
 |-------------|------------------|----------------------|
 | **M1-M3** | 1-2 mA/μm | 3-5 mA/μm |
 | **M4-M6** | 2-4 mA/μm | 5-8 mA/μm |
-| **Top metals** | 4-8 mA/μm | 10-15 mA/μm |
+| **頂層金屬** | 4-8 mA/μm | 10-15 mA/μm |
 
-**EM Prevention Techniques:**
+**EM 預防技術：**
 
-| Technique | Description |
+| 技術 | 描述 |
 |-----------|-------------|
-| **Wire widening** | Increase cross-section to reduce J |
-| **Via doubling** | Multiple vias reduce current per via |
-| **Avoid 90° bends** | Current crowding at sharp corners |
-| **Cu capping layers** | CoWP, Ta barrier improve EM resistance |
-| **Blech length** | Short wires (<~10μm) are "EM immortal" |
+| **Wire widening** | 增加截面積以降低 J |
+| **Via doubling** | 多個 vias 降低每個 via 的電流 |
+| **避免 90° 彎角** | 尖角處的電流集中效應 |
+| **Cu capping layers** | CoWP、Ta barrier 改善 EM 抵抗力 |
+| **Blech length** | 短導線（<~10μm）為「EM immortal」|
 
-**Blech Length Effect:**
+**Blech Length 效應：**
 
-Below a critical length (Blech length), mechanical back-stress prevents void formation:
+低於臨界長度（Blech length）時，機械背應力會阻止 void 形成：
 
 ```
 Blech length ≈ Ω·σ_crit / (e·ρ·J)
 
-For typical Cu interconnects: ~10-50 μm
+對於典型 Cu interconnects：~10-50 μm
 
-If wire length < Blech length → No EM failure!
+若導線長度 < Blech length → 無 EM 失效！
 ```
 
-**EM Verification Flow:**
+**EM 驗證流程：**
 
 ```
 Post-route netlist + Spice simulation
            ↓
-Current extraction (DC + AC/RMS)
+電流提取（DC + AC/RMS）
            ↓
-EM rule checking against PDK limits
+依 PDK 限制進行 EM rule checking
            ↓
-Fix violations: widen wires, add vias
+修復 violations：加寬導線、新增 vias
            ↓
-Re-verify until clean
+重新驗證直到通過
 ```
 
 ### **Signal Integrity (Crosstalk)**
 
 Signal integrity（SI）指電氣訊號在 interconnect 中傳播時的品質。不良的 SI 會導致 timing 錯誤、資料損壞和矽片失效。在先進製程（28nm 及以下），SI 問題佔 post-silicon bug 的 30% 以上。
 
-**Types of Crosstalk:**
+**Crosstalk 類型：**
 
-| Type | Mechanism | Description |
+| 類型 | 機制 | 描述 |
 |------|-----------|-------------|
-| **Capacitive (Electrostatic)** | Mutual capacitance | Changing voltage couples to adjacent net via electric field |
-| **Inductive** | Mutual inductance | Changing current creates magnetic field coupling |
+| **電容性（靜電）** | Mutual capacitance | 電壓變化透過電場耦合到相鄰 net |
+| **電感性** | Mutual inductance | 電流變化產生磁場耦合 |
 
-Capacitive crosstalk dominates in most digital designs due to close wire spacing.
+由於導線間距緊密，電容性 crosstalk 在大多數數位設計中佔主導地位。
 
-**Crosstalk Effects:**
+**Crosstalk 效應：**
 
 ```
-Aggressor: The switching net that causes interference
-Victim: The affected net that receives noise
+Aggressor：造成干擾的 switching net
+Victim：接收雜訊的受影響 net
 
-Two main effects:
-1. Crosstalk Glitch (Functional): Noise pulse on static victim
-2. Crosstalk Delay (Timing): Speed up or slow down victim transition
+兩個主要效應：
+1. Crosstalk Glitch（功能性）：靜態 victim 上的雜訊脈衝
+2. Crosstalk Delay（時序性）：加速或減慢 victim 的轉換
 ```
 
 **Crosstalk Glitch:**
@@ -3590,12 +3592,12 @@ Two main effects:
                  noise pulse (glitch)
 ```
 
-**Crosstalk Delay:**
+**Crosstalk Delay：**
 
-| Transition Direction | Effect on Victim | Result |
+| 轉換方向 | 對 Victim 的影響 | 結果 |
 |---------------------|------------------|--------|
-| **Same direction** (↑↑ or ↓↓) | Miller effect reduces Cc | Faster victim (speed-up) |
-| **Opposite direction** (↑↓ or ↓↑) | Miller effect increases Cc | Slower victim (slow-down) |
+| **同向**（↑↑ 或 ↓↓）| Miller 效應降低 Cc | Victim 較快（speed-up）|
+| **反向**（↑↓ 或 ↓↑）| Miller 效應增加 Cc | Victim 較慢（slow-down）|
 
 ```
 Same direction (both rise):
@@ -3624,15 +3626,15 @@ Setup violation risk: Victim slows down
 Hold violation risk: Victim speeds up
 ```
 
-**Crosstalk Mitigation Techniques:**
+**Crosstalk 緩解技術：**
 
-| Technique | Description | Trade-off |
+| 技術 | 描述 | 權衡 |
 |-----------|-------------|-----------|
-| **Spacing** | Increase wire separation | Routing resources |
-| **Shielding** | Insert ground wire between aggressor/victim | Metal density, routing |
-| **Buffer insertion** | Strengthen victim driver | Area, power |
-| **Net ordering** | Route timing-critical nets first | Tool runtime |
-| **Layer assignment** | Use different layers for crossing nets | Via count |
+| **間距** | 增加導線間距 | Routing 資源 |
+| **屏蔽** | 在 aggressor/victim 之間插入接地導線 | 金屬密度、routing |
+| **Buffer 插入** | 增強 victim driver | 面積、功耗 |
+| **Net 排序** | 優先 route 時序關鍵 nets | 工具執行時間 |
+| **層分配** | 對交叉 nets 使用不同層 | Via 數量 |
 
 **Shielding Example:**
 
@@ -3679,11 +3681,11 @@ route_detail -crosstalk_optimization true
 | **Noise margin** | Glitch < 10-20% VDD | Prevent functional failure |
 | **Timing margin** | SI delta < 5% of slack | Prevent timing closure issues |
 
-### **Latch-up Effect**
+### **Latch-up 效應**
 
-Latch-up is a parasitic thyristor (PNPN) effect in CMOS that can cause permanent damage.
+Latch-up 是 CMOS 中的寄生 thyristor（PNPN）效應，可能導致永久損壞。
 
-**Mechanism:**
+**機制：**
 ```
          VDD
           │
@@ -3702,55 +3704,55 @@ Latch-up is a parasitic thyristor (PNPN) effect in CMOS that can cause permanent
          GND
 ```
 
-The parasitic PNP and NPN transistors form a thyristor (SCR) structure. Once triggered, it creates a low-resistance path from VDD to GND.
+寄生 PNP 和 NPN 電晶體形成 thyristor（SCR）結構。一旦觸發，會從 VDD 到 GND 形成低電阻路徑。
 
-**Triggering Conditions:**
+**觸發條件：**
 
-Latch-up is triggered when sufficient current flows through the parasitic BJT base regions to turn on the thyristor structure. Once triggered, the positive feedback loop sustains conduction even after the trigger is removed.
+當足夠的電流流過寄生 BJT 基極區域以導通 thyristor 結構時，會觸發 Latch-up。一旦觸發，即使觸發源移除，正回授迴路仍會維持導通。
 
-- Voltage spikes on I/O pins (exceeding VDD or below GND)
-- ESD events (sudden charge injection)
-- High junction temperature (increases leakage, reduces trigger threshold)
-- Excessive current injection (from external circuits)
+- I/O pins 上的電壓尖峰（超過 VDD 或低於 GND）
+- ESD 事件（突然的電荷注入）
+- 高接面溫度（增加 leakage，降低觸發閾值）
+- 過量電流注入（來自外部電路）
 
-**Prevention Methods:**
+**預防方法：**
 
-Prevention strategies aim to reduce parasitic BJT gain and provide low-resistance paths for charge dissipation before the thyristor can trigger.
+預防策略旨在降低寄生 BJT 增益，並在 thyristor 觸發前提供低電阻路徑以消散電荷。
 
-| Method | Description |
+| 方法 | 描述 |
 |--------|-------------|
-| **Guard rings** | Substrate/well contacts surrounding transistors |
-| **Butted contacts** | Source tied directly to well/substrate |
-| **Increase well spacing** | Larger distance between NMOS and PMOS |
-| **ESD protection** | Clamp circuits on I/O pins |
-| **Reduce substrate resistance** | Heavy doping, more substrate contacts |
+| **Guard rings** | 環繞電晶體的 substrate/well contacts |
+| **Butted contacts** | Source 直接連接到 well/substrate |
+| **增加 well 間距** | NMOS 和 PMOS 之間更大的距離 |
+| **ESD 保護** | I/O pins 上的 clamp 電路 |
+| **降低 substrate 電阻** | 重摻雜、更多 substrate contacts |
 
-**Design Rules:**
+**設計規則：**
 
-Foundries provide specific design rules to ensure latch-up immunity. These rules are mandatory for tape-out and verified during DRC (Design Rule Check).
+Foundries 提供特定的設計規則以確保 latch-up 免疫力。這些規則是 tape-out 的強制要求，並在 DRC（Design Rule Check）中驗證。
 
-- Maximum distance from transistor to well tap
-- Minimum guard ring width
-- I/O cells require robust latch-up protection
+- 電晶體到 well tap 的最大距離
+- 最小 guard ring 寬度
+- I/O cells 需要強健的 latch-up 保護
 
-**How Guard Rings Work:**
+**Guard Rings 運作原理：**
 
-Guard rings are diffusions that decouple the parasitic bipolar transistors:
-- **Minority carrier guard rings**: Collect minority carriers before they reach the parasitic collector junction
-- **Majority carrier guard rings**: Connected to VDD/VSS to reduce effective well/substrate resistance
+Guard rings 是解耦寄生雙極電晶體的擴散區：
+- **少數載子 guard rings**：在少數載子到達寄生集極接面前收集它們
+- **多數載子 guard rings**：連接到 VDD/VSS 以降低有效的 well/substrate 電阻
 
-The key is that guard rings act as "collectors" that intercept diffusing carriers and shunt them to the supply rails before they can trigger the thyristor.
+關鍵在於 guard rings 作為「集極」，在擴散載子觸發 thyristor 之前攔截它們並分流到電源軌。
 
-**ESD and Latch-up Relationship:** ESD protection cells are common latch-up trigger sources. When ESD enters through an I/O pad, the protection circuit can inject minority carriers into the substrate. Guard rings around ESD cells are critical.
+**ESD 與 Latch-up 的關係：** ESD 保護單元是常見的 latch-up 觸發源。當 ESD 通過 I/O pad 進入時，保護電路可能將少數載子注入 substrate。ESD 單元周圍的 guard rings 至關重要。
 
-**Advanced Techniques:**
-- Deep trench isolation blocks minority carrier diffusion
-- Heavily doped substrates reduce parasitic BJT gain
-- SOI (Silicon-On-Insulator) substrates eliminate the thyristor structure entirely
+**進階技術：**
+- Deep trench isolation 阻擋少數載子擴散
+- 重摻雜 substrates 降低寄生 BJT 增益
+- SOI（Silicon-On-Insulator）substrates 完全消除 thyristor 結構
 
-### **Antenna Effect**
+### **Antenna 效應**
 
-Antenna effect occurs during fabrication when metal interconnects collect charge during plasma etching, potentially damaging gate oxide.
+Antenna 效應發生在製造過程中，當金屬 interconnects 在 plasma etching 期間收集電荷時，可能損壞 gate oxide。
 
 **Mechanism:**
 ```
