@@ -103,6 +103,10 @@ tags:
 - [Johnson Counter](#johnson-counter)
 - [D 觸發器實現計數器](#d-觸發器實現-n-進制計數器經典面試題)
 - [Round Robin Arbiter](#round-robin-arbiter)
+- [CRC（循環冗餘校驗）](#crc循環冗餘校驗)
+- [Booth 與 Wallace Tree 乘法器](#booth-與-wallace-tree-乘法器)
+- [LFSR 與 PRBS（偽隨機序列）](#lfsr-與-prbs偽隨機序列)
+- [串並轉換與並串轉換](#串並轉換與並串轉換)
 
 ### 後端 / 實體設計
 - [CTS 與 Clock Uncertainty](#cts-與-clock-uncertainty)
@@ -127,6 +131,7 @@ tags:
 
 ### 匯流排協定
 - [常見協定](#common-protocols)（包含 AXI、SPI、I2C、UART、DDR）
+- [AXI-Stream 協議](#axi-stream-協議)
 - [DDR Memory Timing](#ddr-memory-timing)
 
 ### 電腦架構
@@ -3784,6 +3789,432 @@ endmodule
 - Network-on-Chip routing
 - DMA channel 排程
 
+### **CRC（循環冗餘校驗）**
+
+CRC（Cyclic Redundancy Check）是通訊領域中最常用的錯誤檢測方法，用於確保資料傳輸的可靠性。
+
+**基本原理：**
+
+CRC 透過將資料視為多項式，與生成多項式（Generator Polynomial）進行模 2 除法，得到餘數作為校驗碼。
+
+```
+發送端：
+  原始資料 D(x) × x^r ÷ G(x) = Q(x) ... R(x)
+  傳送：D(x) × x^r + R(x)（原始資料後接 CRC 校驗碼）
+
+接收端：
+  收到資料 ÷ G(x)
+  餘數 = 0 → 資料正確
+  餘數 ≠ 0 → 資料有誤
+```
+
+**常見 CRC 標準：**
+
+| 標準 | 多項式 | 位寬 | 應用 |
+|------|--------|------|------|
+| **CRC-8** | x⁸+x²+x+1 | 8 bit | I2C、ATM |
+| **CRC-16** | x¹⁶+x¹⁵+x²+1 | 16 bit | USB、Modbus |
+| **CRC-32** | x³²+x²⁶+x²³+...+1 | 32 bit | Ethernet、ZIP |
+
+**Verilog 實現（並行計算）：**
+
+```verilog
+// CRC-8 並行實現（以 x^8 + x^2 + x + 1 為例）
+module crc8_parallel (
+    input  clk,
+    input  rst_n,
+    input  data_valid,
+    input  [7:0] data_in,
+    output reg [7:0] crc_out
+);
+
+// CRC 多項式：x^8 + x^2 + x + 1 = 0x07
+// 並行 CRC 計算矩陣（根據多項式推導）
+wire [7:0] next_crc;
+
+assign next_crc[0] = crc_out[0] ^ crc_out[6] ^ crc_out[7] ^ data_in[0] ^ data_in[6] ^ data_in[7];
+assign next_crc[1] = crc_out[0] ^ crc_out[1] ^ crc_out[6] ^ data_in[0] ^ data_in[1] ^ data_in[6];
+assign next_crc[2] = crc_out[0] ^ crc_out[1] ^ crc_out[2] ^ crc_out[6] ^ data_in[0] ^ data_in[1] ^ data_in[2] ^ data_in[6];
+assign next_crc[3] = crc_out[1] ^ crc_out[2] ^ crc_out[3] ^ crc_out[7] ^ data_in[1] ^ data_in[2] ^ data_in[3] ^ data_in[7];
+assign next_crc[4] = crc_out[2] ^ crc_out[3] ^ crc_out[4] ^ data_in[2] ^ data_in[3] ^ data_in[4];
+assign next_crc[5] = crc_out[3] ^ crc_out[4] ^ crc_out[5] ^ data_in[3] ^ data_in[4] ^ data_in[5];
+assign next_crc[6] = crc_out[4] ^ crc_out[5] ^ crc_out[6] ^ data_in[4] ^ data_in[5] ^ data_in[6];
+assign next_crc[7] = crc_out[5] ^ crc_out[6] ^ crc_out[7] ^ data_in[5] ^ data_in[6] ^ data_in[7];
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        crc_out <= 8'hFF;  // 初始值
+    else if (data_valid)
+        crc_out <= next_crc;
+end
+
+endmodule
+```
+
+**CRC vs 其他錯誤檢測：**
+
+| 方法 | 檢錯能力 | 硬體成本 | 應用場景 |
+|------|----------|----------|----------|
+| **Parity** | 單 bit | 最低 | 記憶體 |
+| **Checksum** | 多 bit（弱）| 低 | IP header |
+| **CRC** | 多 bit（強）| 中 | Ethernet、儲存 |
+| **ECC** | 可糾錯 | 高 | DRAM、Flash |
+
+**面試常見問題：**
+
+| 問題 | 答案要點 |
+|------|----------|
+| **「CRC 和 Parity 有什麼區別？」** | Parity 只能檢測奇數個 bit 錯誤；CRC 可檢測 burst error 和多 bit 錯誤 |
+| **「為什麼用 XOR 實現？」** | 模 2 除法的本質就是 XOR 操作，硬體實現簡單高效 |
+| **「如何選擇 CRC 多項式？」** | 根據資料長度、錯誤模式選擇標準多項式（如 Ethernet 用 CRC-32） |
+
+### **Booth 與 Wallace Tree 乘法器**
+
+乘法器是 DSP 和 CPU 中的關鍵運算單元。由於乘法操作邏輯複雜，往往處於 critical path 上，優化乘法器對系統性能影響很大。
+
+**基本陣列乘法器的問題：**
+
+```
+對於 N-bit × N-bit 乘法：
+  - 產生 N² 個 partial products
+  - 需要 (N-1) 層加法器
+  - Delay = O(N²)，面積 = O(N²)
+```
+
+#### **Booth 演算法**
+
+Booth 演算法透過編碼減少部分積的數量，特別對有符號數乘法效率更高。
+
+**Radix-2 Booth 編碼：**
+
+```
+檢視乘數 Y 相鄰兩位 (Yi, Yi-1)：
+  00 → 0（不操作）
+  01 → +1（加 X）
+  10 → -1（減 X）
+  11 → 0（不操作）
+
+假設 Y-1 = 0
+```
+
+**Radix-4 Booth 編碼（Modified Booth）：**
+
+```
+檢視乘數 Y 三位 (Y2i+1, Y2i, Y2i-1)：
+  000, 111 → 0
+  001, 010 → +X
+  011      → +2X
+  100      → -2X
+  101, 110 → -X
+
+優點：部分積數量減半（N/2 個）
+```
+
+**Radix-4 Booth 部分積生成：**
+
+```verilog
+// Radix-4 Booth 編碼部分積生成
+module booth_pp_gen (
+    input  signed [15:0] multiplicand,  // X
+    input  [2:0] booth_code,            // {Y2i+1, Y2i, Y2i-1}
+    output reg signed [16:0] partial_product
+);
+
+always @(*) begin
+    case (booth_code)
+        3'b000, 3'b111: partial_product = 17'd0;           // 0
+        3'b001, 3'b010: partial_product = {multiplicand[15], multiplicand};  // +X
+        3'b011:         partial_product = {multiplicand, 1'b0};              // +2X
+        3'b100:         partial_product = -{multiplicand, 1'b0};             // -2X
+        3'b101, 3'b110: partial_product = -{multiplicand[15], multiplicand}; // -X
+        default:        partial_product = 17'd0;
+    endcase
+end
+
+endmodule
+```
+
+#### **Wallace Tree**
+
+Wallace Tree 透過並行壓縮部分積，減少加法層數。
+
+**核心思想：使用 3:2 壓縮器（全加器）**
+
+```
+傳統逐層相加：N-1 層延遲
+Wallace Tree：log₁.₅(N) ≈ 1.71 log₂(N) 層延遲
+
+8 個部分積的 Wallace Tree：
+  第 1 層：8 → 6（使用 2 個 3:2 壓縮器）
+  第 2 層：6 → 4
+  第 3 層：4 → 3
+  第 4 層：3 → 2
+  最後：2 個數用 CPA（Carry Propagate Adder）相加
+```
+
+**3:2 壓縮器（全加器）：**
+
+```verilog
+// 3:2 Compressor = Full Adder
+module compressor_3_2 (
+    input  a, b, c,
+    output sum, carry
+);
+    assign sum   = a ^ b ^ c;
+    assign carry = (a & b) | (b & c) | (a & c);
+endmodule
+```
+
+**4:2 壓縮器（提高效率）：**
+
+```verilog
+// 4:2 Compressor
+// 輸入：4 個數 + 1 個進位輸入
+// 輸出：2 個數 + 1 個進位輸出
+module compressor_4_2 (
+    input  a, b, c, d, cin,
+    output sum, carry, cout
+);
+    wire t = a ^ b ^ c ^ d;
+    assign sum   = t ^ cin;
+    assign cout  = (a & b) | (c & d);  // 不依賴 cin，可並行
+    assign carry = t ? cin : d;
+endmodule
+```
+
+**Booth-Wallace 乘法器架構：**
+
+```
+                    ┌─────────────────┐
+    Multiplicand ──►│  Booth Encoder  │──► N/2 個 Partial Products
+                    └─────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │  Wallace Tree   │──► 2 個數（Sum, Carry）
+                    │  (Compressors)  │
+                    └─────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │  Final Adder    │──► Product
+                    │  (CPA/CLA)      │
+                    └─────────────────┘
+```
+
+**性能比較：**
+
+| 乘法器類型 | 部分積數 | 延遲複雜度 | 面積 | 適用場景 |
+|------------|----------|------------|------|----------|
+| **陣列乘法器** | N² | O(N) | 大 | 教學用途 |
+| **Booth** | N/2 | O(N) | 中 | 減少部分積 |
+| **Wallace Tree** | N | O(log N) | 中 | 減少延遲 |
+| **Booth + Wallace** | N/2 | O(log N) | 最優 | 高性能處理器 |
+
+**面試常見問題：**
+
+| 問題 | 答案要點 |
+|------|----------|
+| **「Booth 演算法的優點？」** | 減少部分積數量，對有符號數直接處理，減少面積和功耗 |
+| **「為什麼用 Radix-4 而非 Radix-2？」** | 部分積減半，但編碼稍複雜（需處理 ±2X） |
+| **「Wallace Tree 如何減少延遲？」** | 並行壓縮多個部分積，延遲從 O(N) 降為 O(log N) |
+| **「4:2 壓縮器比 3:2 好在哪？」** | cout 不依賴 cin，可更快地並行計算 |
+
+### **LFSR 與 PRBS（偽隨機序列）**
+
+LFSR（Linear Feedback Shift Register，線性反饋移位暫存器）是數位電路中產生偽隨機序列的經典方法，廣泛用於測試、加密和通訊。
+
+**LFSR 基本結構：**
+
+```
+Fibonacci 結構（外部 XOR）：
+┌──────────────────────────────────┐
+│                                  │
+▼                                  │
+[D3]──►[D2]──►[D1]──►[D0]──►Out   │
+  │      │                         │
+  └──XOR─┴─────────────────────────┘
+     ↑
+  反饋多項式決定哪些位參與 XOR
+
+Galois 結構（內部 XOR）：
+┌───────────────────────────────────┐
+│      ↓XOR        ↓XOR            │
+[D3]──►[D2]──►[D1]──►[D0]──►Out ───┘
+```
+
+**最大長度序列（M-sequence）：**
+
+使用本原多項式（Primitive Polynomial）時，N-bit LFSR 可產生 2^N - 1 個不重複狀態。
+
+**常用 PRBS 多項式：**
+
+| 序列 | 多項式 | 長度 | 應用 |
+|------|--------|------|------|
+| **PRBS-7** | x⁷ + x⁶ + 1 | 127 | 短距測試 |
+| **PRBS-9** | x⁹ + x⁵ + 1 | 511 | 音頻測試 |
+| **PRBS-15** | x¹⁵ + x¹⁴ + 1 | 32767 | 通訊 |
+| **PRBS-23** | x²³ + x¹⁸ + 1 | 8M | 高速 SerDes |
+| **PRBS-31** | x³¹ + x²⁸ + 1 | 2G | 誤碼率測試 |
+
+**Verilog 實現（PRBS-7）：**
+
+```verilog
+// PRBS-7 生成器（x^7 + x^6 + 1）
+module prbs7_gen (
+    input  clk,
+    input  rst_n,
+    input  enable,
+    output prbs_out,
+    output reg [6:0] lfsr
+);
+
+wire feedback = lfsr[6] ^ lfsr[5];  // x^7 XOR x^6
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n)
+        lfsr <= 7'b1111111;  // 非零種子
+    else if (enable)
+        lfsr <= {lfsr[5:0], feedback};
+end
+
+assign prbs_out = lfsr[6];
+
+endmodule
+```
+
+**LFSR 應用場景：**
+
+| 應用 | 說明 |
+|------|------|
+| **BIST** | 測試向量生成和響應壓縮 |
+| **Scrambler** | 資料擾碼（消除連續 0/1） |
+| **CRC** | 循環冗餘校驗（Galois 結構） |
+| **加密** | 流密碼種子 |
+| **計數器替代** | 低功耗偽計數（每次只翻轉 1-2 bit） |
+
+**面試常見問題：**
+
+| 問題 | 答案要點 |
+|------|----------|
+| **「LFSR 為什麼不能初始化為全 0？」** | 0 XOR 0 = 0，會永遠卡在全 0 狀態（鎖定狀態） |
+| **「如何達到最大長度序列？」** | 使用本原多項式，確保反饋抽頭正確 |
+| **「Fibonacci 和 Galois 結構的區別？」** | Fibonacci 外部 XOR 結構簡單；Galois 內部 XOR 延遲更低 |
+| **「PRBS 用於 SerDes 測試的優點？」** | 包含所有可能的位模式組合，可測試 ISI 和抖動 |
+
+### **串並轉換與並串轉換**
+
+串並轉換（Serial-to-Parallel）和並串轉換（Parallel-to-Serial）是數位通訊的基礎電路，核心思想是用面積換速度。
+
+**串轉並（Serial-to-Parallel）：**
+
+```
+Serial In ──►[Shift Register]──► Parallel Out[N-1:0]
+
+時序圖：
+CLK:      ─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─
+Serial:   ──D0─D1─D2─D3─D4─D5─D6─D7──
+                              ↓
+Parallel: ──────────────────[D7:D0]── (每 8 個 clock 輸出一次)
+```
+
+**Verilog 實現（串轉並）：**
+
+```verilog
+// 8-bit 串轉並（MSB first）
+module serial_to_parallel #(
+    parameter WIDTH = 8
+)(
+    input  clk,
+    input  rst_n,
+    input  serial_in,
+    input  serial_valid,
+    output reg [WIDTH-1:0] parallel_out,
+    output reg parallel_valid
+);
+
+reg [WIDTH-1:0] shift_reg;
+reg [$clog2(WIDTH)-1:0] cnt;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        shift_reg      <= {WIDTH{1'b0}};
+        cnt            <= 0;
+        parallel_out   <= {WIDTH{1'b0}};
+        parallel_valid <= 1'b0;
+    end else if (serial_valid) begin
+        shift_reg <= {shift_reg[WIDTH-2:0], serial_in};  // 左移，新位進 LSB
+
+        if (cnt == WIDTH - 1) begin
+            parallel_out   <= {shift_reg[WIDTH-2:0], serial_in};
+            parallel_valid <= 1'b1;
+            cnt            <= 0;
+        end else begin
+            parallel_valid <= 1'b0;
+            cnt            <= cnt + 1;
+        end
+    end else begin
+        parallel_valid <= 1'b0;
+    end
+end
+
+endmodule
+```
+
+**並轉串（Parallel-to-Serial）：**
+
+```verilog
+// 8-bit 並轉串（MSB first）
+module parallel_to_serial #(
+    parameter WIDTH = 8
+)(
+    input  clk,
+    input  rst_n,
+    input  [WIDTH-1:0] parallel_in,
+    input  load,           // 載入並行資料
+    output serial_out,
+    output busy
+);
+
+reg [WIDTH-1:0] shift_reg;
+reg [$clog2(WIDTH):0] cnt;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        shift_reg <= {WIDTH{1'b0}};
+        cnt       <= 0;
+    end else if (load && cnt == 0) begin
+        shift_reg <= parallel_in;
+        cnt       <= WIDTH;
+    end else if (cnt > 0) begin
+        shift_reg <= {shift_reg[WIDTH-2:0], 1'b0};  // 左移
+        cnt       <= cnt - 1;
+    end
+end
+
+assign serial_out = shift_reg[WIDTH-1];  // MSB first
+assign busy = (cnt != 0);
+
+endmodule
+```
+
+**實現方式比較：**
+
+| 方法 | 適用場景 | 優點 | 缺點 |
+|------|----------|------|------|
+| **移位暫存器** | 資料量小 | 簡單、低延遲 | 固定位寬 |
+| **FIFO** | 跨時鐘域 | 彈性大、解耦 | 面積較大 |
+| **雙埠 RAM** | 大資料量 | 高吞吐量 | 複雜度高 |
+
+**面試常見問題：**
+
+| 問題 | 答案要點 |
+|------|----------|
+| **「串轉並的核心電路是什麼？」** | 移位暫存器 + 計數器，每 N 個 clock 輸出一次並行資料 |
+| **「MSB first 和 LSB first 怎麼切換？」** | MSB first 左移新位進 LSB；LSB first 右移新位進 MSB |
+| **「如何處理不同速率的轉換？」** | 使用 FIFO 或雙埠 RAM 進行速率匹配 |
+| **「SerDes 和簡單串並轉換的區別？」** | SerDes 包含 PLL/CDR、編碼（8b/10b）、均衡等高速功能 |
+
 ---
 
 ## 後端 / 實體設計
@@ -5614,6 +6045,143 @@ WRAP:   [A+2][A+3][A][A+1] Wraps at boundary (cache line fill)
 - Same-ID transactions complete in order
 - Different-ID transactions can complete out of order
 - Enables efficient memory controller pipelining
+
+#### **AXI-Stream 協議**
+
+AXI-Stream（AXIS）是 AXI 協議家族中最簡單的一個，專門用於高速點對點的串流資料傳輸，不涉及記憶體位址。
+
+**AXI-Stream vs AXI-Full：**
+
+| 面向 | AXI-Full | AXI-Stream |
+|------|----------|------------|
+| **通道數** | 5 個（AW, W, B, AR, R）| 1 個 |
+| **位址** | 需要位址 | 無位址 |
+| **方向** | 雙向（讀/寫）| 單向 |
+| **拓撲** | Master ↔ Slave | Source → Destination |
+| **應用** | 記憶體存取 | 影像處理、DSP、網路封包 |
+
+**核心訊號：**
+
+| 訊號 | 方向 | 說明 |
+|------|------|------|
+| **TDATA** | Source → Dest | 資料匯流排 |
+| **TVALID** | Source → Dest | 資料有效訊號 |
+| **TREADY** | Dest → Source | 接收端準備好 |
+| **TLAST** | Source → Dest | 封包最後一筆資料 |
+| **TKEEP** | Source → Dest | 有效位元組指示（每 byte 1 bit）|
+| **TSTRB** | Source → Dest | 資料/位置位元組指示 |
+| **TID** | Source → Dest | 資料流識別碼 |
+| **TDEST** | Source → Dest | 路由識別碼 |
+| **TUSER** | Source → Dest | 使用者自定義訊號 |
+
+**握手機制（與 AXI-Full 相同）：**
+
+```
+        TVALID ────►┌─────┐
+        TDATA  ────►│     │
+                    │ DST │
+        TREADY ◄────│     │
+                    └─────┘
+
+傳輸條件：TVALID = 1 AND TREADY = 1
+```
+
+**三種握手場景：**
+
+```
+場景 1：Source 先準備好
+CLK:     ─┐  ┌──┐  ┌──┐  ┌──
+TVALID:  ────────┐
+TDATA:   ────────[D0]────
+TREADY:  ────────────┐
+                     ↑ 傳輸發生
+
+場景 2：Destination 先準備好
+CLK:     ─┐  ┌──┐  ┌──┐  ┌──
+TREADY:  ────────┐
+TVALID:  ────────────┐
+TDATA:   ────────────[D0]
+                     ↑ 傳輸發生
+
+場景 3：同時準備好
+CLK:     ─┐  ┌──┐  ┌──┐  ┌──
+TVALID:  ────────┐
+TREADY:  ────────┐
+TDATA:   ────────[D0]
+                 ↑ 傳輸發生
+```
+
+**TLAST 與封包結構：**
+
+```
+一個 Packet 包含多個 Transfer：
+
+CLK:     ─┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──
+TVALID:  ────┐                       ┌───
+TDATA:   ────[D0][D1][D2][D3]────────
+TLAST:   ──────────────────┐   ┌─────
+                           ↑
+                     封包結束
+```
+
+**Verilog 範例：AXI-Stream 打拍（Pipeline Register）**
+
+```verilog
+// AXI-Stream Pipeline Register（無氣泡傳輸）
+module axis_register #(
+    parameter DATA_WIDTH = 32
+)(
+    input  clk, rst_n,
+    // Slave interface (input)
+    input  [DATA_WIDTH-1:0] s_tdata,
+    input  s_tvalid,
+    input  s_tlast,
+    output s_tready,
+    // Master interface (output)
+    output reg [DATA_WIDTH-1:0] m_tdata,
+    output reg m_tvalid,
+    output reg m_tlast,
+    input  m_tready
+);
+
+// 當下游準備好或輸出無效時，可接收新資料
+assign s_tready = m_tready || !m_tvalid;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        m_tvalid <= 1'b0;
+        m_tdata  <= {DATA_WIDTH{1'b0}};
+        m_tlast  <= 1'b0;
+    end else if (s_tready) begin
+        m_tvalid <= s_tvalid;
+        m_tdata  <= s_tdata;
+        m_tlast  <= s_tlast;
+    end
+end
+
+endmodule
+```
+
+**反壓（Backpressure）處理：**
+
+```verilog
+// 當下游無法接收時，上游必須保持資料
+always @(posedge clk) begin
+    if (s_tvalid && !s_tready) begin
+        // 下游反壓中，保持當前資料
+        // 不能丟棄！
+    end
+end
+```
+
+**面試常見問題：**
+
+| 問題 | 答案要點 |
+|------|----------|
+| **「AXI-Stream 和 AXI-Full 差在哪？」** | AXIS 無位址、單向、適合串流；AXI-Full 有位址、雙向、適合記憶體存取 |
+| **「TLAST 的用途？」** | 標示封包邊界，讓下游知道一筆完整資料的結束 |
+| **「如何處理反壓？」** | 當 TREADY=0 時必須保持 TDATA 和 TVALID，直到握手完成 |
+| **「TKEEP 和 TSTRB 的區別？」** | TKEEP 標示有效位元組，TSTRB 區分資料位元組與位置位元組 |
 
 ### **DDR Memory Timing**
 
