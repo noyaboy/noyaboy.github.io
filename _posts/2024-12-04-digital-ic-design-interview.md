@@ -150,46 +150,46 @@ tags:
 
 Latch 與 flip-flop 是數位設計中的基本儲存元件，各自儲存一個位元的資料。關鍵區別在於觸發機制：latch 是 **level-triggered**（位準觸發），表示當 enable 訊號為 active 時，輸出會跟隨輸入（transparent）；而 flip-flop 是 **edge-triggered**（邊緣觸發），僅在 clock 訊號的上升或下降邊緣時擷取輸入。這使得 flip-flop 在同步設計中更為可預測，而 latch 雖有速度優勢但會使時序分析變複雜。
 
-| Feature | Latch | Flip-Flop |
+| 特性 | Latch | Flip-Flop |
 |---------|-------|-----------|
-| **Triggering** | Level-triggered (transparent when enabled) | Edge-triggered (changes only at clock edge) |
-| **Sensitivity** | Output follows input while enable is high | Output changes only at rising/falling edge |
-| **Area** | Smaller, requires less circuitry | Larger, requires more gates |
-| **Speed** | Faster | Slower due to edge detection logic |
-| **Power** | Lower | Higher |
-| **Timing Analysis** | More complex (time borrowing possible) | Simpler, well-defined timing |
-| **FPGA Support** | Not recommended | Preferred |
+| **觸發方式** | Level-triggered（enable 時為 transparent）| Edge-triggered（僅在 clock edge 時變化）|
+| **敏感度** | enable 為 high 時輸出跟隨輸入 | 僅在 rising/falling edge 時輸出變化 |
+| **面積** | 較小，需要較少電路 | 較大，需要較多 gate |
+| **速度** | 較快 | 較慢（因 edge detection 邏輯）|
+| **功耗** | 較低 | 較高 |
+| **時序分析** | 較複雜（可使用 time borrowing）| 較簡單，時序明確 |
+| **FPGA 支援** | 不建議使用 | 建議使用 |
 
-**Key Points:**
-- A flip-flop is built from two back-to-back latches with opposite polarity clocks (master-slave topology)
-- Latches allow **time borrowing**: if one half-cycle path is slow and another is fast, the slow path can borrow time from the fast path
-- Latches are typically avoided in synchronous designs due to complex timing analysis
+**重點：**
+- Flip-flop 由兩個背對背的 latch 組成，使用相反極性的 clock（master-slave 架構）
+- Latch 允許 **time borrowing**：若一個 half-cycle path 較慢而另一個較快，慢的 path 可從快的 path 借用時間
+- 由於時序分析複雜，同步設計中通常避免使用 latch
 
-**Time Borrowing Deep Dive:**
+**Time Borrowing 深入探討：**
 
-Time borrowing is a powerful technique in latch-based designs that flip-flops cannot achieve. The key insight is that latches are transparent during the entire enable phase, not just at an edge.
+Time borrowing 是 latch-based 設計中的強大技術，flip-flop 無法達成。關鍵在於 latch 在整個 enable 階段都是 transparent，而非僅在 edge 時。
 
 ```
-Example: 4-stage pipeline with latches vs flip-flops
+範例：4 階段 pipeline，比較 latch 與 flip-flop
 
-Flip-flop based (each stage limited to half-period):
+Flip-flop 架構（每階段限制在 half-period）：
   Stage delays: 8ns, 12ns, 6ns, 10ns (max = 12ns)
-  Required period: 2 × 12ns = 24ns → Fmax = 41.7 MHz
+  所需週期: 2 × 12ns = 24ns → Fmax = 41.7 MHz
 
-Latch-based (time borrowing allowed):
-  Total delay: 8 + 12 + 6 + 10 = 36ns
-  Average per stage: 36/4 = 9ns
-  Required period: 2 × 9ns = 18ns → Fmax = 55.6 MHz (33% faster!)
+Latch 架構（允許 time borrowing）：
+  總延遲: 8 + 12 + 6 + 10 = 36ns
+  每階段平均: 36/4 = 9ns
+  所需週期: 2 × 9ns = 18ns → Fmax = 55.6 MHz（快 33%！）
 ```
 
-**Why latches are more variation-tolerant:** When process variation causes some paths to be slow and others fast, latch-based designs automatically compensate through time borrowing. This makes them dramatically more yield-friendly in advanced nodes where variation is significant.
+**為何 latch 對製程變異更有容忍度：** 當製程變異導致某些 path 較慢而其他較快時，latch-based 設計會透過 time borrowing 自動補償。這使得在變異顯著的先進製程中，latch 設計對良率更為友善。
 
 ![Latch](https://i.imgur.com/E6NY4ca.png)
 
 ![Flip-flop](https://i.imgur.com/tv3FbCD.png)
 
 ### **Metastability**
-Metastability occurs when the time for the flip-flop's output (Q pin) to stabilize is greater than the clk-to-q (Tcq) time. This happens when data transitions near the clock edge, violating setup or hold time requirements.
+Metastability 發生在 flip-flop 輸出（Q pin）穩定所需的時間大於 clk-to-q（Tcq）時間時。這發生在資料在 clock edge 附近轉換，違反 setup 或 hold time 要求時。
 
 ![Metastability 1](https://i.imgur.com/y3WG22Q.png)
 ![Metastability 2](https://i.imgur.com/kp5y9dk.png)
@@ -200,52 +200,52 @@ Metastability occurs when the time for the flip-flop's output (Q pin) to stabili
 MTBF = e^(Tr/τ) / (T0 × Fclk × Fdata)
 ```
 
-Where:
-- `Tr` = resolution time (time available for metastability to resolve)
-- `τ` (tau) = metastability time constant (device dependent)
-- `Fclk` = clock frequency
-- `Fdata` = data transition frequency
+其中：
+- `Tr` = resolution time（可用於 metastability 解決的時間）
+- `τ` (tau) = metastability 時間常數（與元件相關）
+- `Fclk` = clock 頻率
+- `Fdata` = data 轉換頻率
 
-**Resolution time calculation:**
+**Resolution time 計算：**
 ```
 Tr = Tclk - (Tsu + Tckq + Tpd)
 ```
 
-**Design Guidelines:**
+**設計指引：**
 
-The number of synchronizer stages directly affects MTBF through the exponential term in the formula. Each additional stage roughly squares the MTBF, making the choice of synchronizer depth a critical design decision based on reliability requirements.
+Synchronizer 階段數透過公式中的指數項直接影響 MTBF。每增加一級大約可將 MTBF 平方，使 synchronizer 深度的選擇成為基於可靠性需求的關鍵設計決策。
 
-- With **2 flip-flops**: adequate MTBF for most designs (10s-100s MHz)
-- With **3 flip-flops**: mandated for space/medical devices
-- With **4 flip-flops**: MTBF can reach 1,000+ years
+- 使用 **2 個 flip-flop**：對大多數設計足夠（10s-100s MHz）
+- 使用 **3 個 flip-flop**：太空/醫療設備強制要求
+- 使用 **4 個 flip-flop**：MTBF 可達 1,000 年以上
 
-**Practical MTBF Example:**
+**實際 MTBF 範例：**
 ```
-Given: Fclk = 100 MHz, Fdata = 10 MHz, τ = 0.3 ns, T0 = 1 ns
-With Tr = 5 ns (2FF synchronizer at 100 MHz):
+已知: Fclk = 100 MHz, Fdata = 10 MHz, τ = 0.3 ns, T0 = 1 ns
+當 Tr = 5 ns（100 MHz 下的 2FF synchronizer）：
   MTBF = e^(5/0.3) / (1e-9 × 100e6 × 10e6)
        = e^16.67 / (1e6)
-       ≈ 17.4 million seconds ≈ 201 days
+       ≈ 1740 萬秒 ≈ 201 天
 
-With Tr = 10 ns (3FF synchronizer):
+當 Tr = 10 ns（3FF synchronizer）：
   MTBF = e^(10/0.3) / (1e6)
-       ≈ 2.8e8 years (effectively infinite)
+       ≈ 2.8e8 年（實際上無限大）
 ```
 
-`Solution (double flip-flop synchronizer)`: Simply add another flip-flop driven by the same clock after the subsequent flip-flop stage. The second flip-flop gives the first flip-flop an entire clock cycle to resolve from any metastable state.
+`解決方案（double flip-flop synchronizer）`：只需在後續 flip-flop 階段後添加另一個由相同 clock 驅動的 flip-flop。第二個 flip-flop 給予第一個 flip-flop 整個 clock cycle 來從任何 metastable 狀態恢復。
 
-**Advanced MTBF Considerations:**
+**進階 MTBF 考量：**
 
-| Factor | Impact on MTBF | Recommendation |
+| 因素 | 對 MTBF 的影響 | 建議 |
 |--------|----------------|----------------|
-| **Heavy load on sync output** | Reduces resolution time → worse MTBF | Keep synchronizer output lightly loaded |
-| **Faster flip-flop family** | Lower setup/hold times → better MTBF | Use fast cells for synchronizers |
-| **Multiple sync locations** | Each adds failure probability | Synchronize signal only once, distribute the synchronized version |
-| **Temperature/voltage variation** | τ varies with conditions | Characterize at worst-case corner |
+| **sync 輸出負載重** | 減少 resolution time → MTBF 變差 | 保持 synchronizer 輸出輕載 |
+| **較快的 flip-flop 系列** | 較低 setup/hold time → MTBF 較佳 | 使用快速 cell 作為 synchronizer |
+| **多個 sync 位置** | 每個都增加失敗機率 | 訊號只同步一次，分發同步後的版本 |
+| **溫度/電壓變化** | τ 隨條件變化 | 在最差 corner 下進行特性化 |
 
-**Process Node Trends:** In advanced nodes (28nm and below), τ values around 10ps with T0 around 20ps are typical. At 1 GHz with data changing every 10 cycles and one clock cycle for resolution, MTBF can exceed 10^29 years—essentially infinite.
+**製程節點趨勢：** 在先進製程（28nm 及以下），τ 值約 10ps，T0 約 20ps 是典型的。在 1 GHz 下，資料每 10 個 cycle 變化一次，有一個 clock cycle 用於解決，MTBF 可超過 10^29 年——實際上無限大。
 
-**Altera/Intel Recommendation:** Use three synchronizer flip-flops as standard practice for better metastability protection, not just two.
+**Altera/Intel 建議：** 使用三個 synchronizer flip-flop 作為標準做法以獲得更好的 metastability 保護，而非僅兩個。
 
 ---
 
@@ -255,29 +255,29 @@ With Tr = 10 ns (3FF synchronizer):
 
 當訊號在數位系統中從一個 clock domain 傳遞到另一個 clock domain 時，就會發生 clock domain crossing。這是多時脈設計中最具挑戰性的部分，因為跨越非同步邊界的訊號可能導致 metastability——一種 flip-flop 輸出在不確定期間內不可預測的不穩定狀態。了解 clock 之間的關係決定了適當的同步策略。
 
-**Types of CDC:**
+**CDC 類型：**
 
-| Type | Description |
+| 類型 | 說明 |
 |------|-------------|
-| **Asynchronous** | Clocks have different frequencies and no phase relationship—most challenging, requires robust synchronization |
-| **Mesochronous** | Same frequency, different phase—phase offset is fixed, needs one-time compensation |
-| **Plesiochronous** | Almost same frequency, gradual drift—requires continuous phase tracking and compensation |
+| **Asynchronous** | Clock 有不同頻率且無相位關係——最具挑戰性，需要強健的同步機制 |
+| **Mesochronous** | 相同頻率，不同相位——相位偏移固定，需一次性補償 |
+| **Plesiochronous** | 幾乎相同頻率，逐漸漂移——需要持續相位追蹤和補償 |
 
-#### **single bit signal**
-→ Can be solved using double flip-flop synchronizer
-However, it is not suitable for pulse signals, so Pulse synchronizer is used instead.
+#### **Single bit signal**
+→ 可使用 double flip-flop synchronizer 解決
+然而，這不適用於 pulse 訊號，因此改用 Pulse synchronizer。
 
-**Best Practice:** Avoid combinatorial logic immediately before synchronizer flip-flops. Combinational logic tends to glitch multiple times before settling, increasing metastability risk.
+**最佳實踐：** 避免在 synchronizer flip-flop 前面放置組合邏輯。組合邏輯在穩定前容易產生多次 glitch，增加 metastability 風險。
 
-**Types of Single-bit Synchronizers:**
+**Single-bit Synchronizer 類型：**
 
-| Synchronizer | Description | Use Case |
+| Synchronizer | 說明 | 使用情境 |
 |--------------|-------------|----------|
-| **Level** | 2-FF synchronizer for static signals | Slow-changing control signals |
-| **Edge** | Detects edge transitions across domains | Clock enables, interrupts |
-| **Pulse** | XOR-based, converts pulse→level→pulse | Fast pulses (req/ack) |
+| **Level** | 用於靜態訊號的 2-FF synchronizer | 變化緩慢的控制訊號 |
+| **Edge** | 偵測跨域的 edge 轉換 | Clock enable、中斷 |
+| **Pulse** | 基於 XOR，轉換 pulse→level→pulse | 快速 pulse（req/ack）|
 
-**Pulse synchronizer**: Convert the pulse signal to a level signal through an XOR gate, pass it through a double flip-flop, then convert the level signal back to a pulse signal through another XOR gate.
+**Pulse synchronizer**：透過 XOR gate 將 pulse 訊號轉換為 level 訊號，通過 double flip-flop，再透過另一個 XOR gate 將 level 訊號轉換回 pulse 訊號。
 ![Pulse synchronizer](https://i.imgur.com/UuK9bvn.png)
 
 ```verilog
@@ -302,13 +302,13 @@ assign dst_pulse = sync[2] ^ sync[1];  // XOR detects toggle
 endmodule
 ```
 
-**Limitation:** Minimum 3 destination clock cycles between consecutive source pulses.
+**限制：** 連續 source pulse 之間最少需要 3 個 destination clock cycle。
 
-**Edge synchronizer**: Similar to pulse synchronizer but outputs a pulse when detecting rising/falling edge in the destination domain.
+**Edge synchronizer**：與 pulse synchronizer 類似，但在 destination domain 偵測到 rising/falling edge 時輸出 pulse。
 
-#### **Toggle Synchronizer (Slow-to-Fast CDC)**
+#### **Toggle Synchronizer（慢到快 CDC）**
 
-When transferring pulses from a slow clock domain to a fast clock domain, the destination can safely sample the signal multiple times. The toggle synchronizer is effective here because the pulse duration from the slow domain spans multiple fast clock cycles.
+當從慢速 clock domain 傳輸 pulse 到快速 clock domain 時，destination 可以安全地多次取樣訊號。Toggle synchronizer 在此情況下有效，因為來自慢速 domain 的 pulse 持續時間跨越多個快速 clock cycle。
 
 ```verilog
 module toggle_sync_slow_to_fast (
@@ -338,13 +338,13 @@ assign fast_pulse = sync[1] ^ sync_d;
 endmodule
 ```
 
-#### **Pulse Extender (Fast-to-Slow CDC)**
+#### **Pulse Extender（快到慢 CDC）**
 
-When transferring pulses from a fast clock domain to a slow clock domain, a single-cycle fast pulse may be missed entirely by the slow clock. The pulse extender stretches the fast pulse to ensure it spans at least 2-3 slow clock cycles.
+當從快速 clock domain 傳輸 pulse 到慢速 clock domain 時，單一 cycle 的快速 pulse 可能完全被慢速 clock 錯過。Pulse extender 會延展快速 pulse，確保它至少跨越 2-3 個慢速 clock cycle。
 
-**Problem:** A 1-cycle pulse at 500 MHz (2ns) transferring to 50 MHz (20ns period) could be entirely missed between two slow clock edges.
+**問題：** 在 500 MHz（2ns）的 1-cycle pulse 傳輸到 50 MHz（20ns 週期）時，可能完全在兩個慢速 clock edge 之間被錯過。
 
-**Solution:** Extend the pulse in the source domain using a feedback acknowledgment:
+**解決方案：** 使用 feedback acknowledgment 在 source domain 中延展 pulse：
 
 ```verilog
 module pulse_extender (
@@ -380,52 +380,52 @@ assign slow_pulse = slow_sync[1] & ~slow_d;  // Rising edge detect
 endmodule
 ```
 
-**CDC Synchronizer Selection Guide:**
+**CDC Synchronizer 選擇指南：**
 
-| Source → Dest | Technique | Latency | Notes |
+| Source → Dest | 技術 | 延遲 | 備註 |
 |--------------|-----------|---------|-------|
-| Slow → Fast | Toggle sync | 2-3 fast cycles | Simple, reliable |
-| Fast → Slow | Pulse extender | 4-6 fast cycles | Uses feedback ack |
-| Same frequency | 2-FF sync | 2 cycles | Simplest approach |
-| Multi-bit | Async FIFO | Variable | Most robust |
+| 慢 → 快 | Toggle sync | 2-3 快速 cycle | 簡單、可靠 |
+| 快 → 慢 | Pulse extender | 4-6 快速 cycle | 使用 feedback ack |
+| 相同頻率 | 2-FF sync | 2 cycle | 最簡單的方法 |
+| Multi-bit | Async FIFO | 可變 | 最穩健 |
 
 #### **Multi bit signal**
-Cannot use 2F/F synchronizer to synchronize multi-bit data because the delay of 2F/F synchronizer is random - it may take one cycle to synchronize or two cycles, which causes each bit of multi-bits to be unstable.
+無法使用 2F/F synchronizer 同步 multi-bit 資料，因為 2F/F synchronizer 的延遲是隨機的——可能需要一個 cycle 或兩個 cycle 來同步，這導致 multi-bit 的每個位元不穩定。
 
-**Solutions for Multi-bit CDC:**
+**Multi-bit CDC 解決方案：**
 
-Synchronizing multi-bit data requires ensuring all bits are captured coherently. Several techniques exist, each with different trade-offs between latency, throughput, and complexity.
+同步 multi-bit 資料需要確保所有位元被一致地擷取。有幾種技術存在，各有不同的延遲、吞吐量和複雜度之間的權衡。
 
-* **Load signal (MCP - Multi-Cycle Path)**: Use pulse synchronizer to generate load signal. The qualifier pulse enables sampling of the multi-bit bus. Source data must remain stable long enough for safe synchronization.
+* **Load signal（MCP - Multi-Cycle Path）**：使用 pulse synchronizer 產生 load signal。Qualifier pulse 啟用 multi-bit bus 的取樣。Source data 必須保持穩定足夠長的時間以安全同步。
 ![Load signal](https://i.imgur.com/gDR7VW7.png)
 
-* **Handshake synchronization**: Source sends "request" signal → destination receives via 2-FF synchronizer → destination sends "ack" back via 2-FF synchronizer → source can update data. Guarantees data integrity but adds latency.
+* **Handshake synchronization**：Source 發送「request」訊號 → destination 透過 2-FF synchronizer 接收 → destination 透過 2-FF synchronizer 發送「ack」回去 → source 可更新資料。保證資料完整性但增加延遲。
 
-* **Additional two-stage flip-flop**: Use double flip-flop synchronizer to synchronize data to the destination domain, then pass the data through two stages of flip-flops, then compare these 3 stages. If all are equal, it means the value synchronized by the synchronizer is stable.
+* **額外兩級 flip-flop**：使用 double flip-flop synchronizer 將資料同步到 destination domain，然後讓資料通過兩級 flip-flop，再比較這 3 級。若全部相等，表示 synchronizer 同步的值是穩定的。
 
-* **Asynchronous FIFO**: The most robust solution for continuous data streams, using Gray-coded pointers to safely transfer read/write addresses between domains.
+* **Asynchronous FIFO**：對於連續資料流最穩健的解決方案，使用 Gray-coded pointer 在 domain 之間安全傳輸讀/寫位址。
 
 ### **Asynchronous FIFO**
-Handles multi-bit CDC Problem
+處理 multi-bit CDC 問題
 
-Convert read pointer & write pointer to gray code representation. Since gray code only changes one bit at each edge, it can be transferred to the destination domain through 2F/F synchronizer.
+將 read pointer 和 write pointer 轉換為 gray code 表示法。由於 gray code 在每個 edge 只改變一個位元，可透過 2F/F synchronizer 傳輸到 destination domain。
 
-**Why Gray Code is Essential:**
+**為何 Gray Code 是必要的：**
 ```
-Binary counter (WRONG for CDC):
-  3 → 4: 011 → 100 (3 bits change simultaneously!)
-  If sampled mid-transition: could read 000, 001, 010, 100, 101, 110, 111
-  → FIFO may incorrectly report full/empty
+Binary counter（CDC 錯誤做法）：
+  3 → 4: 011 → 100（3 個位元同時改變！）
+  若在轉換中取樣：可能讀到 000, 001, 010, 100, 101, 110, 111
+  → FIFO 可能錯誤報告 full/empty
 
-Gray code counter (SAFE for CDC):
-  3 → 4: 010 → 110 (only 1 bit changes)
-  If sampled mid-transition: either 010 or 110
-  → At worst, pointer is off by 1 (conservative full/empty)
+Gray code counter（CDC 安全做法）：
+  3 → 4: 010 → 110（只有 1 個位元改變）
+  若在轉換中取樣：不是 010 就是 110
+  → 最差情況，pointer 偏移 1（保守的 full/empty）
 ```
 
-#### Gray code Encoding Method
-1. Only one bit differs between two adjacent gray codes
-2. When the Nth bit of binary code changes from 0 to 1, the subsequent N-1 bits of gray code will be symmetrical to the first half, while the bits before the Nth bit remain the same
+#### Gray code 編碼方法
+1. 相鄰的兩個 gray code 之間只有一個位元不同
+2. 當 binary code 的第 N 個位元從 0 變為 1 時，gray code 的後續 N-1 個位元會與前半部分對稱，而第 N 個位元之前的位元保持不變
 
 **Binary to Gray Code Conversion:**
 ```verilog
@@ -459,23 +459,23 @@ end
 ![Gray code 1](https://i.imgur.com/Mfsh1nk.png)
 ![Gray code 2](https://i.imgur.com/CVVPyQy.png)
 
-If the Asynchronous FIFO depth is not a power of 2, use the symmetry property of gray code to change the starting point, ensuring that each adjacent gray code only has one bit change.
+若 Asynchronous FIFO 深度不是 2 的冪次，可利用 gray code 的對稱性改變起始點，確保每個相鄰 gray code 僅有一個 bit 變化。
 ![Gray code 3](https://i.imgur.com/yBLXnAv.png)
 
 ### **FIFO Depth Calculation**
 
-Calculating the minimum FIFO depth is critical for asynchronous FIFOs to prevent data loss when the write rate temporarily exceeds the read rate. The "Leaky Bucket" model provides a systematic approach to determine the required depth.
+計算最小 FIFO 深度對於 asynchronous FIFO 至關重要，可防止當 write rate 暫時超過 read rate 時發生資料遺失。「Leaky Bucket」模型提供了系統性的方法來決定所需深度。
 
 **Leaky Bucket Model:**
 
-Think of the FIFO as a bucket where:
-- Water flows IN at the write rate (f_wr)
-- Water leaks OUT at the read rate (f_rd)
-- The bucket must be large enough to hold the accumulated water during burst periods
+將 FIFO 想像成一個水桶：
+- 水以 write rate (f_wr) 流入
+- 水以 read rate (f_rd) 流出
+- 水桶必須足夠大，以容納 burst 期間累積的水量
 
 **Basic Formula (Continuous Burst):**
 
-When writing B data items in a burst with no idle cycles:
+在連續寫入 B 個 data items 且無 idle cycles 時：
 
 ```
 FIFO_Depth ≥ B - B × (f_rd / f_wr)
@@ -483,14 +483,14 @@ FIFO_Depth ≥ B - B × (f_rd / f_wr)
            = B × (f_wr - f_rd) / f_wr
 ```
 
-Where:
-- B = Burst length (number of data items written consecutively)
-- f_wr = Write clock frequency
-- f_rd = Read clock frequency
+其中：
+- B = Burst 長度（連續寫入的 data items 數量）
+- f_wr = Write clock 頻率
+- f_rd = Read clock 頻率
 
-**Example 1: Simple Burst**
+**範例 1: Simple Burst**
 - Write clock: 80 MHz, Read clock: 50 MHz
-- Burst length: 120 data items (no idle)
+- Burst 長度: 120 data items（無 idle）
 
 ```
 Depth ≥ 120 × (1 - 50/80)
@@ -499,11 +499,11 @@ Depth ≥ 120 × (1 - 50/80)
       = 45
 ```
 
-Minimum FIFO depth = 45 entries
+最小 FIFO 深度 = 45 entries
 
-**Idle Cycle Adjustment:**
+**Idle Cycle 調整:**
 
-If there are idle cycles between writes, the effective write rate decreases:
+若寫入之間有 idle cycles，有效 write rate 會降低：
 
 ```
 Effective_f_wr = f_wr × (Data_cycles / Total_cycles)
@@ -511,9 +511,9 @@ Effective_f_wr = f_wr × (Data_cycles / Total_cycles)
 FIFO_Depth ≥ B × (1 - f_rd / Effective_f_wr)
 ```
 
-**Example 2: With Idle Cycles**
-- Write: 80 MHz with 1 idle cycle every 4 data cycles (3 data + 1 idle)
-- Read: 50 MHz continuous
+**範例 2: 含 Idle Cycles**
+- Write: 80 MHz，每 4 個 data cycles 有 1 個 idle cycle（3 data + 1 idle）
+- Read: 50 MHz 連續
 - Burst: 120 data items
 
 ```
@@ -524,14 +524,14 @@ Depth ≥ 120 × (1 - 50/60)
       = 20
 ```
 
-**Practical Considerations:**
+**實際考量:**
 
-| Factor | Impact on Depth |
+| 因素 | 對深度的影響 |
 |--------|----------------|
-| Synchronization latency | Add 2-4 cycles margin |
-| Full/Empty detection delay | Add extra entries |
-| Power-of-2 constraint | Round up to nearest 2^n |
-| Safety margin | Typically add 10-20% |
+| Synchronization latency | 增加 2-4 cycles margin |
+| Full/Empty detection delay | 增加額外 entries |
+| 2 的冪次限制 | 向上取整至最近的 2^n |
+| 安全餘量 | 通常增加 10-20% |
 
 **Gray Code Full/Empty Detection:**
 
@@ -544,49 +544,49 @@ assign full = (wr_ptr_gray[N:N-1] == ~rd_ptr_sync[N:N-1]) &&
 assign empty = (rd_ptr_gray == wr_ptr_sync);
 ```
 
-Note: The extra MSB bit in the pointer allows distinguishing between full (pointers differ only in MSB) and empty (pointers identical) conditions when using Gray code.
+注意：pointer 中額外的 MSB bit 允許在使用 Gray code 時區分 full（pointers 僅在 MSB 不同）和 empty（pointers 相同）狀態。
 
-**Why Gray Code Works for CDC (Even Fast-to-Slow):**
+**為何 Gray Code 在 CDC 中有效（即使 Fast-to-Slow）:**
 
-A common misconception is that Gray code fails when crossing from a fast to slow clock domain because multiple increments may occur between slow clock samples. However, the key insight is:
+一個常見的誤解是 Gray code 在從 fast 到 slow clock domain 跨越時會失效，因為在 slow clock 取樣之間可能發生多次 increment。然而，關鍵的洞見是：
 
 ```
-Fast-to-slow crossing concern:
+Fast-to-slow crossing 考量:
   Fast domain increments: 5 → 6 → 7 → 8 (Gray: 111 → 101 → 100 → 110)
-  Slow domain samples: may only see 5 and 8
+  Slow domain 取樣: 可能只看到 5 和 8
 
-Why this is SAFE:
-  - Only ONE bit is changing at any instant in the fast domain
-  - The slow domain sees a monotonically increasing sequence
-  - At worst, the slow domain may skip values, but never sees an invalid value
-  - This means the FIFO may report "more full" or "less empty" than reality
-  - Conservative (safe) behavior: prevents overflow/underflow
+為何這是安全的:
+  - 在 fast domain 中任一時刻只有一個 bit 在變化
+  - Slow domain 看到的是單調遞增的序列
+  - 最壞情況下，slow domain 可能跳過數值，但永遠不會看到無效值
+  - 這意味著 FIFO 可能回報「比實際更滿」或「比實際更空」
+  - 保守（安全）行為：防止 overflow/underflow
 ```
 
-**Real-World FIFO Considerations:**
-- Real FIFOs have CDC synchronizers that consume 2-4 entries of usable depth
-- Always verify your specific FIFO IP's behavior at corner cases
-- Consider back-pressure latency when sizing for streaming applications
+**實際 FIFO 考量:**
+- 實際 FIFO 的 CDC synchronizers 會消耗 2-4 entries 的可用深度
+- 務必驗證特定 FIFO IP 在 corner cases 的行為
+- 為 streaming 應用決定大小時，需考慮 back-pressure latency
 
 ### **FIFO Almost Full/Empty**
 
-Beyond basic full/empty flags, FIFOs often implement programmable threshold flags (almost_full, almost_empty) to support burst transfers and provide early warnings for flow control.
+除了基本的 full/empty flags，FIFO 通常會實作可程式化的 threshold flags（almost_full、almost_empty）來支援 burst 傳輸並為 flow control 提供早期警告。
 
-**Why Almost Full/Empty is Needed:**
+**為何需要 Almost Full/Empty:**
 
 ```
-Problem: Writer cannot instantly stop
-  Writer sees: FULL flag (too late!)
-  Writer already has data in flight
-  Result: FIFO overrun!
+問題：Writer 無法立即停止
+  Writer 看到：FULL flag（太晚了！）
+  Writer 已有資料在傳輸中
+  結果：FIFO overrun！
 
-Solution: Early warning with Almost Full
-  Writer sees: ALMOST_FULL flag
-  Writer stops sending new data
-  Writer's in-flight data fills remaining slots
-  Result: No overrun, FULL reached gracefully
+解決方案：使用 Almost Full 提供早期警告
+  Writer 看到：ALMOST_FULL flag
+  Writer 停止發送新資料
+  Writer 傳輸中的資料填滿剩餘空間
+  結果：無 overrun，優雅地達到 FULL 狀態
 
-The gap between ALMOST_FULL and FULL is called a "skid buffer"
+ALMOST_FULL 和 FULL 之間的間隙稱為「skid buffer」
 ```
 
 **Flag Thresholds:**
@@ -607,17 +607,17 @@ ALMOST_EMPTY  HALF_FULL
 (count≤4)    (count=8)
 ```
 
-**Common Flag Definitions:**
+**常見 Flag 定義:**
 
-| Flag | Condition | Typical Use |
+| Flag | 條件 | 典型用途 |
 |------|-----------|-------------|
-| **EMPTY** | rd_ptr == wr_ptr | Block read operations |
-| **FULL** | wr_ptr - rd_ptr == DEPTH | Block write operations |
-| **ALMOST_EMPTY** | count ≤ AE_threshold | Trigger DMA refill |
-| **ALMOST_FULL** | count ≥ AF_threshold | Apply back-pressure |
-| **HALF_FULL** | count == DEPTH/2 | Flow control switching |
+| **EMPTY** | rd_ptr == wr_ptr | 阻擋 read 操作 |
+| **FULL** | wr_ptr - rd_ptr == DEPTH | 阻擋 write 操作 |
+| **ALMOST_EMPTY** | count ≤ AE_threshold | 觸發 DMA refill |
+| **ALMOST_FULL** | count ≥ AF_threshold | 施加 back-pressure |
+| **HALF_FULL** | count == DEPTH/2 | Flow control 切換 |
 
-**Implementation Approaches:**
+**實作方法:**
 
 ```verilog
 // Method 1: Direct threshold comparison
@@ -631,9 +631,9 @@ assign almost_empty = (fifo_count <= AE_THRESHOLD);
 // Read domain: increment count when write acknowledged
 ```
 
-**Programmable Thresholds:**
+**可程式化 Thresholds:**
 
-Many FIFO IPs allow runtime configuration of thresholds:
+許多 FIFO IP 允許在執行時期設定 thresholds：
 
 ```verilog
 module async_fifo #(
@@ -651,37 +651,37 @@ module async_fifo #(
 // Use prog_*_thresh for dynamic configuration
 ```
 
-**Threshold Selection Guidelines:**
+**Threshold 選擇指南:**
 
-| Parameter | Consideration | Typical Value |
+| 參數 | 考量 | 典型值 |
 |-----------|---------------|---------------|
-| **AF_THRESH** | Max burst size + CDC latency | DEPTH - 4 to DEPTH - 8 |
-| **AE_THRESH** | Min read burst before underrun | 2 to 4 |
-| **CDC Latency** | 2-3 clock cycles per synchronizer | Account for in timing |
+| **AF_THRESH** | 最大 burst size + CDC latency | DEPTH - 4 到 DEPTH - 8 |
+| **AE_THRESH** | underrun 前的最小 read burst | 2 到 4 |
+| **CDC Latency** | 每個 synchronizer 2-3 clock cycles | 納入 timing 考量 |
 
-**Burst Transfer Example:**
+**Burst 傳輸範例:**
 
 ```
-Scenario: USB packet reception (max 64 bytes)
-  - FIFO depth: 128 bytes
-  - Read clock slower than write clock
+情境：USB 封包接收（最大 64 bytes）
+  - FIFO 深度：128 bytes
+  - Read clock 比 write clock 慢
 
-AF_THRESHOLD calculation:
-  Max burst: 64 bytes
-  CDC latency: 3 write cycles
-  Safety margin: 1 byte
+AF_THRESHOLD 計算：
+  最大 burst：64 bytes
+  CDC latency：3 write cycles
+  安全餘量：1 byte
 
   AF_THRESH = 128 - 64 - 3 - 1 = 60
 
-When count ≥ 60:
+當 count ≥ 60 時：
   - Assert almost_full
-  - Tell USB controller to NAK next packet
-  - Remaining 68 slots absorb in-flight data
+  - 通知 USB controller 對下一個封包回應 NAK
+  - 剩餘 68 slots 吸收傳輸中的資料
 ```
 
-**Gray Code Consideration:**
+**Gray Code 考量:**
 
-In async FIFOs, full/empty flags use synchronized Gray code pointers. For almost_full/empty, you need the actual distance between pointers:
+在 async FIFO 中，full/empty flags 使用 synchronized Gray code pointers。對於 almost_full/empty，需要計算 pointers 之間的實際距離：
 
 ```verilog
 // Option 1: Convert to binary after synchronization
@@ -693,13 +693,13 @@ wire [PTR_WIDTH-1:0] count = wr_ptr_bin_sync - rd_ptr_bin_sync;
 // Almost_full may assert slightly early (safe, but reduced effective depth)
 ```
 
-**Common Interview Questions:**
+**常見面試問題:**
 
-**Q: Why not just use full flag for flow control?**
-A: By the time the writer sees FULL, it may have already issued more writes. The almost_full gives advance warning, allowing graceful stopping.
+**Q: 為何不直接用 full flag 做 flow control？**
+A: 當 writer 看到 FULL 時，可能已經發出更多寫入。almost_full 提供預先警告，允許優雅地停止。
 
-**Q: How do you choose almost_full threshold?**
-A: DEPTH minus (max_burst_size + synchronization_latency + safety_margin).
+**Q: 如何選擇 almost_full threshold？**
+A: DEPTH 減去（max_burst_size + synchronization_latency + safety_margin）。
 
 ---
 
@@ -737,7 +737,7 @@ end
 
 **Asynchronous Reset with Synchronous Release:**
 
-Best practice combining both approaches - reset activates immediately but releases synchronized to clock to avoid metastability.
+結合兩種方法的最佳實踐 - reset 立即生效，但釋放時與 clock 同步以避免 metastability。
 
 ```verilog
 // Reset synchronizer (async assert, sync deassert)
@@ -756,41 +756,41 @@ end
 
 ### **Race and Hazard**
 
-| Term | Definition |
+| 術語 | 定義 |
 |------|------------|
-| **Race** | Different propagation delays cause signals to arrive at different times, leading to unpredictable results |
-| **Hazard** | Temporary glitches (unwanted pulses) in combinational logic output due to unequal path delays |
+| **Race** | 不同的傳播延遲導致訊號在不同時間到達，造成不可預測的結果 |
+| **Hazard** | 由於路徑延遲不等，組合邏輯輸出產生暫時性 glitches（不期望的脈衝）|
 
-**Types of Hazards:**
+**Hazard 類型:**
 
-| Type | Description | Example |
+| 類型 | 描述 | 範例 |
 |------|-------------|---------|
-| **Static-1** | Output should stay 1, but glitches to 0 | Y = A + A' (momentary 0) |
-| **Static-0** | Output should stay 0, but glitches to 1 | Y = A · A' (momentary 1) |
-| **Dynamic** | Output should change once, but changes multiple times | Multiple transitions |
+| **Static-1** | 輸出應保持 1，但 glitch 到 0 | Y = A + A'（瞬間為 0）|
+| **Static-0** | 輸出應保持 0，但 glitch 到 1 | Y = A · A'（瞬間為 1）|
+| **Dynamic** | 輸出應變化一次，但變化多次 | 多次 transitions |
 
-**Solutions:**
+**解決方案:**
 
-Hazards can be eliminated at the logic design level or masked through sequential elements. The choice depends on whether glitch-free combinational output is required or if registered outputs are acceptable.
+Hazards 可在邏輯設計層面消除，或透過 sequential elements 遮蔽。選擇取決於是否需要無 glitch 的組合輸出，還是可接受 registered 輸出。
 
-- Add redundant terms to Boolean expression (consensus term)
-- Insert output register to filter glitches
-- Use Gray code encoding
-- Add delay elements to balance paths
+- 在布林表達式中加入冗餘項（consensus term）
+- 插入 output register 以過濾 glitches
+- 使用 Gray code encoding
+- 加入 delay elements 以平衡路徑
 
 ```
-Example: Y = AB + A'C has hazard when B=C=1, A changes
-Fix: Y = AB + A'C + BC (add consensus term BC)
+範例：Y = AB + A'C 當 B=C=1、A 變化時有 hazard
+修正：Y = AB + A'C + BC（加入 consensus term BC）
 ```
 
 ### **High-Impedance State (Tri-state)**
 
-High-impedance (Hi-Z) state is neither logic 0 nor logic 1. The output acts as an open circuit with very high resistance.
+高阻抗（Hi-Z）狀態既非邏輯 0 也非邏輯 1。輸出表現為具有極高電阻的開路。
 
-**Characteristics:**
-- Output is electrically disconnected from the circuit
-- Allows multiple drivers to share a common bus
-- Controlled by output enable (OE) signal
+**特性:**
+- 輸出與電路電性隔離
+- 允許多個驅動器共用一條 bus
+- 由 output enable (OE) 訊號控制
 
 ```verilog
 // Tri-state buffer
@@ -814,30 +814,30 @@ module bidir_io (
 endmodule
 ```
 
-**Use Cases:**
+**使用場景:**
 
-Tri-state outputs are essential when multiple devices need to drive a common signal line. Without tri-state capability, connecting multiple outputs together would cause contention and potential damage. The high-impedance state allows inactive drivers to electrically disconnect.
+當多個裝置需要驅動同一訊號線時，tri-state 輸出至關重要。若無 tri-state 功能，連接多個輸出會造成競爭並可能損壞電路。高阻抗狀態允許非活動的驅動器電性隔離。
 
-- Shared bus architectures (e.g., CPU data bus)
-- Bidirectional I/O pins (GPIO, memory interfaces)
-- Memory data buses (SRAM, DRAM data lines)
+- 共享 bus 架構（如 CPU data bus）
+- 雙向 I/O pins（GPIO、memory interfaces）
+- Memory data buses（SRAM、DRAM data lines）
 
 ### **NMOS vs PMOS**
 
-NMOS and PMOS are the two complementary transistor types in CMOS technology. Their fundamental difference lies in charge carriers: NMOS uses electrons while PMOS uses holes. Since electron mobility in silicon (~1350 cm²/V·s) is approximately 2-3× higher than hole mobility (~480 cm²/V·s), NMOS transistors switch faster and can be smaller for equivalent drive strength. This is why PMOS transistors in a balanced CMOS inverter are typically sized 2-3× wider than their NMOS counterparts.
+NMOS 和 PMOS 是 CMOS 技術中兩種互補的電晶體類型。它們的根本差異在於載流子：NMOS 使用電子，而 PMOS 使用電洞。由於矽中電子遷移率（~1350 cm²/V·s）約為電洞遷移率（~480 cm²/V·s）的 2-3 倍，NMOS 電晶體切換速度更快，在相同驅動強度下可以更小。這就是為何平衡 CMOS inverter 中的 PMOS 電晶體通常比 NMOS 寬 2-3 倍。
 
-| Property | NMOS | PMOS |
+| 特性 | NMOS | PMOS |
 |----------|------|------|
-| **Carrier** | Electrons | Holes |
-| **Mobility** | Higher (~2-3× faster) | Lower |
-| **Conducts when** | Gate = High (VGS > Vth) | Gate = Low (VGS < Vth) |
-| **Passes** | Strong 0, weak 1 | Strong 1, weak 0 |
-| **Pull network** | Pull-down (to GND) | Pull-up (to VDD) |
-| **Size for equal drive** | Smaller | Larger (~2-3×) |
+| **載流子** | 電子 | 電洞 |
+| **遷移率** | 較高（約快 2-3 倍）| 較低 |
+| **導通條件** | Gate = High (VGS > Vth) | Gate = Low (VGS < Vth) |
+| **傳遞特性** | Strong 0, weak 1 | Strong 1, weak 0 |
+| **Pull 網路** | Pull-down（至 GND）| Pull-up（至 VDD）|
+| **相同驅動力的尺寸** | 較小 | 較大（約 2-3 倍）|
 
-**Why NMOS is faster:**
-- Electron mobility (~1350 cm²/V·s) > Hole mobility (~480 cm²/V·s)
-- For same current drive, NMOS can be smaller than PMOS
+**為何 NMOS 較快:**
+- 電子遷移率（~1350 cm²/V·s）> 電洞遷移率（~480 cm²/V·s）
+- 在相同電流驅動下，NMOS 可比 PMOS 更小
 
 **CMOS Inverter:**
 ```
@@ -856,11 +856,11 @@ NMOS and PMOS are the two complementary transistor types in CMOS technology. The
 
 ### **CMOS Inverter VTC (Voltage Transfer Characteristic)**
 
-The Voltage Transfer Characteristic (VTC) curve plots input voltage vs output voltage and is the key metric for characterizing digital inverter quality. From this curve, we can extract noise margins, gain, and operating logic levels.
+電壓轉移特性（VTC）曲線繪製輸入電壓對輸出電壓的關係，是表徵數位 inverter 品質的關鍵指標。從此曲線可以提取 noise margins、增益和操作邏輯位準。
 
-**Five Regions of Operation:**
+**五個操作區域:**
 
-| Region | Vin Range | NMOS State | PMOS State | Vout |
+| 區域 | Vin 範圍 | NMOS 狀態 | PMOS 狀態 | Vout |
 |--------|-----------|------------|------------|------|
 | **A** | 0 ≤ Vin ≤ VTHn | Cut-off | Linear | VDD |
 | **B** | VTHn < Vin < VM | Saturation | Linear | High |
@@ -868,28 +868,28 @@ The Voltage Transfer Characteristic (VTC) curve plots input voltage vs output vo
 | **D** | VM < Vin < VDD-VTHp | Linear | Saturation | Low |
 | **E** | Vin ≥ VDD-VTHp | Linear | Cut-off | 0 |
 
-**Switching Threshold (VM):** At VM, both NMOS and PMOS are in saturation, both conduct, creating **short-circuit current** - an important component of dynamic power.
+**切換閾值（VM）:** 在 VM 時，NMOS 和 PMOS 都處於飽和狀態並同時導通，產生 **short-circuit current** - 這是動態功耗的重要組成部分。
 
 **Noise Margins:**
 
-Noise margin quantifies how much noise the input can tolerate without affecting the output:
+Noise margin 量化輸入能容忍多少雜訊而不影響輸出：
 
 ```
 NML = VIL - VOL  (Low Noise Margin)
 NMH = VOH - VIH  (High Noise Margin)
 
-Where:
-  VIL = Maximum input voltage recognized as LOW
-  VIH = Minimum input voltage recognized as HIGH
-  VOL = Maximum output voltage for LOW
-  VOH = Minimum output voltage for HIGH
+其中：
+  VIL = 被認定為 LOW 的最大輸入電壓
+  VIH = 被認定為 HIGH 的最小輸入電壓
+  VOL = LOW 的最大輸出電壓
+  VOH = HIGH 的最小輸出電壓
 ```
 
-**Adjusting VM:** The switching threshold can be shifted by changing the β ratio (W/L ratio of PMOS to NMOS). Increasing PMOS width shifts VM higher; increasing NMOS width shifts VM lower.
+**調整 VM:** 可透過改變 β ratio（PMOS 對 NMOS 的 W/L 比）來移動切換閾值。增加 PMOS 寬度會使 VM 升高；增加 NMOS 寬度會使 VM 降低。
 
 ### **Transmission Gate**
 
-A transmission gate consists of an NMOS and PMOS connected in parallel, enabling **full-swing** signal passing (both strong 0 and strong 1).
+傳輸閘由並聯的 NMOS 和 PMOS 組成，實現 **full-swing** 訊號傳遞（同時傳遞 strong 0 和 strong 1）。
 
 ```
            ┌─────┐
@@ -903,12 +903,12 @@ A transmission gate consists of an NMOS and PMOS connected in parallel, enabling
     Control: EN (to NMOS gate), EN' (to PMOS gate)
 ```
 
-**Why both transistors?**
-- NMOS passes strong 0 but weak 1 (loses VTHn)
-- PMOS passes strong 1 but weak 0 (loses |VTHp|)
-- Together: full rail-to-rail signal transfer
+**為何需要兩個電晶體？**
+- NMOS 傳遞 strong 0 但 weak 1（損失 VTHn）
+- PMOS 傳遞 strong 1 但 weak 0（損失 |VTHp|）
+- 結合使用：完整的 rail-to-rail 訊號傳遞
 
-**D-Latch using Transmission Gates:**
+**使用 Transmission Gates 的 D-Latch:**
 
 ```
         ┌─────────────────────────────┐
@@ -922,13 +922,13 @@ A transmission gate consists of an NMOS and PMOS connected in parallel, enabling
         │      └─────┘    └─────┘    │
         └─────────────────────────────┘
 
-    EN=1: TG1 open, TG2 closed → Transparent (Q follows D)
-    EN=0: TG1 closed, TG2 open → Latched (Q holds)
+    EN=1: TG1 開啟, TG2 關閉 → Transparent（Q 跟隨 D）
+    EN=0: TG1 關閉, TG2 開啟 → Latched（Q 保持）
 ```
 
-**Why use Weak Inverter in feedback?** To avoid **contention** - when new data is written, the weak inverter's output can be easily overridden by the stronger input signal.
+**為何在回授中使用 Weak Inverter？** 為避免 **contention** - 當寫入新資料時，weak inverter 的輸出可被較強的輸入訊號輕易覆蓋。
 
-**Building gates using NMOS/PMOS:**
+**使用 NMOS/PMOS 建構閘:**
 
 ```
 NAND using CMOS:           NOR using CMOS:
@@ -956,15 +956,15 @@ NAND using CMOS:           NOR using CMOS:
 
 ### **Blocking vs Non-blocking Assignments**
 
-| Assignment | Symbol | Behavior | Use Case |
+| Assignment | 符號 | 行為 | 使用場景 |
 |------------|--------|----------|----------|
-| **Blocking** | `=` | Executes sequentially, blocks next statement | Combinational logic |
-| **Non-blocking** | `<=` | Executes concurrently, updates at end of time step | Sequential logic |
+| **Blocking** | `=` | 依序執行，阻擋下一條陳述式 | Combinational logic |
+| **Non-blocking** | `<=` | 同時執行，在 time step 結束時更新 | Sequential logic |
 
-**Key Rules:**
-- Use **non-blocking (`<=`)** for sequential logic (flip-flops, registers)
-- Use **blocking (`=`)** for combinational logic
-- Never mix blocking and non-blocking in the same always block
+**關鍵規則:**
+- 對 sequential logic（flip-flops、registers）使用 **non-blocking (`<=`)**
+- 對 combinational logic 使用 **blocking (`=`)**
+- 永遠不要在同一個 always block 中混用 blocking 和 non-blocking
 
 ```verilog
 // WRONG - causes race condition
@@ -980,22 +980,22 @@ always @(posedge clk) begin
 end
 ```
 
-**Why it matters:** Blocking assignments in sequential logic can create unintended combinational paths during synthesis, leading to simulation/synthesis mismatch.
+**為何重要:** Sequential logic 中的 blocking assignments 可能在合成時產生非預期的組合路徑，導致 simulation/synthesis 不一致。
 
-**Cliff Cummings' Golden Guidelines** (from "Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!"):
+**Cliff Cummings 的黃金準則**（出自 "Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!"）:
 
-1. **Guideline #1:** When modeling sequential logic, use **non-blocking** assignments
-2. **Guideline #2:** When modeling latches, use **non-blocking** assignments
-3. **Guideline #3:** When modeling combinational logic with an always block, use **blocking** assignments
-4. **Guideline #4:** When modeling both sequential and combinational logic in the same always block, use **non-blocking** assignments
-5. **Guideline #5:** Do **not mix** blocking and non-blocking in the same always block
-6. **Guideline #6:** Do not make assignments to the same variable from more than one always block
+1. **準則 #1:** 建模 sequential logic 時，使用 **non-blocking** assignments
+2. **準則 #2:** 建模 latches 時，使用 **non-blocking** assignments
+3. **準則 #3:** 使用 always block 建模 combinational logic 時，使用 **blocking** assignments
+4. **準則 #4:** 在同一個 always block 中同時建模 sequential 和 combinational logic 時，使用 **non-blocking** assignments
+5. **準則 #5:** **不要混用** blocking 和 non-blocking 在同一個 always block 中
+6. **準則 #6:** 不要從多個 always block 對同一變數進行 assignments
 
-Following these guidelines eliminates 90-100% of the most common Verilog race conditions.
+遵循這些準則可消除 90-100% 最常見的 Verilog race conditions。
 
 **Verilog Stratified Event Queue:**
 
-Understanding *why* blocking and non-blocking behave differently requires understanding Verilog's simulation event queue:
+理解 blocking 和 non-blocking *為何*行為不同，需要了解 Verilog 的 simulation event queue：
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -1020,9 +1020,9 @@ Understanding *why* blocking and non-blocking behave differently requires unders
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Key Insight:** Non-blocking assignments evaluate RHS in Active region but update LHS in NBA region. This separation prevents race conditions in sequential logic.
+**關鍵洞見:** Non-blocking assignments 在 Active region 評估 RHS，但在 NBA region 更新 LHS。這種分離防止了 sequential logic 中的 race conditions。
 
-**Interview Trap - Shift Register with Blocking:**
+**面試陷阱 - 使用 Blocking 的 Shift Register:**
 ```verilog
 // WRONG: Using blocking in sequential logic
 always @(posedge clk) begin
@@ -1039,9 +1039,9 @@ always @(posedge clk) begin
 end
 ```
 
-### **FSM (Finite State Machine) - Three-Stage Coding**
+### **FSM (Finite State Machine) - 三段式寫法**
 
-Recommended coding style separating sequential and combinational logic:
+推薦的寫法風格，將 sequential 和 combinational logic 分開：
 
 ```verilog
 // Stage 1: State register (sequential)
@@ -1070,18 +1070,18 @@ always @(posedge clk or negedge rst_n) begin
 end
 ```
 
-**FSM Types:**
+**FSM 類型:**
 
-Finite state machines are classified by how their outputs are generated. Moore machines produce outputs based solely on the current state, resulting in glitch-free registered outputs but potentially requiring more states. Mealy machines generate outputs based on both current state and inputs, enabling faster response with fewer states but potentially introducing glitches on output transitions.
+有限狀態機依據其輸出產生方式分類。Moore machine 的輸出僅基於當前狀態，產生無 glitch 的 registered 輸出，但可能需要更多狀態。Mealy machine 的輸出基於當前狀態和輸入，能以更少狀態實現更快響應，但可能在輸出轉換時產生 glitches。
 
-| Aspect | Moore Machine | Mealy Machine |
+| 面向 | Moore Machine | Mealy Machine |
 |--------|---------------|---------------|
-| **Output depends on** | Current state only | Current state + inputs |
-| **Output timing** | Changes after state transition | Changes immediately with input |
-| **Latency** | 1 cycle delay | No delay (combinational) |
-| **Glitches** | Glitch-free outputs | Prone to glitches |
-| **States required** | More states | Fewer states |
-| **Use case** | Clean outputs, safety-critical | Fast response, area-constrained |
+| **輸出取決於** | 僅當前狀態 | 當前狀態 + 輸入 |
+| **輸出時序** | 在狀態轉換後變化 | 隨輸入立即變化 |
+| **延遲** | 1 cycle delay | 無延遲（combinational）|
+| **Glitches** | 無 glitch 輸出 | 易產生 glitches |
+| **所需狀態數** | 較多狀態 | 較少狀態 |
+| **使用場景** | 乾淨輸出、安全關鍵 | 快速響應、面積受限 |
 
 ```verilog
 // Moore: output registered, depends on state only
@@ -1101,41 +1101,41 @@ always @(*) begin
 end
 ```
 
-**Coding Tips:**
-- Use `localparam` or `parameter` for state encoding
-- Prefer **one-hot encoding** for high-speed designs (faster decode, more FFs)
-- Prefer **binary encoding** for area-constrained designs (fewer FFs)
-- Prefer **Gray code encoding** for sequential state machines (minimal switching)
-- Always include `default` case to avoid latches
+**寫法提示:**
+- 使用 `localparam` 或 `parameter` 進行 state encoding
+- 高速設計優先使用 **one-hot encoding**（解碼快、較多 FFs）
+- 面積受限設計優先使用 **binary encoding**（較少 FFs）
+- 循序狀態機優先使用 **Gray code encoding**（最小切換）
+- 永遠包含 `default` case 以避免產生 latches
 
-**State Encoding Comparison:**
+**State Encoding 比較:**
 
-| Encoding | Flip-Flops (N states) | Decode Logic | Best For |
+| Encoding | Flip-Flops（N 個狀態）| 解碼邏輯 | 最適用於 |
 |----------|----------------------|--------------|----------|
-| **Binary** | ⌈log₂N⌉ | Complex (N-bit comparison) | ASIC, area-constrained |
-| **One-Hot** | N | Simple (single bit check) | FPGA, high-speed |
-| **Gray** | ⌈log₂N⌉ | Moderate | Sequential cycling, low power |
+| **Binary** | ⌈log₂N⌉ | 複雜（N-bit 比較）| ASIC、面積受限 |
+| **One-Hot** | N | 簡單（單 bit 檢查）| FPGA、高速 |
+| **Gray** | ⌈log₂N⌉ | 中等 | 循序循環、低功耗 |
 
-**FPGA vs ASIC Trade-off:**
-- **FPGA**: Flip-flops are abundant (in CLBs); combinational logic is expensive (consumes LUTs). One-hot is typically faster and often uses fewer resources overall.
-- **ASIC**: Flip-flops require ~25 transistors each plus clock distribution; 2-input gates need ~4 transistors. Binary encoding usually wins on area.
+**FPGA vs ASIC 權衡:**
+- **FPGA**: Flip-flops 豐富（在 CLBs 中）；combinational logic 昂貴（消耗 LUTs）。One-hot 通常較快，且整體資源使用常更少。
+- **ASIC**: 每個 flip-flop 需約 25 個電晶體加上 clock distribution；2-input gates 僅需約 4 個電晶體。Binary encoding 通常在面積上勝出。
 
-**Synthesis Tool Behavior:** Modern tools (Vivado, DC) often re-encode FSMs automatically. Vivado defaults to one-hot for FSMs with ≤32 states. To preserve your encoding, use synthesis attributes like `(* fsm_encoding = "one_hot" *)` or `(* fsm_encoding = "sequential" *)`.
+**合成工具行為:** 現代工具（Vivado、DC）常自動重新編碼 FSMs。Vivado 對 ≤32 狀態的 FSM 預設使用 one-hot。要保留你的編碼，使用合成屬性如 `(* fsm_encoding = "one_hot" *)` 或 `(* fsm_encoding = "sequential" *)`。
 
 ### **SystemVerilog Assertions (SVA)**
 
 SystemVerilog Assertions（SVA）是強大的驗證功能，允許設計師直接在 RTL 或 testbench 中嵌入檢查。Assertion 可透過 simulation 動態驗證，或透過 formal verification 工具靜態驗證。
 
-**Two Types of Assertions:**
+**兩種 Assertion 類型:**
 
-| Type | Syntax | Evaluation | Use Case |
+| 類型 | 語法 | 評估方式 | 使用場景 |
 |------|--------|------------|----------|
-| **Immediate** | `assert (expression)` | Procedural, instant | Simple checks, procedural code |
-| **Concurrent** | `assert property (...)` | Clock-based, temporal | Protocol checking, multi-cycle behavior |
+| **Immediate** | `assert (expression)` | Procedural，即時 | 簡單檢查、procedural 程式碼 |
+| **Concurrent** | `assert property (...)` | 基於 clock，temporal | Protocol 檢查、多週期行為 |
 
 **Immediate Assertions:**
 
-Immediate assertions execute like procedural statements and check a condition at the current simulation time.
+Immediate assertions 像 procedural 陳述式一樣執行，在當前 simulation 時間檢查條件。
 
 ```systemverilog
 // Immediate assertion in procedural block
@@ -1156,7 +1156,7 @@ assert (fifo_count <= FIFO_DEPTH);
 
 **Concurrent Assertions:**
 
-Concurrent assertions are clock-based and can express temporal relationships spanning multiple cycles.
+Concurrent assertions 基於 clock 且能表達跨越多個週期的時序關係。
 
 ```systemverilog
 // Basic concurrent assertion
@@ -1174,12 +1174,12 @@ endproperty
 assert property (p_valid_data);
 ```
 
-**Implication Operators:**
+**蘊含運算子:**
 
-| Operator | Name | Meaning |
+| 運算子 | 名稱 | 含義 |
 |----------|------|---------|
-| `\|->` | Overlapping | If antecedent true, check consequent same cycle |
-| `\|=>` | Non-overlapping | If antecedent true, check consequent next cycle |
+| `\|->` | Overlapping | 若前項為真，同一週期檢查後項 |
+| `\|=>` | Non-overlapping | 若前項為真，下一週期檢查後項 |
 
 ```systemverilog
 // Overlapping: check starts same cycle
@@ -1191,7 +1191,7 @@ req |=> gnt;           // When req=1, gnt must be 1 (next cycle)
 req |-> ##1 gnt;
 ```
 
-**Sequence Operators:**
+**序列運算子:**
 
 ```systemverilog
 // ##N: delay by N cycles
@@ -1210,7 +1210,7 @@ a[*2:4];               // a repeats 2-4 times
 start ##1 data[->3] ##1 done;  // 3 data cycles (not necessarily consecutive)
 ```
 
-**Common SVA Patterns:**
+**常見 SVA 模式:**
 
 ```systemverilog
 // Request-acknowledge handshake
@@ -1238,21 +1238,21 @@ property p_onehot;
 endproperty
 ```
 
-**Built-in Functions:**
+**內建函式:**
 
-| Function | Description |
+| 函式 | 描述 |
 |----------|-------------|
-| `$rose(signal)` | True if signal transitioned 0→1 |
-| `$fell(signal)` | True if signal transitioned 1→0 |
-| `$stable(signal)` | True if signal unchanged |
-| `$past(signal, N)` | Value of signal N cycles ago |
-| `$onehot(vector)` | True if exactly one bit is set |
-| `$onehot0(vector)` | True if zero or one bit is set |
-| `$isunknown(signal)` | True if signal contains X or Z |
+| `$rose(signal)` | 若訊號從 0→1 轉換則為真 |
+| `$fell(signal)` | 若訊號從 1→0 轉換則為真 |
+| `$stable(signal)` | 若訊號未變化則為真 |
+| `$past(signal, N)` | N 個週期前的訊號值 |
+| `$onehot(vector)` | 若恰好一個 bit 被設置則為真 |
+| `$onehot0(vector)` | 若零或一個 bit 被設置則為真 |
+| `$isunknown(signal)` | 若訊號包含 X 或 Z 則為真 |
 
 **Cover Property:**
 
-Besides checking violations, assertions can measure coverage:
+除了檢查違規，assertions 還可測量 coverage：
 
 ```systemverilog
 // Cover: check that scenario occurs
@@ -1285,7 +1285,7 @@ assume property (@(posedge clk)
 // assume: Tell formal tool to assume input satisfies property
 ```
 
-**Binding Assertions to Design:**
+**將 Assertions 綁定到設計:**
 
 ```systemverilog
 // Bind assertions to module without modifying RTL
@@ -1303,7 +1303,7 @@ endmodule
 bind fifo fifo_assertions u_fifo_asserts (.*);
 ```
 
-**Assertion Severity Levels:**
+**Assertion 嚴重程度等級:**
 
 ```systemverilog
 assert property (...) else $info("Info message");
@@ -1318,7 +1318,7 @@ assert property (...) else $fatal(1, "Fatal error!");
 
 ### **Full adder**
 
-A full adder is the fundamental building block for arithmetic circuits, adding three single-bit inputs (two operands and a carry-in) to produce a sum and carry-out. Multiple full adders can be cascaded to create ripple-carry adders for multi-bit addition, though more advanced architectures like carry-lookahead or carry-select adders are used for higher performance.
+Full adder 是算術電路的基本建構模組，將三個單 bit 輸入（兩個運算元和一個 carry-in）相加，產生 sum 和 carry-out。多個 full adders 可串接成 ripple-carry adders 進行多位元加法，但更高效能的架構如 carry-lookahead 或 carry-select adders 用於更高效能需求。
 
 | a | b | Cin | Sum | Cout |
 |:---:|:---:|:---:|:---:|:----:|
@@ -1341,18 +1341,18 @@ Cout = ab + aCin + bCin
 
 ### **Ripple Carry Adder (RCA) vs Carry Look-ahead Adder (CLA)**
 
-When building multi-bit adders, the choice between RCA and CLA represents a fundamental area-speed trade-off.
+建構多位元加法器時，RCA 和 CLA 之間的選擇代表基本的面積-速度權衡。
 
-| Aspect | Ripple Carry Adder (RCA) | Carry Look-ahead Adder (CLA) |
+| 面向 | Ripple Carry Adder (RCA) | Carry Look-ahead Adder (CLA) |
 |--------|--------------------------|------------------------------|
-| **Delay** | O(N) - linear with bit width | O(log N) - logarithmic |
-| **Area** | Smaller, N full adders | Larger, extra logic for G/P |
-| **Complexity** | Simple cascade | Complex carry computation |
-| **Use Case** | Low-speed, area-critical | High-speed arithmetic |
+| **延遲** | O(N) - 與 bit 寬度線性關係 | O(log N) - 對數關係 |
+| **面積** | 較小，N 個 full adders | 較大，額外的 G/P 邏輯 |
+| **複雜度** | 簡單串接 | 複雜的 carry 計算 |
+| **使用場景** | 低速、面積關鍵 | 高速算術運算 |
 
-**RCA Problem:** Carry must ripple through all stages sequentially. For N-bit adder, worst-case delay = N × (carry propagation delay).
+**RCA 問題:** Carry 必須依序通過所有階段。對於 N-bit 加法器，最壞情況延遲 = N × (carry propagation delay)。
 
-**CLA Solution:** Pre-compute carries in parallel using Generate (G) and Propagate (P) functions:
+**CLA 解決方案:** 使用 Generate (G) 和 Propagate (P) 函式平行預先計算 carries：
 
 ```
 Generate: Gi = Ai · Bi      (bit position i generates carry)
@@ -1365,14 +1365,14 @@ C3 = G2 + P2·G1 + P2·P1·G0 + P2·P1·P0·C0
 ...
 ```
 
-**Hybrid Architectures:** For 64-bit adders, pure CLA becomes impractical. Common solutions:
-- **Carry-Select Adder**: Compute both (Cin=0, Cin=1) in parallel, select result
-- **Carry-Skip Adder**: Skip carry through blocks where all Pi=1
-- **Kogge-Stone Adder**: Parallel-prefix network, O(log N) delay, high area
-- **Brent-Kung Adder**: Reduced area variant of Kogge-Stone
+**混合架構:** 對於 64-bit 加法器，純 CLA 變得不實際。常見解決方案：
+- **Carry-Select Adder**: 平行計算兩種情況（Cin=0、Cin=1），選擇結果
+- **Carry-Skip Adder**: 當所有 Pi=1 時跳過 carry
+- **Kogge-Stone Adder**: Parallel-prefix 網路，O(log N) 延遲，高面積
+- **Brent-Kung Adder**: Kogge-Stone 的面積縮減變體
 
-**Interview Question:** "For a 64-bit adder, which architecture would you choose?"
-**Answer:** Hybrid approach - hierarchical CLA (4-bit CLA blocks with second-level lookahead) or Kogge-Stone for maximum speed with acceptable area overhead.
+**面試問題:** 「對於 64-bit 加法器，你會選擇哪種架構？」
+**回答:** 混合方法 - 階層式 CLA（4-bit CLA blocks 配合第二層 lookahead）或 Kogge-Stone 以在可接受的面積開銷下達到最高速度。
 
 ## 設計流程
 
@@ -1394,47 +1394,47 @@ C3 = G2 + P2·G1 + P2·P1·G0 + P2·P1·P0·C0
 
 ### **Front-End Design**
 
-| Stage | Description | Key Tools |
+| 階段 | 描述 | 主要工具 |
 |-------|-------------|-----------|
-| **Specification** | Define customer requirements and architecture | Documentation |
-| **Detailed Design** | Module planning, interface definition | Documentation |
-| **HDL Coding** | Write RTL-level Verilog/VHDL | VS Code, Vim, Quartus, Vivado |
-| **Pre-Simulation** | Functional verification against spec | VCS, ModelSim, NC-Verilog, Xcelium |
-| **Logic Synthesis** | Convert RTL to gate-level netlist | Design Compiler, Synplify, Genus |
-| **STA** | Verify timing constraints | PrimeTime, Tempus |
-| **Formal Verification** | Prove RTL ≡ Netlist equivalence | Formality, Conformal |
+| **Specification** | 定義客戶需求和架構 | Documentation |
+| **Detailed Design** | 模組規劃、介面定義 | Documentation |
+| **HDL Coding** | 撰寫 RTL-level Verilog/VHDL | VS Code, Vim, Quartus, Vivado |
+| **Pre-Simulation** | 依規格進行功能驗證 | VCS, ModelSim, NC-Verilog, Xcelium |
+| **Logic Synthesis** | 將 RTL 轉換為 gate-level netlist | Design Compiler, Synplify, Genus |
+| **STA** | 驗證 timing constraints | PrimeTime, Tempus |
+| **Formal Verification** | 證明 RTL ≡ Netlist 等價性 | Formality, Conformal |
 
-**Logic Synthesis**: Translates HDL code into a gate-level netlist. The synthesizer maps RTL constructs to standard cells from the technology library.
+**Logic Synthesis**: 將 HDL code 轉譯為 gate-level netlist。合成器將 RTL constructs 映射到技術庫中的 standard cells。
 
 ### **Back-End Design**
 
-| Stage | Description | Key Tools |
+| 階段 | 描述 | 主要工具 |
 |-------|-------------|-----------|
-| **DFT (Design For Test)** | Insert scan chains for testability | DFT Compiler, Tessent |
-| **Floorplanning** | Define block placement, power grid, I/O | ICC2, Innovus |
-| **Placement** | Place standard cells optimally | ICC2, Innovus |
-| **CTS (Clock Tree Synthesis)** | Build symmetric clock distribution | ICC2, Innovus |
-| **Routing** | Connect all signals with metal layers | ICC2, Innovus |
-| **Physical Verification** | DRC, LVS, ERC checks | Calibre, ICV |
-| **Tape-out** | Generate GDSII for fabrication | — |
+| **DFT (Design For Test)** | 插入 scan chains 以提高可測試性 | DFT Compiler, Tessent |
+| **Floorplanning** | 定義區塊放置、電源網格、I/O | ICC2, Innovus |
+| **Placement** | 最佳化放置 standard cells | ICC2, Innovus |
+| **CTS (Clock Tree Synthesis)** | 建立對稱的 clock distribution | ICC2, Innovus |
+| **Routing** | 使用金屬層連接所有訊號 | ICC2, Innovus |
+| **Physical Verification** | DRC、LVS、ERC 檢查 | Calibre, ICV |
+| **Tape-out** | 產生 GDSII 供製造 | — |
 
-**CTS Purpose**: Create a balanced clock distribution network to minimize clock skew across all flip-flops.
+**CTS 目的**: 建立平衡的 clock distribution 網路，以最小化所有 flip-flops 之間的 clock skew。
 
-**DFT Purpose**: Make the design testable after fabrication by inserting scan chains, BIST, and boundary scan logic.
+**DFT 目的**: 透過插入 scan chains、BIST 和 boundary scan logic，使設計在製造後可測試。
 
-### **ASIC vs FPGA Comparison**
+### **ASIC vs FPGA 比較**
 
-ASICs (Application-Specific Integrated Circuits) and FPGAs (Field-Programmable Gate Arrays) represent different trade-offs in digital design. ASICs offer maximum performance and lowest unit cost at high volumes but require expensive mask fabrication and cannot be modified after manufacturing. FPGAs provide flexibility and rapid prototyping but sacrifice performance and power efficiency due to programmable routing overhead. The choice depends on volume, time-to-market, and whether the design may need future updates.
+ASICs（Application-Specific Integrated Circuits）和 FPGAs（Field-Programmable Gate Arrays）代表數位設計中不同的權衡。ASICs 提供最高效能和大量生產時的最低單位成本，但需要昂貴的光罩製造且製造後無法修改。FPGAs 提供彈性和快速原型設計，但因可程式化 routing 的開銷而犧牲效能和功耗效率。選擇取決於產量、上市時間，以及設計是否可能需要未來更新。
 
-| Aspect | ASIC | FPGA |
+| 面向 | ASIC | FPGA |
 |--------|------|------|
-| **Reconfigurability** | Fixed after fabrication | Reprogrammable |
-| **NRE Cost** | High (millions USD for masks) | Low (development tools) |
-| **Unit Cost** | Low at high volume | Higher per unit |
-| **Time-to-market** | Months (fabrication) | Days/weeks |
-| **Performance** | Highest (custom optimization) | Lower (routing overhead) |
-| **Power Efficiency** | Best | Higher power consumption |
-| **Application** | Mass production, high performance | Prototyping, low volume, flexibility |
+| **可重新配置性** | 製造後固定 | 可重新程式化 |
+| **NRE 成本** | 高（光罩數百萬美元）| 低（開發工具）|
+| **單位成本** | 大量生產時低 | 單位成本較高 |
+| **上市時間** | 數月（製造）| 數天/數週 |
+| **效能** | 最高（客製最佳化）| 較低（routing 開銷）|
+| **功耗效率** | 最佳 | 功耗較高 |
+| **應用** | 量產、高效能 | 原型設計、低量、彈性 |
 
 ---
 
@@ -1442,182 +1442,182 @@ ASICs (Application-Specific Integrated Circuits) and FPGAs (Field-Programmable G
 
 ### **FPGA vs CPLD**
 
-| Aspect | FPGA | CPLD |
+| 面向 | FPGA | CPLD |
 |--------|------|------|
-| **Architecture** | LUT-based (Look-Up Tables) | Product-term based (AND-OR arrays) |
-| **Granularity** | Fine-grained (many small logic blocks) | Coarse-grained (fewer large blocks) |
-| **Density** | High (100K+ logic elements) | Low (up to ~10K gates) |
-| **Storage** | SRAM-based (volatile) | EEPROM/Flash (non-volatile) |
-| **Power-on** | Requires configuration loading | Instant-on operation |
-| **Timing** | Variable (routing-dependent) | Predictable (fixed interconnect) |
-| **Best for** | Complex algorithms, DSP, high-speed | Control logic, glue logic, state machines |
-| **Power** | Higher (SRAM leakage) | Lower |
-| **Cost** | Higher | Lower |
+| **架構** | LUT-based（Look-Up Tables）| Product-term based（AND-OR arrays）|
+| **粒度** | Fine-grained（許多小邏輯區塊）| Coarse-grained（較少大區塊）|
+| **密度** | 高（100K+ logic elements）| 低（約至 10K gates）|
+| **儲存** | SRAM-based（volatile）| EEPROM/Flash（non-volatile）|
+| **開機** | 需要載入配置 | 即時開機操作 |
+| **時序** | 可變（取決於 routing）| 可預測（固定 interconnect）|
+| **最適用於** | 複雜演算法、DSP、高速 | Control logic、glue logic、state machines |
+| **功耗** | 較高（SRAM leakage）| 較低 |
+| **成本** | 較高 | 較低 |
 
-**When to use FPGA:**
+**何時使用 FPGA:**
 
-FPGAs excel in applications requiring high logic density, complex algorithms, or frequent design updates. Their LUT-based architecture efficiently implements any combinational function, while abundant registers and embedded blocks support sophisticated designs.
+FPGA 在需要高邏輯密度、複雜演算法或頻繁設計更新的應用中表現卓越。其 LUT-based 架構能有效實現任何組合函式，而豐富的 registers 和嵌入式區塊支援複雜設計。
 
-- Complex digital signal processing
-- High-speed interfaces (PCIe, DDR)
-- Prototyping ASIC designs
-- Applications requiring embedded processors
+- 複雜的數位訊號處理
+- 高速介面（PCIe、DDR）
+- ASIC 設計的原型驗證
+- 需要嵌入式處理器的應用
 
-**When to use CPLD:**
+**何時使用 CPLD:**
 
-CPLDs are ideal for simpler applications where deterministic timing and instant-on operation are critical. Their non-volatile storage means the design is ready immediately after power-up without configuration loading.
+CPLD 適合較簡單的應用，其中確定性時序和即時開機操作至關重要。其 non-volatile 儲存意味著設計在開機後立即可用，無需配置載入。
 
-- Simple control logic
+- 簡單的 control logic
 - Boot sequencing
 - Level shifting / voltage translation
-- Applications requiring instant power-on
+- 需要即時開機的應用
 
-### **FPGA Architecture**
+### **FPGA 架構**
 
-Modern FPGAs are organized as a sea of configurable logic blocks surrounded by programmable I/O and interconnected by a hierarchical routing network. This architecture enables implementation of virtually any digital circuit by programming the logic functions, memory contents, and routing connections. The key to understanding FPGA capabilities is knowing how each component type contributes to the overall design.
+現代 FPGA 以可配置邏輯區塊的陣列組織，周圍環繞可程式化 I/O，並透過階層式 routing 網路互連。此架構透過程式化邏輯函式、記憶體內容和 routing 連接，能實現幾乎任何數位電路。理解 FPGA 能力的關鍵在於了解每種元件類型如何貢獻於整體設計。
 
-| Component | Description |
+| 元件 | 描述 |
 |-----------|-------------|
-| **IOB (I/O Block)** | Programmable I/O units for various electrical standards |
-| **CLB (Configurable Logic Block)** | Basic logic unit = LUT + Register |
-| **Clock Resources** | PLLs, global/regional clock trees |
-| **Routing Resources** | Interconnect for signal routing |
-| **Block RAM** | Embedded memory blocks |
-| **Hard IP** | DSP blocks, SerDes, embedded processors |
+| **IOB (I/O Block)** | 適用各種電氣標準的可程式化 I/O 單元 |
+| **CLB (Configurable Logic Block)** | 基本邏輯單元 = LUT + Register |
+| **Clock Resources** | PLLs、global/regional clock trees |
+| **Routing Resources** | 訊號 routing 的 interconnect |
+| **Block RAM** | 嵌入式記憶體區塊 |
+| **Hard IP** | DSP blocks、SerDes、嵌入式處理器 |
 
 #### **CLB (Configurable Logic Block)**
 
-The Configurable Logic Block is the fundamental computational element in an FPGA. Each CLB can implement arbitrary combinational logic through its Look-Up Tables (LUTs) and sequential logic through its flip-flops. The combination of programmable logic and storage in a single block enables efficient implementation of both datapath and control logic.
+Configurable Logic Block 是 FPGA 中的基本運算元件。每個 CLB 可透過其 Look-Up Tables（LUTs）實現任意組合邏輯，並透過其 flip-flops 實現循序邏輯。在單一區塊中結合可程式化邏輯和儲存，能有效實現 datapath 和 control logic。
 
-Each CLB contains:
-- **LUT (Look-Up Table)**: Implements combinational logic (typically 4-6 inputs)
-- **Flip-flops/Registers**: Configurable as D, T, JK, or SR types
-- **Carry chain**: Fast arithmetic operations
-- **MUX**: Output selection
+每個 CLB 包含：
+- **LUT (Look-Up Table)**: 實現組合邏輯（通常 4-6 輸入）
+- **Flip-flops/Registers**: 可配置為 D、T、JK 或 SR 類型
+- **Carry chain**: 快速算術運算
+- **MUX**: 輸出選擇
 
-**How LUT Works:**
-- A 4-input LUT stores 2⁴ = 16 bits in SRAM
-- Any 4-input Boolean function can be implemented
-- Larger functions use multiple LUTs with routing
+**LUT 運作原理:**
+- 4 輸入 LUT 在 SRAM 中儲存 2⁴ = 16 bits
+- 可實現任何 4 輸入布林函式
+- 較大函式使用多個 LUT 配合 routing
 
-**LUT Example (2-input AND gate: Y = A·B):**
+**LUT 範例（2 輸入 AND 閘：Y = A·B）:**
 ```
-Inputs address SRAM locations; stored value is the output.
+輸入作為 SRAM 位置的位址；儲存的值即為輸出。
 
-Address (BA) | SRAM Content | Output Y
+位址 (BA)    | SRAM 內容    | 輸出 Y
 -------------|--------------|----------
     00       |      0       |    0
     01       |      0       |    0
     10       |      0       |    0
     11       |      1       |    1
 
-The LUT is programmed with: 0001 (binary) = truth table of AND
+LUT 程式化為：0001（binary）= AND 的真值表
 ```
 
-**Why LUTs are powerful:** Same hardware implements ANY 4-input function by changing SRAM contents. XOR, MUX, comparator - all use identical LUT structure.
+**為何 LUT 強大:** 相同硬體透過改變 SRAM 內容可實現任何 4 輸入函式。XOR、MUX、comparator - 全都使用相同的 LUT 結構。
 
 #### **I/O Block (IOB)**
 
-I/O Blocks provide the interface between the FPGA's internal logic and the external world. Each IOB can be configured to support various voltage levels and signaling standards, enabling direct connection to diverse external devices without level-shifting circuitry. The registered I/O paths improve timing by placing flip-flops at the chip boundary.
+I/O Blocks 提供 FPGA 內部邏輯與外部世界之間的介面。每個 IOB 可配置支援各種電壓位準和信號標準，能直接連接各種外部裝置而無需位準轉換電路。Registered I/O 路徑透過在晶片邊界放置 flip-flops 來改善時序。
 
-Each I/O element contains:
+每個 I/O element 包含：
 - Input register
 - Output register
 - Output enable register
-- Programmable pull-up/pull-down
-- Configurable for: LVDS, LVCMOS, SSTL, HSTL, etc.
+- 可程式化 pull-up/pull-down
+- 可配置為：LVDS、LVCMOS、SSTL、HSTL 等
 
 #### **Routing Resources**
 
-The programmable interconnect consumes the majority of FPGA silicon area and significantly impacts timing. Routing is organized hierarchically: fast local connections for adjacent blocks, longer segmented lines for medium distances, and dedicated global networks for clocks and resets. The routing architecture determines how efficiently logic can be interconnected and often limits achievable clock frequencies.
+可程式化 interconnect 佔用 FPGA 矽面積的大部分並顯著影響時序。Routing 以階層方式組織：相鄰區塊的快速本地連接、中距離的較長分段線路，以及 clocks 和 resets 的專用全域網路。Routing 架構決定邏輯互連的效率，且常限制可達成的 clock 頻率。
 
-| Type | Description |
+| 類型 | 描述 |
 |------|-------------|
-| **Global routing** | Dedicated lines for clock and reset signals |
-| **Long lines** | Inter-bank signal routing |
-| **Short lines** | Adjacent logic unit connections |
-| **Row connections (R4, R24)** | Horizontal routing within rows |
-| **Column connections (C4, C16)** | Vertical routing within columns |
+| **Global routing** | clock 和 reset 訊號的專用線路 |
+| **Long lines** | Bank 間訊號 routing |
+| **Short lines** | 相鄰邏輯單元連接 |
+| **Row connections (R4, R24)** | Row 內水平 routing |
+| **Column connections (C4, C16)** | Column 內垂直 routing |
 
 #### **Clock Resources**
 
-Clock distribution is critical for FPGA performance and reliability. FPGAs provide dedicated low-skew clock networks separate from general routing to ensure all flip-flops see clock edges within tight timing bounds. Multiple clock network levels allow designers to balance between global reach (all logic) and local performance (specific regions).
+Clock distribution 對 FPGA 效能和可靠性至關重要。FPGA 提供與一般 routing 分開的專用低 skew clock 網路，以確保所有 flip-flops 在嚴格的時序範圍內看到 clock edges。多層 clock 網路允許設計師在全域覆蓋（所有邏輯）和區域效能（特定區域）之間取得平衡。
 
-| Level | Description |
+| 層級 | 描述 |
 |-------|-------------|
-| **Global clock** | Dedicated CLK pins → global clock tree → all FFs |
-| **Regional clock** | BUFR buffers for clock regions |
-| **I/O clock** | Local clocks for SerDes/DDR interfaces |
+| **Global clock** | 專用 CLK pins → global clock tree → 所有 FFs |
+| **Regional clock** | clock regions 的 BUFR buffers |
+| **I/O clock** | SerDes/DDR interfaces 的本地 clocks |
 
 **PLL (Phase-Locked Loop):**
 
-PLLs are essential clock management resources that manipulate input clock signals to generate precisely controlled output clocks. They use feedback loops to lock onto an input reference and can synthesize multiple derived clocks from a single input.
+PLL 是操控輸入 clock 訊號以產生精確控制輸出 clocks 的重要 clock 管理資源。它們使用回授迴路鎖定輸入參考，並能從單一輸入合成多個衍生 clocks。
 
-- Frequency multiplication/division
+- 頻率倍增/除頻
 - Phase shifting
-- Duty cycle correction
+- Duty cycle 校正
 - Clock deskewing
 
 #### **Embedded Memory (Block RAM)**
 
-Block RAMs are dedicated memory resources embedded throughout the FPGA fabric. Unlike distributed RAM (implemented in LUTs), Block RAMs provide larger, more power-efficient storage with dedicated read/write ports. They can be configured in various widths and depths to match application requirements, from narrow deep FIFOs to wide shallow register files.
+Block RAMs 是嵌入在整個 FPGA fabric 中的專用記憶體資源。不同於 distributed RAM（在 LUTs 中實現），Block RAMs 提供更大、更省電的儲存，並具有專用 read/write ports。它們可配置為各種寬度和深度以符合應用需求，從窄而深的 FIFOs 到寬而淺的 register files。
 
-| Mode | Description |
+| 模式 | 描述 |
 |------|-------------|
-| **Single-port RAM** | One read/write port |
-| **Simple dual-port** | One read port, one write port |
-| **True dual-port** | Two independent read/write ports |
-| **ROM** | Read-only with initialized data |
+| **Single-port RAM** | 一個 read/write port |
+| **Simple dual-port** | 一個 read port，一個 write port |
+| **True dual-port** | 兩個獨立的 read/write ports |
+| **ROM** | 具有初始化資料的唯讀 |
 | **FIFO** | First-in-first-out buffer |
-| **Shift register** | Serial data storage |
+| **Shift register** | 串列資料儲存 |
 
-### **FPGA Configuration Modes**
+### **FPGA 配置模式**
 
-FPGA configuration data must be loaded on every power-up (volatile SRAM-based).
+FPGA 配置資料必須在每次開機時載入（volatile SRAM-based）。
 
 #### **JTAG Configuration**
 
-JTAG (IEEE 1149.1) is a standard interface originally designed for board-level testing but widely used for FPGA configuration and debugging. It provides direct access to the configuration memory through a simple 4-wire interface, making it ideal for development environments where rapid iteration is more important than configuration speed.
+JTAG（IEEE 1149.1）是原本設計用於板級測試的標準介面，但廣泛用於 FPGA 配置和除錯。它透過簡單的 4-wire 介面直接存取配置記憶體，非常適合快速迭代比配置速度更重要的開發環境。
 
-| Signal | Direction | Description |
+| 訊號 | 方向 | 描述 |
 |--------|-----------|-------------|
 | **TDI** | Input | Test Data In |
 | **TDO** | Output | Test Data Out |
 | **TMS** | Input | Test Mode Select |
 | **TCK** | Input | Test Clock |
-| **TRST** | Input | Test Reset (optional, tie to GND if unused) |
+| **TRST** | Input | Test Reset（可選，若不使用則接 GND）|
 
-**Use case:** Development, debugging, boundary scan testing.
+**使用場景:** 開發、除錯、boundary scan testing。
 
 #### **Master Mode**
 
-FPGA controls the configuration process and provides clock to external memory.
+FPGA 控制配置流程並提供 clock 給外部記憶體。
 
-| Mode | Description | Speed |
+| 模式 | 描述 | 速度 |
 |------|-------------|-------|
-| **Master Serial (AS)** | FPGA reads bit-by-bit from serial flash | Slower |
-| **Master Parallel** | FPGA reads 8+ bits per cycle from parallel flash | Faster |
+| **Master Serial (AS)** | FPGA 從 serial flash 逐 bit 讀取 | 較慢 |
+| **Master Parallel** | FPGA 每 cycle 從 parallel flash 讀取 8+ bits | 較快 |
 
 #### **Slave Mode**
 
-External processor/controller manages configuration.
+外部處理器/控制器管理配置。
 
-| Mode | Description | Use Case |
+| 模式 | 描述 | 使用場景 |
 |------|-------------|----------|
-| **Slave Parallel** | Processor writes 8-bit data | Processor-controlled boot |
-| **Slave Serial** | Processor sends serial bitstream | Pin-constrained designs |
+| **Slave Parallel** | 處理器寫入 8-bit 資料 | 處理器控制的開機 |
+| **Slave Serial** | 處理器發送 serial bitstream | Pin 受限的設計 |
 
 #### **Multi-Chip Cascade**
 
-Multiple FPGAs share single configuration memory:
-- First FPGA in **Master** mode
-- Subsequent FPGAs in **Slave** mode
-- Daisy-chain connection via configuration pins
-- Reduces memory chip count
+多個 FPGA 共享單一配置記憶體：
+- 第一個 FPGA 為 **Master** mode
+- 後續 FPGA 為 **Slave** mode
+- 透過配置 pins 的 daisy-chain 連接
+- 減少記憶體晶片數量
 
-**Mode Selection:**
-- Typically 3 MSEL pins determine configuration mode
-- Set before power-up or during reset
+**模式選擇:**
+- 通常由 3 個 MSEL pins 決定配置模式
+- 在開機前或 reset 期間設定
 
 ---
 
@@ -1637,19 +1637,19 @@ Technology library（.lib/.db 檔案）包含 standard cell 的 timing、power �
 
 Liberty format 是由 Synopsys 開發的業界標準 ASCII 格式，描述 standard cell 的特性化 timing、power 和 noise 資料。它對 synthesis 和 place-and-route 工具都是必要的。
 
-**What Liberty Files Contain:**
+**Liberty 檔案包含內容:**
 
-| Category | Information |
+| 類別 | 資訊 |
 |----------|-------------|
-| **Cell Information** | Area, function, pin definitions |
-| **Timing Data** | Delay, transition time, setup/hold, recovery/removal |
-| **Power Data** | Dynamic power, leakage power, internal power |
-| **Noise Data** | Output noise, noise immunity |
-| **Operating Conditions** | Process, voltage, temperature (PVT) corners |
+| **Cell Information** | Area、function、pin definitions |
+| **Timing Data** | Delay、transition time、setup/hold、recovery/removal |
+| **Power Data** | Dynamic power、leakage power、internal power |
+| **Noise Data** | Output noise、noise immunity |
+| **Operating Conditions** | Process、voltage、temperature (PVT) corners |
 
-**Multiple Liberty Files per Library:**
+**每個 Library 的多個 Liberty 檔案:**
 
-It is common to have multiple liberty files for the same cell library—one for each PVT corner:
+同一 cell library 常有多個 liberty files - 每個 PVT corner 各一個：
 
 | Library | Process | Voltage | Temperature | Use Case |
 |---------|---------|---------|-------------|----------|
@@ -1664,9 +1664,9 @@ It is common to have multiple liberty files for the same cell library—one for 
 | **NLDM** | Non-Linear Delay Model (voltage source) | Good | Fast |
 | **CCS** | Composite Current Source model | Higher | Slower |
 
-CCS models current waveforms more accurately than NLDM voltage-based models, which is critical for advanced nodes where waveform effects significantly impact timing.
+CCS 比 NLDM voltage-based models 更準確地建模電流波形，這對先進製程節點至關重要，因為波形效應顯著影響 timing。
 
-**Liberty File Structure:**
+**Liberty 檔案結構:**
 
 ```
 library (my_lib) {
@@ -1718,67 +1718,67 @@ library (my_lib) {
 }
 ```
 
-**Key Timing Measurements:**
+**關鍵 Timing 量測:**
 
 ```
-Delay measurement points (default):
-  - Input:  50% of transition
-  - Output: 50% of transition
+Delay 量測點（預設）：
+  - Input:  transition 的 50%
+  - Output: transition 的 50%
 
-Transition (slew) measurement:
-  - Rise: 10% to 90% of VDD
-  - Fall: 90% to 10% of VDD
-  (Can be 20%-80% or 30%-70% depending on foundry)
+Transition（slew）量測：
+  - Rise: VDD 的 10% 至 90%
+  - Fall: VDD 的 90% 至 10%
+  （可能是 20%-80% 或 30%-70%，取決於 foundry）
 ```
 
-**Look-Up Table (LUT) Interpolation:**
+**Look-Up Table（LUT）內插:**
 
-Cell delay is characterized as a function of input transition time (slew) and output capacitive load:
+Cell delay 作為輸入 transition time（slew）和輸出電容負載的函式來特性化：
 
 ```
 delay = f(input_slew, output_load)
 
-The LUT provides discrete values; tools interpolate for actual conditions:
-- If actual values fall within table range: interpolation
-- If actual values exceed table range: extrapolation (less accurate)
+LUT 提供離散值；工具對實際條件進行內插：
+- 若實際值在表格範圍內：內插
+- 若實際值超出表格範圍：外插（較不準確）
 ```
 
 **Timing Arcs:**
 
-| Arc Type | Description |
+| Arc 類型 | 描述 |
 |----------|-------------|
-| **Combinational** | Input-to-output delay through logic cell |
-| **Sequential Setup** | Setup time check at clock edge |
-| **Sequential Hold** | Hold time check at clock edge |
-| **Recovery** | Async signal release to clock edge |
-| **Removal** | Clock edge to async signal assertion |
+| **Combinational** | 通過 logic cell 的 input-to-output delay |
+| **Sequential Setup** | 在 clock edge 的 setup time 檢查 |
+| **Sequential Hold** | 在 clock edge 的 hold time 檢查 |
+| **Recovery** | Async 訊號釋放到 clock edge |
+| **Removal** | Clock edge 到 async 訊號 assertion |
 
-### **Undefined interconnect**
-Can be solved by wire load model
+### **未定義的 Interconnect**
+可透過 wire load model 解決
 
 ### **Delay Models**
 
-Delay models represent how signal propagation time is calculated during timing analysis. The choice of model affects both accuracy and runtime. Early in the design flow, simpler models provide quick feedback; as the design matures and layout information becomes available, more accurate models ensure reliable timing closure.
+Delay models 表示在 timing analysis 期間如何計算訊號傳播時間。模型的選擇影響準確性和執行時間。在設計流程早期，較簡單的模型提供快速回饋；隨著設計成熟和 layout 資訊可用，更準確的模型確保可靠的 timing closure。
 
-| Model | Description | Accuracy | Use Case |
+| 模型 | 描述 | 準確性 | 使用場景 |
 |-------|-------------|----------|----------|
-| **Lumped** | Single delay value per gate | Low | Quick estimation |
-| **Distributed** | Per-gate delay based on fanout/load | Medium | Early synthesis |
-| **Module-path** | Specify block delays (SDF) | High | Timing-critical designs |
+| **Lumped** | 每個 gate 單一 delay 值 | 低 | 快速估算 |
+| **Distributed** | 基於 fanout/load 的每 gate delay | 中 | 早期合成 |
+| **Module-path** | 指定 block delays（SDF）| 高 | Timing-critical 設計 |
 
-### **SDF File Format**
+### **SDF 檔案格式**
 
-**SDF (Standard Delay Format)** contains timing information for post-synthesis/post-layout simulation.
+**SDF（Standard Delay Format）** 包含 post-synthesis/post-layout simulation 的 timing 資訊。
 
-**Delay Format:** `(min:typ:max)`
+**Delay 格式:** `(min:typ:max)`
 
-| Value | Description | Use Case |
+| 值 | 描述 | 使用場景 |
 |-------|-------------|----------|
-| **min** | Best-case delay (fast corner) | Hold time analysis |
-| **typ** | Typical delay (nominal corner) | Functional verification |
-| **max** | Worst-case delay (slow corner) | Setup time analysis |
+| **min** | Best-case delay（fast corner）| Hold time analysis |
+| **typ** | Typical delay（nominal corner）| Functional verification |
+| **max** | Worst-case delay（slow corner）| Setup time analysis |
 
-**SDF File Contents:**
+**SDF 檔案內容:**
 
 ```
 (DELAYFILE
@@ -1799,17 +1799,17 @@ Delay models represent how signal propagation time is calculated during timing a
 )
 ```
 
-**Key SDF Constructs:**
+**關鍵 SDF 結構:**
 
-| Construct | Description |
+| 結構 | 描述 |
 |-----------|-------------|
 | **IOPATH** | Cell input-to-output delay |
-| **INTERCONNECT** | Wire/net delay between cells |
-| **SETUPHOLD** | Setup and hold timing checks |
+| **INTERCONNECT** | Cells 之間的 wire/net delay |
+| **SETUPHOLD** | Setup 和 hold timing 檢查 |
 | **PERIOD** | Clock period constraint |
-| **WIDTH** | Minimum pulse width |
+| **WIDTH** | 最小 pulse width |
 
-**Usage in Simulation:**
+**在 Simulation 中的使用:**
 ```tcl
 # Verilog simulation with SDF back-annotation
 vcs design.v -sdf max:top:timing.sdf
@@ -1817,9 +1817,9 @@ vcs design.v -sdf max:top:timing.sdf
 
 ### **SDC Constraints**
 
-**SDC (Synopsys Design Constraints)** is the industry-standard format for specifying timing, power, and area constraints. SDC files guide synthesis and place-and-route tools to meet design specifications.
+**SDC（Synopsys Design Constraints）** 是指定 timing、power 和 area constraints 的業界標準格式。SDC 檔案引導 synthesis 和 place-and-route 工具達到設計規格。
 
-**Essential Clock Definition:**
+**基本 Clock 定義:**
 
 ```tcl
 # Basic clock definition
@@ -1843,19 +1843,19 @@ set_clock_uncertainty -hold 0.1 [get_clocks sys_clk]
 set_clock_uncertainty -from [get_clocks clk_a] -to [get_clocks clk_b] 0.5
 ```
 
-**Common SDC Commands:**
+**常用 SDC 指令:**
 
-| Command | Purpose | Example |
+| 指令 | 目的 | 範例 |
 |---------|---------|---------|
-| `create_clock` | Define clock source and period | `create_clock -period 10 [get_ports clk]` |
-| `create_generated_clock` | Define derived clocks | `create_generated_clock -divide_by 2 -source clk` |
-| `set_input_delay` | Constrain input arrival time | `set_input_delay -clock clk 3.0 [get_ports din]` |
-| `set_output_delay` | Constrain output required time | `set_output_delay -clock clk 2.5 [get_ports dout]` |
-| `set_false_path` | Mark path as don't-time | `set_false_path -from clkA -to clkB` |
-| `set_multicycle_path` | Allow multiple cycles | `set_multicycle_path 2 -setup -from [get_pins */Q]` |
-| `set_max_delay` | Constrain combinational path | `set_max_delay 5.0 -from A -to B` |
+| `create_clock` | 定義 clock source 和 period | `create_clock -period 10 [get_ports clk]` |
+| `create_generated_clock` | 定義衍生 clocks | `create_generated_clock -divide_by 2 -source clk` |
+| `set_input_delay` | 約束輸入到達時間 | `set_input_delay -clock clk 3.0 [get_ports din]` |
+| `set_output_delay` | 約束輸出需求時間 | `set_output_delay -clock clk 2.5 [get_ports dout]` |
+| `set_false_path` | 標記路徑為不計時 | `set_false_path -from clkA -to clkB` |
+| `set_multicycle_path` | 允許多週期 | `set_multicycle_path 2 -setup -from [get_pins */Q]` |
+| `set_max_delay` | 約束組合路徑 | `set_max_delay 5.0 -from A -to B` |
 
-**Generated Clock Example:**
+**Generated Clock 範例:**
 
 ```tcl
 # Divide-by-2 clock
@@ -1885,55 +1885,55 @@ set_clock_groups -asynchronous \
 ```
 
 ### **Clock gating**
-Clock signal arrives only when data is to be switched
-→ Reduce dynamic power dissipation (up to 30-50% power savings)
+僅在資料需要切換時 clock 訊號才到達
+→ 降低動態功耗（可節省高達 30-50% 功耗）
 
-**Power Equation:**
+**功耗方程式:**
 ```
 P_dynamic = α × C_L × V_DD² × f
 ```
 
-Clock gating reduces switching activity (α) by disabling clock to inactive registers.
+Clock gating 透過停用非活動 registers 的 clock 來降低切換活動（α）。
 
 ![Clock gated](https://i.imgur.com/oazpEi2.png)
 
-**Implementation Methods:**
-1. **AND gate**: Simple but prone to glitches
-2. **Integrated Clock Gating (ICG) cell**: Latch-based, glitch-free (preferred)
+**實作方法:**
+1. **AND gate**: 簡單但易產生 glitches
+2. **Integrated Clock Gating (ICG) cell**: Latch-based，無 glitch（較佳）
 
-CG with AND gate may have glitch due to unstable enable signal
-→ **Glitch prevention**: Enable generated by <span style="color:red">latch with negative clk</span>
+使用 AND gate 的 CG 可能因 enable 訊號不穩定而產生 glitch
+→ **Glitch 防止**: Enable 由<span style="color:red">負緣 clk 的 latch</span> 產生
 ![Glitch prevention](https://i.imgur.com/WfrnP41.png)
 
-**Types of Clock Gating:**
+**Clock Gating 類型:**
 
-Clock gating can be inserted explicitly by the designer or automatically by the synthesis tool. Automatic clock gating typically achieves 20-40% power savings with minimal area overhead.
+Clock gating 可由設計師明確插入或由合成工具自動插入。自動 clock gating 通常能以最小面積開銷達成 20-40% 功耗節省。
 
-- **RTL-based (Intent-based)**: Designer explicitly codes clock gating
-- **Tool-generated**: Synthesis tool identifies flip-flops sharing same control logic
+- **RTL-based（Intent-based）**: 設計師明確編寫 clock gating
+- **Tool-generated**: 合成工具識別共享相同控制邏輯的 flip-flops
 
 ### **Cross Boundary Optimization**
 
-Cross boundary optimization allows synthesis tools to optimize logic across hierarchical module boundaries.
+Cross boundary optimization 允許合成工具跨階層模組邊界最佳化邏輯。
 
-| Aspect | Enabled | Disabled |
+| 面向 | 啟用 | 停用 |
 |--------|---------|----------|
-| **Optimization** | Better QoR (timing, area) | Limited to module scope |
-| **Hierarchy** | Flattened/modified | Preserved exactly |
-| **Debug** | Harder (structure changed) | Easier (structure intact) |
-| **ECO** | More difficult | Easier |
-| **Runtime** | Longer | Shorter |
+| **最佳化** | 較好的 QoR（timing、area）| 限於模組範圍 |
+| **階層** | 攤平/修改 | 完全保留 |
+| **除錯** | 較難（結構已改變）| 較易（結構完整）|
+| **ECO** | 較困難 | 較容易 |
+| **執行時間** | 較長 | 較短 |
 
-**When to Enable:**
-- Performance-critical designs
-- Area-constrained designs
-- Final tape-out synthesis
+**何時啟用:**
+- 效能關鍵設計
+- 面積受限設計
+- 最終 tape-out 合成
 
-**When to Disable:**
-- Early design exploration
-- IP blocks (preserve interface)
-- Debug-friendly netlists
-- Hierarchical ECO requirements
+**何時停用:**
+- 早期設計探索
+- IP blocks（保留介面）
+- 適合除錯的 netlists
+- 階層式 ECO 需求
 
 ```tcl
 # Design Compiler commands
@@ -1942,105 +1942,105 @@ set_boundary_optimization [get_designs block_B] false  # disable
 compile_ultra -no_boundary_optimization                 # global disable
 ```
 
-**Common Optimizations:**
-- Constant propagation across boundaries
-- Redundant logic removal
+**常見最佳化:**
+- 跨邊界常數傳播
+- 冗餘邏輯移除
 - Buffer/inverter pushing
-- Logic restructuring at interfaces
+- 介面處的邏輯重組
 
 ## 靜態時序分析 (STA)
 
 ### **DTA v.s. STA**
 
-| Aspect | DTA (Dynamic) | STA (Static) |
+| 面向 | DTA（Dynamic）| STA（Static）|
 |--------|---------------|--------------|
-| **Method** | Simulation with test vectors + SDF | Traverses all timing paths |
-| **Input required** | Test vectors/stimuli | Constraints only |
-| **Coverage** | Depends on test quality | All paths analyzed |
-| **Speed** | Very slow | Fast |
-| **Memory** | High | Low |
-| **Circuit type** | Any (sync/async) | Synchronous only |
-| **Tools** | VCS, ModelSim, NC-Verilog | PrimeTime, Tempus |
+| **方法** | 使用 test vectors + SDF 的 simulation | 遍歷所有 timing paths |
+| **輸入需求** | Test vectors/stimuli | 僅 constraints |
+| **涵蓋範圍** | 取決於測試品質 | 所有路徑皆分析 |
+| **速度** | 非常慢 | 快 |
+| **記憶體** | 高 | 低 |
+| **電路類型** | 任何（sync/async）| 僅 synchronous |
+| **工具** | VCS, ModelSim, NC-Verilog | PrimeTime, Tempus |
 
-**STA Advantages:**
+**STA 優點:**
 
-Static timing analysis mathematically computes all possible timing paths without requiring simulation vectors. This makes it both exhaustive and efficient, catching timing violations that might be missed by simulation.
+靜態時序分析以數學方式計算所有可能的 timing paths，無需 simulation vectors。這使它既全面又高效，能捕捉 simulation 可能遺漏的 timing violations。
 
-- No input stimuli required
-- Finds nearly all critical paths
-- Fast execution, low memory usage
-- Exhaustive path analysis
+- 不需輸入 stimuli
+- 找到幾乎所有 critical paths
+- 執行快速、記憶體使用低
+- 窮舉式路徑分析
 
-**STA Disadvantages:**
+**STA 缺點:**
 
-STA's static nature means it cannot handle asynchronous logic or verify functional correctness. Designers must carefully specify exceptions for paths that don't follow normal timing rules.
+STA 的靜態特性意味著它無法處理非同步邏輯或驗證功能正確性。設計師必須仔細指定不遵循正常 timing 規則的路徑例外。
 
-- Synchronous circuits only
-- Cannot verify functionality
-- Tricky constraints for special cases:
+- 僅適用同步電路
+- 無法驗證功能性
+- 特殊情況的 constraints 較複雜：
   - False paths
   - Multicycle paths
   - Multiple clock domains
 
-**DTA Advantages:**
+**DTA 優點:**
 
-Dynamic timing analysis simulates actual circuit behavior with real delays, making it suitable for verifying asynchronous logic and confirming that functionality is preserved under timing constraints.
+動態時序分析以實際延遲模擬實際電路行為，適合驗證非同步邏輯並確認功能在 timing constraints 下保持正確。
 
-- Works for any circuit type (including asynchronous)
-- Verifies both timing and functionality
+- 適用於任何電路類型（包括非同步）
+- 同時驗證 timing 和功能性
 
-**DTA Disadvantages:**
+**DTA 缺點:**
 
-The simulation-based approach means DTA is only as good as its test vectors. Achieving full path coverage is practically impossible, and runtime grows significantly with design complexity.
+基於 simulation 的方法意味著 DTA 的品質取決於 test vectors。達成完整路徑涵蓋幾乎不可能，且執行時間隨設計複雜度顯著增加。
 
-- Critical paths may be missed (depends on vectors)
-- Very slow simulation
-- High memory and compute requirements
+- Critical paths 可能遺漏（取決於 vectors）
+- Simulation 非常慢
+- 記憶體和運算需求高
 
 ### **Pre-simulation vs Post-simulation**
 
-Digital designs undergo simulation at multiple stages, with each stage revealing different types of issues. Pre-simulation (RTL) verifies logical correctness quickly, while post-simulation (gate-level with SDF) confirms the design meets timing requirements with actual delays. Both are essential: pre-simulation catches functional bugs early, post-simulation catches timing-related failures.
+數位設計在多個階段進行 simulation，每個階段揭示不同類型的問題。Pre-simulation（RTL）快速驗證邏輯正確性，而 post-simulation（gate-level with SDF）確認設計以實際延遲符合 timing 需求。兩者皆必要：pre-simulation 及早捕捉功能性 bugs，post-simulation 捕捉 timing 相關的故障。
 
-| Aspect | Pre-simulation | Post-simulation |
+| 面向 | Pre-simulation | Post-simulation |
 |--------|----------------|-----------------|
-| **Stage** | Before synthesis | After synthesis/P&R |
-| **Netlist** | RTL (behavioral) | Gate-level |
-| **Timing** | Ideal (unit delay or no delay) | Real delays from SDF |
-| **Purpose** | Functional verification | Timing verification |
-| **Speed** | Fast | Slow |
-| **Accuracy** | Logic only | Includes timing effects |
+| **階段** | 合成前 | 合成/P&R 後 |
+| **Netlist** | RTL（behavioral）| Gate-level |
+| **Timing** | 理想（unit delay 或無延遲）| 來自 SDF 的實際延遲 |
+| **目的** | 功能驗證 | Timing 驗證 |
+| **速度** | 快 | 慢 |
+| **準確性** | 僅邏輯 | 包含 timing 效應 |
 
-**Post-synthesis simulation:** Uses gate-level netlist + SDF (Standard Delay Format) for timing annotation.
+**Post-synthesis simulation:** 使用 gate-level netlist + SDF（Standard Delay Format）進行 timing annotation。
 
-**Post-layout simulation:** Most accurate, includes actual routing delays and parasitics.
+**Post-layout simulation:** 最準確，包含實際 routing delays 和 parasitics。
 
-### **Types of timing path**
+### **Timing 路徑類型**
 
-STA analyzes timing along all possible signal paths in the design. Understanding path types helps in setting appropriate constraints and interpreting timing reports. Each path type has different characteristics and constraint requirements.
+STA 分析設計中所有可能訊號路徑的 timing。理解路徑類型有助於設定適當的 constraints 和解讀 timing 報告。每種路徑類型有不同的特性和 constraint 需求。
 
-* reg (clk) → reg (D) : Register to Register (most common, constrained by clock period)
-* reg (clk) → OUTPUT : Register to Output (constrained by output delay)
-* INPUT → reg (D) : Input to Register (constrained by input delay)
-* INPUT (clk) → OUTPUT : Input to Output (combinational path, constrained by max delay)
+* reg (clk) → reg (D)：Register to Register（最常見，受 clock period 約束）
+* reg (clk) → OUTPUT：Register to Output（受 output delay 約束）
+* INPUT → reg (D)：Input to Register（受 input delay 約束）
+* INPUT (clk) → OUTPUT：Input to Output（組合路徑，受 max delay 約束）
 
-### **Type of STA**
+### **STA 類型**
 
-Two fundamental approaches exist for propagating delays through a design. Path-based analysis tracks each unique path separately for maximum accuracy, while block-based analysis uses arrival time windows at each node for computational efficiency. Most commercial tools use block-based STA with path enumeration only for critical paths.
+傳播延遲穿過設計有兩種基本方法。Path-based 分析分別追蹤每條獨特路徑以達最高準確性，而 block-based 分析在每個節點使用 arrival time windows 以提高運算效率。大多數商業工具使用 block-based STA，僅對 critical paths 進行路徑枚舉。
 
 *  Path-based STA
-    - Real situation, considers actual delay of each path
-    - Complex computation
-    - More accurate
+    - 實際情況，考慮每條路徑的實際延遲
+    - 複雜的計算
+    - 更準確
 *  Block-based STA
-    - Only considers best/worst case of each node
-    - More pessimistic
-    - Faster computation
+    - 僅考慮每個節點的 best/worst case
+    - 較悲觀
+    - 計算較快
 
-### **Setup & Hold check**
+### **Setup & Hold 檢查**
 
-Setup and hold are the fundamental timing constraints for flip-flops. Setup time defines how early data must arrive before the clock edge, while hold time defines how long data must remain stable after the clock edge. Violating either causes the flip-flop to potentially enter a metastable state, producing unpredictable outputs.
+Setup 和 hold 是 flip-flops 的基本 timing constraints。Setup time 定義資料必須在 clock edge 之前多早到達，而 hold time 定義資料必須在 clock edge 之後保持穩定多久。違反任一約束都可能導致 flip-flop 進入 metastable 狀態，產生不可預測的輸出。
 
-* `Setup` (Max delay) - Data must be stable **before** clock edge
+* `Setup`（Max delay）- 資料必須在 clock edge **之前**穩定
 
 ```
 Arrival Time (AT) = T0 + Tclk_latency + Tcq + Tpd
@@ -2050,7 +2050,7 @@ Slack = RT - AT  (positive = timing met)
 
 ![Setup](https://i.imgur.com/MNbkt4s.png)
 
-* `Hold` (Min delay) - Data must be stable **after** clock edge
+* `Hold`（Min delay）- 資料必須在 clock edge **之後**保持穩定
 
 ```
 Arrival Time (AT) = T0 + Tclk_latency + Tcq + Tpd
@@ -2060,11 +2060,11 @@ Slack = AT - RT  (positive = timing met)
 
 ![Hold](https://i.imgur.com/ZJxtQoR.png)
 
-**Why Slack Formulas Differ:**
-- **Setup**: Data must arrive BEFORE required time → Slack = RT - AT (positive means early enough)
-- **Hold**: Data must stay AFTER required time → Slack = AT - RT (positive means held long enough)
+**為何 Slack 公式不同:**
+- **Setup**: 資料必須在 required time 之前到達 → Slack = RT - AT（正值表示足夠早）
+- **Hold**: 資料必須在 required time 之後保持 → Slack = AT - RT（正值表示保持夠久）
 
-**Practical Timing Example:**
+**實際 Timing 範例:**
 ```
 Given: Tcycle = 10 ns, Tsetup = 0.5 ns, Thold = 0.3 ns
        Tcq = 0.4 ns, Tpd = 3.0 ns, Tskew = 0.1 ns
@@ -2080,16 +2080,16 @@ Hold Analysis:
   Hold Slack = 3.4 - 0.3 = +3.1 ns ✓ (met)
 ```
 
-**Key Insight:** Hold time is independent of clock period. Reducing clock frequency fixes setup violations but NOT hold violations.
+**關鍵洞見:** Hold time 與 clock period 無關。降低 clock 頻率可修復 setup violations，但無法修復 hold violations。
 
 ### **Recovery & Removal Time**
 
-These timing checks apply to **asynchronous control signals** (reset, set, clear) relative to the clock.
+這些 timing 檢查適用於相對於 clock 的**非同步控制訊號**（reset、set、clear）。
 
-| Timing Check | Definition |
+| Timing 檢查 | 定義 |
 |--------------|------------|
-| **Recovery Time** | Minimum time between async signal release and next active clock edge |
-| **Removal Time** | Minimum time between active clock edge and async signal assertion |
+| **Recovery Time** | Async 訊號釋放到下一個 active clock edge 的最小時間 |
+| **Removal Time** | Active clock edge 到 async 訊號 assertion 的最小時間 |
 
 ```
 Recovery Time Check (similar to setup):
@@ -2113,63 +2113,63 @@ RST_N: ──────────────────────┘
 The reset must remain asserted for at least Tremoval after clock edge.
 ```
 
-**Why they matter:**
-- Violation causes metastability in the flip-flop
-- Critical for asynchronous reset with synchronous release design
-- STA tools check these automatically
+**為何重要:**
+- 違規會導致 flip-flop 的 metastability
+- 對 asynchronous reset with synchronous release 設計至關重要
+- STA 工具自動檢查這些
 
 ### **Clock Jitter**
 
-Clock jitter is the deviation of clock edges from their ideal positions, caused by noise in clock generation and distribution circuits. Jitter effectively reduces the available timing margin because the actual clock edge may arrive earlier or later than expected. In high-speed designs, jitter can consume a significant portion of the timing budget.
+Clock jitter 是 clock edges 偏離其理想位置的現象，由 clock 產生和分配電路中的雜訊造成。Jitter 有效地減少可用的 timing margin，因為實際 clock edge 可能比預期更早或更晚到達。在高速設計中，jitter 可能消耗相當大比例的 timing budget。
 
-| Type | Description |
+| 類型 | 描述 |
 |------|-------------|
-| **Period Jitter** | Variation in clock period from cycle to cycle |
-| **Cycle-to-Cycle Jitter** | Difference between adjacent clock periods |
-| **Long-term Jitter** | Accumulated timing error over many cycles |
+| **Period Jitter** | 週期間 clock period 的變化 |
+| **Cycle-to-Cycle Jitter** | 相鄰 clock periods 之間的差異 |
+| **Long-term Jitter** | 多個週期累積的 timing 誤差 |
 
-**Sources of Jitter:**
+**Jitter 來源:**
 
-Multiple noise sources contribute to clock jitter, with power supply noise typically being the dominant factor in on-chip PLLs.
+多種雜訊來源貢獻於 clock jitter，電源雜訊通常是晶片上 PLLs 的主要因素。
 
-- PLL/DLL noise (phase detector, VCO non-idealities)
-- Power supply noise (IR drop, switching noise)
-- Thermal noise (random electron motion)
-- Crosstalk from adjacent signals
+- PLL/DLL 雜訊（phase detector、VCO 非理想性）
+- 電源雜訊（IR drop、switching noise）
+- 熱雜訊（隨機電子運動）
+- 來自相鄰訊號的 crosstalk
 
-**Impact on Timing:**
+**對 Timing 的影響:**
 ```
-Setup check: Tjitter reduces available setup margin
-Hold check: Tjitter can cause hold violations if edges shift
+Setup 檢查：Tjitter 減少可用的 setup margin
+Hold 檢查：若 edges 偏移，Tjitter 可能造成 hold violations
 ```
 
-**Jitter in STA:**
-- Modeled as clock uncertainty
-- Added to setup/hold timing budgets
-- Typical values: 50-200 ps for on-chip PLLs
+**STA 中的 Jitter:**
+- 建模為 clock uncertainty
+- 加入 setup/hold timing budgets
+- 典型值：晶片上 PLLs 為 50-200 ps
 
-**Reducing Jitter:**
+**降低 Jitter:**
 
-Jitter reduction focuses on minimizing noise sources and providing clean reference signals to clock generation circuits. Power supply noise is often the dominant contributor to PLL jitter.
+Jitter 降低著重於最小化雜訊來源並為 clock 產生電路提供乾淨的參考訊號。電源雜訊通常是 PLL jitter 的主要貢獻者。
 
-- Use clean power supplies for PLLs (dedicated LDO regulators)
-- Proper decoupling capacitors (multiple values for different frequencies)
-- Shield clock signals from noisy traces (guard rings, spacing)
-- Use dedicated clock routing resources (global clock networks in FPGAs)
+- 為 PLLs 使用乾淨電源（專用 LDO regulators）
+- 適當的去耦電容（不同頻率用不同值）
+- 將 clock 訊號與雜訊訊號隔離（guard rings、間距）
+- 使用專用 clock routing 資源（FPGAs 中的 global clock networks）
 
 ### **OCV (On-Chip Variation)**
 
-On-Chip Variation accounts for the fact that identical cells on the same chip can have different delays due to local manufacturing variations, voltage drops, and temperature gradients. Traditional corner-based analysis assumes all cells see the same conditions, but OCV provides more realistic analysis by applying derating factors to account for within-die variation.
+On-Chip Variation 考慮了同一晶片上相同 cells 因局部製造變異、電壓降和溫度梯度可能有不同延遲的事實。傳統的 corner-based 分析假設所有 cells 看到相同條件，但 OCV 透過應用 derating factors 來考慮晶粒內變異，提供更實際的分析。
 
-| Factor | Description |
+| 因素 | 描述 |
 |--------|-------------|
-| **Process (P)** | Manufacturing variations across die (doping, oxide thickness) |
-| **Voltage (V)** | IR drop, power supply noise |
-| **Temperature (T)** | Thermal gradients across chip |
+| **Process (P)** | 晶粒上的製造變異（摻雜、氧化層厚度）|
+| **Voltage (V)** | IR drop、電源雜訊 |
+| **Temperature (T)** | 晶片上的溫度梯度 |
 
 **OCV Derating:**
 
-STA applies OCV derating factors to account for worst-case variations:
+STA 應用 OCV derating factors 以考慮最壞情況變異：
 
 ```
 Launch path: Use slower cells (max delay) × (1 + OCV_late)
@@ -2177,34 +2177,34 @@ Capture path: Use faster cells (min delay) × (1 - OCV_early)
 ```
 
 **AOCV (Advanced OCV):**
-- Location-aware derating
-- Cells closer together have less variation
-- More accurate than flat OCV
+- 位置感知 derating
+- 較近的 cells 變異較小
+- 比 flat OCV 更準確
 
 **POCV/SOCV (Parametric/Statistical OCV):**
-- Statistical timing analysis
-- Uses probability distributions instead of fixed derates (uses delay σ from Monte-Carlo HSPICE)
-- Most accurate, reduces pessimism
-- Assumes delay follows normal distribution; uses 3σ by default for sign-off
+- 統計 timing 分析
+- 使用機率分佈取代固定 derates（使用來自 Monte-Carlo HSPICE 的 delay σ）
+- 最準確，減少 pessimism
+- 假設 delay 服從常態分佈；sign-off 預設使用 3σ
 
-**Technology Node Recommendations:**
+**技術節點建議:**
 
-| Technology Node | Recommended Variation Method | Rationale |
+| 技術節點 | 建議的變異方法 | 原理 |
 |----------------|------------------------------|-----------|
-| **Above 90nm** | OCV (flat derates) | Sufficient accuracy at older nodes |
-| **65nm - 40nm** | AOCV (depth/distance aware) | Depth reduces random variation impact |
-| **28nm - 20nm** | AOCV or POCV | Transition zone, POCV gaining adoption |
-| **16nm and below** | POCV/SOCV/LVF | Essential for sign-off; significantly reduces pessimism |
+| **90nm 以上** | OCV（flat derates）| 舊節點準確度足夠 |
+| **65nm - 40nm** | AOCV（depth/distance aware）| Depth 減少隨機變異影響 |
+| **28nm - 20nm** | AOCV 或 POCV | 過渡區，POCV 逐漸普及 |
+| **16nm 及以下** | POCV/SOCV/LVF | Sign-off 必要；顯著減少 pessimism |
 
-**Why Flat OCV is Overly Pessimistic:** Fixed derates assume all cells in a path are simultaneously fast or slow. In reality, random variations tend to cancel out in deep paths—some cells are fast, others slow. AOCV and POCV model this statistical reality.
+**為何 Flat OCV 過度悲觀:** 固定 derates 假設路徑中所有 cells 同時都快或都慢。實際上，在深層路徑中隨機變異傾向於相互抵消 — 有些 cells 快，有些慢。AOCV 和 POCV 建模這種統計現實。
 
 ### **CPPR/CRPR (Clock Path Pessimism Removal)**
 
 當 STA 對 launch 和 capture clock 的相同實體 clock path 套用不同的 derating factor 時，就會產生 clock path pessimism。CPPR（Common Path Pessimism Removal）會自動修正這種人為的 pessimism。
 
-**Why CPPR is Needed:**
+**為何需要 CPPR:**
 
-In OCV mode, STA applies late derating to the launch clock path and early derating to the capture clock path. However, part of these paths is physically the same—the common clock path from the clock source to where the tree branches.
+在 OCV 模式下，STA 對 launch clock path 套用 late derating，對 capture clock path 套用 early derating。然而，這些路徑的一部分實際上是相同的 — 從 clock source 到 tree 分支處的 common clock path。
 
 ```
                     Clock Source
@@ -2220,27 +2220,27 @@ In OCV mode, STA applies late derating to the launch clock path and early derati
       Launch FF                 Capture FF
 ```
 
-**The Pessimism Problem:**
+**Pessimism 問題:**
 
 ```
-Without CPPR:
-  Common path delay (late derate):  1.0 ns × 1.2 = 1.20 ns
-  Common path delay (early derate): 1.0 ns × 0.8 = 0.80 ns
-  Artificial skew added: 1.20 - 0.80 = 0.40 ns pessimism!
+無 CPPR：
+  Common path delay（late derate）：1.0 ns × 1.2 = 1.20 ns
+  Common path delay（early derate）：1.0 ns × 0.8 = 0.80 ns
+  人為增加的 skew：1.20 - 0.80 = 0.40 ns pessimism！
 
-With CPPR:
-  CPPR adjustment removes 0.40 ns from the skew calculation
-  More realistic timing without unnecessary margin
+有 CPPR：
+  CPPR 調整從 skew 計算中移除 0.40 ns
+  更實際的 timing，無不必要的 margin
 ```
 
 **CPPR vs CRPR:**
 
-| Term | Full Name | Cause | Correction |
+| 術語 | 全名 | 原因 | 修正 |
 |------|-----------|-------|------------|
-| **CPPR** | Common Path Pessimism Removal | OCV derating on common clock path | Remove delta from common path |
-| **CRPR** | Clock Reconvergence Pessimism Removal | Clock paths through different logic that reconverge | Remove unrealistic path combinations |
+| **CPPR** | Common Path Pessimism Removal | Common clock path 上的 OCV derating | 從 common path 移除 delta |
+| **CRPR** | Clock Reconvergence Pessimism Removal | 通過不同邏輯後會合的 clock paths | 移除不實際的路徑組合 |
 
-**CRPR Example (Clock Reconvergence):**
+**CRPR 範例（Clock Reconvergence）:**
 
 ```
         ┌──────┐
@@ -2269,9 +2269,9 @@ set timing_crpr_mode same_transition  # or other_transition
 set_global timing_cppr true
 ```
 
-**When CPPR/CRPR Matters:**
+**何時 CPPR/CRPR 重要:**
 
-| Scenario | Impact |
+| 情境 | 影響 |
 |----------|--------|
 | **Deep clock trees** | More common path → larger adjustment |
 | **Tight timing margins** | Small adjustment can mean pass/fail |
