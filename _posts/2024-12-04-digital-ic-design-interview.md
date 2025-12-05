@@ -148,6 +148,8 @@ tags:
 
 ## 基礎概念
 
+> **為何這些概念重要？** 在數位 IC 設計面試中，Latch、Flip-flop 和 Metastability 是最基礎也最常被問到的主題。這是因為：(1) 它們是所有 sequential circuits 的核心組成元件；(2) 理解它們的差異直接影響時序分析、功耗最佳化和設計穩定性；(3) Metastability 是跨時脈域設計（CDC）的根本挑戰，幾乎所有現代 SoC 都會遇到。掌握這些概念是理解後續 CDC、STA、低功耗設計等進階主題的必要前提。
+
 ### Latch vs Flip-flop
 
 Latch 與 flip-flop 是數位設計中的基本儲存元件，各自儲存一個位元的資料。關鍵區別在於觸發機制：latch 是 **level-triggered**（位準觸發），表示當 enable 訊號為 active 時，輸出會跟隨輸入（transparent）；而 flip-flop 是 **edge-triggered**（邊緣觸發），僅在 clock 訊號的上升或下降邊緣時擷取輸入。這使得 flip-flop 在同步設計中更為可預測，而 latch 雖有速度優勢但會使時序分析變複雜。
@@ -191,7 +193,10 @@ Latch 架構（允許 time borrowing）：
 ![Flip-flop](https://i.imgur.com/tv3FbCD.png)
 
 ### **Metastability**
-Metastability 發生在 flip-flop 輸出（Q pin）穩定所需的時間大於 clk-to-q（Tcq）時間時。這發生在資料在 clock edge 附近轉換，違反 setup 或 hold time 要求時。
+
+> **為何需要理解 Metastability？** 當設計師將訊號從一個 clock domain 傳遞到另一個時，由於兩個 clocks 之間沒有固定的相位關係，資料訊號必然會在某個時刻違反 destination flip-flop 的 setup 或 hold time。這種違規會導致 flip-flop 進入 metastable 狀態——輸出既非穩定的 0 也非穩定的 1，而是在中間電壓徘徊。若這種不穩定的輸出傳播到下游邏輯，可能導致系統功能錯誤甚至損壞。因此，理解 metastability 是設計可靠 CDC circuits 的基礎。
+
+**什麼是 Metastability？** Metastability 發生在 flip-flop 輸出（Q pin）穩定所需的時間大於正常 clk-to-q（Tcq）時間時。這發生在資料在 clock edge 附近轉換，違反 setup 或 hold time 要求時。此時 flip-flop 內部的 feedback loop 處於不穩定平衡狀態，需要額外時間才能「決定」最終輸出是 0 還是 1。
 
 ![Metastability 1](https://i.imgur.com/y3WG22Q.png)
 ![Metastability 2](https://i.imgur.com/kp5y9dk.png)
@@ -253,9 +258,17 @@ Synchronizer 階段數透過公式中的指數項直接影響 MTBF。每增加�
 
 ## 跨時脈域 (CDC)
 
+> **為何 CDC 是面試熱門主題？** 現代 SoC 通常包含多個 clock domains：CPU 可能運行在 2GHz，DDR 介面在 1.6GHz，USB 控制器在 480MHz，I2C 在 400kHz。這些不同頻率的模組必須相互通訊，而每當訊號跨越 clock domain 邊界時，就會產生 CDC 問題。CDC 設計錯誤是 ASIC 設計中最常見的功能性 bug 來源之一，因為這類錯誤：(1) 在 simulation 中難以重現（需要特定的相位關係）；(2) 可能在 silicon 上間歇性發生；(3) 隨著製程變異和溫度變化而表現不同。因此，面試官會深入考察應試者對 CDC 的理解。
+
 ### **CDC 概述**
 
-當訊號在數位系統中從一個 clock domain 傳遞到另一個 clock domain 時，就會發生 clock domain crossing。這是多時脈設計中最具挑戰性的部分，因為跨越非同步邊界的訊號可能導致 metastability——一種 flip-flop 輸出在不確定期間內不可預測的不穩定狀態。了解 clock 之間的關係決定了適當的同步策略。
+**什麼是 Clock Domain Crossing？** 當訊號從一個 clock domain 傳遞到另一個 clock domain 時，就會發生 CDC。這是多時脈設計中最具挑戰性的部分。
+
+**為何 CDC 會導致問題？** 由於兩個 clocks 之間沒有固定的相位關係，訊號在 destination domain 被 sample 的時機是不可預測的。當訊號恰好在 destination flip-flop 的 setup/hold window 內變化時，就會違反時序要求並導致 metastability。更糟的是，若直接將多位元訊號（如 bus）跨時脈域傳輸，每個 bit 可能在不同的 cycle 被正確 sample，導致資料錯亂（例如：原本要傳 `0111`，結果收到 `0011`）。
+
+**解決 CDC 的核心思路：** 我們無法避免 metastability 的發生，但可以給 flip-flop 足夠的時間從 metastable 狀態恢復，並確保多位元資料的一致性。這就是各種 CDC synchronizers 的設計原理。
+
+了解 clock 之間的頻率和相位關係，可以幫助選擇最適合的同步策略：
 
 **CDC 類型：**
 
@@ -266,8 +279,12 @@ Synchronizer 階段數透過公式中的指數項直接影響 MTBF。每增加�
 | **Plesiochronous** | 幾乎相同頻率，逐漸漂移——需要持續相位追蹤和補償 |
 
 #### **Single bit signal**
-→ 可使用 double flip-flop synchronizer 解決
-然而，這不適用於 pulse 訊號，因此改用 Pulse synchronizer。
+
+**2-FF Synchronizer 的原理：** 對於單一位元訊號的 CDC，最基本且最常用的解決方案是 double flip-flop（2-FF）synchronizer。它的原理很簡單：第一個 flip-flop 可能進入 metastable 狀態，但我們給它整整一個 clock cycle 的時間來恢復穩定；當訊號傳到第二個 flip-flop 時，它已經是穩定的 0 或 1 了。
+
+**為何 2-FF 足夠？** 如前面 MTBF 公式所示，兩級 synchronizer 在大多數應用（數十到數百 MHz）下已能提供足夠的可靠性。對於太空或醫療等高可靠性要求的應用，則使用 3-FF 或 4-FF。
+
+**2-FF 的限制：** 這種方法僅適用於「level」型訊號（訊號會保持足夠長的時間讓 destination domain 能 sample 到）。對於 pulse 訊號（僅持續一個 source clock cycle），destination domain 可能完全錯過這個 pulse，特別是當 source clock 比 destination clock 快時。因此需要使用 Pulse synchronizer。
 
 **最佳實踐：** 避免在 synchronizer flip-flop 前面放置組合邏輯。組合邏輯在穩定前容易產生多次 glitch，增加 metastability 風險。
 
@@ -392,11 +409,27 @@ endmodule
 | Multi-bit | Async FIFO | 可變 | 最穩健 |
 
 #### **Multi bit signal**
-無法使用 2F/F synchronizer 同步 multi-bit 資料，因為 2F/F synchronizer 的延遲是隨機的——可能需要一個 cycle 或兩個 cycle 來同步，這導致 multi-bit 的每個位元不穩定。
+
+**為何 Multi-bit CDC 比 Single-bit 複雜得多？** 假設我們需要將一個 4-bit 計數器從 source domain 傳到 destination domain。若對每個 bit 分別使用 2-FF synchronizer，會發生什麼事？
+
+```
+問題示範：Binary counter 3→4 的 CDC
+Source domain:  0011 (3) → 0100 (4)  // 3個bits同時變化
+
+在 destination domain 取樣時，每個 bit 的 2-FF 延遲是隨機的（1或2個cycle）：
+  - bit[3]: 0→0 (sampled early)  → 0
+  - bit[2]: 0→1 (sampled late)   → 1
+  - bit[1]: 1→0 (sampled early)  → 1
+  - bit[0]: 1→0 (sampled late)   → 0
+
+結果：destination 可能看到 0110 (6)，完全錯誤的值！
+```
+
+這種現象稱為「data coherency」問題——多個相關的 bits 必須作為一個整體被一致地擷取。
 
 **Multi-bit CDC 解決方案：**
 
-同步 multi-bit 資料需要確保所有位元被一致地擷取。有幾種技術存在，各有不同的延遲、吞吐量和複雜度之間的權衡。
+同步 multi-bit 資料需要確保所有位元被一致地擷取。有幾種技術存在，各有不同的延遲、吞吐量和複雜度之間的權衡：
 
 * **Load signal（MCP - Multi-Cycle Path）**：使用 pulse synchronizer 產生 load signal。Qualifier pulse 啟用 multi-bit bus 的取樣。Source data 必須保持穩定足夠長的時間以安全同步。
 ![Load signal](https://i.imgur.com/gDR7VW7.png)
@@ -408,9 +441,12 @@ endmodule
 * **Asynchronous FIFO**：對於連續資料流最穩健的解決方案，使用 Gray-coded pointer 在 domain 之間安全傳輸讀/寫位址。
 
 ### **Asynchronous FIFO**
-處理 multi-bit CDC 問題
 
-將 read pointer 和 write pointer 轉換為 gray code 表示法。由於 gray code 在每個 edge 只改變一個位元，可透過 2F/F synchronizer 傳輸到 destination domain。
+**什麼情況需要 Asynchronous FIFO？** 當兩個不同 clock domains 之間需要持續、高頻寬的資料傳輸時，Async FIFO 是最穩健的解決方案。例如：(1) DDR controller 與 CPU 之間的資料緩衝；(2) USB PHY 與 USB controller 之間的封包儲存；(3) 任何需要處理 burst 傳輸或 data rate 不匹配的介面。
+
+**Async FIFO 的核心挑戰：** FIFO 需要比較 read pointer 和 write pointer 來判斷 full/empty 狀態。但這兩個 pointers 分別在不同的 clock domain 中更新——write pointer 在 write clock domain，read pointer 在 read clock domain。我們需要將 pointers 跨時脈域同步，同時避免前面提到的 multi-bit data coherency 問題。
+
+**解決方案：Gray Code** 將 read/write pointer 轉換為 Gray code 表示法。由於 Gray code 在每次遞增時只改變一個位元，我們可以安全地使用 2-FF synchronizer 傳輸到另一個 domain，不會發生 data coherency 問題。
 
 **為何 Gray Code 是必要的：**
 ```
@@ -707,6 +743,8 @@ A: DEPTH 減去（max_burst_size + synchronization_latency + safety_margin）。
 
 ## CMOS 與數位基礎元件
 
+> **為何需要了解 CMOS 基礎？** 數位 IC 設計最終都是由 NMOS 和 PMOS 電晶體實現的。理解這些基礎元件的特性，有助於解釋許多設計現象：為何 PMOS 要比 NMOS 大？為何 transmission gate 需要兩個電晶體？為何 inverter 比 buffer 效率更高？這些知識在面試中經常被用來測試應試者對底層原理的理解。
+
 ### **Synchronous vs Asynchronous Reset**
 
 Reset 訊號在開機或錯誤恢復時將 flip-flop 初始化至已知狀態。選擇 synchronous 或 asynchronous reset 會影響 timing closure、面積和可靠性。Synchronous reset 被視為一般資料輸入，僅在 clock edge 時生效；而 asynchronous reset 會立即作用，不受 clock 影響，但若在 clock edge 附近釋放可能導致 metastability。
@@ -955,6 +993,8 @@ NAND using CMOS:           NOR using CMOS:
 ---
 
 ## Verilog 與 RTL 設計
+
+> **Verilog 面試的重點是什麼？** 面試官通常不會只問「Verilog 的語法是什麼」，而是測試你對 Verilog 背後硬體概念的理解。最經典的問題是 blocking vs non-blocking assignments——這不只是語法問題，而是關於你是否理解 simulation semantics 與 synthesis 結果的對應關係。另一個常見主題是「什麼寫法會產生 Latch」，這測試你是否知道綜合工具如何將 RTL 映射到硬體。
 
 ### **Blocking vs Non-blocking Assignments**
 
@@ -1378,6 +1418,8 @@ C3 = G2 + P2·G1 + P2·P1·G0 + P2·P1·P0·C0
 
 ## 設計流程
 
+> **為何需要了解設計流程？** 面試官經常會問「從 RTL 到 GDSII 的流程是什麼」或「解釋 synthesis 到 tapeout 之間的步驟」。這不是要你背誦步驟清單，而是測試你是否理解每個步驟的目的、輸入輸出，以及步驟之間的依賴關係。例如：為何 CTS 要在 placement 之後？因為需要知道 flip-flops 的位置才能建立 clock tree。為何 timing signoff 要在 routing 之後？因為 routing 之後才有精確的 RC parasitics。
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                           FRONT-END DESIGN                               │
@@ -1441,6 +1483,8 @@ ASICs（Application-Specific Integrated Circuits）和 FPGAs（Field-Programmabl
 ---
 
 ## FPGA
+
+> **FPGA 面試的重點** 雖然許多數位 IC 設計職位以 ASIC 為主，但 FPGA 知識在面試中同樣重要。原因是：(1) 許多公司使用 FPGA 進行 ASIC 原型驗證；(2) 理解 FPGA 架構（LUT、Block RAM、DSP slices）有助於寫出更可綜合的 RTL code；(3) FPGA 時序約束（與 SDC 類似）是實務技能。常見的面試問題包括：FPGA 與 CPLD 的差異、LUT 如何實現組合邏輯、為何 FPGA 需要配置載入。
 
 ### **FPGA vs CPLD**
 
@@ -1624,6 +1668,13 @@ FPGA 控制配置流程並提供 clock 給外部記憶體。
 ---
 
 ## 合成
+
+> **合成是 RTL 與實體設計的橋樑** 合成（Synthesis）將 RTL 描述轉換為 gate-level netlist，是設計流程中承先啟後的關鍵步驟。合成工具需要三項主要輸入：(1) RTL code（設計功能）；(2) Technology library（.lib/.db，描述 standard cells 的特性）；(3) SDC constraints（時序、面積、功耗目標）。輸出是符合 constraints 的 gate-level netlist，可交給後端工具進行 place and route。
+
+**本章與其他概念的關聯：**
+- **Technology Library** 定義了 PVT corners，與 STA 中的 timing analysis 直接相關
+- **SDC Constraints** 包含 clock 定義、false paths、multicycle paths——這些都是前面 STA 章節討論的概念
+- **Clock Gating** 是合成階段自動插入的低功耗優化，與低功耗設計章節呼應
 
 ### **Technology library**
 
@@ -1952,6 +2003,10 @@ compile_ultra -no_boundary_optimization                 # global disable
 
 ## 靜態時序分析 (STA)
 
+> **為何 STA 是 tapeout 的門檻？** 一顆晶片能否正常運作，最終取決於訊號是否能在正確的時間到達正確的位置。若資料在 flip-flop capture 之前沒有穩定（setup violation），或在 capture 之後太快改變（hold violation），電路就會產生錯誤甚至 metastability。由於製造晶片的成本極高（先進製程的 mask 費用可達數百萬美元），任何 timing 問題都可能導致整批晶片報廢。因此，**timing closure**——確保設計在所有 PVT corners 下都符合時序要求——是 tapeout 前的必要條件。STA 是達成 timing closure 的核心工具。
+
+**本章概覽：** 我們將從 STA 的基本原理開始（與 DTA 的比較），接著深入 setup/hold 檢查的機制，然後討論實務中的挑戰（OCV、jitter、CPPR），最後介紹如何修復 timing violations。這些概念環環相扣：理解 setup/hold 才能理解為何需要 OCV derating；理解 OCV 才能理解為何需要 CPPR。
+
 ### **DTA v.s. STA**
 
 | 面向 | DTA（Dynamic）| STA（Static）|
@@ -2040,7 +2095,11 @@ STA 分析設計中所有可能訊號路徑的 timing。理解路徑類型有助
 
 ### **Setup & Hold 檢查**
 
-Setup 和 hold 是 flip-flops 的基本 timing constraints。Setup time 定義資料必須在 clock edge 之前多早到達，而 hold time 定義資料必須在 clock edge 之後保持穩定多久。違反任一約束都可能導致 flip-flop 進入 metastable 狀態，產生不可預測的輸出。
+**回顧：為何需要 setup/hold？** 還記得前面討論的 metastability 嗎？Flip-flop 內部是由 feedback loop 構成的。當 clock edge 來臨時，這個 loop 需要「做出決定」——將輸入的 0 或 1 鎖存下來。如果此時輸入訊號正在變化（從 0 變 1 或從 1 變 0），flip-flop 就無法做出明確的決定，進入 metastable 狀態。
+
+**Setup time** 定義了資料必須在 clock edge **之前**多早穩定，讓 flip-flop 有足夠時間「看清楚」輸入是 0 還是 1。**Hold time** 則定義了資料必須在 clock edge **之後**保持穩定多久，確保 flip-flop 在做決定的過程中輸入不會改變。
+
+**違反的後果：** 違反 setup time 意味著資料太晚到達，flip-flop 來不及看清楚就被迫做決定；違反 hold time 意味著資料變化太快，flip-flop 還沒鎖存完畢輸入就改變了。兩者都可能導致 metastability，產生不可預測的輸出。
 
 * `Setup`（Max delay）- 資料必須在 clock edge **之前**穩定
 
@@ -2161,7 +2220,11 @@ Jitter 降低著重於最小化雜訊來源並為 clock 產生電路提供乾淨
 
 ### **OCV (On-Chip Variation)**
 
-On-Chip Variation 考慮了同一晶片上相同 cells 因局部製造變異、電壓降和溫度梯度可能有不同延遲的事實。傳統的 corner-based 分析假設所有 cells 看到相同條件，但 OCV 透過應用 derating factors 來考慮晶粒內變異，提供更實際的分析。
+**為何需要 OCV？** 傳統的 corner-based 分析（如 slow corner、fast corner）假設晶片上所有的 cells 都處於相同的 PVT 條件。但在實際晶片上，這是不可能的：晶片的一角可能比另一角熱 10°C；電源網路的 IR drop 導致不同位置的電壓略有不同；製造過程中的隨機變異使得相同設計的 cells 有不同的延遲特性。
+
+**OCV 的影響：** 考慮一個簡單的 setup 檢查。Launch path 和 capture path 都經過某些 clock buffers。如果 launch path 的 buffers 恰好比較慢，而 capture path 的 buffers 恰好比較快，就會產生比預期更大的 clock skew，可能導致原本通過的 timing 檢查失敗。
+
+On-Chip Variation 透過應用 derating factors（加速或減速特定路徑）來模擬這種晶粒內變異，提供更實際且保守的分析。
 
 | 因素 | 描述 |
 |--------|-------------|
@@ -2455,6 +2518,14 @@ Not all paths in a design require single-cycle timing closure. Correctly identif
 ---
 
 ## 低功耗設計
+
+> **為何低功耗設計如此重要？** 功耗是現代 IC 設計的三大關鍵指標之一（PPA：Power, Performance, Area）。在 mobile 和 IoT 應用中，功耗直接決定電池續航力；在高效能運算中，功耗決定散熱需求和電費成本；在先進製程中，leakage power 已成為與 dynamic power 同等重要的問題。因此，低功耗設計已成為面試的熱門主題。
+
+**本章與其他概念的關聯：**
+- **Clock Gating** 利用前面討論的 Latch 特性來產生 glitch-free 的 gated clock
+- **Multi-Vt** 是 PVT variation 的延伸——不同 Vt 的 cells 有不同的 speed-leakage trade-off
+- **Power Gating** 會引入類似 CDC 的問題——被關閉的 domain 重新上電時需要同步
+- **Level Shifters** 在不同 VDD domains 之間轉換訊號，類似 CDC synchronizers 在不同 clock domains 之間同步訊號
 
 ### **功耗組成**
 
@@ -3127,9 +3198,21 @@ endmodule
 
 ## 後端 / 實體設計
 
+> **從 RTL 到 Silicon：後端設計的角色** 前面討論的 STA 概念（setup/hold、OCV、CPPR）都是在後端設計流程中實際執行和驗證的。後端設計師的工作是將合成後的 netlist 轉化為實際的 GDSII 版圖，同時確保設計在所有 PVT corners 下都能達成 timing closure。這個過程涉及：(1) Floorplanning — 決定各模組的位置；(2) Placement — 放置 standard cells；(3) CTS — 建立低 skew 的 clock tree；(4) Routing — 連接所有訊號線。每個步驟都會影響 timing，因此需要反覆迭代直到達成收斂。
+
+**本章與前面概念的關聯：**
+- **CTS（Clock Tree Synthesis）** 直接影響 STA 中討論的 clock skew 和 uncertainty
+- **IR Drop 分析** 與 OCV 概念相關——電壓降會影響 cell delay
+- **Crosstalk 和 Signal Integrity** 會增加額外的 timing uncertainty
+- **DFT/Scan Chain** 是確保製造後晶片可測試性的關鍵
+
 ### **CTS 與 Clock Uncertainty**
 
-Clock uncertainty 考量 clock 網路中的時序變異。
+**什麼是 CTS？** Clock Tree Synthesis 是在 placement 後插入 clock buffers，將 clock 訊號從 clock source 均勻地分配到所有 flip-flops 的過程。目標是最小化不同 flip-flops 之間的 clock skew，同時控制 clock transition time 和 power consumption。
+
+**為何 CTS 如此重要？** 回顧 STA 中的 setup/hold 檢查：clock skew 直接出現在這些公式中。若 clock skew 過大，即使 data path delay 符合預期，也可能導致 timing violation。因此，良好的 CTS 是達成 timing closure 的基礎。
+
+Clock uncertainty 考量 clock 網路中的時序變異：
 
 | 階段 | Setup Uncertainty | Hold Uncertainty |
 |-------|-------------------|------------------|
@@ -3261,10 +3344,13 @@ Spare cells 是預先放置的邏輯元件，可在 mask 製造後透過 metal-o
 
 ### **Scan Chain / DFT**
 
-DFT（Design for Testability）插入測試結構以實現製造測試。
+**為何需要 DFT？** 即使設計在 simulation 中完全正確，製造過程仍可能引入缺陷——transistor 可能 stuck-at 0/1、metal 可能斷線或短路、via 可能接觸不良。這些製造缺陷必須在晶片出貨前被檢測出來，否則會造成 field failures 和品質問題。
 
-**Scan Chain 概念：**
-透過將所有 flip-flops 連接成 shift register chain，將循序電路測試轉換為組合電路測試。
+**問題：Sequential circuits 難以測試** 考慮一個有 1000 個 flip-flops 的設計。要測試每個 flip-flop 的行為，我們需要先設定其前置電路的狀態，然後施加輸入，再觀察輸出。但由於 flip-flops 是 sequential 的，要設定特定的內部狀態可能需要非常複雜的 input sequences。這使得完整測試變得幾乎不可能。
+
+**解決方案：Scan Chain** 透過將所有 flip-flops 連接成一條 shift register chain，我們可以直接 shift 進任何想要的內部狀態，執行一個 clock cycle，然後 shift 出結果。這將困難的 sequential testing 轉換為簡單的 combinational testing。
+
+DFT（Design for Testability）插入測試結構以實現製造測試。
 
 ```
 Normal Mode:        Scan Mode:
@@ -3417,7 +3503,11 @@ Built-In Self-Repair 使用冗餘 rows/columns 替換故障 cells：
 
 ### **IR Drop 分析**
 
-IR drop 是由於 power distribution network 中的電阻，造成電源與電路元件之間的電壓差。過大的 IR drop 會導致 timing failures 和功能錯誤。
+**回顧：IR Drop 與 OCV 的關聯** 還記得前面 STA 章節討論的 OCV 嗎？其中一個 OCV 因素就是「Voltage variation」——晶片不同位置可能看到不同的供應電壓。IR drop 正是造成這種電壓變異的主要原因。
+
+**什麼是 IR Drop？** IR drop 是由於 power distribution network（PDN）中的電阻，造成電源端與實際電路元件之間的電壓差（V = I × R）。離 VDD pad 越遠的 cells，看到的電壓越低。
+
+**為何 IR Drop 會影響 timing？** Cell delay 與供應電壓成反比：電壓越低，電晶體驅動力越弱，delay 越大。因此，過大的 IR drop 會導致：(1) Setup violations（paths 變慢）；(2) 功能錯誤（邏輯位準無法正確切換）；(3) 在先進製程中，10% 的電壓下降可能造成 20% 以上的 delay 增加。
 
 **Static vs Dynamic IR Drop：**
 
@@ -3554,6 +3644,10 @@ Post-route netlist + Spice simulation
 ```
 
 ### **Signal Integrity (Crosstalk)**
+
+**為何 Crosstalk 在先進製程越來越嚴重？** 隨著製程微縮，導線間距越來越小，但導線高度因電阻考量無法同比例縮小。這導致相鄰導線之間的耦合電容（coupling capacitance）佔總電容的比例越來越高——在 7nm 以下製程，耦合電容可能超過 50%。
+
+**Crosstalk 與 STA 的關聯：** 當一條「aggressor」導線切換時，透過耦合電容會在相鄰的「victim」導線上感應出雜訊。這有兩種影響：(1) 若 victim 靜止，可能產生 glitch 導致功能錯誤；(2) 若 victim 正在切換，會改變其 delay——同向切換會加速，反向切換會減慢。這種 crosstalk-induced delay 是 STA 必須考慮的 timing uncertainty 來源之一。
 
 Signal integrity（SI）指電氣訊號在 interconnect 中傳播時的品質。不良的 SI 會導致 timing 錯誤、資料損壞和矽片失效。在先進製程（28nm 及以下），SI 問題佔 post-silicon bug 的 30% 以上。
 
