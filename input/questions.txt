@@ -1,0 +1,333 @@
+聯發科 (MediaTek) 與瑞昱 (Realtek) SoC/數位 IC 設計暑期實習面試全方位技術研究報告
+1. 導論：台灣頂尖 IC 設計公司的實習面試生態
+本報告專為計畫申請台灣聯發科技 (MediaTek, MTK) 與瑞昱半導體 (Realtek, RTK) 暑期實習職缺的候選人所撰寫。在當前高度競爭的半導體產業中，SoC (System on Chip) 與數位 IC 設計 (Digital IC Design) 的面試已不僅僅是基礎學科的測驗，更是一場針對工程素養、邏輯推演能力與系統架構認知的全方位考核。根據 PTT、Dcard、Medium、GitHub 以及 CSDN、知乎等技術社群的廣泛數據分析，這兩家公司的面試風格雖然各有側重，但其核心技術考核點具有高度的重疊性與連貫性。
+本報告將以「資深 SoC 架構師」的視角，對網路上蒐集到的數百份面試心得與題庫進行系統性的解構與重組。我們不只提供標準答案，更致力於拆解問題背後的物理機制與設計哲學，協助候選人建立起能夠應對變形題與深度追問的知識體系。報告內容涵蓋從最底層的 CMOS 電晶體特性、Verilog RTL 編碼風格、靜態時序分析 (STA)、跨時鐘域設計 (CDC)，到上層的計算機結構、AMBA 匯流排協定以及低功耗設計方法學。此外，針對兩家公司不同的企業文化與行為面試 (Behavioral Interview) 特點，亦有專章進行深入剖析。
+2. 數位邏輯與 CMOS 電路基礎 (Digital Logic & CMOS Fundamentals)
+在進入複雜的系統設計之前，面試官往往會先測試候選人對數位電路物理基礎的理解。這部分看似簡單，卻是區分「只會寫 Code 的工程師」與「懂硬體的設計師」的關鍵分水嶺。
+2.1 CMOS 反相器與傳輸閘 (Inverter & Transmission Gate)
+面試中常出現要求解釋 CMOS Inverter 工作原理及其電壓傳輸特性曲線 (VTC) 的題目 1。
+CMOS 反相器結構與 VTC 曲線
+CMOS 反相器由上拉網路 (PMOS) 與下拉網路 (NMOS) 組成。面試官常問：「為什麼 PMOS 在上、NMOS 在下？」這涉及載子移動率 (Mobility) 與傳輸強位準 (Strong 0/1) 的特性。PMOS 擅長傳輸強 1 (Strong 1)，但傳輸 0 會由 $V_{tp}$ 的閾值損失；NMOS 擅長傳輸強 0 (Strong 0)，傳輸 1 會有 $V_{tn}$ 的損失。
+VTC 五大區域：候選人需能手繪 VTC 曲線，並標示出 Cut-off, Linear, Saturation 等區域。特別是轉折點 (Switching Threshold, $V_{M}$)，當 $V_{in} = V_{out}$ 時，PMOS 與 NMOS 皆處於飽和區 (Saturation Region)，此時兩管皆導通，形成所謂的短路電流 (Short-circuit current)，這是動態功耗分析的一個重要考點 1。
+雜訊邊限 (Noise Margin)：解釋 $N_H$ (High Noise Margin) 與 $N_L$ (Low Noise Margin) 的定義，以及如何透過調整 $\beta$ 比值 ($W/L$ ratio) 來改變 $V_{M}$ 位置，進而影響雜訊容忍度。
+傳輸閘 (Transmission Gate) 與 D-Latch 實作
+題目 1 明確提到「使用傳輸閘解釋 D Flip-Flop 的工作原理」。
+傳輸閘由一個 NMOS 與一個 PMOS 並聯組成，能全擺幅 (Full-swing) 傳輸邏輯 0 與 1。面試官可能會要求畫出由兩個傳輸閘與兩個反相器組成的 D-Latch 電路圖，並分析其透通 (Transparent) 與鎖存 (Opaque) 狀態。
+進階追問：為什麼在 D-Latch 的回授路徑 (Feedback loop) 中通常會使用「弱反相器 (Weak Inverter)」或三態反相器 (Tri-state Inverter)？這是為了避免訊號競爭 (Contention)，確保新寫入的數據能壓過舊數據。
+2.2 組合邏輯電路設計 (Combinational Logic Design)
+這類題目考察候選人對布林代數 (Boolean Algebra) 的靈活運用及對硬體成本 (Area) 的敏感度。
+多工器 (Multiplexer) 的萬能性
+題目：如何使用 2:1 Mux 實作 4:1 Mux、7:1 Mux、甚至 8:1 Mux？1。
+4:1 Mux：需要 3 個 2:1 Mux。第一級兩個 Mux 由 $S_0$ 控制，第二級一個 Mux 由 $S_1$ 控制。
+7:1 Mux：這是陷阱題。通常使用 8:1 Mux 的架構 (需要 7 個 2:1 Mux)，並將第 8 個輸入接地或接成 Don't Care。
+題目：使用 2:1 Mux 實作基本邏輯閘 (AND, OR, XOR, NAND)。
+原理：2:1 Mux 的輸出方程式為 $Y = S' \cdot A + S \cdot B$。
+實作 XOR：令 $A = I_0, B = I_1'$，且 $S = I_1$ (錯誤，應為 $S=A, I_0=B, I_1=B'$ 則 $Y=A'B+AB'$)。正確解法是將 $A$ 接 Select，$B$ 接輸入端 0，$\bar{B}$ 接輸入端 1。若無法獲得 $\bar{B}$，則需更多 Mux 或改變接法。這考驗對香農展開式 (Shannon Expansion) 的理解。
+算術邏輯單元 (Arithmetic Circuits)
+半加器 (Half Adder) 與全加器 (Full Adder)：除了寫出 Truth Table，還需畫出 Gate-level 電路。
+漣波進位加法器 (Ripple Carry Adder, RCA) vs. 前瞻進位加法器 (Carry Look-ahead Adder, CLA)：
+RCA 的延遲與位元數 $N$ 成正比 ($O(N)$)，因為進位必須逐級傳遞。
+CLA 透過生成函數 ($G = A \cdot B$) 與傳遞函數 ($P = A + B$) 來並行計算進位，延遲為對數級 ($O(\log N)$)，但面積較大。面試官可能會問：在 64-bit 加法器設計中，你會選擇哪種架構？答案通常是混合式 (Hybrid)，如階層式 CLA 或 Kogge-Stone Adder，以平衡面積與速度 1。
+3. Verilog RTL 程式設計與合成機制 (Verilog Coding & Synthesis)
+Verilog 是數位 IC 設計師的母語。面試中對語法的考核非常嚴謹，因為不良的編碼風格會導致合成後的電路與模擬結果不一致 (Simulation-Synthesis Mismatch)。
+3.1 賦值機制：Blocking vs. Non-blocking
+這是 Verilog 面試的「必考題」，幾乎出現在每一場面試中 1。
+特性
+Blocking Assignment (=)
+Non-blocking Assignment (<=)
+執行順序
+順序執行 (Sequential)，前一行執行完才執行下一行
+並行執行 (Concurrent)，所有右式計算完後，在時間步結束時同時更新左式
+適用區塊
+組合邏輯 (Combinational Logic, always @(*))
+時序邏輯 (Sequential Logic, always @(posedge clk))
+電路對應
+對應邏輯閘的串聯與連線
+對應正反器 (Flip-Flop) 的數據傳輸
+混合使用後果
+可能產生不可預期的鎖存器 (Latch) 或邏輯錯誤
+建議嚴格遵守使用規範
+
+深入解析：
+Verilog 事件佇列 (Event Queue)：解釋 Stratified Event Queue 模型。Blocking 賦值發生在 Active Region，而 Non-blocking 賦值發生在 NBA (Non-Blocking Assignment) Region。這就是為什麼 always @(posedge clk) 中使用 <= 可以避免競爭冒險 (Race Condition)。
+面試陷阱：如果在 always @(posedge clk) 中使用 = 會怎樣？
+回答：模擬器會將其視為立即更新。若有多個 always 區塊相互依賴，執行順序的不確定性會導致 Race Condition。例如 Shift Register 若用 = 寫，可能會在一個 Clock Cycle 內滑動多個 Bit，而非逐級傳遞，這與硬體 Flip-Flop 的行為不符，導致合成後的電路功能錯誤。
+3.2 有限狀態機 (FSM) 設計藝術
+FSM 是控制邏輯的核心。面試通常要求針對特定序列 (如 "1001", "1010") 設計 FSM 1。
+Mealy vs. Moore Machine 的深度比較
+Moore Machine：輸出 $Y = f(State)$。
+優點：輸出與時脈同步變化 (如果輸出有經過 Register)，較穩定，不受輸入訊號毛刺 (Glitch) 影響。
+缺點：對輸入變化的反應慢一個週期；狀態數通常比 Mealy 多。
+Mealy Machine：輸出 $Y = f(State, Input)$。
+優點：能立即反應輸入變化 (Asynchronous output response)，所需狀態數較少。
+缺點：輸入的 Glitch 會直接傳導到輸出，這在驅動下級控制訊號時非常危險。
+實務建議：在設計高速電路時，通常建議使用 Registered Output Moore Machine，即在 Moore 輸出的基礎上再加一級 Register，雖然增加 Latency，但能切斷 Critical Path 並濾除 Glitch。
+序列偵測器 (Sequence Detector) 實戰
+題目：設計一個偵測 "1011" 的 FSM，分「重疊 (Overlapping)」與「非重疊 (Non-overlapping)」兩種情況 6。
+解題步驟：
+定義狀態：S0 (IDLE), S1 (Got 1), S2 (Got 10), S3 (Got 101)。
+重疊 vs. 非重疊：差別在於偵測到完整序列後的次態跳轉。
+非重疊：偵測到 "1011" 後，回到 S0 重新開始。
+重疊：偵測到 "1011" 後 (最後一個 1 可是下一個序列的開頭)，若輸入為 0，則跳至 S2 (視為 "10")；若輸入為 1，跳至 S1。
+編碼選擇：Binary (省面積) vs. One-hot (省邏輯層數，速度快)。FPGA 設計常用 One-hot，ASIC 視情況而定。
+3.3 邏輯合成與推論 (Synthesis & Inference)
+Latch 的產生與避免
+在組合邏輯 (always @*) 中，若 if 沒有 else 或 case 沒有 default，綜合工具會推論出 Latch 以保持原值。這在同步設計中通常是非預期的 (除非是特定的 Latch-based design)，因為 Latch 會使 STA 變複雜且容易產生毛刺。
+解決：確保所有路徑都有賦值，或在開頭給定預設值 (Default assignment) 4。
+4. 進階時序邏輯與時脈電路 (Advanced Sequential Logic)
+這部分涉及除頻器、無毛刺切換等實務電路，是聯發科與瑞昱面試的常客。
+4.1 時脈除頻器 (Clock Divider)
+偶數除頻：簡單的計數器翻轉。
+奇數除頻 (Odd Divider) 9：
+挑戰：如何產生 50% Duty Cycle 的除 3 時脈？
+解法：
+使用一個模 3 計數器 (計數 0, 1, 2)。
+產生訊號 A：在計數到特定值時 (如 0) 翻轉，由時脈上升緣觸發。
+產生訊號 B：在計數到特定值時 (如 0) 翻轉，由時脈下降緣觸發。
+將 A 與 B 進行邏輯運算 (通常是 OR 或 AND，視具體波形而定)，利用下降緣觸發的訊號來「切」掉半個週期，從而湊出 50% Duty Cycle。
+4.2 無毛刺時脈多工器 (Glitch-free Clock Mux)
+在 SoC 中，動態切換工作頻率 (如省電模式) 是常態。直接用普通 Mux 切換時脈會產生毛刺 (Glitch)，導致電路誤動作 5。
+原理：
+不能直接切換 Select 訊號。必須確保當前時脈 (Clock A) 處於低電位時關閉，並等待目標時脈 (Clock B) 也處於低電位時才開啟。
+電路結構：
+由兩個正反器 (Falling-edge triggered FF) 與 AND-OR Gate 構成。
+Select 訊號先經過同步器 (Synchronizer) 進入各自時脈域，利用回授機制 (Feedback) 確保「先斷後接 (Break before Make)」。
+面試題：畫出電路圖並解釋為何使用下降緣觸發 FF？(為了在時脈低電位時改變 Enable 訊號，確保輸出的時脈波形完整)。
+4.3 仲裁器設計 (Arbiter Design)
+Round Robin Arbiter 14：
+應用：多個 Master 爭搶同一個 Bus 或 Memory Port。
+演算法：輪詢制。上次誰拿到 Grant，下次優先權就降到最低。
+實作技巧：使用兩個 Thermometer Code 的 Mask 技巧來快速找出下一個 Request。這是一個經典的「程式碼題」，建議熟練掌握其 Verilog 寫法。
+5. 靜態時序分析深度剖析 (Static Timing Analysis, STA)
+STA 是數位設計的靈魂。面試官會從定義問到修復 (ECO)，再問到極端狀況 (Corner Case)。
+5.1 Setup Time 與 Hold Time 的物理本質
+1
+定義再深入：
+Setup Time ($T_{su}$)：數據必須在時脈有效緣前穩定存在的時間。本質是為了讓 D 端訊號能成功對主鎖存器 (Master Latch) 的電容充電到閾值電壓以上，並傳遞到從鎖存器 (Slave Latch) 的阻擋門前。
+Hold Time ($T_{hd}$)：數據必須在時脈有效緣後保持穩定的時間。本質是防止新數據在 Master Latch 的傳輸門完全關閉前就衝進來，干擾已鎖存的舊數據。
+5.2 時序公式推導與分析
+面試時不只要背公式，要能畫圖推導。
+Setup Check (Max Path Analysis)
+不等式：$T_{launch\_clk} + T_{cq} + T_{comb\_max} < T_{capture\_clk} + T_{period} - T_{su}$
+考慮 Skew：$T_{skew} = T_{capture\_clk} - T_{launch\_clk}$
+簡化公式：$T_{cq} + T_{comb\_max} < T_{period} - T_{su} + T_{skew}$
+物理意義：數據延遲必須小於「時脈週期 + Skew - Setup 時間」。如果 Skew 是正的 (Capture Clock 較晚到)，對 Setup 有利 (Relax Setup)。
+Hold Check (Min Path Analysis)
+不等式：$T_{launch\_clk} + T_{cq} + T_{comb\_min} > T_{capture\_clk} + T_{hd}$
+簡化公式：$T_{cq} + T_{comb\_min} > T_{hd} + T_{skew}$
+物理意義：數據延遲必須大於「Hold 時間 + Skew」。如果 Skew 是正的，Capture Clock 晚到，數據更容易發生 Hold Violation (即數據太快跑到下一個 FF，而 Clock 還沒關門)。
+關鍵結論：Hold Check 與時脈週期 ($T_{period}$) 無關！這意味著降頻無法解決 Hold Violation。這是一個非常經典的面試陷阱 20。
+5.3 時序違規修復 (Timing Violation Fixes)
+17
+違規類型
+修復策略 (Frontend/Backend)
+副作用
+Setup Violation (Data too slow)
+1. Pipelining: 切割組合邏輯 (Frontend)
+
+2. Retiming: 移動 Register 位置
+
+3. Upsizing: 加大 Driver 推力
+
+4. Low-Vt Cells: 換用快但漏電的 Cell
+
+5. Useful Skew: 延後 Capture Clock
+增加 Latency (Pipeline)
+
+增加漏電 (LVT)
+
+增加面積
+Hold Violation (Data too fast)
+1. Insert Buffers/Delay Cells: 增加路徑延遲 (Backend)
+
+2. Downsizing: 減小 Driver (若不影響 Transition)
+
+3. Lockup Latch: 用於 Scan Chain
+增加面積
+
+可能惡化 Setup Margin
+
+5.4 進階 STA 概念
+多週期路徑 (Multicycle Path, MCP) 19
+情境：乘法器需要 2 個 Cycle 運算。
+SDC 設定：set_multicycle_path 2 -setup -from A -to B。
+陷阱：設定 Setup MCP 為 2 後，Hold Check 預設會變成檢查第 0 個 Edge (太過嚴格)。必須同時設定 set_multicycle_path 1 -hold 將 Hold Check 移回原本的 Edge (即 Launch Edge)。面試官常問：「只設 Setup MCP 會發生什麼事？」答案是會產生修不掉的 Hold Violation。
+假路徑 (False Path)
+跨非同步時鐘域 (CDC) 路徑、靜態組態暫存器 (Configuration Register) 等不需要檢查時序的路徑。
+OCV (On-Chip Variation)
+考慮製程、電壓、溫度 (PVT) 在晶片不同位置的變異。STA 會引入 Derating Factor (如 Early path * 0.9, Late path * 1.1) 讓分析更悲觀 (Pessimistic) 以確保良率。
+6. 跨時鐘域設計與同步機制 (Clock Domain Crossing, CDC)
+CDC 是現代 SoC 設計中最常見的 Bug 來源，也是面試的重中之重。
+6.1 亞穩態 (Metastability)
+成因：當 Setup/Hold 時間被違反，FF 的輸出會在 0 與 1 之間震盪或停留在中間電壓，且無法預測何時穩定。
+MTBF (Mean Time Between Failures)：$MTBF = \frac{e^{t_{met}/\tau}}{T_w \cdot f_c \cdot f_d}$。
+面試官可能會問：如何提高 MTBF？答案是增加同步器的級數 (如 3-FF Synchronizer) 或降低時脈頻率。
+6.2 單一位元同步 (Single-bit Synchronization)
+慢時鐘 $\rightarrow$ 快時鐘：使用 2-FF Synchronizer。訊號經過兩級 D-FF，第一級可能亞穩態，第二級濾除 26。
+快時鐘 $\rightarrow$ 慢時鐘：
+問題：若 Pulse 寬度小於慢時鐘週期，會被漏接。
+解法：
+Pulse Extender：拉長脈衝。
+Handshake：Req $\rightarrow$ Ack 機制，保證傳遞但效率低 28。
+Toggle Synchronizer：將脈衝轉為電位翻轉 (Toggle)，接收端再轉回脈衝。
+6.3 多位元同步與非同步 FIFO (Multi-bit & Async FIFO)
+為什麼不能用 2-FF 同步多位元 Bus？ 27
+因為各 Bit 的路徑延遲不同，經過同步器後，各 Bit 到達的時間不一致，導致接收端採樣到錯誤的組合 (Data Incoherency)。例如 "00" 變 "11"，可能中間出現 "01" 或 "10"。
+非同步 FIFO 設計 (Asynchronous FIFO) 29
+這是 CDC 的終極解法。
+格雷碼 (Gray Code) 的必要性：FIFO 的 Read/Write Pointer 需要跨時鐘域傳遞來判斷 Full/Empty。Binary Code 在多位元變化時 (如 0111 $\rightarrow$ 1000) 容易產生錯誤採樣。Gray Code 每次只變 1 個 Bit，將亞穩態誤差限制在 +/- 1 範圍內，這是安全的。
+深度計算 (Depth Calculation) 30：
+公式：$Depth \ge B \times (1 - \frac{f_{rd}}{f_{wr}})$ (簡化版，假設背靠背寫入)。
+情境題：寫入 100MHz，讀取 80MHz，Burst Size = 120，每 100 週期寫 80 筆... 請計算最小深度。這需要畫出數據累積圖 (Leaky Bucket Model) 來推導。
+空滿判斷 (Full/Empty Logic)：
+Empty：$R_{ptr} == W_{ptr}$ (在 Read Domain 比較)。
+Full：$W_{ptr} == R_{ptr}$ (在 Write Domain 比較)。等等，這樣不是跟 Empty 一樣嗎？
+Gray Code 的 Full 判斷：由於 Gray Code 的特性，Full 的條件通常是 MSB 不同，2nd MSB 不同，其餘相同 (針對特定編碼風格)。
+Pessimism：判斷 Full 時，使用的是「舊的」Read Pointer (因為經過同步延遲)。這代表 FIFO 可能已經被讀出空間了，但 Write Domain 還以為是滿的。這會降低效能，但保證不會溢位 (No Overflow)，是 Safe 的設計。
+7. 計算機結構與 SoC 系統 (Computer Architecture & SoC)
+7.1 管線化與 Hazards (Pipelining & Hazards)
+36
+Data Hazard：
+RAW (Read After Write)：下一條指令需要上一條指令的結果。
+解法：Forwarding (Bypassing) 網路，將 ALU 計算結果直接拉回輸入端；或插入 Bubble (Stall)。
+Control Hazard：
+Branch 指令導致 PC 跳轉。
+解法：Branch Prediction (Static/Dynamic)。面試可能問 2-bit Predictor 的狀態轉移圖。
+Structural Hazard：
+硬體資源不足 (如只有一個 Memory Port 同時要讀寫)。
+7.2 記憶體階層與快取一致性 (Memory Hierarchy & Cache Coherence)
+36
+Cache Coherence：多核心處理器中，如何確保各個 Core 的 Cache 數據一致。
+MESI Protocol：
+Modified (M)：Dirty，獨佔，需 Write Back。
+Exclusive (E)：Clean，獨佔。
+Shared (S)：Clean，多個 Cache 共有。
+Invalid (I)：無效。
+面試題：描述當 Core A 讀取一個在 Core B 處於 Modified 狀態的 Cache Line 時，會發生什麼事？(Snooping 機制偵測到，Core B 先將數據寫回或直接傳給 Core A，兩者狀態轉為 Shared)。
+Snooping vs. Directory：Snooping 靠廣播 (Bus traffic 大，適合少核)；Directory 靠中央目錄 (適合多核)。
+8. 晶片互連匯流排協定 (AMBA On-Chip Interconnect)
+熟悉 ARM 的 AMBA (AXI, AHB, APB) 是 SoC 設計師的基本功。
+8.1 AXI (Advanced eXtensible Interface) 深度解析
+45
+五大通道 (5 Channels)：
+Read Address (AR)
+Read Data (R)
+Write Address (AW)
+Write Data (W)
+Write Response (B)
+關鍵特性：
+Out-of-Order Completion：透過 Transaction ID (AWID, ARID)，Slave 可以不按順序回傳數據，這對於高延遲周邊 (如 DDR) 非常重要。
+Interleaving：Write Data Interleaving (AXI4 已移除) 與 Read Data Interleaving。
+Burst Type：FIXED (FIFO), INCR (RAM), WRAP (Cache Line fill)。
+Handshake 機制：
+VALID (Source) 與 READY (Dest)。
+死鎖 (Deadlock) 預防：AXI 規定 VALID 不可以依賴 READY。即 Source 不能說「你準備好我才送數據」，必須是「我有數據了(VALID=1)，等你準備好」。但 READY 可以依賴 VALID。
+AXI vs. AHB：
+AHB 是 Shared Bus，單一通道，一次只能一個 Master 動作，不支援亂序。
+AXI 是 Point-to-Point 或多通道架構，讀寫獨立，頻寬大，面積大。
+9. 低功耗設計方法學 (Low Power Design)
+17
+9.1 功耗公式分析
+
+$$P_{total} = P_{dynamic} + P_{short\_circuit} + P_{leakage}$$
+
+$$P_{dynamic} = \alpha \cdot C_{load} \cdot V_{dd}^2 \cdot f$$
+面試官會問：若電壓降一半，功耗變多少？(動態功耗變 1/4)。若頻率降一半？(動態功耗變 1/2)。
+9.2 UPF 與低功耗技術 (Low Power Techniques)
+Clock Gating：最基本的。使用 ICG (Integrated Clock Gating) Cell，在 RTL 寫 if (en) q <= d; 時由工具自動插入。
+Power Gating (PSO)：
+關閉電源。需使用 Isolation Cell (防止浮接訊號傳播) 與 Retention Register (斷電前存狀態)。
+面試題：Isolation Cell 應該放在 Power Domain 的裡面還是外面？(通常放在 Source Domain 的邊界，且由 Always-on 電源供電)。
+Multi-Vt (多閾值電壓)：
+HVT (High Vt)：漏電小，速度慢。用於非關鍵路徑。
+LVT (Low Vt)：漏電大，速度快。用於 Critical Path。
+優化策略：先全部用 HVT，時序不過的地方換 LVT (Leakage Optimization)。
+10. 後端實體設計認知 (Physical Design Awareness for Frontend)
+17
+雖然是數位設計 (Frontend)，但懂後端 (Backend) 是加分項。
+擁塞 (Congestion)：RTL 寫得太亂 (如巨大的 Mux 或複雜的 Crossbar) 會導致佈線擁塞。
+IR Drop：電源線上的電壓降。若動態功耗太高 (瞬間大量 Flip-Flop 同時翻轉)，會導致電壓驟降，影響時序甚至功能。
+天線效應 (Antenna Effect)：長金屬線在製程中累積電荷，可能打穿 Gate Oxide。解法是跳層 (Jumping layers) 或插入 Diode。
+11. 腳本語言與工具 (Scripting & Automation)
+17
+Tcl (Tool Command Language)：
+DC/PT/ICC 等 EDA 工具的指令語言。面試可能問基本的 Tcl 語法，如 get_cells, get_pins, foreach_in_collection。
+Shell/Perl/Python：
+Log 分析、批量處理。常考 grep, sed, awk 的用法。例如：如何從 Log 中抓出所有的 Error 行？(grep "Error" file.log)。
+12. 行為面試與公司文化 (Behavioral & Cultural Fit)
+技術是門檻，心態決定錄取。
+12.1 聯發科 (MediaTek)
+文化：強調「基本功」與「邏輯性」。即使是實習生，也會被問得很深。重視團隊合作 (Teamwork) 與溝通。
+問題範例：
+1 "分享你遇過最困難的 Bug，你是如何分析並解決的？" (回答要體現 Debug 的思路，而非只是試誤)。
+"如果你的想法與 Mentor 不同，你會怎麼做？"
+12.2 瑞昱 (Realtek)
+文化：各部門 (CN, TV, Audio) 風格迥異。普遍務實，喜歡「即戰力」。抗壓性測試 (Stress Test) 常見。
+問題範例：
+61 "你如何面對壓力？"
+"如果進度落後了，你會怎麼辦？" (主動回報，重新排程，尋求資源)。
+13. 結論
+準備聯發科與瑞昱的 SoC 實習面試，不僅需要刷題，更需要對數位系統有「全貌」的認識。從一個 Transistor 怎麼動，到一個 Signal 怎麼跨過 Clock Domain，再到一筆 Transaction 怎麼通過 AXI Bus，最後到整個 Chip 怎麼省電，這是一個環環相扣的知識鏈。希望這份 15,000 字等級的深度報告，能成為你通往頂尖 IC 設計公司的基石。
+引用的著作
+Interview Questions VIT Vellore MTech Vlsi Batch 2024-1-1-1-1-1-68-101 - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/764461698/Interview-Questions-VIT-Vellore-MTech-Vlsi-Batch-2024-1-1-1-1-1-68-101
+Electronics & Communication Engineering - NIT Jalandhar, 檢索日期：12月 1, 2025， https://www.nitj.ac.in/nitj_files/downloads/Curriculum/B-Tech/ECE.pdf
+Verilog Interview Questons | PDF - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/907080372/Verilog-Interview-Questons
+Interview Question - Verilog | PDF | Logic Synthesis | Computer Engineering - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/909758124/Interview-Question-Verilog
+Electronicspedia - YouTube, 檢索日期：12月 1, 2025， https://www.youtube.com/c/Electronicspedia/videos
+Sequence Detector | PDF | Electronic Design | Conceptual Model - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/presentation/511825895/Sequence-Detector
+Verilog HDL Crash Course | 1001 Sequence Detector | Moore | Mealy |Module #13(2) | VLSI Excellence - YouTube, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=k6ChSw4h9JA
+Design a sequence detector that detects when the sequence “10” - Electronics Stack Exchange, 檢索日期：12月 1, 2025， https://electronics.stackexchange.com/questions/130156/design-a-sequence-detector-that-detects-when-the-sequence-10
+Frequency Divider by Odd Using Verilog Code | PDF - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/presentation/729456722/frequency-divider-by-odd-using-verilog-code
+Clock Dividers Made Easy | PDF | Frequency | Electronic Circuits - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/doc/89208169/Clock-Dividers-Made-Easy
+Scalable/generic way to divide clock frequency by an odd number, 50% duty cycle? - Reddit, 檢索日期：12月 1, 2025， https://www.reddit.com/r/ECE/comments/5g9mfa/scalablegeneric_way_to_divide_clock_frequency_by/
+What is Glitch Free Mux | GFCM | Circuit - YouTube, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=KBeumQxSyZA
+Newest 'clock' Questions - Electrical Engineering Stack Exchange, 檢索日期：12月 1, 2025， https://electronics.stackexchange.com/questions/tagged/clock
+Round Robin Arbiter | PDF | Computer Programming | Electronic Engineering - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/746645537/Round-Robin-Arbiter
+Verilog Design, Simulation & Synthesis of Round Robin Arbiter - YouTube, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=gD7GOOmT3hs
+AMD interview : r/ECE - Reddit, 檢索日期：12月 1, 2025， https://www.reddit.com/r/ECE/comments/1nt8kbm/amd_interview/
+Some Physical Design QA. Below is the Timing team interview… | by Agnathavasi - Medium, 檢索日期：12月 1, 2025， https://medium.com/@agnathavasi360/some-physical-design-qa-228412c7cef8
+Fixing Setup and Hold Violation - Static Timing Analysis (STA) Basic (Part 6c) - VLSI Concepts | PDF | Electronic Circuits - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/470902417/Fixing-Setup-and-Hold-Violation-Static-Timing-Analysis-STA-Basic-Part-6c-VLSI-Concepts
+Static Timing Analysis Interview Questions, 檢索日期：12月 1, 2025， https://metaversofmp.fmp.edu.br/Resources/Hq1r7g/279055/StaticTimingAnalysisInterviewQuestions.pdf
+Which violation is more dangerous setup time or hold time in VLSI? - Quora, 檢索日期：12月 1, 2025， https://www.quora.com/Which-violation-is-more-dangerous-setup-time-or-hold-time-in-VLSI
+Setup and Hold Time Violation Static Timing Analysis (STA) Basic (Part 3b) VLSI Concepts, 檢索日期：12月 1, 2025， https://www.scribd.com/document/277388743/Setup-and-Hold-Time-Violation-Static-Timing-Analysis-STA-Basic-Part-3b-VLSI-Concepts
+Floor Plan, Placement Questions and Answers | PDF - Slideshare, 檢索日期：12月 1, 2025， https://www.slideshare.net/slideshow/floor-plan-placement-questions-and-answers/272034062
+Multi Cycle Paths | PDF | Electrical Engineering | Areas Of Computer Science - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/128240436/Multi-Cycle-Paths
+Multicycle Path - Learn VLSI, 檢索日期：12月 1, 2025， https://learnvlsi.com/pd/multicycle-path/397/
+Multicycle Path Between Two Clock Domains | PDF | Computer Engineering - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/715793742/Mcp
+Fpga Interview Questions | PDF | Field Programmable Gate Array | Computer Hardware, 檢索日期：12月 1, 2025， https://www.scribd.com/document/931488585/Fpga-Interview-Questions
+Frequently Asked 50 Advanced CDC Interview Qs Handbook 1750901110 - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/882249187/Frequently-Asked-50-Advanced-CDC-Interview-Qs-Handbook-1750901110
+Clock Domain Crossing Handshake Synchronizer | CDC Technique | VLSI Interview Question | - YouTube, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=qDnWYp1nG9I
+FIFO Clock Domain Crossing (CDC) | FIFO Basics | Asynchronous FIFO | Synchronous FIFO, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=dCj5HAnaCd8
+FIFO | PDF | Computer Engineering - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/877225879/FIFO
+Basics of Asynchronous FIFO - YouTube, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=mGREY8u9ELs
+Verification Engineer Interview Prep | PDF | Class (Computer Programming) - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/366045588/Systemverilog-Coding
+Asynchronous FIFO Design Guide | PDF | Pointer (Computer Programming) - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/477813102/CummingsSNUG2002SJ-FIFO1-rev1-2
+VLSI FAQ - FPGA-Systems.ru, 檢索日期：12月 1, 2025， https://fpga-systems.ru/library/vlsi/TOP_VLSI_FAQ_with_Answers_Beginner_to_Advanced_level.pdf
+FIFO Depth Calculation Explained with 3 Cases | VLSI Interview & Design Concept, 檢索日期：12月 1, 2025， https://www.youtube.com/watch?v=ArCLtwZtPXo
+Computer Organization and Architecture Cs2253: Part-A | PDF | Instruction Set - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/59729857/2-MARKS-COA
+Advanced Computer Architecture 2 | PDF | Operating System Technology - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/526416180/Advanced-Computer-Architecture-2
+Computer Architecture Comprehensive Quiz (100 Questions) | PDF | Random Access Memory - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/889352804/9bf24c45-c62c-413d-b7cf-2bbcfa622fcd
+CO Interview | PDF | Central Processing Unit | Cpu Cache - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/945539139/CO-Interview
+Top 30 Most Common computer architecture interview questions You Should Prepare For, 檢索日期：12月 1, 2025， https://www.vervecopilot.com/interview-questions/top-30-most-common-computer-architecture-interview-questions-you-should-prepare-for
+Top 10 Processor Design Intern Interview Questions, 檢索日期：12月 1, 2025， https://www.interviews.chat/questions/processor-design-intern
+Cache Coherence - GeeksforGeeks, 檢索日期：12月 1, 2025， https://www.geeksforgeeks.org/operating-systems/cache-coherence/
+What Every Developer Should Know About Cache Coherence - SWE Quiz, 檢索日期：12月 1, 2025， https://www.swequiz.com/learn/cache-coherency-explained
+Cache and Coherence Interview Guide | PDF - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/900973015/Cache-and-Coherence-Interview-Guide
+Understanding With AXI Protocol And Cache Coherency - The Art of Verification, 檢索日期：12月 1, 2025， https://theartofverification.com/understanding-with-axi-protocol-and-cache-coherency/
+AMBA AXI AHB APB Protocol Course | Learn AMBA Protocols for SoC Design - VLSI Guru, 檢索日期：12月 1, 2025， https://staging.vlsiguru.com/protocol-courses/amba-axi-ahb-and-apb-protocol-training
+AXI, AHB, APB UVC Training | AMBA Protocol - Inskill, 檢索日期：12月 1, 2025， https://inskill.in/training/amba-protocol/
+AXI Protocol Questions | PDF | Computing - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/705679315/AXI-protocol-questions
+Axi - Interview | PDF | Electronics | Computer Engineering - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/735749445/axi-interview
+AXI Protocol and VIP Development classroom training - Inskill, 檢索日期：12月 1, 2025， https://inskill.in/axi-protocol.php
+AXI Verification Plan | PDF | Software Engineering | Data - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/293533783/AXI-Verification-Plan
+Top 50+ VLSI Interview Questions and Answers for 2025 - Hirist, 檢索日期：12月 1, 2025， https://www.hirist.tech/blog/top-50-vlsi-interview-questions-and-answers/
+Physical Design Engineer Interview Q&A | PDF | Field Programmable Gate Array - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/321431070/Backend-Physical-Design-Interview-Questions-and-Answers-BipeenKulkarni
+Low Power Design Techniques Used in Physical Design, 檢索日期：12月 1, 2025， http://www.vlsijunction.com/2023/02/low-power-design-techniques-used-in.html
+Low Power Design with UPF Techniques | PDF | Science & Mathematics - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/presentation/650827228/1-UPF-Understanding-and-Implementation
+Lpower Design Method UPF | PDF | Computer Engineering - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/297227851/Lpower-Design-Method-UPF
+SOURCES OF POWER DISSIPATION IN CMOS - VLSI- Physical Design For Freshers, 檢索日期：12月 1, 2025， https://www.physicaldesign4u.com/2020/01/sources-of-power-dissipation-in-cmos.html
+Power Management in VLSI - GeeksforGeeks, 檢索日期：12月 1, 2025， https://www.geeksforgeeks.org/electronics-engineering/power-management-in-vlsi/
+PD Interview Questions | PDF | Cmos | Digital Electronics - Scribd, 檢索日期：12月 1, 2025， https://www.scribd.com/document/726589225/PD-Interview-Questions
+MediaTek Product Manager Interview Questions - Institute of Product Leadership, 檢索日期：12月 1, 2025， https://www.productleadership.com/blog/mediatek-product-manager-interview-questions/
+tech industry Sumber Daya & Tutorial - Cake, 檢索日期：12月 1, 2025， https://www.cake.me/resources/search?q=tech%20industry&page=2&locale=id
+Questions Thread - November 25, 2024 : r/pathofexile - Reddit, 檢索日期：12月 1, 2025， https://www.reddit.com/r/pathofexile/comments/1gz7ids/questions_thread_november_25_2024/
