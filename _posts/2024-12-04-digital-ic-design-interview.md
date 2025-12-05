@@ -395,15 +395,13 @@ MTBF = e^(Tr/τ) / (T0 × Fclk × Fdata)
 ```
 
 其中：
-- `Tr` = resolution time（可用於 metastability 解決的時間）
-- `τ` (tau) = metastability 時間常數（與元件相關）
+- `Tr` = resolution time（可用於 metastability 解決的時間）= Tclk - (Tsu + Tcq + Tpd)
+- `τ` (tau) = metastability 時間常數（與製程和元件相關，數值越小表示恢復越快）
+- `T0` = metastability 視窗係數（setup/hold 視窗大小的量化參數）
 - `Fclk` = clock 頻率
 - `Fdata` = data 轉換頻率
 
-**Resolution time 計算：**
-```
-Tr = Tclk - (Tsu + Tckq + Tpd)
-```
+**參數意義：** T0 和 τ 是 flip-flop 的固有特性，由元件庫（cell library）提供。τ 表示 flip-flop 從 metastable 狀態恢復的速度——τ 越小，恢復越快。T0 則表示觸發 metastability 的時間視窗大小——T0 越小，發生 metastability 的機率越低。
 
 **設計指引：**
 
@@ -778,6 +776,29 @@ Depth ≥ 120 × (1 - 50/60)
 | 2 的冪次限制 | 向上取整至最近的 2^n |
 | 安全餘量 | 通常增加 10-20% |
 
+**範例 3: 完整實務計算（含 Sync Overhead）**
+- Write: 100 MHz, Read: 75 MHz
+- Burst: 200 data items
+- 2-FF synchronizer (2 cycle latency each direction)
+
+```
+Step 1: 理論最小深度
+  Depth_min = 200 × (1 - 75/100) = 200 × 0.25 = 50
+
+Step 2: 加入 CDC synchronization overhead
+  Write→Read sync: 2 cycles (at read clock)
+  Read→Write sync: 2 cycles (at write clock)
+  Full flag 傳回 writer 的延遲：約 2-4 entries
+
+  Depth_adjusted = 50 + 4 = 54
+
+Step 3: 向上取整至 2 的冪次
+  54 → 64 (2^6)
+
+Step 4: 安全餘量（若有空間）
+  實際深度 = 64 entries
+```
+
 **Gray Code Full/Empty Detection:**
 
 ```verilog
@@ -950,6 +971,25 @@ wire [PTR_WIDTH-1:0] count = wr_ptr_bin_sync - rd_ptr_bin_sync;
 | **「FIFO Depth 如何計算？」** | `Depth ≥ B × (1 - f_rd/f_wr)`，B 是 burst 長度，還要加上 sync latency 的 margin |
 | **「為何不直接用 full flag 做 flow control？」** | Writer 可能已發出更多寫入，almost_full 提供預先警告，避免 overrun |
 | **「Almost_full threshold 如何選擇？」** | DEPTH 減去（max_burst_size + synchronization_latency + safety_margin） |
+
+#### **CDC 驗證工具**
+
+**為何需要專門的 CDC 驗證？** CDC bugs 是 ASIC 設計中最難發現的問題之一——它們在 simulation 中難以重現（需要特定的相位關係），但在 silicon 上會間歇性發生。因此，業界使用專門的 static CDC analysis 工具來檢查所有可能的 CDC 路徑。
+
+**常用 CDC 驗證工具：**
+
+| 工具 | 廠商 | 特點 |
+|------|------|------|
+| **Spyglass CDC** | Synopsys | 業界標準，支援完整的 CDC analysis flow |
+| **VC SpyGlass** | Synopsys | 整合於 Verdi 環境，提供更好的 debug 體驗 |
+| **Meridian CDC** | Cadence | 與 Conformal 整合，支援 formal CDC proof |
+| **ALINT-PRO** | ALDEC | 輕量級選擇，適合 FPGA 設計 |
+
+**CDC 驗證檢查項目：**
+- **Missing synchronizer**：跨時脈域訊號未經過同步器
+- **Incorrect synchronizer**：同步器結構不正確（如 synchronizer FF 前有組合邏輯）
+- **Multi-bit CDC without reconvergence**：多位元訊號未使用 Gray code 或 FIFO
+- **Glitch on async control signal**：異步控制訊號可能產生 glitch
 
 ---
 
@@ -2032,6 +2072,16 @@ FPGA 控制配置流程並提供 clock 給外部記憶體。
 - 通常由 3 個 MSEL pins 決定配置模式
 - 在開機前或 reset 期間設定
 
+**🎯 FPGA 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「FPGA 和 CPLD 差異？」** | FPGA 用 LUT-based、需外部配置、容量大；CPLD 用 AND-OR array、non-volatile、開機即用 |
+| **「LUT 如何實現邏輯？」** | N-input LUT 就是 2^N×1 的查找表，儲存 truth table 所有輸出，任何 N 輸入邏輯只需 1 個 LUT |
+| **「為何 FPGA 開機需要配置？」** | 因為用 SRAM 儲存配置，斷電即丟失，需從 Flash 或其他來源載入 |
+| **「Block RAM vs Distributed RAM？」** | Block RAM 是專用大容量記憶體；Distributed RAM 用 LUT 實現，適合小型快速存取 |
+| **「FPGA 做原型驗證的優勢？」** | 可修改設計、at-speed 驗證、比 simulation 快 100-1000 倍 |
+
 ---
 
 ## 合成
@@ -2627,15 +2677,24 @@ Capture path: Use faster cells (min delay) × (1 - OCV_early)
 ```
 
 **AOCV (Advanced OCV):**
-- 位置感知 derating
-- 較近的 cells 變異較小
-- 比 flat OCV 更準確
+- 位置感知 derating（考慮 cells 之間的距離）
+- **Depth-aware**：路徑深度越深（經過越多 cells），隨機變異越傾向於平均化
+- **Distance-aware**：距離越近的 cells，受相同局部變異影響，變異較相關
+- 比 flat OCV 更準確，減少 10-20% 的 pessimism
+
+**AOCV Depth 概念：**
+```
+Depth = 1: 單一 cell，使用完整 derating（例如 ±10%）
+Depth = 5: 5 個 cells 串接，變異傾向抵消，使用較小 derating（例如 ±6%）
+Depth = 10+: 深層路徑，使用最小 derating（例如 ±4%）
+```
 
 **POCV/SOCV (Parametric/Statistical OCV):**
-- 統計 timing 分析
-- 使用機率分佈取代固定 derates（使用來自 Monte-Carlo HSPICE 的 delay σ）
-- 最準確，減少 pessimism
-- 假設 delay 服從常態分佈；sign-off 預設使用 3σ
+- 統計 timing 分析，使用每個 cell 的 delay σ（標準差）
+- 來源：Monte-Carlo HSPICE 模擬或 foundry 提供的 LVF（Liberty Variance Format）檔案
+- 使用統計計算取代固定 derates：`Path_σ = √(σ1² + σ2² + ... + σn²)`
+- 假設 delay 服從常態分佈；sign-off 預設使用 3σ（99.87% 信心水準）
+- 最準確，可減少 20-40% 的 pessimism，對先進製程節點尤其重要
 
 **技術節點建議:**
 
@@ -2647,6 +2706,16 @@ Capture path: Use faster cells (min delay) × (1 - OCV_early)
 | **16nm 及以下** | POCV/SOCV/LVF | Sign-off 必要；顯著減少 pessimism |
 
 **為何 Flat OCV 過度悲觀:** 固定 derates 假設路徑中所有 cells 同時都快或都慢。實際上，在深層路徑中隨機變異傾向於相互抵消 — 有些 cells 快，有些慢。AOCV 和 POCV 建模這種統計現實。
+
+**🎯 OCV 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「什麼是 OCV？為何需要？」** | On-Chip Variation，模擬同一晶片上不同位置的 PVT 變異，因為 corner-based 分析假設整個晶片條件一致是不實際的 |
+| **「OCV 如何套用到 setup 檢查？」** | Launch path 用 late derate（變慢），Capture path 用 early derate（變快），模擬最差情況 |
+| **「AOCV 比 OCV 好在哪？」** | Depth-aware：深層路徑的隨機變異會互相抵消，不需要用最大 derate |
+| **「什麼是 POCV/LVF？」** | 用每個 cell 的 delay 標準差做統計計算，比固定 derate 更精確，先進製程必要 |
+| **「16nm 以下為何要用 POCV？」** | 變異比例增大，flat OCV 會過度悲觀導致無法 timing closure，需要統計方法減少 pessimism |
 
 ### **CPPR/CRPR (Clock Path Pessimism Removal)**
 
@@ -3113,6 +3182,16 @@ assign isolated_out = data_in | iso_en;
 - 必須能存取兩個電壓 rails
 - 通常是 double-height cells（跨越兩列 standard cells）
 - 工具根據 UPF/CPF 規格自動插入
+
+**🎯 低功耗設計常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「Dynamic 和 Static Power 哪個在先進製程更重要？」** | 先進製程（<28nm）中 leakage power 佔比顯著增加，可達總功耗的 30-50%。兩者都要處理 |
+| **「Clock Gating 和 Power Gating 如何選擇？」** | Clock gating 用於短時間 idle（喚醒快、開銷小）；Power gating 用於長時間 idle（喚醒慢但省更多電） |
+| **「Multi-Vt 設計的 trade-off？」** | HVT 省電但慢、LVT 快但漏電多。通常非關鍵路徑用 HVT，關鍵路徑用 LVT |
+| **「Power gating 需要哪些特殊 cells？」** | Sleep transistors（header/footer）、Isolation cells（防 floating）、Retention registers（保存狀態）、Level shifters（電壓轉換） |
+| **「為何 Power gating 喚醒需要時間？」** | 需要 inrush current management、power supply stabilization、retention restore 等步驟 |
 
 ---
 
@@ -4579,6 +4658,34 @@ Clock uncertainty 考量 clock 網路中的時序變異：
 - 考慮使用雙倍寬度 routing 以降低電阻
 - 設定合理的最大 fanout 限制
 - 避免過於緊密的 skew 目標（導致過度 buffering）
+- **頻率順序**：先對最快的 clock 做 CTS，再處理較慢的 clock
+
+**Useful Skew（重要概念）：**
+
+Useful skew 是刻意引入的 clock skew，用來改善 timing。當 setup 違規的路徑可以向相鄰路徑「借用」slack 時，這種技術稱為 useful skewing。
+
+```
+典型應用場景：
+  Path A: Setup slack = -50ps (violation)
+  Path B: Setup slack = +200ps (通過，有餘量)
+
+  透過在 Path A 的 capture FF 加入 +80ps skew：
+  - Path A: 新 slack = -50ps + 80ps = +30ps (修復！)
+  - Path B: 需確認 hold 不受影響
+```
+
+**注意：** Useful skew 雖然能修復 setup，但會讓該 FF 的 hold timing 變緊。CTS 工具會自動考量這個 trade-off。
+
+**Clock Tree 結構類型：**
+
+| 結構 | 特點 | 適用場景 |
+|------|------|----------|
+| **H-Tree** | 對稱二分結構，skew 最小 | 大面積、高 fanout |
+| **X-Tree** | H-Tree 變體，更好的角落覆蓋 | 方形 die |
+| **Mesh** | 網格結構，最低 skew 和 OCV | 高性能 CPU |
+| **Multi-Source CTS** | 多個 clock tap points | 平衡 skew 與功耗 |
+
+**Clock 功耗考量：** Clock network 通常佔整體功耗的 30-40%。有效的 clock gating、合理的 buffer sizing、和避免過度 buffering 是降低 clock power 的關鍵。
 
 ### **Routing Congestion 解決方案**
 
@@ -4842,6 +4949,17 @@ Built-In Self-Repair 使用冗餘 rows/columns 替換故障 cells：
 | **測試時間** | 快速 | 取決於 scan chain 長度 |
 | **面積開銷** | 記憶體的 3-5% | 邏輯的 ~15% |
 
+**🎯 DFT/Scan Chain 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「為何需要 DFT？」** | 將難以測試的 sequential circuit 轉換為易測試的 combinational circuit，提高 fault coverage |
+| **「Scan chain 的三個操作模式？」** | Shift（SE=1，移入 test pattern）、Capture（SE=0，擷取回應）、Shift-out（SE=1，移出結果） |
+| **「Stuck-at 和 Transition fault 差異？」** | Stuck-at 用慢速 clock 測試永久性短路；Transition 需 at-speed clock 測試延遲缺陷 |
+| **「什麼是 Fault Coverage？業界標準？」** | 可偵測 faults 數 / 總 faults 數。業界標準 95%+，汽車/醫療要求 98-99% |
+| **「ATPG 的第一個 pattern 是什麼？」** | Chain test pattern（pattern0），用來檢查 scan chain 是否正確 shift |
+| **「Controllability 和 Observability？」** | Controllability：能控制節點值；Observability：能觀察節點值。兩者都需要才能測試 |
+
 ### **IR Drop 分析**
 
 **回顧：IR Drop 與 OCV 的關聯** 還記得前面 STA 章節討論的 OCV 嗎？其中一個 OCV 因素就是「Voltage variation」——晶片不同位置可能看到不同的供應電壓。IR drop 正是造成這種電壓變異的主要原因。
@@ -4907,6 +5025,15 @@ Cell delay ∝ 1 / (VDD - Vth)
 | **Decaps** | N/A | 新增 decoupling capacitors |
 | **Placement** | 分散高功耗 cells | 避免 switching hot spots |
 | **Pads** | 新增 VDD/VSS bumps/pads | 相同，靠近 hot spots |
+
+**🎯 IR Drop 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「Static 和 Dynamic IR Drop 差異？」** | Static：平均電流造成的穩態壓降；Dynamic：大量電路同時切換時的瞬態壓降，通常更嚴重 |
+| **「Decoupling Capacitor 如何幫助？」** | 作為本地電荷儲存庫，在瞬態電流需求時提供電荷，減少 Dynamic IR Drop |
+| **「IR Drop 如何影響 timing？」** | 電壓降低 → cell delay 增加。10% 壓降可能造成 20%+ delay 增加，導致 setup violations |
+| **「如何修復 Dynamic IR Drop？」** | 增加 decap cells、分散 switching hot spots、加強 power mesh、增加 VDD/VSS pads |
 
 ### **Electromigration**
 
@@ -4983,6 +5110,15 @@ Post-route netlist + Spice simulation
            ↓
 重新驗證直到通過
 ```
+
+**🎯 Electromigration 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「什麼是 Electromigration？」** | 電子流的動量轉移造成金屬原子移動，長期會形成 voids（開路）或 hillocks（短路） |
+| **「Black's Equation 中哪個參數影響最大？」** | 電流密度 J！J 加倍會使 MTTF 降低 2-4 倍（因為 J 的指數是 1-2） |
+| **「什麼是 Blech Length？」** | 低於此長度的導線不會有 EM 失效，因為機械背應力會阻止 void 形成 |
+| **「如何修復 EM violation？」** | 加寬導線降低電流密度、增加 via 數量分散電流、避免 90° 轉角 |
 
 ### **Signal Integrity (Crosstalk)**
 
@@ -5116,6 +5252,15 @@ route_detail -crosstalk_optimization true
 | **Noise margin** | Glitch < 10-20% VDD | Prevent functional failure |
 | **Timing margin** | SI delta < 5% of slack | Prevent timing closure issues |
 
+**🎯 Signal Integrity 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「什麼是 Aggressor 和 Victim？」** | Aggressor 是造成干擾的 switching net；Victim 是接收雜訊的受影響 net。同一條線可以同時是 aggressor 和 victim |
+| **「Crosstalk 對 timing 有什麼影響？」** | 同向切換會加速 victim（幫助 setup、傷害 hold）；反向切換會減慢 victim（傷害 setup、幫助 hold） |
+| **「如何減少 Crosstalk？」** | 增加間距、插入 shielding（接地線）、增強 victim driver、使用不同 routing layer、net ordering |
+| **「為何先進製程 Crosstalk 更嚴重？」** | 導線間距縮小但高度維持，耦合電容佔比從 20-30% 增加到 50% 以上 |
+
 ### **Latch-up 效應**
 
 Latch-up 是 CMOS 中的寄生 thyristor（PNPN）效應，可能導致永久損壞。
@@ -5185,6 +5330,15 @@ Guard rings 是解耦寄生雙極電晶體的擴散區：
 - 重摻雜 substrates 降低寄生 BJT 增益
 - SOI（Silicon-On-Insulator）substrates 完全消除 thyristor 結構
 
+**🎯 Latch-up 常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「什麼是 Latch-up？」** | CMOS 中寄生 PNPN thyristor 被觸發，形成 VDD 到 GND 的低阻抗路徑，可能造成永久損壞 |
+| **「如何預防 Latch-up？」** | 使用 Guard rings（p+ 圍繞 NMOS，n+ 圍繞 PMOS）、增加 well/substrate taps、使用 SOI 製程 |
+| **「Well tap cell 的作用？」** | 將 n-well 連接到 VDD、p-substrate 連接到 VSS，降低 well/substrate 電阻，防止寄生 BJT 導通 |
+| **「為何 I/O pad 周圍特別容易 Latch-up？」** | ESD 事件會注入大量載子，容易觸發寄生 thyristor |
+
 ### **Antenna 效應**
 
 Antenna 效應發生在製造過程中，當金屬 interconnects 在 plasma etching 期間收集電荷時，可能損壞 gate oxide。
@@ -5248,6 +5402,15 @@ Counterintuitively, very thin gate oxides in advanced nodes are **less** suscept
 - Result: The discharge rate outpaces the damage threshold
 
 **Why "Antenna" is a Misnomer:** The effect has nothing to do with electromagnetic wave reception (the usual meaning of antenna). The term refers only to the charge-collecting behavior of long metal conductors during plasma processing. A more accurate name is "Plasma-Induced Gate Oxide Damage" (PID).
+
+**🎯 Antenna 效應常見面試追問：**
+
+| 問題 | 答案重點 |
+|------|----------|
+| **「什麼是 Antenna 效應？」** | 製造過程中 plasma etching 時，長金屬線收集電荷，累積在 gate 上可能擊穿 thin oxide |
+| **「如何修復 Antenna violation？」** | 插入 antenna diode、metal jumper（跳到高層金屬再跳回）、增加 gate 面積 |
+| **「Antenna Ratio 是什麼？」** | 連接到 gate 的金屬面積 / gate 面積。典型限制為 400-1000（製程相關） |
+| **「若已在最高層金屬且無法跳層怎麼辦？」** | 插入 antenna diode 提供放電路徑，或 re-route 縮短該層金屬長度 |
 
 ---
 
@@ -6206,7 +6369,19 @@ Negative skew: Capture clock arrives EARLIER than launch clock
 - **Thold = 0**: Data can change immediately after clock edge
 - **Thold < 0** (negative): Data can change slightly BEFORE clock edge
 
-This occurs in fast flip-flop designs where internal delays ensure data is already captured before the clock edge fully propagates. Common in advanced process nodes.
+**為何會有負的 Hold Time？**
+
+Hold time 的正負取決於 flip-flop 內部 clock 和 data 路徑的傳播延遲競爭：
+
+```
+Thold = Thold_internal + Tdelay_clock - Tdelay_data
+```
+
+- 若內部 clock 路徑比 data 路徑長（clock buffer chain），clock edge 到達內部 latch 的時間較晚
+- 此時外部 data 可以在 clock edge **之前**就開始變化，因為舊的 data 值已被擷取
+- 例如：若 Thold = -1ns，表示 data 可以在 clock edge 前 1ns 就開始變化
+
+**負 Hold Time 的好處：** 這種特性讓 timing closure 更容易，因為 hold margin 更寬鬆。在先進製程節點中常見。
 
 **Why hold time is independent of clock period:** Hold is measured from the SAME clock edge that captured the data, not the next edge. It only depends on flip-flop internal timing, not clock frequency.
 
@@ -6959,6 +7134,7 @@ MTBF = e^(Tr/τ) / (T0 × Fclk × Fdata)
 - [https://www.zhihu.com/people/li-hong-jiang-54](https://www.zhihu.com/people/li-hong-jiang-54)
 - [Clock Domain Crossing - The Complete Reference Guide](https://thedatabus.in/cdc_complete_guide/)
 - [CDC Design & Verification - Cliff Cummings](http://www.sunburst-design.com/papers/CummingsSNUG2008Boston_CDC.pdf)
+- [Spyglass CDC User Guide - Synopsys](https://www.synopsys.com/verification/static-and-formal-verification/spyglass/spyglass-cdc.html)
 
 ### Metastability & MTBF
 - [Metastability and MTBF Explained](https://thedatabus.in/metastab_mtbf/)
