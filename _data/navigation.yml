@@ -16,3 +16,6 @@ main:
 
   - title: "Blogs"
     url: /blog/
+
+  - title: "Lectures"
+    url: /lectures/
