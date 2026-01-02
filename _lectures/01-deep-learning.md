@@ -19,4 +19,5 @@ Course materials and assignments for Deep Learning, covering neural networks, CN
 
 <p style="margin-top: 1.5em;">
   <a href="https://github.com/noyaboy/DeepLearning" class="pub-button">GitHub</a>
+  <a href="https://www.youtube.com/watch?v=otA_Glv_Dfk" class="pub-button">Presentation</a>
 </p>
