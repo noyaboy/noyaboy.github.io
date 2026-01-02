@@ -3,6 +3,7 @@ title: "Deep Learning"
 excerpt: "Course materials and assignments for Deep Learning, covering neural networks, CNNs, RNNs, and modern deep learning techniques."
 collection: lectures
 github: "https://github.com/noyaboy/DeepLearning"
+presentation: "https://www.youtube.com/watch?v=otA_Glv_Dfk"
 ---
 
 ## Overview
