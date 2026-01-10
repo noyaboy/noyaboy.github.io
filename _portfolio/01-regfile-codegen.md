@@ -2,7 +2,6 @@
 title: "Regfile Automatic Code Generation"
 excerpt: "An automation tool designed to streamline hardware IP design workflows. It parses standardized CSV register definitions to automatically generate synthesizable Verilog register files, C/C++ headers, and technical documentation, ensuring hardware-software interface consistency and significantly accelerating the development cycle."
 collection: portfolio
-github: "https://github.com/noyaboy/andla_codegen"
 ---
 
 ## Overview
@@ -18,6 +17,3 @@ An automation tool designed to streamline hardware IP design workflows. It parse
   <span class="skill-tag">Shell</span>
 </div>
 
-<p style="margin-top: 1.5em;">
-  <a href="https://github.com/noyaboy/andla_codegen" class="pub-button">GitHub</a>
-</p>
