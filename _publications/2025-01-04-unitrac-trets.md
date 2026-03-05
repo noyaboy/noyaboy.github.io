@@ -14,4 +14,6 @@ citation: 'Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Chen
 
 <p class="pub-venue">ACM Transactions on Reconfigurable Technology and Systems (In-Submission)</p>
 
+<p><span class="achievement">Second + Communication Author</span></p>
+
 Abstract: Trajectory reconstruction in high-energy physics, particularly for the High-Luminosity Large Hadron Collider (HL-LHC), presents a significant computational challenge due to the immense pile-up and data rates. This paper presents a unified Field-Programmable Gate Array (FPGA) accelerator of a complete Graph Neural Network (GNN)-based pipeline for particle tracking. By leveraging the parallel processing capabilities of FPGAs, we propose an efficient hardware architecture that accelerates the GNN inference process. The design optimizes both latency and throughput, ensuring that the trajectory reconstruction meets the stringent real-time requirements of the HL-LHC experiments. Our implementation demonstrates the feasibility and performance benefits of using FPGA-accelerated GNNs for next-generation particle detector trigger systems.
