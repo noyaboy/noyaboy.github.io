@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-<p style="text-align: center; margin: 0 0 0.5em 0;"><a href="/input/resume.pdf?v=8" class="pub-button" style="font-size: 0.9em; padding: 0.4em 1em;">Download CV (PDF)</a></p>
+<p style="text-align: center; margin: 0 0 0.5em 0;"><a href="/input/resume.pdf?v=9" class="pub-button" style="font-size: 0.9em; padding: 0.4em 1em;">Download CV (PDF)</a></p>
 
 <div class="cv-section">
 <h2>Education</h2>
@@ -33,7 +33,7 @@ redirect_from:
   <li>Transferred from Dept. of Physics (Top 1 out of 65 students; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
 </ul>
 
-<p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning (A+).</p>
+<p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning (A+), Digital Communication System (A+).</p>
 
 </div>
 
