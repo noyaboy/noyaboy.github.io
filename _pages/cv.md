@@ -17,7 +17,7 @@ redirect_from:
 <div class="experience-item">
   <div class="job-info">
     <strong><a href="https://iais.nycu.edu.tw/en/intro1.html" target="_blank">M.Eng. in Institute of Pioneer Semiconductor Innovation (ICS &amp; EDA Group)</a></strong><br>
-    <em>National Yang Ming Chiao Tung University (NYCU)</em>
+    <em>National Yang Ming Chiao Tung University (NYCU)</em> — GPA: 4.3/4.3
   </div>
   <div class="job-date">Sep 2025 – Jun 2027 (Expected)</div>
 </div>
@@ -33,7 +33,7 @@ redirect_from:
   <li>Transferred from Dept. of Physics (Top 1 out of 65 students; <a href="#" class="cert-title-link" onclick="openModal('eliteModal'); return false;">College of Science Elite Student Award</a>).</li>
 </ul>
 
-<p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning.</p>
+<p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning (A+).</p>
 
 </div>
 
