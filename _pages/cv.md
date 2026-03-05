@@ -34,6 +34,7 @@ redirect_from:
 </ul>
 
 <p><strong>Selected Coursework:</strong> IC Design Laboratory (A+), VLSI Testing, VLSI Design, Computer Architecture, Deep Learning (A+), Digital Communication System (A+).</p>
+<p><strong>Current Coursework:</strong> IC Design Laboratory (ICLAB), DSP VLSI Design (DSPVLSI).</p>
 
 </div>
 
