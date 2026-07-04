@@ -92,21 +92,21 @@
   --sans: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'SF Mono', Menlo, Consolas, monospace;
 
-  --paper: #fdfcfa;
+  --paper: #faf7f1;
   --paper-elevated: #ffffff;
   --ink: #1c2129;
   --text: #2e3440;
   --muted: #5f6672;
-  --faint: #8b919b;
+  --faint: #6a707b;
   --link: #17538c;
   --link-hover: #0e3b66;
-  --rule: #e6e2da;
-  --rule-soft: #efece5;
+  --rule: #e4dfd3;
+  --rule-soft: #ece8dc;
   --accent: #a11d33;
-  --wash: #f7f5f0;
-  --flash: #f3ecd9;
+  --wash: #f2eee4;
+  --flash: #f2e8cf;
   --selection: #dce7f3;
-  --shadow: 28, 33, 41;
+  --shadow: 41, 35, 24;
 
   color-scheme: light dark;
 }
@@ -114,38 +114,38 @@
 /* Dark palette — keep the two copies of this block identical. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #16181d;
-    --paper-elevated: #1d2026;
+    --paper: #1a1815;
+    --paper-elevated: #221f1a;
     --ink: #e9e7e2;
-    --text: #c4c8ce;
-    --muted: #969ca6;
-    --faint: #71777f;
+    --text: #c9c4bb;
+    --muted: #9d978c;
+    --faint: #8a8277;
     --link: #8ab4dd;
     --link-hover: #aecdea;
-    --rule: #2b2e35;
-    --rule-soft: #22252b;
+    --rule: #322d26;
+    --rule-soft: #27231d;
     --accent: #e2818f;
-    --wash: #1d2026;
-    --flash: #34301f;
+    --wash: #221f1a;
+    --flash: #38311e;
     --selection: #2d4a66;
     --shadow: 0, 0, 0;
   }
 }
 
 :root[data-theme="dark"] {
-  --paper: #16181d;
-  --paper-elevated: #1d2026;
+  --paper: #1a1815;
+  --paper-elevated: #221f1a;
   --ink: #e9e7e2;
-  --text: #c4c8ce;
-  --muted: #969ca6;
-  --faint: #71777f;
+  --text: #c9c4bb;
+  --muted: #9d978c;
+  --faint: #8a8277;
   --link: #8ab4dd;
   --link-hover: #aecdea;
-  --rule: #2b2e35;
-  --rule-soft: #22252b;
+  --rule: #322d26;
+  --rule-soft: #27231d;
   --accent: #e2818f;
-  --wash: #1d2026;
-  --flash: #34301f;
+  --wash: #221f1a;
+  --flash: #38311e;
   --selection: #2d4a66;
   --shadow: 0, 0, 0;
 }
@@ -830,7 +830,7 @@ strong { font-weight: 600; color: var(--ink); }
   padding-top: 1.3rem;
   padding-bottom: 2.6rem;
   font-size: 0.85rem;
-  color: var(--faint);
+  color: var(--muted);
 }
 
 .footer-row {
@@ -848,7 +848,7 @@ strong { font-weight: 600; color: var(--ink); }
   font-family: var(--serif);
   font-style: italic;
   font-size: 0.86rem;
-  color: var(--faint);
+  color: var(--muted);
 }
 
 /* --------------------------------------------------------------------------
