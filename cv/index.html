@@ -8,17 +8,19 @@
   <title>CV — Hao-Chun Liang</title>
   <meta name="description" content="Curriculum vitae of Hao-Chun Liang: education, awards, experience, and publications.">
   <link rel="canonical" href="https://noyaboy.github.io/cv/">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon-180x180.png">
+  <link rel="manifest" href="/images/manifest.json">
   <meta property="og:title" content="CV — Hao-Chun Liang">
   <meta property="og:description" content="Curriculum vitae of Hao-Chun Liang.">
   <meta property="og:url" content="https://noyaboy.github.io/cv/">
   <meta property="og:image" content="https://noyaboy.github.io/images/portrait.jpg">
   <meta name="twitter:card" content="summary">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="preload" href="/assets/fonts/newsreader-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <link rel="stylesheet" href="/assets/site.css?v=20">
 </head>
 <body>
 
@@ -27,12 +29,16 @@
 <header class="site-header">
   <div class="container">
     <a class="wordmark" href="/">Hao-Chun Liang</a>
-    <nav class="site-nav">
-      <a href="/">About</a>
-      <a href="/publications/">Publications</a>
-      <a href="/projects/">Projects</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/#news">News</a>
+      <a href="/#publications">Publications</a>
+      <a href="/#projects">Projects</a>
       <a href="/cv/" aria-current="page">CV</a>
     </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch theme">
+      <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.2v2.3M12 19.5v2.3M2.2 12h2.3M19.5 12h2.3M5.1 5.1l1.6 1.6M17.3 17.3l1.6 1.6M18.9 5.1l-1.6 1.6M6.7 17.3l-1.6 1.6"/></svg>
+      <svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.8 14.6a8.7 8.7 0 0 1-11.4-11.4A9.3 9.3 0 1 0 20.8 14.6z"/></svg>
+    </button>
   </div>
 </header>
 
@@ -40,7 +46,7 @@
 
   <h1 class="page-title">Curriculum Vitae</h1>
   <p class="page-lede">
-    <a class="btn btn-primary" href="/input/resume.pdf?v=10"><svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>&nbsp;Download PDF</a>
+    <a class="btn" href="/files/resume.pdf?v=11">Download PDF</a>
   </p>
 
   <h2 class="kicker">Education</h2>
@@ -161,30 +167,30 @@
   <h2 class="kicker">Selected Publications</h2>
 
   <div class="pub">
-    <h3><a href="/publications/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a></h3>
+    <h3><a href="/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a></h3>
     <p class="authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
     <p class="venue">Fast Machine Learning for Science Conference, CERN, 2025</p>
   </div>
 
   <div class="pub">
-    <h3><a href="/publications/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a></h3>
+    <h3><a href="/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a></h3>
     <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang*</strong>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai</p>
     <p class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2025 <span class="chip chip-muted">In submission</span></p>
   </div>
 
   <div class="pub">
-    <h3><a href="/publications/#gnn-fpga-vlsi">A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</a></h3>
+    <h3><a href="/#gnn-fpga-vlsi">A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</a></h3>
     <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
     <p class="venue">VLSI Design / CAD Symposium, 2025</p>
   </div>
 
   <div class="pub">
-    <h3><a href="/publications/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a></h3>
+    <h3><a href="/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a></h3>
     <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
     <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
   </div>
 
-  <p><a href="/publications/">All publications →</a> · <a href="/projects/">All projects →</a></p>
+  <p><a href="/#publications">All publications →</a> · <a href="/#projects">All projects →</a></p>
 
 </main>
 
@@ -194,10 +200,11 @@
       <span>© 2026 Hao-Chun Liang · Last updated July 2026</span>
       <span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a> · <a href="https://github.com/noyaboy">GitHub</a></span>
     </div>
-    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans</p>
+    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans · Patrolled by a Bichon Frise and an orange tabby</p>
   </div>
 </footer>
 
 <script src="/assets/pets.js" defer></script>
+<script src="/assets/theme.js" defer></script>
 </body>
 </html>

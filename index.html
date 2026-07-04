@@ -8,17 +8,19 @@
   <title>Hao-Chun Liang</title>
   <meta name="description" content="Hao-Chun Liang — M.Eng. student at NYCU working on hardware acceleration for machine learning: HLS accelerators, GPU performance engineering, and ML architecture–compiler codesign.">
   <link rel="canonical" href="https://noyaboy.github.io/">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon-180x180.png">
+  <link rel="manifest" href="/images/manifest.json">
   <meta property="og:title" content="Hao-Chun Liang">
   <meta property="og:description" content="M.Eng. student at NYCU — hardware acceleration for machine learning.">
   <meta property="og:image" content="https://noyaboy.github.io/images/portrait.jpg">
   <meta property="og:url" content="https://noyaboy.github.io/">
   <meta name="twitter:card" content="summary">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="preload" href="/assets/fonts/newsreader-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <link rel="stylesheet" href="/assets/site.css?v=20">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -45,12 +47,16 @@
 <header class="site-header">
   <div class="container">
     <a class="wordmark" href="/">Hao-Chun Liang</a>
-    <nav class="site-nav">
-      <a href="/" aria-current="page">About</a>
-      <a href="/publications/">Publications</a>
-      <a href="/projects/">Projects</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="/#news">News</a>
+      <a href="/#publications">Publications</a>
+      <a href="/#projects">Projects</a>
       <a href="/cv/">CV</a>
     </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch theme">
+      <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.2v2.3M12 19.5v2.3M2.2 12h2.3M19.5 12h2.3M5.1 5.1l1.6 1.6M17.3 17.3l1.6 1.6M18.9 5.1l-1.6 1.6M6.7 17.3l-1.6 1.6"/></svg>
+      <svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.8 14.6a8.7 8.7 0 0 1-11.4-11.4A9.3 9.3 0 1 0 20.8 14.6z"/></svg>
+    </button>
   </div>
 </header>
 
@@ -64,25 +70,274 @@
       <p>I work on the hardware side of machine learning in the <a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, advised by Prof. Bo-Cheng Lai. As an affiliate trainee of the <a href="https://a3d3.ai/">A3D3 Institute</a>, I collaborate with researchers at the University of Washington and UIUC on real-time machine learning for high-energy physics.</p>
       <p>My current focus is accelerating particle track reconstruction for the High-Luminosity LHC — high-level synthesis (HLS) accelerator design for the <a href="https://github.com/acts-project/traccc">traccc</a> pipeline on the AMD Versal V80, and CUDA-level optimization of GPU Kalman-filter tracking. In the long term, I aim to pursue a Ph.D. on the codesign of ML architectures and compilers.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="mailto:science103555@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>Email</a>
-        <a class="btn" href="/input/resume.pdf?v=10"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>CV (PDF)</a>
-        <a class="btn" href="https://github.com/noyaboy"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+        <a class="btn" href="mailto:science103555@gmail.com">Email</a>
+        <a class="btn" href="/files/resume.pdf?v=11">CV (PDF)</a>
+        <a class="btn" href="https://github.com/noyaboy">GitHub</a>
       </div>
     </div>
-    <img class="portrait" src="/images/portrait.jpg" alt="Portrait of Hao-Chun Liang" width="250" height="250">
+    <img class="portrait" src="/images/portrait.jpg" alt="Portrait of Hao-Chun Liang" width="460" height="460" fetchpriority="high">
   </section>
 
-  <section class="section">
-    <h2 class="kicker">Research Interests</h2>
-    <ul class="interests">
-      <li><strong>ML architecture &amp; compiler codesign</strong> — jointly optimizing model architectures and compilation stacks for efficient inference</li>
-      <li><strong>Domain-specific accelerators</strong> — HLS-based FPGA/ACAP design (AMD Versal) and GNN inference for real-time scientific applications</li>
-      <li><strong>GPU performance engineering</strong> — CUDA kernel optimization and profiling with Nsight Systems/Compute</li>
-      <li><strong>Efficient machine learning</strong> — low-precision arithmetic and lightweight architectures for constrained deployment</li>
+  <section class="section" id="news">
+    <h2 class="kicker">News</h2>
+    <ul class="news">
+      <li><time>Dec 2025</time><span>Received the <strong>Elite New Graduate Scholarship</strong> from the Industry Academia Innovation School, NYCU.</span></li>
+      <li><time>Nov 2025</time><span>Our ultra-lightweight HDC-CNN placed <strong>Top-20</strong> in the <a href="/#weak-lensing">NeurIPS 2025 FAIR Universe Weak-Lensing Challenge</a>.</span></li>
+      <li><time>Sep 2025</time><span>Presented our work on <a href="/#fastml-gpu-tracking">real-time GPU Kalman-filter tracking</a> at the Fast Machine Learning for Science Conference, CERN.</span></li>
+      <li><time>Sep 2025</time><span>Started my M.Eng. at NYCU as a graduate research assistant in the Parallel Computing System Laboratory.</span></li>
+      <li><time>Aug 2025</time><span>Received the <strong>Excellent Poster Award</strong> at TJCAS 2025 for our <a href="/#higtr-tjcas">GNN-based trajectory reconstruction on FPGA</a>.</span></li>
+      <li><time>Nov 2024</time><span>Joined the <a href="https://a3d3.ai/">A3D3 Institute</a> as an affiliate trainee and <a href="https://www.andestech.com/en/">Andes Technology</a> as a digital IC design intern.</span></li>
     </ul>
   </section>
 
-  <section class="section">
+  <section class="section" id="research">
+    <h2 class="kicker">Research Interests</h2>
+    <ul class="interests">
+      <li><strong>ML architecture &amp; compiler codesign</strong><span>jointly optimizing model architectures and compilation stacks for efficient inference</span></li>
+      <li><strong>Domain-specific accelerators</strong><span>HLS-based FPGA/ACAP design (AMD Versal) and GNN inference for real-time science</span></li>
+      <li><strong>GPU performance engineering</strong><span>CUDA kernel optimization and profiling with Nsight Systems/Compute</span></li>
+      <li><strong>Efficient machine learning</strong><span>low-precision arithmetic and lightweight architectures for constrained deployment</span></li>
+    </ul>
+  </section>
+
+  <section class="section" id="publications">
+    <h2 class="kicker">Publications</h2>
+
+    <div class="pub" id="unitrac">
+      <img class="thumb" src="/images/thumbs/unitrac.png" alt="" width="342" height="482" loading="lazy" decoding="async">
+      <div>
+        <h3>UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</h3>
+        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang*</strong>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai</p>
+        <p class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2025 <span class="chip chip-muted">in submission</span></p>
+        <p class="tldr">One FPGA accelerator that runs the entire GNN tracking pipeline — graph construction, GNN inference, and track labeling — within the real-time budgets of the HL-LHC.</p>
+        <details>
+          <summary>Abstract</summary>
+          <p>Trajectory reconstruction in high-energy physics, particularly for the High-Luminosity Large Hadron Collider (HL-LHC), presents a significant computational challenge due to the immense pile-up and data rates. This paper presents a unified Field-Programmable Gate Array (FPGA) accelerator of a complete Graph Neural Network (GNN)-based pipeline for particle tracking. By leveraging the parallel processing capabilities of FPGAs, we propose an efficient hardware architecture that accelerates the GNN inference process. The design optimizes both latency and throughput, ensuring that the trajectory reconstruction meets the stringent real-time requirements of the HL-LHC experiments. Our implementation demonstrates the feasibility and performance benefits of using FPGA-accelerated GNNs for next-generation particle detector trigger systems.</p>
+        </details>
+        <details class="bibtex">
+          <summary>BibTeX</summary>
+          <pre>@article{yang2025unitrac,
+  title   = {UniTrac: A Unified FPGA Accelerator for GNN-based
+             Particle Track Reconstruction in HEPs},
+  author  = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
+             and Rios, Edwin Arkel and Parajuli, Santosh and
+             Neubauer, Mark S. and Hsu, Shih-Chieh and Lai, Bo-Cheng},
+  journal = {ACM Transactions on Reconfigurable Technology and Systems},
+  note    = {In submission},
+  year    = {2025}
+}</pre>
+        </details>
+      </div>
+    </div>
+
+    <div class="pub" id="fastml-gpu-tracking">
+      <img class="thumb" src="/images/thumbs/fastml.png" alt="" width="340" height="480" loading="lazy" decoding="async">
+      <div>
+        <h3>Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</h3>
+        <p class="authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
+        <p class="venue">Fast Machine Learning for Science Conference, CERN (hybrid), 2025</p>
+        <p class="tldr">Kernel refactoring plus INT8 surrogate models make GPU Kalman-filter track finding fast enough for trigger-level use at high-luminosity colliders.</p>
+        <div class="pub-links">
+          <a class="btn" href="/files/fastml2025-poster.pdf">Poster</a>
+          <a class="btn" href="/images/fastml-presentation.jpg">Photo</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <p>Standard Kalman Filter-based tracking algorithms are computationally intensive and struggle to scale with the high-luminosity conditions expected at future colliders. This work presents a real-time GPU-accelerated tracking approach that leverages kernel refactoring and low-precision INT8 surrogates to enhance performance. By optimizing memory access patterns and utilizing reduced-precision arithmetic, we achieve a substantial speedup in tracking throughput without compromising physics accuracy. The proposed method effectively utilizes the massive parallelism of modern GPUs, demonstrating its potential as a viable solution for the online trigger level tracking at the HL-LHC.</p>
+        </details>
+        <details class="bibtex">
+          <summary>BibTeX</summary>
+          <pre>@misc{liang2025realtime,
+  title        = {Real-Time GPU Kalman-Filter Tracking via Kernel
+                  Refactoring and INT8 Surrogates for
+                  High-Luminosity Colliders},
+  author       = {Liang, Hao-Chun and Chou, Yuan-Tang and Lai, Bo-Cheng},
+  howpublished = {Poster at the Fast Machine Learning for Science
+                  Conference, CERN},
+  year         = {2025}
+}</pre>
+        </details>
+      </div>
+    </div>
+
+    <div class="pub" id="higtr-tjcas">
+      <img class="thumb" src="/images/thumbs/tjcas.png" alt="" width="340" height="480" loading="lazy" decoding="async">
+      <div>
+        <h3>An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</h3>
+        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
+        <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
+        <p class="tldr">End-to-end GNN trajectory reconstruction — embedding, graph building, and inference — running as one integrated FPGA design.</p>
+        <div class="pub-links">
+          <a class="btn" href="/files/tjcas_gnn_trajectory_reconstruction.pdf">Paper</a>
+          <a class="btn" href="/files/tjcas2025-slides.pdf">Slides</a>
+          <a class="btn" href="/files/tjcas2025-poster.pdf">Poster</a>
+          <a class="btn" href="/images/tjcas-award.jpg">Photo</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <p>Trajectory reconstruction in high-energy physics, particularly for the High-Luminosity Large Hadron Collider (HL-LHC), presents a significant computational challenge due to the immense pile-up and data rates. This paper presents an integrated Field-Programmable Gate Array (FPGA) implementation of a complete Graph Neural Network (GNN)-based pipeline for particle tracking. By leveraging the parallel processing capabilities of FPGAs, we propose an efficient hardware architecture that accelerates the GNN inference process. The design optimizes both latency and throughput, ensuring that the trajectory reconstruction meets the stringent real-time requirements of the HL-LHC experiments. Our implementation demonstrates the feasibility and performance benefits of using FPGA-accelerated GNNs for next-generation particle detector trigger systems.</p>
+        </details>
+        <details class="bibtex">
+          <summary>BibTeX</summary>
+          <pre>@inproceedings{yang2025integrated,
+  title     = {An Integrated FPGA Implementation of Complete
+               GNN-Based Trajectory Reconstruction},
+  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
+               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
+               Neubauer, Mark and Pandey, Santosh},
+  booktitle = {Taiwan and Japan Conference on Circuits and Systems (TJCAS)},
+  year      = {2025}
+}</pre>
+        </details>
+      </div>
+    </div>
+
+    <div class="pub" id="gnn-fpga-vlsi">
+      <img class="thumb" src="/images/thumbs/vlsicad.png" alt="" width="340" height="480" loading="lazy" decoding="async">
+      <div>
+        <h3>A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</h3>
+        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
+        <p class="venue">VLSI Design / CAD Symposium, 2025</p>
+        <p class="tldr">HiGTR maps the sparse, irregular dataflow of GNN tracking onto FPGA processing elements, clearing HL-LHC latency and throughput requirements.</p>
+        <div class="pub-links">
+          <a class="btn" href="/files/gnn_trajectory_reconstruction.pdf">Paper</a>
+          <a class="btn" href="/files/vlsicad2025-slides.pdf">Slides</a>
+          <a class="btn" href="/images/vlsicad-presentation.jpg">Photo</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <p>We propose a high-performance hardware implementation for GNN-based trajectory reconstruction, tailored for the computing demands of the High-Luminosity LHC. This work focuses on optimizing the hardware mapping of Graph Neural Networks onto FPGA platforms to maximize throughput and minimize latency. The proposed architecture, referred to as HiGTR, employs efficient dataflow management and processing element utilization to handle the sparse and irregular nature of graph data in particle tracking. Experimental results indicate that our FPGA-based solution significantly exceeds the baseline latency and throughput requirements, providing a robust and scalable solution for real-time edge processing in high-energy physics applications.</p>
+        </details>
+        <details class="bibtex">
+          <summary>BibTeX</summary>
+          <pre>@inproceedings{yang2025higtr,
+  title     = {A High-Performance Implementation of GNN-Based
+               Trajectory Reconstruction on FPGA},
+  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
+               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
+               Neubauer, Mark and Pandey, Santosh},
+  booktitle = {VLSI Design/CAD Symposium},
+  year      = {2025}
+}</pre>
+        </details>
+      </div>
+    </div>
+
+    <div class="pub" id="tgda-fgir">
+      <img class="thumb" src="/images/thumbs/fgir.png" alt="" width="371" height="480" loading="lazy" decoding="async">
+      <div>
+        <h3>Fine-Grained Image Recognition from Scratch with Teacher-Guided Data Augmentation</h3>
+        <p class="authors">Edwin Arkel Rios, Fernando Mikael, Oswin Gosal, Femiloye Oyerinde, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai, Min-Chun Hu</p>
+        <p class="venue">arXiv preprint, 2025</p>
+        <p class="tldr">Teacher-guided data augmentation trains fine-grained recognition models from scratch — no ImageNet pretraining — matching pretrained baselines at a fraction of the compute.</p>
+        <div class="pub-links">
+          <a class="btn" href="/files/fgir.pdf">Paper</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <p>Fine-grained image recognition (FGIR) aims to distinguish visually similar sub-categories within a broader class. While most existing FGIR methods rely on backbones pretrained on large-scale datasets like ImageNet, this dependence limits adaptability to resource-constrained environments and hinders the development of task-specific architectures. In this work, we challenge the conventional reliance on pretrained models by introducing a novel training framework called Teacher-Guided Data Augmentation (TGDA). TGDA integrates data-aware augmentation with weak supervision via a fine-grained-aware teacher model, implemented through knowledge distillation. This framework enables the training of high-performance FGIR systems entirely from scratch, unlocking the design of task-specific architectures such as LRNets for low-resolution FGIR and ViTFS, a family of Vision Transformers optimized for efficient inference. Extensive experiments across three FGIR benchmarks show that our method matches or surpasses state-of-the-art pretrained counterparts, improving accuracy by up to 23% in low-resolution settings while significantly reducing parameters and computational costs.</p>
+        </details>
+        <details class="bibtex">
+          <summary>BibTeX</summary>
+          <pre>@misc{rios2025tgda,
+  title  = {Fine-Grained Image Recognition from Scratch with
+            Teacher-Guided Data Augmentation},
+  author = {Rios, Edwin Arkel and Mikael, Fernando and Gosal, Oswin
+            and Oyerinde, Femiloye and Liang, Hao-Chun and
+            Lai, Bo-Cheng and Hu, Min-Chun},
+  note   = {arXiv preprint},
+  year   = {2025}
+}</pre>
+        </details>
+      </div>
+    </div>
+
+    <p class="pub-note">* denotes corresponding author.</p>
+  </section>
+
+  <section class="section" id="projects">
+    <h2 class="kicker">Projects</h2>
+
+    <div class="project-grid">
+
+      <div class="project" id="traccc">
+        <h3>Optimization of CUDA Pipeline for Particle Tracking at HL-LHC</h3>
+        <p class="meta">A3D3 Institute, University of Washington · Nov 2024 – Present</p>
+        <p class="desc">High-performance GPU optimization for the traccc particle-tracking pipeline at the High-Luminosity LHC: accelerating real-time trajectory reconstruction through low-level CUDA kernel tuning and memory-access optimization to maximize throughput on heterogeneous platforms.</p>
+        <div class="tags">
+          <span class="chip chip-muted">C++</span><span class="chip chip-muted">CUDA</span><span class="chip chip-muted">SYCL</span><span class="chip chip-muted">Alpaka</span>
+        </div>
+        <div class="links">
+          <a class="btn" href="https://github.com/noyaboy/traccc-optimization">GitHub</a>
+          <a class="btn" href="/#fastml-gpu-tracking">Related: FastML 2025 poster</a>
+        </div>
+      </div>
+
+      <div class="project" id="weak-lensing">
+        <h3>UltraLightweight HDC-CNN for Weak-Lensing Convergence Maps <span class="chip chip-award">Top-20</span></h3>
+        <p class="meta">NeurIPS 2025 FAIR Universe Challenge · Oct – Nov 2025</p>
+        <p class="desc">A top-20 solution to the NeurIPS 2025 FAIR Universe Weak-Lensing Challenge using an ultra-lightweight 0.2M-parameter model: an HDC-CNN architecture combined with an 8-model Mixture-of-Gaussians ensemble and isotonic calibration for robust uncertainty quantification at minimal cost.</p>
+        <div class="tags">
+          <span class="chip chip-muted">Python</span><span class="chip chip-muted">PyTorch</span><span class="chip chip-muted">TensorFlow</span>
+        </div>
+        <div class="links">
+          <a class="btn" href="/files/FAIR_Universe_Submission_Writeup.pdf">Write-up</a>
+          <a class="btn" href="https://github.com/noyaboy/Weak-Lensing-Uncertainty-Challenge">GitHub</a>
+        </div>
+      </div>
+
+      <div class="project" id="regfile-codegen">
+        <h3>Regfile Automatic Code Generation</h3>
+        <p class="meta">Andes Technology · Nov 2024 – Aug 2025</p>
+        <p class="desc">An automation tool that streamlines hardware IP design workflows: it parses standardized CSV register definitions and generates synthesizable Verilog register files, C/C++ headers, and documentation — keeping the hardware–software interface consistent while accelerating the development cycle.</p>
+        <div class="tags">
+          <span class="chip chip-muted">Perl</span><span class="chip chip-muted">Python</span><span class="chip chip-muted">Verilog</span><span class="chip chip-muted">Shell</span>
+        </div>
+      </div>
+
+      <div class="project" id="token-reduction">
+        <h3>Token-Reduction Profiling for Vision Transformers</h3>
+        <p class="meta">NYCU · 2025</p>
+        <p class="desc">A performance analysis of token-reduction mechanisms in Vision Transformers using NVIDIA Nsight Systems and Nsight Compute: investigating computational bottlenecks and kernel-level execution to evaluate the trade-off between token pruning and inference latency.</p>
+        <div class="tags">
+          <span class="chip chip-muted">Python</span><span class="chip chip-muted">PyTorch</span><span class="chip chip-muted">Nsight</span>
+        </div>
+        <div class="links">
+          <a class="btn" href="/files/Profile_Token_Reduction_for_Vision_Transformer.pdf">Slides</a>
+          <a class="btn" href="https://github.com/noyaboy/TokenReductionPT">GitHub</a>
+        </div>
+      </div>
+
+      <div class="project" id="riscv-cpu">
+        <h3>RISC-V 5-Stage Pipelined CPU Core</h3>
+        <p class="meta">IC Design Laboratory, NTHU · Dec 2023 – Jan 2024</p>
+        <p class="desc">An RV32I processor with a classic five-stage pipeline (IF/ID/EX/MEM/WB), data forwarding and stall units for hazard resolution, a dual-bank instruction cache, and a single-port data cache. Synthesized at 179.21&nbsp;MHz on GPDK 45nm (158,257&nbsp;µm², 5.1&nbsp;mW).</p>
+        <div class="tags">
+          <span class="chip chip-muted">Verilog</span><span class="chip chip-muted">VCS</span><span class="chip chip-muted">Design Compiler</span><span class="chip chip-muted">Innovus</span>
+        </div>
+        <div class="links">
+          <a class="btn" href="/files/ICLAB_report.pdf">Report</a>
+          <a class="btn" href="https://github.com/noyaboy/5-Stage-Pipelined-RISC-V-CPU-Core">GitHub</a>
+        </div>
+      </div>
+
+      <div class="project" id="deep-learning">
+        <h3>Deep Learning — Course Materials</h3>
+        <p class="meta">Coursework</p>
+        <p class="desc">Course materials and assignments for Deep Learning, covering neural networks, CNNs, RNNs, and modern deep-learning techniques, with a recorded presentation.</p>
+        <div class="tags">
+          <span class="chip chip-muted">Python</span><span class="chip chip-muted">PyTorch</span>
+        </div>
+        <div class="links">
+          <a class="btn" href="https://github.com/noyaboy/DeepLearning">GitHub</a>
+          <a class="btn" href="https://www.youtube.com/watch?v=otA_Glv_Dfk">Presentation</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" id="education">
     <h2 class="kicker">Education</h2>
 
     <div class="cv-item">
@@ -102,49 +357,34 @@
     </div>
   </section>
 
-  <section class="section">
-    <h2 class="kicker">News</h2>
-    <ul class="news">
-      <li><time>Dec 2025</time><span>Received the <strong>Elite New Graduate Scholarship</strong> from the Industry Academia Innovation School, NYCU.</span></li>
-      <li><time>Nov 2025</time><span>Our ultra-lightweight HDC-CNN placed <strong>Top-20</strong> in the <a href="/projects/#weak-lensing">NeurIPS 2025 FAIR Universe Weak-Lensing Challenge</a>.</span></li>
-      <li><time>Sep 2025</time><span>Presented our work on <a href="/publications/#fastml-gpu-tracking">real-time GPU Kalman-filter tracking</a> at the Fast Machine Learning for Science Conference, CERN.</span></li>
-      <li><time>Sep 2025</time><span>Started my M.Eng. at NYCU as a graduate research assistant in the Parallel Computing System Laboratory.</span></li>
-      <li><time>Aug 2025</time><span>Received the <strong>Excellent Poster Award</strong> at TJCAS 2025 for our <a href="/publications/#higtr-tjcas">GNN-based trajectory reconstruction on FPGA</a>.</span></li>
-      <li><time>Nov 2024</time><span>Joined the <a href="https://a3d3.ai/">A3D3 Institute</a> as an affiliate trainee and <a href="https://www.andestech.com/en/">Andes Technology</a> as a digital IC design intern.</span></li>
-    </ul>
-  </section>
+  <section class="section" id="experience">
+    <h2 class="kicker">Experience</h2>
 
-  <section class="section">
-    <h2 class="kicker">Selected Publications</h2>
-
-    <div class="pub">
-      <img class="thumb" src="/images/thumbs/unitrac.png" alt="">
-      <div>
-        <h3><a href="/publications/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a></h3>
-        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang*</strong>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai</p>
-        <p class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2025 <span class="chip chip-muted">in submission</span></p>
+    <div class="cv-item">
+      <div class="what">
+        <strong>Graduate Research Assistant</strong>
+        <span class="org"><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, NYCU</span>
       </div>
+      <span class="when">Sep 2025 – Present</span>
     </div>
 
-    <div class="pub">
-      <img class="thumb" src="/images/thumbs/fastml.png" alt="">
-      <div>
-        <h3><a href="/publications/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a></h3>
-        <p class="authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
-        <p class="venue">Fast Machine Learning for Science Conference, CERN, 2025</p>
+    <div class="cv-item">
+      <div class="what">
+        <strong>Affiliate Trainee (remote)</strong>
+        <span class="org"><a href="https://a3d3.ai/">A3D3 Institute</a>, University of Washington</span>
       </div>
+      <span class="when">Nov 2024 – Present</span>
     </div>
 
-    <div class="pub">
-      <img class="thumb" src="/images/thumbs/tjcas.png" alt="">
-      <div>
-        <h3><a href="/publications/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a></h3>
-        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
-        <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
+    <div class="cv-item">
+      <div class="what">
+        <strong>Digital IC Design Intern</strong>
+        <span class="org"><a href="https://www.andestech.com/en/">Andes Technology Corporation</a></span>
       </div>
+      <span class="when">Nov 2024 – Aug 2025</span>
     </div>
 
-    <p><a href="/publications/">All publications →</a></p>
+    <p class="cv-note" style="margin-top:1.4rem">Full details on the <a href="/cv/">CV page</a> or in the <a href="/files/resume.pdf?v=11">PDF résumé</a>.</p>
   </section>
 
 </main>
@@ -155,10 +395,11 @@
       <span>© 2026 Hao-Chun Liang · Last updated July 2026</span>
       <span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a> · <a href="https://github.com/noyaboy">GitHub</a></span>
     </div>
-    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans</p>
+    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans · Patrolled by a Bichon Frise and an orange tabby</p>
   </div>
 </footer>
 
 <script src="/assets/pets.js" defer></script>
+<script src="/assets/theme.js" defer></script>
 </body>
 </html>
