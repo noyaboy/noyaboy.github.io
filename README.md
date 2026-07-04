@@ -10,7 +10,7 @@ Keenan Crane, Andrej Karpathy): everything a reviewer needs on one page.
 - `assets/site.css` — the entire design system (light/dark via `prefers-color-scheme` + manual toggle)
 - `assets/fonts/` — self-hosted variable woff2 subsets of Newsreader & Source Sans 3
 - `assets/theme.js` — light/dark toggle; `assets/pets.js` — the resident Bichon & tabby; `assets/tracks.js` — pale specks drift beneath the page, and clicks ink faint collider-event tracks
-- `files/`, `images/`, `input/` — papers, slides, photos, source materials
+- `files/`, `images/` — papers, slides, photos (working materials stay out of the repo — `/input/` is gitignored)
 - `publications/`, `projects/`, `portfolio/`, `publication/`, `lectures/`, `about/`, `resume/` — redirect stubs preserving old URLs (hash-forwarding where needed)
 
 Deployed via GitHub Pages (`.nojekyll`, no build).

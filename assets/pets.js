@@ -31,6 +31,9 @@
     '@keyframes pet-wag{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(7deg);}}',
     '.pet-heart{position:fixed;z-index:60;font-size:15px;color:#e2607a;pointer-events:none;transform:translate(-50%,0);animation:pet-heart 1.1s ease-out forwards;}',
     '@keyframes pet-heart{from{opacity:0;transform:translate(-50%,4px) scale(.7);}20%{opacity:1;}to{opacity:0;transform:translate(-50%,-44px) scale(1.15);}}',
+    '.pet .ground{fill:rgba(60,50,30,.10);}',
+    '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pet .ground{fill:rgba(0,0,0,.4);}}',
+    ':root[data-theme="dark"] .pet .ground{fill:rgba(0,0,0,.4);}',
     '@media (prefers-reduced-motion:reduce){.pet *{animation:none !important;}}',
     '@media print{.pet-layer,.pet,.pet-heart{display:none !important;}}'
   ].join('\n');
@@ -69,7 +72,7 @@
         '<path d="M-4.5,12 q4.5,3.4 9,0" fill="none" stroke="#4b4238" stroke-width="1.3" stroke-linecap="round"/>' +
       '</g>' +
     '</defs>' +
-    '<ellipse cx="62" cy="101" rx="42" ry="3" fill="rgba(60,50,30,.10)"/>' +
+    '<ellipse class="ground" cx="62" cy="101" rx="42" ry="3"/>' +
     '<g class="pose pose-stand">' +
       '<g transform="translate(48,82)"><g class="leg leg-a"><rect x="-5.5" y="0" width="11" height="18" rx="5.5" fill="#efe8d8" stroke="#dbd2c3" stroke-width="1.1"/></g></g>' +
       '<g transform="translate(74,82)"><g class="leg leg-b"><rect x="-5.5" y="0" width="11" height="18" rx="5.5" fill="#efe8d8" stroke="#dbd2c3" stroke-width="1.1"/></g></g>' +
@@ -129,7 +132,7 @@
         '<path d="M-8.5,4 L-24,1.5 M-8.5,7.5 L-24,8.5 M8.5,4 L24,1.5 M8.5,7.5 L24,8.5" fill="none" stroke="rgba(94,70,42,.32)" stroke-width="1" stroke-linecap="round"/>' +
       '</g>' +
     '</defs>' +
-    '<ellipse cx="66" cy="101" rx="42" ry="3" fill="rgba(60,50,30,.10)"/>' +
+    '<ellipse class="ground" cx="66" cy="101" rx="42" ry="3"/>' +
     '<g class="pose pose-stand">' +
       '<g transform="translate(50,80)"><g class="leg leg-a"><use href="#cat-paw-far"/></g></g>' +
       '<g transform="translate(86,80)"><g class="leg leg-b"><use href="#cat-paw-far"/></g></g>' +
@@ -254,8 +257,18 @@
     setTimeout(function () { h.remove(); }, 1200);
   }
 
+  /* The loop only takes animation frames while a pet is actually moving.
+     When both are resting, it parks on a single setTimeout aimed at the
+     earliest state deadline, and stops entirely while the tab is hidden —
+     so an idle page spends nothing on the pets. */
   var last = performance.now();
+  var rafId = null;
+  var timerId = null;
+
+  function moving(p) { return p.state === 'walk' || p.state === 'run'; }
+
   function tick(now) {
+    rafId = null;
     var dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     for (var i = 0; i < pets.length; i++) {
@@ -284,9 +297,44 @@
       }
       render(p);
     }
-    requestAnimationFrame(tick);
+    schedule(now);
   }
-  requestAnimationFrame(tick);
+
+  function schedule(now) {
+    if (document.hidden) return;
+    if (moving(dog) || moving(cat)) {
+      if (rafId === null) rafId = requestAnimationFrame(tick);
+    } else {
+      var delay = Math.max(16, Math.min(dog.until, cat.until) - now);
+      if (timerId !== null) clearTimeout(timerId);
+      timerId = setTimeout(function () {
+        timerId = null;
+        last = performance.now();
+        tick(performance.now());
+      }, delay);
+    }
+  }
+
+  /* Cancel whatever is parked and take a fresh frame — used after any
+     out-of-band state change (pet clicks, tab becoming visible again). */
+  function kick() {
+    if (timerId !== null) { clearTimeout(timerId); timerId = null; }
+    if (rafId === null && !document.hidden) {
+      last = performance.now();
+      rafId = requestAnimationFrame(tick);
+    }
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+      if (timerId !== null) { clearTimeout(timerId); timerId = null; }
+    } else {
+      kick();
+    }
+  });
+
+  kick();
 
   layer.addEventListener('click', function (e) {
     var el = e.target.closest ? e.target.closest('.pet') : null;
@@ -306,5 +354,6 @@
         pets[i].until = performance.now() + 1600;
       }
     }
+    kick();
   });
 })();
