@@ -35,123 +35,138 @@
     '@media print{.pet-layer,.pet,.pet-heart{display:none !important;}}'
   ].join('\n');
 
-  /* ---- Bichon Frise: giant powder-puff head, apricot muzzle, stubby legs.
-         Faces right; floor at y=100. ---- */
+  /* ---- Bichon Frise (drawn from the owner's photo): giant powder-puff
+         head facing the visitor, black button eyes, apricot curly beard
+         around a black nose, cotton-ball body. Floor at y=100. ---- */
   var DOG =
   '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
     '<defs>' +
       '<g id="dog-head">' +
-        '<circle cx="-16" cy="-10" r="10" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<circle cx="-6" cy="-19" r="11" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<circle cx="7" cy="-19" r="11" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<circle cx="17" cy="-9" r="10" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<circle cx="21" cy="3" r="9" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<circle cx="-20" cy="2" r="9" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<circle cx="0" cy="0" r="22" fill="#f9f6ef" stroke="#ddd3c0" stroke-width="1.2"/>' +
-        '<ellipse cx="12" cy="10" rx="9.5" ry="8" fill="#eed7ab" stroke="#dcc08a" stroke-width="1.1"/>' +
-        '<ellipse cx="17" cy="3" rx="4.2" ry="3.6" fill="#2e2b27"/>' +
-        '<circle cx="3" cy="-2" r="3" fill="#2e2b27"/>' +
-        '<circle cx="4.2" cy="-3.2" r="1" fill="#ffffff"/>' +
-        '<path d="M13,15 q4,3 8,0" fill="none" stroke="#6b5f4e" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<circle cx="0" cy="-20" r="10" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="-13" cy="-16" r="9.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="13" cy="-16" r="9.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="-20" cy="-5" r="9" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="20" cy="-5" r="9" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="-17" cy="7" r="8.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="17" cy="7" r="8.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="-9" cy="14" r="8" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="9" cy="14" r="8" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="0" cy="0" r="21" fill="#fcfaf5"/>' +
+        '<ellipse cx="-8" cy="0" rx="4.2" ry="4.6" fill="#e6dcd2"/>' +
+        '<ellipse cx="8" cy="0" rx="4.2" ry="4.6" fill="#e6dcd2"/>' +
+        '<circle cx="-8" cy="0" r="3.1" fill="#211d1a"/>' +
+        '<circle cx="8" cy="0" r="3.1" fill="#211d1a"/>' +
+        '<circle cx="-7" cy="-1.1" r="1" fill="#ffffff"/>' +
+        '<circle cx="9" cy="-1.1" r="1" fill="#ffffff"/>' +
+        '<circle cx="-8" cy="11.5" r="5.2" fill="#edd5a5" stroke="#dcc190" stroke-width="0.9"/>' +
+        '<circle cx="8" cy="11.5" r="5.2" fill="#edd5a5" stroke="#dcc190" stroke-width="0.9"/>' +
+        '<circle cx="-3.5" cy="15" r="4.3" fill="#edd5a5" stroke="#dcc190" stroke-width="0.9"/>' +
+        '<circle cx="3.5" cy="15" r="4.3" fill="#edd5a5" stroke="#dcc190" stroke-width="0.9"/>' +
+        '<ellipse cx="0" cy="11" rx="5.6" ry="5" fill="#f4e5c0"/>' +
+        '<ellipse cx="0" cy="6" rx="3.7" ry="3.2" fill="#26221f"/>' +
+        '<circle cx="-1.2" cy="5" r="0.9" fill="#5a534c"/>' +
+        '<path d="M0,9.2 l0,2.2" fill="none" stroke="#4b4238" stroke-width="1.1" stroke-linecap="round"/>' +
+        '<path d="M-4.5,12 q4.5,3.4 9,0" fill="none" stroke="#4b4238" stroke-width="1.3" stroke-linecap="round"/>' +
       '</g>' +
     '</defs>' +
-    '<ellipse cx="60" cy="101" rx="42" ry="3" fill="rgba(60,50,30,.10)"/>' +
-    '<g class="pose pose-stand" stroke-width="1.2">' +
-      '<g transform="translate(46,80)"><g class="leg leg-a"><rect x="-5" y="0" width="10" height="20" rx="5" fill="#efe8d8" stroke="#ddd3c0"/></g></g>' +
-      '<g transform="translate(76,80)"><g class="leg leg-b"><rect x="-5" y="0" width="10" height="20" rx="5" fill="#efe8d8" stroke="#ddd3c0"/></g></g>' +
-      '<g transform="translate(56,80)"><g class="leg leg-b"><rect x="-5" y="0" width="10" height="20" rx="5" fill="#f9f6ef" stroke="#ddd3c0"/></g></g>' +
-      '<g transform="translate(86,80)"><g class="leg leg-a"><rect x="-5" y="0" width="10" height="20" rx="5" fill="#f9f6ef" stroke="#ddd3c0"/></g></g>' +
-      '<g class="torso">' +
-        '<g class="tail-wag"><circle cx="24" cy="46" r="9" fill="#f9f6ef" stroke="#ddd3c0"/><circle cx="19" cy="40" r="6" fill="#f9f6ef" stroke="#ddd3c0"/></g>' +
-        '<circle cx="30" cy="58" r="10" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-        '<ellipse cx="56" cy="66" rx="30" ry="20" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-        '<circle cx="40" cy="50" r="10" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-        '<circle cx="56" cy="46" r="11" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-        '<circle cx="72" cy="50" r="10" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-        '<circle cx="78" cy="52" r="11" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-        '<use href="#dog-head" x="90" y="36"/>' +
-      '</g>' +
-    '</g>' +
-    '<g class="pose pose-sit" stroke-width="1.2">' +
-      '<circle cx="18" cy="90" r="8" fill="#f9f6ef" stroke="#ddd3c0"/><circle cx="13" cy="94" r="5" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<circle cx="46" cy="74" r="25" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<circle cx="34" cy="56" r="9" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<circle cx="48" cy="50" r="10" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<g transform="translate(64,82)"><rect x="-5" y="0" width="10" height="18" rx="5" fill="#efe8d8" stroke="#ddd3c0"/></g>' +
-      '<ellipse cx="70" cy="60" rx="19" ry="25" fill="#f9f6ef" stroke="#ddd3c0" transform="rotate(-12 70 60)"/>' +
-      '<g transform="translate(78,84)"><rect x="-5" y="0" width="10" height="16" rx="5" fill="#f9f6ef" stroke="#ddd3c0"/></g>' +
-      '<circle cx="76" cy="44" r="11" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<use href="#dog-head" x="86" y="26"/>' +
-    '</g>' +
-    '<g class="pose pose-lie" stroke-width="1.2">' +
-      '<circle cx="16" cy="88" r="8" fill="#f9f6ef" stroke="#ddd3c0"/><circle cx="11" cy="92" r="5" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<ellipse cx="54" cy="84" rx="34" ry="15" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<circle cx="38" cy="72" r="9" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<circle cx="54" cy="68" r="10" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<circle cx="78" cy="74" r="10" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<rect x="78" y="90" width="22" height="9" rx="4.5" fill="#f9f6ef" stroke="#ddd3c0"/>' +
-      '<use href="#dog-head" x="90" y="56"/>' +
-    '</g>' +
-  '</svg>';
-
-  /* ---- Orange tabby: chunky, ringed tail, white muzzle and paws,
-         green eyes, forehead tabby marks. Faces right; floor at y=100. ---- */
-  var CAT =
-  '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
-    '<defs>' +
-      '<g id="cat-paw"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#e6913c" stroke="#b25715" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#f6ead6" stroke="#b25715" stroke-width="1.1"/></g>' +
-      '<g id="cat-paw-far"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#d1762a" stroke="#b25715" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#e8d6bd" stroke="#b25715" stroke-width="1.1"/></g>' +
-      '<g id="cat-head">' +
-        '<path d="M-14,-7 L-19,-24 L-4,-13 Z" fill="#e6913c" stroke="#b25715" stroke-width="1.1" stroke-linejoin="round"/>' +
-        '<path d="M4,-14 L12,-26 L17,-9 Z" fill="#e6913c" stroke="#b25715" stroke-width="1.1" stroke-linejoin="round"/>' +
-        '<path d="M-13,-10 L-16,-19 L-7,-13 Z" fill="#f0a9a2"/>' +
-        '<path d="M6,-14 L10.5,-21.5 L14,-11 Z" fill="#f0a9a2"/>' +
-        '<circle cx="0" cy="0" r="16" fill="#e6913c" stroke="#b25715" stroke-width="1.1"/>' +
-        '<path d="M-6,-14 l1.5,6 M-1,-15.5 l1,6.5 M4,-14.5 l-.5,6" fill="none" stroke="#c96a1e" stroke-width="2.2" stroke-linecap="round"/>' +
-        '<ellipse cx="6" cy="8" rx="9.5" ry="7" fill="#fdf6ec"/>' +
-        '<path d="M10,3.5 l3.6,0 l-1.8,3.2 z" fill="#e58f96"/>' +
-        '<circle cx="2" cy="-2.5" r="3" fill="#9db43f"/>' +
-        '<ellipse cx="2.6" cy="-2.5" rx="1.2" ry="2.4" fill="#2c2a26"/>' +
-        '<path d="M14,6 L27,3 M14,9 L27,10" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1" stroke-linecap="round"/>' +
-      '</g>' +
-    '</defs>' +
-    '<ellipse cx="64" cy="101" rx="40" ry="3" fill="rgba(60,50,30,.10)"/>' +
+    '<ellipse cx="62" cy="101" rx="42" ry="3" fill="rgba(60,50,30,.10)"/>' +
     '<g class="pose pose-stand">' +
-      '<g transform="translate(48,80)"><g class="leg leg-a"><use href="#cat-paw-far"/></g></g>' +
-      '<g transform="translate(84,80)"><g class="leg leg-b"><use href="#cat-paw-far"/></g></g>' +
-      '<g transform="translate(58,80)"><g class="leg leg-b"><use href="#cat-paw"/></g></g>' +
-      '<g transform="translate(94,80)"><g class="leg leg-a"><use href="#cat-paw"/></g></g>' +
+      '<g transform="translate(48,82)"><g class="leg leg-a"><rect x="-5.5" y="0" width="11" height="18" rx="5.5" fill="#efe8d8" stroke="#dbd2c3" stroke-width="1.1"/></g></g>' +
+      '<g transform="translate(74,82)"><g class="leg leg-b"><rect x="-5.5" y="0" width="11" height="18" rx="5.5" fill="#efe8d8" stroke="#dbd2c3" stroke-width="1.1"/></g></g>' +
+      '<g transform="translate(58,82)"><g class="leg leg-b"><rect x="-5.5" y="0" width="11" height="18" rx="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.1"/></g></g>' +
+      '<g transform="translate(84,82)"><g class="leg leg-a"><rect x="-5.5" y="0" width="11" height="18" rx="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.1"/></g></g>' +
       '<g class="torso">' +
-        '<g class="tail-wag">' +
-          '<path d="M38,58 C26,54 20,42 24,30" fill="none" stroke="#e6913c" stroke-width="9" stroke-linecap="round"/>' +
-          '<path d="M29,47 C27.4,44 26.4,41 26,39" fill="none" stroke="#c96a1e" stroke-width="9" stroke-linecap="round"/>' +
-          '<path d="M24.6,33.5 C24.3,32.3 24.1,31.1 24,30" fill="none" stroke="#c96a1e" stroke-width="9" stroke-linecap="round"/>' +
-        '</g>' +
-        '<ellipse cx="66" cy="64" rx="31" ry="19" fill="#e6913c" stroke="#b25715" stroke-width="1.1"/>' +
-        '<ellipse cx="58" cy="76" rx="16" ry="7" fill="#f4e0c2"/>' +
-        '<path d="M50,48 q2,9 0,13 M62,45 q2,10 0,15 M74,46 q2,9 0,13 M85,50 q2,7 0,10" fill="none" stroke="#c96a1e" stroke-width="5" stroke-linecap="round"/>' +
-        '<use href="#cat-head" x="98" y="42"/>' +
+        '<g class="tail-wag"><circle cx="30" cy="52" r="9" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/><circle cx="24" cy="45" r="6" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/></g>' +
+        '<circle cx="44" cy="56" r="10" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<ellipse cx="62" cy="68" rx="28" ry="18" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="56" cy="52" r="11" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<circle cx="72" cy="54" r="10" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+        '<use href="#dog-head" x="92" y="34"/>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
-      '<path d="M34,96 C42,99.6 60,99.6 74,96" fill="none" stroke="#e6913c" stroke-width="8" stroke-linecap="round"/>' +
-      '<path d="M56,98.9 C60,98.8 63,98.4 66,97.8" fill="none" stroke="#c96a1e" stroke-width="8" stroke-linecap="round"/>' +
-      '<path d="M71,96.7 C72,96.5 73,96.3 74,96" fill="none" stroke="#c96a1e" stroke-width="8" stroke-linecap="round"/>' +
-      '<circle cx="52" cy="77" r="22" fill="#e6913c" stroke="#b25715" stroke-width="1.1"/>' +
-      '<path d="M38,68 q5,-9 16,-11 M36,79 q4,-8 13,-10" fill="none" stroke="#c96a1e" stroke-width="5" stroke-linecap="round"/>' +
-      '<g transform="translate(66,80)"><use href="#cat-paw-far"/></g>' +
-      '<ellipse cx="70" cy="58" rx="16" ry="26" fill="#e6913c" stroke="#b25715" stroke-width="1.1" transform="rotate(-8 70 58)"/>' +
-      '<g transform="translate(78,80)"><use href="#cat-paw"/></g>' +
-      '<use href="#cat-head" x="84" y="27"/>' +
+      '<g class="tail-wag"><circle cx="34" cy="92" r="8" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/><circle cx="27" cy="88" r="5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/></g>' +
+      '<ellipse cx="65" cy="82" rx="23" ry="16" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<ellipse cx="52" cy="94" rx="9" ry="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<ellipse cx="78" cy="94" rx="9" ry="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<use href="#dog-head" x="65" y="42"/>' +
     '</g>' +
     '<g class="pose pose-lie">' +
-      '<path d="M30,92 C36,97 48,98.5 60,96" fill="none" stroke="#e6913c" stroke-width="7" stroke-linecap="round"/>' +
-      '<path d="M52,97.6 C55,97.3 58,96.8 60,96" fill="none" stroke="#c96a1e" stroke-width="7" stroke-linecap="round"/>' +
-      '<ellipse cx="58" cy="85" rx="32" ry="14" fill="#e6913c" stroke="#b25715" stroke-width="1.1"/>' +
-      '<path d="M44,74 q2,8 0,11 M56,72 q2,9 0,12 M68,73 q2,8 0,11" fill="none" stroke="#c96a1e" stroke-width="5" stroke-linecap="round"/>' +
-      '<rect x="80" y="91" width="24" height="8" rx="4" fill="#e6913c" stroke="#b25715" stroke-width="1.1"/>' +
-      '<rect x="98" y="91" width="8" height="8" rx="4" fill="#f6ead6" stroke="#b25715" stroke-width="1.1"/>' +
-      '<use href="#cat-head" x="90" y="58"/>' +
+      '<circle cx="24" cy="90" r="8" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/><circle cx="18" cy="94" r="5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<ellipse cx="56" cy="87" rx="30" ry="13" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<ellipse cx="52" cy="96" rx="10" ry="4.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<ellipse cx="76" cy="96" rx="10" ry="4.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<use href="#dog-head" x="86" y="60"/>' +
+    '</g>' +
+  '</svg>';
+
+  /* ---- Orange mackerel tabby (drawn from the owner's photo): chunky body,
+         forehead "M" and flank stripes, pale green eyes facing the visitor,
+         white muzzle, ringed tail, cream paw tips. Floor at y=100. ---- */
+  var CAT =
+  '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' +
+      '<g id="cat-paw"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#f6e8d2" stroke="#b25715" stroke-width="1.1"/></g>' +
+      '<g id="cat-paw-far"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#d1762a" stroke="#b25715" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#e8d6bd" stroke="#b25715" stroke-width="1.1"/></g>' +
+      '<g id="cat-head">' +
+        '<path d="M-4,-12 L-11,-21.5 L-16.5,-7 Z" fill="#e8933d" stroke="#b25715" stroke-width="1.1" stroke-linejoin="round"/>' +
+        '<path d="M4,-12 L11,-21.5 L16.5,-7 Z" fill="#e8933d" stroke="#b25715" stroke-width="1.1" stroke-linejoin="round"/>' +
+        '<path d="M-7,-12.6 L-10.8,-18.2 L-13.4,-9.4 Z" fill="#f0aca0"/>' +
+        '<path d="M7,-12.6 L10.8,-18.2 L13.4,-9.4 Z" fill="#f0aca0"/>' +
+        '<circle cx="0" cy="0" r="15.5" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
+        '<path d="M-5.5,-13.5 q1.4,3.8 1,6 M-0.3,-15 q0.4,4.4 0.2,6.6 M5,-13.5 q-1.4,3.8 -1,6" fill="none" stroke="#c9711f" stroke-width="2.2" stroke-linecap="round"/>' +
+        '<path d="M-13.5,-6.5 l4.6,2.4 M13.5,-6.5 l-4.6,2.4" fill="none" stroke="#c9711f" stroke-width="2" stroke-linecap="round"/>' +
+        '<path d="M-15.3,2 l5,0.8 M15.3,2 l-5,0.8" fill="none" stroke="#c9711f" stroke-width="1.8" stroke-linecap="round"/>' +
+        '<ellipse cx="0" cy="7.8" rx="7.2" ry="5.4" fill="#fdf5e9"/>' +
+        '<ellipse cx="-5.8" cy="-1.6" rx="3.1" ry="3.5" fill="#bcc97b" stroke="#8a7a3c" stroke-width="0.4"/>' +
+        '<ellipse cx="5.8" cy="-1.6" rx="3.1" ry="3.5" fill="#bcc97b" stroke="#8a7a3c" stroke-width="0.4"/>' +
+        '<ellipse cx="-5.8" cy="-1.6" rx="1.15" ry="2.7" fill="#2c2a26"/>' +
+        '<ellipse cx="5.8" cy="-1.6" rx="1.15" ry="2.7" fill="#2c2a26"/>' +
+        '<circle cx="-5" cy="-2.8" r="0.85" fill="#ffffff"/>' +
+        '<circle cx="6.6" cy="-2.8" r="0.85" fill="#ffffff"/>' +
+        '<path d="M-2,3.8 L2,3.8 L0,6.6 Z" fill="#d5876b" stroke="#b25715" stroke-width="0.6" stroke-linejoin="round"/>' +
+        '<path d="M0,6.6 q0,1.9 -2.6,2.7 M0,6.6 q0,1.9 2.6,2.7" fill="none" stroke="#a67b52" stroke-width="1" stroke-linecap="round"/>' +
+        '<path d="M-8.5,4 L-24,1.5 M-8.5,7.5 L-24,8.5 M8.5,4 L24,1.5 M8.5,7.5 L24,8.5" fill="none" stroke="rgba(94,70,42,.32)" stroke-width="1" stroke-linecap="round"/>' +
+      '</g>' +
+    '</defs>' +
+    '<ellipse cx="66" cy="101" rx="42" ry="3" fill="rgba(60,50,30,.10)"/>' +
+    '<g class="pose pose-stand">' +
+      '<g transform="translate(50,80)"><g class="leg leg-a"><use href="#cat-paw-far"/></g></g>' +
+      '<g transform="translate(86,80)"><g class="leg leg-b"><use href="#cat-paw-far"/></g></g>' +
+      '<g transform="translate(60,80)"><g class="leg leg-b"><use href="#cat-paw"/></g></g>' +
+      '<g transform="translate(96,80)"><g class="leg leg-a"><use href="#cat-paw"/></g></g>' +
+      '<g class="torso">' +
+        '<g class="tail-wag">' +
+          '<path d="M40,60 C27,56 20,43 25,30" fill="none" stroke="#e8933d" stroke-width="10" stroke-linecap="round"/>' +
+          '<path d="M30.5,48.5 C28.8,45.5 27.8,42.5 27.4,40.5" fill="none" stroke="#c9711f" stroke-width="10" stroke-linecap="round"/>' +
+          '<path d="M25.6,34 C25.3,32.7 25.1,31.3 25,30" fill="none" stroke="#c9711f" stroke-width="10" stroke-linecap="round"/>' +
+        '</g>' +
+        '<ellipse cx="68" cy="63" rx="33" ry="21" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
+        '<ellipse cx="60" cy="76" rx="17" ry="7" fill="#f6e8d2"/>' +
+        '<path d="M50,45 q3,12 0,18 M62,42 q3,14 0,20 M75,43 q3,12 0,18 M87,48 q3,9 0,13" fill="none" stroke="#c9711f" stroke-width="5" stroke-linecap="round"/>' +
+        '<use href="#cat-head" x="100" y="40"/>' +
+      '</g>' +
+    '</g>' +
+    '<g class="pose pose-sit">' +
+      '<path d="M36,96 C44,99.6 62,99.6 76,96" fill="none" stroke="#e8933d" stroke-width="8" stroke-linecap="round"/>' +
+      '<path d="M58,98.9 C62,98.8 65,98.4 68,97.8" fill="none" stroke="#c9711f" stroke-width="8" stroke-linecap="round"/>' +
+      '<path d="M73,96.7 C74,96.5 75,96.3 76,96" fill="none" stroke="#c9711f" stroke-width="8" stroke-linecap="round"/>' +
+      '<circle cx="56" cy="78" r="21" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
+      '<path d="M42,69 q5,-9 16,-11 M40,80 q4,-8 13,-10" fill="none" stroke="#c9711f" stroke-width="5" stroke-linecap="round"/>' +
+      '<ellipse cx="73" cy="62" rx="16.5" ry="24" fill="#e8933d" stroke="#b25715" stroke-width="1.1" transform="rotate(-7 73 62)"/>' +
+      '<path d="M64,52 q10,-4 18,0 M63,62 q10,-4 20,0" fill="none" stroke="#c9711f" stroke-width="4.5" stroke-linecap="round"/>' +
+      '<g transform="translate(66,82)"><use href="#cat-paw-far"/></g>' +
+      '<g transform="translate(80,82)"><use href="#cat-paw"/></g>' +
+      '<use href="#cat-head" x="75" y="30"/>' +
+    '</g>' +
+    '<g class="pose pose-lie">' +
+      '<path d="M28,92 C34,97 46,98.5 58,96" fill="none" stroke="#e8933d" stroke-width="7" stroke-linecap="round"/>' +
+      '<path d="M50,97.6 C53,97.3 56,96.8 58,96" fill="none" stroke="#c9711f" stroke-width="7" stroke-linecap="round"/>' +
+      '<ellipse cx="56" cy="86" rx="33" ry="13.5" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
+      '<path d="M42,74 q3,10 0,14 M55,72 q3,11 0,15 M68,73 q3,10 0,14" fill="none" stroke="#c9711f" stroke-width="5" stroke-linecap="round"/>' +
+      '<rect x="80" y="91" width="24" height="8" rx="4" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
+      '<rect x="97" y="91" width="8" height="8" rx="4" fill="#f6e8d2" stroke="#b25715" stroke-width="1.1"/>' +
+      '<use href="#cat-head" x="88" y="61"/>' +
     '</g>' +
   '</svg>';
 
@@ -163,16 +178,16 @@
   layer.className = 'pet-layer';
   layer.setAttribute('aria-hidden', 'true');
   layer.innerHTML =
-    '<div class="pet pet-dog" data-state="walk" style="width:96px" title="woof">' + DOG + '<div class="zzz">z z</div></div>' +
-    '<div class="pet pet-cat" data-state="sit" style="width:92px" title="meow">' + CAT + '<div class="zzz">z z</div></div>';
+    '<div class="pet pet-dog" data-state="walk" style="width:104px" title="woof">' + DOG + '<div class="zzz">z z</div></div>' +
+    '<div class="pet pet-cat" data-state="sit" style="width:100px" title="meow">' + CAT + '<div class="zzz">z z</div></div>';
   document.body.appendChild(layer);
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var pets = [
-    { el: layer.children[0], x: Math.max(8, innerWidth * 0.12), dir: 1, speed: 40, run: 115, w: 96,
+    { el: layer.children[0], x: Math.max(8, innerWidth * 0.12), dir: 1, speed: 40, run: 115, w: 104,
       state: 'walk', until: performance.now() + 4200, chase: null, rest: ['stand', 'sit', 'sit', 'lie'] },
-    { el: layer.children[1], x: Math.min(innerWidth - 100, innerWidth * 0.68), dir: -1, speed: 52, run: 140, w: 92,
+    { el: layer.children[1], x: Math.min(innerWidth - 108, innerWidth * 0.68), dir: -1, speed: 52, run: 140, w: 100,
       state: 'sit', until: performance.now() + 3200, chase: null, rest: ['sit', 'lie', 'lie', 'stand'] }
   ];
   var dog = pets[0], cat = pets[1];
