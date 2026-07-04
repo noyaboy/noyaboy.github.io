@@ -3,8 +3,8 @@
 	"short_name": "H.-C. Liang",
 	"start_url": "/",
 	"display": "browser",
-	"background_color": "#fdfcfa",
-	"theme_color": "#fdfcfa",
+	"background_color": "#faf7f1",
+	"theme_color": "#faf7f1",
 	"icons": [
 		{
 			"src": "/images/favicon-192x192.png",

@@ -12,7 +12,7 @@
   }
 
   function syncChrome(theme) {
-    var color = theme === 'dark' ? '#16181d' : '#fdfcfa';
+    var color = theme === 'dark' ? '#1a1815' : '#faf7f1';
     var metas = document.querySelectorAll('meta[name="theme-color"]');
     for (var i = 0; i < metas.length; i++) metas[i].setAttribute('content', color);
   }
