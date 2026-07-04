@@ -19,6 +19,7 @@
   --gold-text: #7c611e;
   --code-bg: #f3f0e9;
   --shadow: 0 10px 30px rgba(60, 50, 30, 0.08);
+  --pet-shadow: rgba(60, 50, 30, 0.10);
   color-scheme: light;
 }
 
@@ -37,6 +38,7 @@
     --gold-text: #e0c37c;
     --code-bg: #21242b;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    --pet-shadow: rgba(0, 0, 0, 0.45);
     color-scheme: dark;
   }
 }
@@ -420,6 +422,18 @@ strong { font-weight: 600; }
   color: var(--muted);
   border-left: 2px solid var(--hairline);
   padding: 0.2em 0 0.2em 1em;
+  margin: 0.6em 0 0;
+}
+
+.pub .bibtex pre {
+  background: var(--code-bg);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 0.75em 1em;
+  overflow-x: auto;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--muted);
   margin: 0.6em 0 0;
 }
 
