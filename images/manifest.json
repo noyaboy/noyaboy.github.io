@@ -1,5 +1,10 @@
 {
-	"name": "OOjs UI icon academic-progressive",
+	"name": "Hao-Chun Liang",
+	"short_name": "H.-C. Liang",
+	"start_url": "/",
+	"display": "browser",
+	"background_color": "#fdfcfa",
+	"theme_color": "#fdfcfa",
 	"icons": [
 		{
 			"src": "/images/favicon-192x192.png",

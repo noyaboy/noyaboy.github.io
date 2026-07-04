@@ -2,9 +2,15 @@
 
 Personal academic website of Hao-Chun Liang — hand-rolled static HTML/CSS, no build step.
 
-- `index.html`, `publications/`, `projects/`, `cv/`— pages (shared header/footer, one stylesheet)
-- `assets/site.css` — the entire design system (light/dark via `prefers-color-scheme`)
-- `files/`, `images/`, `input/` — papers, slides, photos, resume PDF
-- `portfolio/`, `publication/`, `lectures/` — redirect stubs preserving old Jekyll-era URLs
+Modeled on the single-page profiles of the best academic personal sites (Jon Barron,
+Keenan Crane, Andrej Karpathy): everything a reviewer needs on one page.
+
+- `index.html` — the whole profile: bio, news, publications (with TL;DRs, abstracts, BibTeX), projects, education, experience
+- `cv/` — printable vita page (+ PDF at `files/resume.pdf`)
+- `assets/site.css` — the entire design system (light/dark via `prefers-color-scheme` + manual toggle)
+- `assets/fonts/` — self-hosted variable woff2 subsets of Newsreader & Source Sans 3
+- `assets/theme.js` — light/dark toggle; `assets/pets.js` — the resident Bichon & tabby
+- `files/`, `images/`, `input/` — papers, slides, photos, source materials
+- `publications/`, `projects/`, `portfolio/`, `publication/`, `lectures/`, `about/`, `resume/` — redirect stubs preserving old URLs (hash-forwarding where needed)
 
 Deployed via GitHub Pages (`.nojekyll`, no build).
