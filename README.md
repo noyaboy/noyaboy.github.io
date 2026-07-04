@@ -9,7 +9,7 @@ Keenan Crane, Andrej Karpathy): everything a reviewer needs on one page.
 - `cv/` — printable vita page (+ PDF at `files/resume.pdf`)
 - `assets/site.css` — the entire design system (light/dark via `prefers-color-scheme` + manual toggle)
 - `assets/fonts/` — self-hosted variable woff2 subsets of Newsreader & Source Sans 3
-- `assets/theme.js` — light/dark toggle; `assets/pets.js` — the resident Bichon & tabby
+- `assets/theme.js` — light/dark toggle; `assets/pets.js` — the resident Bichon & tabby; `assets/tracks.js` — clicks ink faint collider-event tracks beneath the page
 - `files/`, `images/`, `input/` — papers, slides, photos, source materials
 - `publications/`, `projects/`, `portfolio/`, `publication/`, `lectures/`, `about/`, `resume/` — redirect stubs preserving old URLs (hash-forwarding where needed)
 
