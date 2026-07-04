@@ -14,9 +14,11 @@
   <link rel="manifest" href="/images/manifest.json">
   <meta property="og:title" content="Hao-Chun Liang">
   <meta property="og:description" content="M.Eng. student at NYCU — hardware acceleration for machine learning.">
-  <meta property="og:image" content="https://noyaboy.github.io/images/portrait.jpg">
+  <meta property="og:image" content="https://noyaboy.github.io/images/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://noyaboy.github.io/">
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="/assets/fonts/newsreader-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/source-sans-3-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
   <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
@@ -67,6 +69,7 @@
       <p class="eyebrow">Hardware · Compilers · Machine Learning</p>
       <h1>Hao-Chun Liang</h1>
       <p class="role">M.Eng. student · <a href="https://iais.nycu.edu.tw/en/intro1.html">Institute of Pioneer Semiconductor Innovation</a>, National Yang Ming Chiao Tung University</p>
+      <p class="thesis">Right now: making trigger-level particle tracking keep pace with 40 million beam crossings a second.</p>
       <p>I work on the hardware side of machine learning in the <a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, advised by Prof. Bo-Cheng Lai. As an affiliate trainee of the <a href="https://a3d3.ai/">A3D3 Institute</a>, I collaborate with researchers at the University of Washington and UIUC on real-time machine learning for high-energy physics.</p>
       <p>My current focus is accelerating particle track reconstruction for the High-Luminosity LHC — high-level synthesis (HLS) accelerator design for the <a href="https://github.com/acts-project/traccc">traccc</a> pipeline on the AMD Versal V80, and CUDA-level optimization of GPU Kalman-filter tracking. In the long term, I aim to pursue a Ph.D. on the codesign of ML architectures and compilers.</p>
       <div class="hero-actions">
@@ -86,6 +89,7 @@
       <li><time>Sep 2025</time><span>Presented our work on <a href="/#fastml-gpu-tracking">real-time GPU Kalman-filter tracking</a> at the Fast Machine Learning for Science Conference, CERN.</span></li>
       <li><time>Sep 2025</time><span>Started my M.Eng. at NYCU as a graduate research assistant in the Parallel Computing System Laboratory.</span></li>
       <li><time>Aug 2025</time><span>Received the <strong>Excellent Poster Award</strong> at TJCAS 2025 for our <a href="/#higtr-tjcas">GNN-based trajectory reconstruction on FPGA</a>.</span></li>
+      <li><time>Jul 2025</time><span>Our work on <a href="/#tgda-fgir">training fine-grained recognition models from scratch</a> (TGDA) is out on <a href="https://arxiv.org/abs/2507.12157">arXiv</a>.</span></li>
       <li><time>Nov 2024</time><span>Joined the <a href="https://a3d3.ai/">A3D3 Institute</a> as an affiliate trainee and <a href="https://www.andestech.com/en/">Andes Technology</a> as a digital IC design intern.</span></li>
     </ul>
   </section>
@@ -127,11 +131,56 @@
   year    = {2025}
 }</pre>
         </details>
+        <div class="pub-lineage">
+          <p class="lineage-note">Journal extension of our earlier conference work:</p>
+          <div class="pub-sub" id="higtr-tjcas">
+            <h4>An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</h4>
+            <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
+            <div class="pub-links">
+              <a class="btn" href="/files/tjcas_gnn_trajectory_reconstruction.pdf">Paper</a>
+              <a class="btn" href="/files/tjcas2025-slides.pdf">Slides</a>
+              <a class="btn" href="/files/tjcas2025-poster.pdf">Poster</a>
+              <a class="btn" href="/images/tjcas-award.jpg">Photo</a>
+            </div>
+            <details class="bibtex">
+              <summary>BibTeX</summary>
+              <pre>@inproceedings{yang2025integrated,
+  title     = {An Integrated FPGA Implementation of Complete
+               GNN-Based Trajectory Reconstruction},
+  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
+               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
+               Neubauer, Mark and Pandey, Santosh},
+  booktitle = {Taiwan and Japan Conference on Circuits and Systems (TJCAS)},
+  year      = {2025}
+}</pre>
+            </details>
+          </div>
+          <div class="pub-sub" id="gnn-fpga-vlsi">
+            <h4>A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</h4>
+            <p class="venue">VLSI Design / CAD Symposium, 2025</p>
+            <div class="pub-links">
+              <a class="btn" href="/files/gnn_trajectory_reconstruction.pdf">Paper</a>
+              <a class="btn" href="/files/vlsicad2025-slides.pdf">Slides</a>
+            </div>
+            <details class="bibtex">
+              <summary>BibTeX</summary>
+              <pre>@inproceedings{yang2025higtr,
+  title     = {A High-Performance Implementation of GNN-Based
+               Trajectory Reconstruction on FPGA},
+  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
+               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
+               Neubauer, Mark and Pandey, Santosh},
+  booktitle = {VLSI Design/CAD Symposium},
+  year      = {2025}
+}</pre>
+            </details>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="pub" id="fastml-gpu-tracking">
-      <img class="thumb" src="/images/thumbs/fastml.png" alt="" width="340" height="480" loading="lazy" decoding="async">
+      <a class="thumb-link" href="/files/fastml2025-poster.pdf" aria-label="FastML 2025 poster (PDF)"><img class="thumb" src="/images/thumbs/fastml-teaser.png" alt="" width="400" height="350" loading="lazy" decoding="async"></a>
       <div>
         <h3>Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</h3>
         <p class="authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
@@ -139,7 +188,6 @@
         <p class="tldr">Kernel refactoring plus INT8 surrogate models make GPU Kalman-filter track finding fast enough for trigger-level use at high-luminosity colliders.</p>
         <div class="pub-links">
           <a class="btn" href="/files/fastml2025-poster.pdf">Poster</a>
-          <a class="btn" href="/images/fastml-presentation.jpg">Photo</a>
         </div>
         <details>
           <summary>Abstract</summary>
@@ -160,78 +208,16 @@
       </div>
     </div>
 
-    <div class="pub" id="higtr-tjcas">
-      <img class="thumb" src="/images/thumbs/tjcas.png" alt="" width="340" height="480" loading="lazy" decoding="async">
-      <div>
-        <h3>An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</h3>
-        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
-        <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
-        <p class="tldr">End-to-end GNN trajectory reconstruction — embedding, graph building, and inference — running as one integrated FPGA design.</p>
-        <div class="pub-links">
-          <a class="btn" href="/files/tjcas_gnn_trajectory_reconstruction.pdf">Paper</a>
-          <a class="btn" href="/files/tjcas2025-slides.pdf">Slides</a>
-          <a class="btn" href="/files/tjcas2025-poster.pdf">Poster</a>
-          <a class="btn" href="/images/tjcas-award.jpg">Photo</a>
-        </div>
-        <details>
-          <summary>Abstract</summary>
-          <p>Trajectory reconstruction in high-energy physics, particularly for the High-Luminosity Large Hadron Collider (HL-LHC), presents a significant computational challenge due to the immense pile-up and data rates. This paper presents an integrated Field-Programmable Gate Array (FPGA) implementation of a complete Graph Neural Network (GNN)-based pipeline for particle tracking. By leveraging the parallel processing capabilities of FPGAs, we propose an efficient hardware architecture that accelerates the GNN inference process. The design optimizes both latency and throughput, ensuring that the trajectory reconstruction meets the stringent real-time requirements of the HL-LHC experiments. Our implementation demonstrates the feasibility and performance benefits of using FPGA-accelerated GNNs for next-generation particle detector trigger systems.</p>
-        </details>
-        <details class="bibtex">
-          <summary>BibTeX</summary>
-          <pre>@inproceedings{yang2025integrated,
-  title     = {An Integrated FPGA Implementation of Complete
-               GNN-Based Trajectory Reconstruction},
-  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
-               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
-               Neubauer, Mark and Pandey, Santosh},
-  booktitle = {Taiwan and Japan Conference on Circuits and Systems (TJCAS)},
-  year      = {2025}
-}</pre>
-        </details>
-      </div>
-    </div>
-
-    <div class="pub" id="gnn-fpga-vlsi">
-      <img class="thumb" src="/images/thumbs/vlsicad.png" alt="" width="340" height="480" loading="lazy" decoding="async">
-      <div>
-        <h3>A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</h3>
-        <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Pandey</p>
-        <p class="venue">VLSI Design / CAD Symposium, 2025</p>
-        <p class="tldr">HiGTR maps the sparse, irregular dataflow of GNN tracking onto FPGA processing elements, clearing HL-LHC latency and throughput requirements.</p>
-        <div class="pub-links">
-          <a class="btn" href="/files/gnn_trajectory_reconstruction.pdf">Paper</a>
-          <a class="btn" href="/files/vlsicad2025-slides.pdf">Slides</a>
-          <a class="btn" href="/images/vlsicad-presentation.jpg">Photo</a>
-        </div>
-        <details>
-          <summary>Abstract</summary>
-          <p>We propose a high-performance hardware implementation for GNN-based trajectory reconstruction, tailored for the computing demands of the High-Luminosity LHC. This work focuses on optimizing the hardware mapping of Graph Neural Networks onto FPGA platforms to maximize throughput and minimize latency. The proposed architecture, referred to as HiGTR, employs efficient dataflow management and processing element utilization to handle the sparse and irregular nature of graph data in particle tracking. Experimental results indicate that our FPGA-based solution significantly exceeds the baseline latency and throughput requirements, providing a robust and scalable solution for real-time edge processing in high-energy physics applications.</p>
-        </details>
-        <details class="bibtex">
-          <summary>BibTeX</summary>
-          <pre>@inproceedings{yang2025higtr,
-  title     = {A High-Performance Implementation of GNN-Based
-               Trajectory Reconstruction on FPGA},
-  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
-               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
-               Neubauer, Mark and Pandey, Santosh},
-  booktitle = {VLSI Design/CAD Symposium},
-  year      = {2025}
-}</pre>
-        </details>
-      </div>
-    </div>
-
     <div class="pub" id="tgda-fgir">
-      <img class="thumb" src="/images/thumbs/fgir.png" alt="" width="371" height="480" loading="lazy" decoding="async">
+      <a class="thumb-link" href="https://arxiv.org/abs/2507.12157" aria-label="TGDA on arXiv"><img class="thumb" src="/images/thumbs/tgda-teaser.png" alt="" width="400" height="279" loading="lazy" decoding="async"></a>
       <div>
         <h3>Fine-Grained Image Recognition from Scratch with Teacher-Guided Data Augmentation</h3>
         <p class="authors">Edwin Arkel Rios, Fernando Mikael, Oswin Gosal, Femiloye Oyerinde, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai, Min-Chun Hu</p>
-        <p class="venue">arXiv preprint, 2025</p>
+        <p class="venue">arXiv:2507.12157, 2025</p>
         <p class="tldr">Teacher-guided data augmentation trains fine-grained recognition models from scratch — no ImageNet pretraining — matching pretrained baselines at a fraction of the compute.</p>
         <div class="pub-links">
-          <a class="btn" href="/files/fgir.pdf">Paper</a>
+          <a class="btn" href="https://arxiv.org/abs/2507.12157">arXiv</a>
+          <a class="btn" href="/files/fgir.pdf">PDF</a>
         </div>
         <details>
           <summary>Abstract</summary>
@@ -245,8 +231,9 @@
   author = {Rios, Edwin Arkel and Mikael, Fernando and Gosal, Oswin
             and Oyerinde, Femiloye and Liang, Hao-Chun and
             Lai, Bo-Cheng and Hu, Min-Chun},
-  note   = {arXiv preprint},
-  year   = {2025}
+  eprint        = {2507.12157},
+  archivePrefix = {arXiv},
+  year          = {2025}
 }</pre>
         </details>
       </div>
@@ -321,19 +308,6 @@
         </div>
       </div>
 
-      <div class="project" id="deep-learning">
-        <h3>Deep Learning — Course Materials</h3>
-        <p class="meta">Coursework</p>
-        <p class="desc">Course materials and assignments for Deep Learning, covering neural networks, CNNs, RNNs, and modern deep-learning techniques, with a recorded presentation.</p>
-        <div class="tags">
-          <span class="chip chip-muted">Python</span><span class="chip chip-muted">PyTorch</span>
-        </div>
-        <div class="links">
-          <a class="btn" href="https://github.com/noyaboy/DeepLearning">GitHub</a>
-          <a class="btn" href="https://www.youtube.com/watch?v=otA_Glv_Dfk">Presentation</a>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -395,7 +369,7 @@
       <span>© 2026 Hao-Chun Liang · Last updated July 2026</span>
       <span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a> · <a href="https://github.com/noyaboy">GitHub</a></span>
     </div>
-    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans · Patrolled by a Bichon Frise and an orange tabby</p>
+    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans · Patrolled by a Bichon Frise and an orange tabby · Click the paper for a collider event</p>
   </div>
 </footer>
 

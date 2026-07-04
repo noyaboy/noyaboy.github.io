@@ -25,7 +25,7 @@
     '.tracks-burst circle{opacity:0;animation:tracks-hit .35s ease-out forwards;}',
     '@keyframes tracks-draw{to{stroke-dashoffset:0;}}',
     '@keyframes tracks-hit{to{opacity:1;}}',
-    '@keyframes tracks-fade{0%,52%{opacity:.45;}100%{opacity:0;}}',
+    '@keyframes tracks-fade{0%,52%{opacity:.6;}100%{opacity:0;}}',
     '.drift-field{position:absolute;inset:0;}',
     '.drift{position:absolute;top:0;animation:drift-rise linear infinite;}',
     '.drift i{display:block;border-radius:50%;background:var(--faint);animation:drift-sway ease-in-out infinite alternate;}',
@@ -50,7 +50,9 @@
   field.className = 'drift-field';
   layer.insertBefore(field, svg);
 
-  var count = Math.max(6, Math.min(40, Math.round(innerWidth * innerHeight / 38000)));
+  /* Sparser on the CV page — it reads like paper, so the air stays stiller. */
+  var perPx = location.pathname.indexOf('/cv') === 0 ? 128000 : 64000;
+  var count = Math.max(4, Math.min(24, Math.round(innerWidth * innerHeight / perPx)));
   for (var i = 0; i < count; i++) {
     var d = document.createElement('div');
     d.className = 'drift';
