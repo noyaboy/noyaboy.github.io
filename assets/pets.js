@@ -11,16 +11,22 @@
     '.pet{position:fixed;bottom:0;left:0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}',
     '.pet svg{display:block;width:100%;height:auto;overflow:visible;}',
     '.pet .pose{display:none;}',
-    '.pet[data-state="walk"] .pose-stand,.pet[data-state="stand"] .pose-stand{display:inline;}',
+    '.pet[data-state="walk"] .pose-stand,.pet[data-state="stand"] .pose-stand,.pet[data-state="run"] .pose-stand{display:inline;}',
     '.pet[data-state="sit"] .pose-sit{display:inline;}',
     '.pet[data-state="lie"] .pose-lie{display:inline;}',
     '.pet .leg{transform-box:fill-box;transform-origin:50% 12%;}',
     '.pet[data-state="walk"] .leg-a{animation:pet-step .45s ease-in-out infinite alternate;}',
     '.pet[data-state="walk"] .leg-b{animation:pet-step .45s ease-in-out infinite alternate-reverse;}',
+    '.pet[data-state="run"] .leg-a{animation:pet-step .2s ease-in-out infinite alternate;}',
+    '.pet[data-state="run"] .leg-b{animation:pet-step .2s ease-in-out infinite alternate-reverse;}',
     '@keyframes pet-step{from{transform:rotate(13deg);}to{transform:rotate(-13deg);}}',
     '.pet .torso{transform-box:fill-box;}',
     '.pet[data-state="walk"] .torso{animation:pet-bob .45s ease-in-out infinite alternate;}',
+    '.pet[data-state="run"] .torso{animation:pet-bob .2s ease-in-out infinite alternate;}',
     '@keyframes pet-bob{from{transform:translateY(0);}to{transform:translateY(-1.6px);}}',
+    '.pet .zzz{display:none;position:absolute;top:-6px;left:60%;color:#9a9a9a;font:700 13px/1 Lato,Verdana,sans-serif;pointer-events:none;}',
+    '.pet[data-state="lie"] .zzz{display:block;animation:pet-zzz 2.6s ease-in 3s infinite;opacity:0;}',
+    '@keyframes pet-zzz{0%{opacity:0;transform:translateY(0);}25%{opacity:.85;}100%{opacity:0;transform:translateY(-16px);}}',
     '.pet .tail-wag{transform-box:fill-box;transform-origin:85% 85%;animation:pet-wag 1.5s ease-in-out infinite;}',
     '@keyframes pet-wag{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(7deg);}}',
     '.pet-heart{position:fixed;z-index:60;font-size:15px;color:#e2607a;pointer-events:none;transform:translate(-50%,0);animation:pet-heart 1.1s ease-out forwards;}',
@@ -157,40 +163,80 @@
   layer.className = 'pet-layer';
   layer.setAttribute('aria-hidden', 'true');
   layer.innerHTML =
-    '<div class="pet pet-dog" data-state="walk" style="width:96px" title="woof">' + DOG + '</div>' +
-    '<div class="pet pet-cat" data-state="sit" style="width:92px" title="meow">' + CAT + '</div>';
+    '<div class="pet pet-dog" data-state="walk" style="width:96px" title="woof">' + DOG + '<div class="zzz">z z</div></div>' +
+    '<div class="pet pet-cat" data-state="sit" style="width:92px" title="meow">' + CAT + '<div class="zzz">z z</div></div>';
   document.body.appendChild(layer);
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var pets = [
-    { el: layer.children[0], x: Math.max(8, innerWidth * 0.12), dir: 1, speed: 40, w: 96,
-      state: 'walk', until: performance.now() + 4200, rest: ['stand', 'sit', 'sit', 'lie'] },
-    { el: layer.children[1], x: Math.min(innerWidth - 100, innerWidth * 0.68), dir: -1, speed: 52, w: 92,
-      state: 'sit', until: performance.now() + 3200, rest: ['sit', 'lie', 'lie', 'stand'] }
+    { el: layer.children[0], x: Math.max(8, innerWidth * 0.12), dir: 1, speed: 40, run: 115, w: 96,
+      state: 'walk', until: performance.now() + 4200, chase: null, rest: ['stand', 'sit', 'sit', 'lie'] },
+    { el: layer.children[1], x: Math.min(innerWidth - 100, innerWidth * 0.68), dir: -1, speed: 52, run: 140, w: 92,
+      state: 'sit', until: performance.now() + 3200, chase: null, rest: ['sit', 'lie', 'lie', 'stand'] }
   ];
+  var dog = pets[0], cat = pets[1];
+  pets.forEach(function (p) { p.svg = p.el.querySelector('svg'); });
 
+  /* Flip the svg (not the container) so the floating "z z" stays readable. */
   function render(p) {
-    p.el.style.transform = 'translateX(' + p.x + 'px) scaleX(' + p.dir + ')';
+    p.el.style.transform = 'translateX(' + p.x + 'px)';
+    p.svg.style.transform = 'scaleX(' + p.dir + ')';
   }
 
   if (reduce) {
-    pets[0].state = 'lie';
-    pets[1].state = 'sit';
+    dog.state = 'lie';
+    cat.state = 'sit';
     pets.forEach(function (p) { p.el.dataset.state = p.state; render(p); });
     return;
   }
 
+  /* oneko-style: the cat chases the visitor's cursor along the floor. */
+  var mouse = { x: null, t: 0 };
+  document.addEventListener('mousemove', function (e) {
+    mouse.x = e.clientX;
+    mouse.t = performance.now();
+  }, { passive: true });
+
+  function setState(p, state, until) {
+    p.state = state;
+    p.until = until;
+    p.el.dataset.state = state === 'run' ? 'run' : state;
+  }
+
   function pick(p, now) {
-    if (p.state === 'walk') {
+    if (p.state === 'walk' || p.state === 'run') {
+      p.chase = null;
       p.state = p.rest[(Math.random() * p.rest.length) | 0];
       p.until = now + 2000 + Math.random() * (p.state === 'lie' ? 9000 : 5000);
     } else {
+      // The cat sometimes darts after the cursor; the dog sometimes chases the cat.
+      if (p === cat && mouse.x !== null && now - mouse.t < 8000 &&
+          Math.abs(mouse.x - (p.x + p.w / 2)) > 180 && Math.random() < 0.5) {
+        p.chase = 'mouse';
+        setState(p, 'run', now + 7000);
+        return;
+      }
+      if (p === dog && Math.random() < 0.3 && Math.abs(cat.x - p.x) > 220) {
+        p.chase = 'cat';
+        setState(p, 'run', now + 7000);
+        return;
+      }
       p.state = 'walk';
       if (Math.random() < 0.45) p.dir *= -1;
       p.until = now + 2500 + Math.random() * 6500;
     }
     p.el.dataset.state = p.state;
+  }
+
+  function heartAt(px, py) {
+    var h = document.createElement('div');
+    h.className = 'pet-heart';
+    h.textContent = '❤';
+    h.style.left = px + 'px';
+    h.style.top = py + 'px';
+    document.body.appendChild(h);
+    setTimeout(function () { h.remove(); }, 1200);
   }
 
   var last = performance.now();
@@ -200,9 +246,24 @@
     for (var i = 0; i < pets.length; i++) {
       var p = pets[i];
       if (now >= p.until) pick(p, now);
-      if (p.state === 'walk') {
+      var max = innerWidth - p.w - 6;
+      if (p.state === 'run') {
+        var target = p.chase === 'mouse' ? mouse.x - p.w / 2 : cat.x;
+        target = Math.max(6, Math.min(max, target));
+        var gap = target - p.x;
+        var arrive = p.chase === 'cat' ? 96 : 16;
+        if (Math.abs(gap) <= arrive) {
+          p.dir = gap === 0 ? p.dir : (gap > 0 ? 1 : -1);
+          if (p.chase === 'cat') heartAt(p.x + p.w / 2, innerHeight - p.w - 8);
+          p.chase = null;
+          setState(p, p === cat ? 'sit' : 'stand', now + 2600);
+        } else {
+          p.dir = gap > 0 ? 1 : -1;
+          p.x += p.dir * p.run * dt;
+          p.x = Math.max(6, Math.min(max, p.x));
+        }
+      } else if (p.state === 'walk') {
         p.x += p.dir * p.speed * dt;
-        var max = innerWidth - p.w - 6;
         if (p.x <= 6) { p.x = 6; p.dir = 1; }
         else if (p.x >= max) { p.x = max; p.dir = -1; }
       }
