@@ -358,6 +358,16 @@ strong { font-weight: 600; color: var(--ink); }
   text-transform: uppercase;
 }
 
+/* Authorship role ("first author", "corresponding author") — same voice
+   as the award chip, but in ink so honors stay the louder signal */
+.chip-role {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .chip-muted { font-style: italic; }
 
 /* --------------------------------------------------------------------------
@@ -802,9 +812,11 @@ strong { font-weight: 600; color: var(--ink); }
   background: var(--wash);
 }
 
+/* The tall bottom padding is the pets' lawn — they roam the document
+   bottom (never the viewport), so text above always stays clear */
 .site-footer .container {
   padding-top: 1.3rem;
-  padding-bottom: 2.6rem;
+  padding-bottom: 7rem;
   font-size: 0.85rem;
   color: var(--muted);
 }
