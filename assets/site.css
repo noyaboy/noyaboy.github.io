@@ -2,7 +2,7 @@
    Hao-Chun Liang — personal academic site
    Editorial scholar style: Newsreader display serif over Source Sans text,
    warm paper ground, spaced small-caps section heads, claret accent thread,
-   matted portrait, light/dark theming (system + manual), print-friendly CV.
+   matted portrait, print-friendly CV. Light-only by design.
    Fonts are self-hosted variable woff2 subsets (see /assets/fonts/).
    ========================================================================== */
 
@@ -83,8 +83,8 @@
 }
 
 /* --------------------------------------------------------------------------
-   Design tokens — light by default; dark via system preference or manual
-   [data-theme] override (set before first paint by the inline head script)
+   Design tokens — one light palette; the site renders identically
+   regardless of the visitor's system color scheme
    -------------------------------------------------------------------------- */
 
 :root {
@@ -108,50 +108,8 @@
   --selection: #dce7f3;
   --shadow: 41, 35, 24;
 
-  color-scheme: light dark;
+  color-scheme: light;
 }
-
-/* Dark palette — keep the two copies of this block identical. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #1a1815;
-    --paper-elevated: #221f1a;
-    --ink: #e9e7e2;
-    --text: #c9c4bb;
-    --muted: #9d978c;
-    --faint: #8a8277;
-    --link: #8ab4dd;
-    --link-hover: #aecdea;
-    --rule: #322d26;
-    --rule-soft: #27231d;
-    --accent: #e2818f;
-    --wash: #221f1a;
-    --flash: #38311e;
-    --selection: #2d4a66;
-    --shadow: 0, 0, 0;
-  }
-}
-
-:root[data-theme="dark"] {
-  --paper: #1a1815;
-  --paper-elevated: #221f1a;
-  --ink: #e9e7e2;
-  --text: #c9c4bb;
-  --muted: #9d978c;
-  --faint: #8a8277;
-  --link: #8ab4dd;
-  --link-hover: #aecdea;
-  --rule: #322d26;
-  --rule-soft: #27231d;
-  --accent: #e2818f;
-  --wash: #221f1a;
-  --flash: #38311e;
-  --selection: #2d4a66;
-  --shadow: 0, 0, 0;
-}
-
-:root[data-theme="light"] { color-scheme: light; }
-:root[data-theme="dark"] { color-scheme: dark; }
 
 /* --------------------------------------------------------------------------
    Base
@@ -268,35 +226,7 @@ p { text-wrap: pretty; }
   border-bottom-color: var(--accent);
 }
 
-/* Light/dark toggle */
-.theme-toggle {
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  background: none;
-  border: 0;
-  padding: 0.3rem;
-  margin: 0 0 0 1.4rem;
-  align-self: center;
-  cursor: pointer;
-  color: var(--muted);
-  line-height: 0;
-  border-radius: 50%;
-  transition: color 0.15s ease;
-}
-
-.theme-toggle:hover { color: var(--ink); }
-
-.theme-toggle .moon { display: none; }
-
-:root[data-theme="dark"] .theme-toggle .sun { display: none; }
-:root[data-theme="dark"] .theme-toggle .moon { display: inline; }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-toggle .sun { display: none; }
-  :root:not([data-theme="light"]) .theme-toggle .moon { display: inline; }
-}
-
-/* Small screens: wordmark + toggle on the first row, nav on its own line */
+/* Small screens: wordmark on the first row, nav on its own line */
 @media (max-width: 600px) {
   .site-header .container {
     padding-top: 0.85rem;
@@ -304,10 +234,7 @@ p { text-wrap: pretty; }
     align-items: center;
     gap: 0.35rem 1rem;
   }
-  .wordmark { order: 1; }
-  .theme-toggle { order: 2; margin-left: auto; }
   .site-nav {
-    order: 3;
     flex-basis: 100%;
     margin-left: 0;
     justify-content: space-between;
@@ -621,12 +548,6 @@ strong { font-weight: 600; color: var(--ink); }
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-:root[data-theme="dark"] .pub .thumb { filter: brightness(0.9); }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .pub .thumb { filter: brightness(0.9); }
-}
-
 /* The lift is a link affordance, so only linked thumbnails get it */
 .thumb-link { display: block; border-radius: 3px; }
 
@@ -912,7 +833,7 @@ strong { font-weight: 600; color: var(--ink); }
 
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
-  .site-nav, .theme-toggle, .site-footer, .hero-actions, .skip-link,
+  .site-nav, .site-footer, .hero-actions, .skip-link,
   .pub-links, .pub details, .pub .tldr, .project .links, .btn { display: none !important; }
   .site-header { border-top-width: 2px; }
   a { color: inherit !important; text-decoration: none !important; }

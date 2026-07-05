@@ -32,8 +32,6 @@
     '.pet-heart{position:fixed;z-index:60;font-size:15px;color:#e2607a;pointer-events:none;transform:translate(-50%,0);animation:pet-heart 1.1s ease-out forwards;}',
     '@keyframes pet-heart{from{opacity:0;transform:translate(-50%,4px) scale(.7);}20%{opacity:1;}to{opacity:0;transform:translate(-50%,-44px) scale(1.15);}}',
     '.pet .ground{fill:rgba(60,50,30,.10);}',
-    '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pet .ground{fill:rgba(0,0,0,.4);}}',
-    ':root[data-theme="dark"] .pet .ground{fill:rgba(0,0,0,.4);}',
     '@media (prefers-reduced-motion:reduce){.pet *{animation:none !important;}}',
     '@media print{.pet-layer,.pet,.pet-heart{display:none !important;}}'
   ].join('\n');
