@@ -1,14 +1,17 @@
 /* Site pets: a Bichon Frise and an orange tabby (modeled on the owner's real
-   pets) that live on the floor of every page. They walk, stand, sit and lie
-   down; click one for a heart. Self-contained; respects reduced motion. */
+   pets). They live on a lawn at the very bottom of the document — anchored to
+   the page, not the viewport, so they never cover text while a visitor reads.
+   They walk, stand, sit and lie down; click one for a heart. Self-contained;
+   respects reduced motion. */
 (function () {
   'use strict';
   if (window.__petsLoaded) return;
   window.__petsLoaded = true;
 
   var CSS = [
-    '.pet-layer{position:fixed;inset:auto 0 0 0;height:0;z-index:30;}',
-    '.pet{position:fixed;bottom:0;left:0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}',
+    'body{position:relative;}',
+    '.pet-layer{position:absolute;left:0;right:0;bottom:0;height:0;z-index:30;}',
+    '.pet{position:absolute;bottom:0;left:0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}',
     '.pet svg{display:block;width:100%;height:auto;overflow:visible;}',
     '.pet .pose{display:none;}',
     '.pet[data-state="walk"] .pose-stand,.pet[data-state="stand"] .pose-stand,.pet[data-state="run"] .pose-stand{display:inline;}',
@@ -280,7 +283,10 @@
         var arrive = p.chase === 'cat' ? 96 : 16;
         if (Math.abs(gap) <= arrive) {
           p.dir = gap === 0 ? p.dir : (gap > 0 ? 1 : -1);
-          if (p.chase === 'cat') heartAt(p.x + p.w / 2, innerHeight - p.w - 8);
+          if (p.chase === 'cat') {
+            var pr = p.el.getBoundingClientRect();
+            heartAt(pr.left + pr.width / 2, pr.top - 4);
+          }
           p.chase = null;
           setState(p, p === cat ? 'sit' : 'stand', now + 2600);
         } else {
