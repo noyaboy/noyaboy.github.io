@@ -55,10 +55,12 @@
     '@keyframes pet-wag-lazy{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(4deg);}}',
     '@keyframes pet-stream{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(5deg);}}',
     '@keyframes pet-tail-settle{0%{transform:rotate(16deg);}40%{transform:rotate(-9deg);}70%{transform:rotate(4deg);}100%{transform:rotate(-5deg);}}',
-    /* Blinks — offset periods so the two never twin. */
-    '.pet .blink{transform-box:fill-box;transform-origin:50% 50%;animation:pet-blink 5.2s linear infinite;}',
-    '.pet-cat .blink{animation-duration:7.4s;animation-delay:1.3s;}',
-    '@keyframes pet-blink{0%,95.5%,99.2%,100%{transform:scaleY(1);}97.3%{transform:scaleY(.12);}}',
+    /* Blinks: the eyes live inside <defs> where neither CSS nor SMIL
+       animation reliably reaches <use> instances, so each pose overlays
+       fur-colored .lids that unfold from the eye top for ~140ms. */
+    '.pet .lids{transform-box:fill-box;transform-origin:50% 0%;transform:scaleY(0);animation:pet-blink 5.2s linear infinite;}',
+    '.pet-cat .lids{animation-duration:7.4s;animation-delay:1.3s;}',
+    '@keyframes pet-blink{0%,95.5%,99.2%,100%{transform:scaleY(0);}97.3%{transform:scaleY(1);}}',
     '.pet .zzz{display:none;position:absolute;top:-6px;left:60%;color:#9a9a9a;font:700 13px/1 Lato,Verdana,sans-serif;pointer-events:none;}',
     '.pet[data-state="lie"] .zzz{display:block;animation:pet-zzz 2.6s ease-in 3s infinite;opacity:0;}',
     '@keyframes pet-zzz{0%{opacity:0;transform:translateY(0);}25%{opacity:.85;}100%{opacity:0;transform:translateY(-16px);}}',
@@ -124,6 +126,7 @@
         '<circle cx="56" cy="52" r="11" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
         '<circle cx="72" cy="54" r="10" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
         '<use href="#dog-head" x="92" y="34"/>' +
+        '<g transform="translate(92,34)"><g class="lids"><circle cx="-8" cy="0" r="3.5" fill="#fcfaf5"/><circle cx="8" cy="0" r="3.5" fill="#fcfaf5"/></g></g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
@@ -132,6 +135,7 @@
       '<ellipse cx="52" cy="94" rx="9" ry="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
       '<ellipse cx="78" cy="94" rx="9" ry="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
       '<use href="#dog-head" x="65" y="42"/>' +
+      '<g transform="translate(65,42)"><g class="lids"><circle cx="-8" cy="0" r="3.5" fill="#fcfaf5"/><circle cx="8" cy="0" r="3.5" fill="#fcfaf5"/></g></g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<circle cx="24" cy="90" r="8" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/><circle cx="18" cy="94" r="5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
@@ -139,6 +143,7 @@
       '<ellipse cx="52" cy="96" rx="10" ry="4.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
       '<ellipse cx="76" cy="96" rx="10" ry="4.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
       '<use href="#dog-head" x="86" y="60"/>' +
+      '<g transform="translate(86,60)"><g class="lids"><circle cx="-8" cy="0" r="3.5" fill="#fcfaf5"/><circle cx="8" cy="0" r="3.5" fill="#fcfaf5"/></g></g>' +
     '</g>' +
   '</svg>';
 
@@ -192,6 +197,7 @@
         '<ellipse cx="61" cy="77" rx="19" ry="8" fill="#f6e8d2"/>' +
         '<path d="M46,46 q3,12 0,19 M57,42 q3,15 0,22 M69,41 q3,15 0,22 M81,43 q3,13 0,19 M91,49 q3,9 0,13" fill="none" stroke="#c9711f" stroke-width="5.5" stroke-linecap="round"/>' +
         '<use href="#cat-head" x="100" y="40"/>' +
+        '<g transform="translate(100,40)"><g class="lids"><ellipse cx="-5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/><ellipse cx="5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/></g></g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
@@ -206,6 +212,7 @@
       '<g transform="translate(66,82)"><use href="#cat-paw-far"/></g>' +
       '<g transform="translate(80,82)"><use href="#cat-paw"/></g>' +
       '<use href="#cat-head" x="75" y="30"/>' +
+      '<g transform="translate(75,30)"><g class="lids"><ellipse cx="-5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/><ellipse cx="5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/></g></g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<path d="M28,92 C34,97 46,98.5 58,96" fill="none" stroke="#e8933d" stroke-width="7" stroke-linecap="round"/>' +
@@ -217,6 +224,7 @@
       '<rect x="91.5" y="91.6" width="4" height="6.8" fill="#c9711f"/>' +
       '<rect x="97" y="91" width="8" height="8" rx="4" fill="#f6e8d2" stroke="#b25715" stroke-width="1.1"/>' +
       '<use href="#cat-head" x="88" y="61"/>' +
+      '<g transform="translate(88,61)"><g class="lids"><ellipse cx="-5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/><ellipse cx="5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/></g></g>' +
     '</g>' +
   '</svg>';
 
