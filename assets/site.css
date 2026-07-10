@@ -119,6 +119,11 @@
 
 html { scrollbar-gutter: stable; }
 
+/* The band-title halo feathers past the container (and a pet can sit past
+   a shrunken viewport for a beat) — clip the overhang instead of growing
+   a horizontal scrollbar. clip, not hidden: no scroll container created. */
+html, body { overflow-x: clip; }
+
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
