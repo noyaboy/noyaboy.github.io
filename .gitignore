@@ -21,3 +21,4 @@ package-lock.json
 
 # Working materials must never deploy to the public site
 /input/
+/resume.zip
