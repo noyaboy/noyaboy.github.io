@@ -375,6 +375,7 @@ strong { font-weight: 600; color: var(--ink); }
    -------------------------------------------------------------------------- */
 
 .hero {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 3.4rem;
@@ -409,14 +410,16 @@ strong { font-weight: 600; color: var(--ink); }
 
 .hero .role a { font-style: italic; }
 
-/* One quotable line — the current mission, stated with a pulse */
+/* One quotable line — the current mission, stated with a pulse.
+   Roman where the role above is italic: this is the declaration, not the caption. */
 .hero .thesis {
   font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.18rem;
-  line-height: 1.5;
+  font-size: clamp(1.3rem, 2.4vw, 1.48rem);
+  font-weight: 500;
+  line-height: 1.42;
+  letter-spacing: -0.008em;
   color: var(--ink);
-  margin: 0 0 1.35em;
+  margin: 0.35em 0 1.15em;
 }
 
 .hero .thesis::before {
@@ -432,6 +435,19 @@ strong { font-weight: 600; color: var(--ink); }
   gap: 0.3rem 1.1rem;
   margin-top: 1.2rem;
   font-size: 0.95rem;
+}
+
+/* Static collider-event vignette — the site's signature, present at first paint.
+   Lives in the hero's whitespace under the portrait; the click bursts (tracks.js)
+   are the moving version of the same motif. */
+.hero-event {
+  position: absolute;
+  right: -8px;
+  bottom: -4px;
+  width: 292px;
+  height: 232px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Matted-print portrait */
@@ -454,8 +470,9 @@ strong { font-weight: 600; color: var(--ink); }
     padding-top: 2.2rem;
   }
   .portrait { width: 172px; height: 172px; align-self: center; }
-  .hero .eyebrow, .hero h1, .hero .role { text-align: center; }
+  .hero .eyebrow, .hero h1, .hero .role, .hero .thesis { text-align: center; }
   .hero-actions { justify-content: center; }
+  .hero-event { display: none; }
 }
 
 /* --------------------------------------------------------------------------
@@ -610,12 +627,6 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 /* Footnote under the publications list ("* corresponding author") */
-.pub-note {
-  font-size: 0.85rem;
-  color: var(--faint);
-  margin: -0.6rem 0 0;
-}
-
 /* Version lineage: earlier conference work nested under the journal entry */
 .pub-lineage {
   margin-top: 1.1em;
@@ -845,7 +856,7 @@ strong { font-weight: 600; color: var(--ink); }
 
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
-  .site-nav, .site-footer, .hero-actions, .skip-link,
+  .site-nav, .site-footer, .hero-actions, .skip-link, .hero-event,
   .pub-links, .pub details, .pub .tldr, .project .links, .btn { display: none !important; }
   .site-header { border-top-width: 2px; }
   a { color: inherit !important; text-decoration: none !important; }
