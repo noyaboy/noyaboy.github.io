@@ -199,6 +199,7 @@
       '<g transform="translate(86,80)"><g class="leg leg-b"><use href="#cat-paw-far"/></g></g>' +
       '<g transform="translate(60,80)"><g class="leg leg-b"><use href="#cat-paw"/></g></g>' +
       '<g transform="translate(96,80)"><g class="leg leg-a"><use href="#cat-paw"/></g></g>' +
+      '<g transform="translate(0,4)">' +
       '<g class="torso">' +
         '<g class="tail-wag">' +
           '<path d="M40,60 C27,56 20,43 25,30" fill="none" stroke="#e8933d" stroke-width="10" stroke-linecap="round"/>' +
@@ -211,6 +212,7 @@
         '<ellipse cx="61" cy="77" rx="19" ry="8" fill="#fdf8ee"/>' +
         '<use href="#cat-head" x="100" y="40"/>' +
         '<g transform="translate(100,40)"><g class="lids"><ellipse cx="-5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/><ellipse cx="5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/></g></g>' +
+      '</g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
@@ -273,6 +275,7 @@
       '<g transform="translate(66,84)"><g class="leg leg-b"><use href="#alp-leg-far"/></g></g>' +
       '<g transform="translate(50,84)"><g class="leg leg-b"><use href="#alp-leg"/></g></g>' +
       '<g transform="translate(76,84)"><g class="leg leg-a"><use href="#alp-leg"/></g></g>' +
+      '<g transform="translate(0,4)">' +
       '<g class="torso">' +
         '<g class="tail-wag"><circle cx="30" cy="66" r="6" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="26.5" cy="62" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g>' +
         '<circle cx="42" cy="62" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
@@ -280,10 +283,11 @@
         '<circle cx="47" cy="74" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
         '<ellipse cx="56" cy="70" rx="24" ry="16" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
         '<circle cx="70" cy="52" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
-        '<rect x="66" y="24" width="18" height="38" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<rect x="66" y="30" width="18" height="32" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
         '<circle cx="70" cy="58" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
-        '<use href="#alp-head" x="75" y="16"/>' +
-        '<g transform="translate(75,16)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
+        '<use href="#alp-head" x="75" y="22"/>' +
+        '<g transform="translate(75,22)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
+      '</g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
@@ -294,10 +298,10 @@
       '<ellipse cx="60" cy="96" rx="7" ry="4" fill="#faf3e3" stroke="#d6c6a5" stroke-width="1"/>' +
       '<ellipse cx="42" cy="97" rx="7" ry="4" fill="#faf3e3" stroke="#d6c6a5" stroke-width="1"/>' +
       '<g class="tail-wag"><circle cx="25" cy="86" r="5.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g>' +
-      '<rect x="62" y="38" width="18" height="42" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<rect x="62" y="46" width="18" height="34" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
       '<circle cx="67" cy="74" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
-      '<use href="#alp-head" x="71" y="30"/>' +
-      '<g transform="translate(71,30)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
+      '<use href="#alp-head" x="71" y="38"/>' +
+      '<g transform="translate(71,38)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<ellipse cx="50" cy="89" rx="30" ry="11.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
@@ -352,13 +356,10 @@
       '<g transform="translate(56,82)"><g class="leg leg-b"><use href="#bear-leg"/></g></g>' +
       '<g transform="translate(82,82)"><g class="leg leg-a"><use href="#bear-leg"/></g></g>' +
       '<g class="torso">' +
-        '<g class="tail-wag"><circle cx="32" cy="60" r="5.5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/></g>' +
-        '<circle cx="46" cy="56" r="9" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
-        '<circle cx="62" cy="52" r="10" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
-        '<circle cx="78" cy="55" r="9" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<g class="tail-wag"><path d="M36,62 q-7,-1 -10,-6 M36,63 q-8,1 -11,-2 M36,64 q-6,4 -10,3" fill="none" stroke="#3a332b" stroke-width="2" stroke-linecap="round"/></g>' +
         '<ellipse cx="64" cy="66" rx="31" ry="20" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
         '<ellipse cx="60" cy="75" rx="17" ry="9" fill="#c3b4a1"/>' +
-        '<use href="#bear-head" x="96" y="36"/>' +
+        '<use href="#bear-head" x="94" y="42"/>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
@@ -376,12 +377,9 @@
     '</g>' +
     '<g class="pose pose-lie">' +
       '<ellipse cx="58" cy="86" rx="33" ry="13.5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
-      '<circle cx="34" cy="80" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
-      '<circle cx="52" cy="77" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
-      '<circle cx="70" cy="79" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
       '<rect x="80" y="90" width="22" height="9" rx="4.5" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1"/>' +
       '<rect x="95" y="90" width="9" height="9" rx="4.5" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1"/>' +
-      '<g class="tail-wag"><circle cx="26" cy="90" r="5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/></g>' +
+      '<g class="tail-wag"><path d="M29,88 q-6,-3 -7,-8 M29,90 q-8,-1 -10,-4 M29,92 q-7,2 -9,0" fill="none" stroke="#3a332b" stroke-width="2" stroke-linecap="round"/></g>' +
       '<use href="#bear-head" x="90" y="62"/>' +
     '</g>' +
   '</svg>';
