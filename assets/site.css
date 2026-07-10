@@ -851,13 +851,61 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 /* --------------------------------------------------------------------------
+   Taipei skyline masthead band (homepage only) — the photo owns the very top,
+   then dissolves into the paper before the ink content begins.
+   -------------------------------------------------------------------------- */
+
+.skyline-band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(300px, 46vw, 440px);
+  background: url(/images/taipei-skyline.jpg) 28% 22% / cover no-repeat;
+  pointer-events: none;
+}
+
+.skyline-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(250, 247, 241, 0) 36%,
+    rgba(250, 247, 241, 0.6) 60%,
+    rgba(250, 247, 241, 0.92) 78%,
+    var(--paper) 88%);
+}
+
+.has-skyline .site-header {
+  position: relative;
+  z-index: 1;
+  border-bottom: none;
+}
+
+.has-skyline .site-header .wordmark,
+.has-skyline .site-nav a {
+  color: #f6f1e6;
+  text-shadow: 0 1px 14px rgba(8, 12, 24, 0.6);
+}
+
+.has-skyline .site-header .wordmark:hover,
+.has-skyline .site-nav a:hover { color: #ffffff; }
+
+.has-skyline main { position: relative; z-index: 1; }
+
+/* Push the hero below the fade so the ink stays on paper */
+.has-skyline .hero { padding-top: calc(clamp(300px, 46vw, 440px) - 120px); }
+
+/* --------------------------------------------------------------------------
    Print (a clean CV on paper)
    -------------------------------------------------------------------------- */
 
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
-  .site-nav, .site-footer, .hero-actions, .skip-link, .hero-event,
+  .site-nav, .site-footer, .hero-actions, .skip-link, .hero-event, .skyline-band,
   .pub-links, .pub details, .pub .tldr, .project .links, .btn { display: none !important; }
+  .has-skyline .site-header .wordmark { color: #000 !important; text-shadow: none !important; }
+  .has-skyline .hero { padding-top: 1rem; }
   .site-header { border-top-width: 2px; }
   a { color: inherit !important; text-decoration: none !important; }
   .kicker { color: #000; }
