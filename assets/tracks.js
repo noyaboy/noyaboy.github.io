@@ -10,7 +10,8 @@
   'use strict';
   if (window.__tracksLoaded) return;
   window.__tracksLoaded = true;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var rmq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rmq.matches) return;
 
   var NS = 'http://www.w3.org/2000/svg';
   var MAX_LIVE = 6;
@@ -31,7 +32,10 @@
     '.drift i{display:block;border-radius:50%;background:var(--faint);animation:drift-sway ease-in-out infinite alternate;}',
     '@keyframes drift-rise{from{transform:translateY(calc(100vh + 24px));}to{transform:translateY(-24px);}}',
     '@keyframes drift-sway{from{transform:translateX(calc(var(--sway) * -1));}to{transform:translateX(var(--sway));}}',
-    '@media print{.tracks-layer{display:none !important;}}'
+    '@media print{.tracks-layer{display:none !important;}}',
+    /* Covers the preference flipping on mid-session (load-time reduce never
+       injects the layer at all) */
+    '@media (prefers-reduced-motion:reduce){.tracks-layer{display:none !important;}}'
   ].join('\n');
   document.head.appendChild(style);
 
@@ -154,6 +158,7 @@
     var d = down;
     down = null;
     if (!d || e.pointerId !== d.id) return;
+    if (rmq.matches) return;
     if (performance.now() - d.t > 600) return;
     if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 12) return;
     var t = e.target;
