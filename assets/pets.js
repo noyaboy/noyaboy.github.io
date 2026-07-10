@@ -68,7 +68,7 @@
     '.pet-heart{position:fixed;z-index:60;font-size:15px;color:#e2607a;pointer-events:none;transform:translate(-50%,0);animation:pet-heart 1.1s ease-out forwards;}',
     '@keyframes pet-heart{0%{opacity:0;transform:translate(-50%,4px) scale(.7) rotate(0deg);}20%{opacity:1;}55%{transform:translate(calc(-50% + var(--sw,7px)),-22px) scale(1) rotate(7deg);}100%{opacity:0;transform:translate(calc(-50% - var(--sw,7px)/2),-46px) scale(1.15) rotate(-5deg);}}',
     '.pet .ground{fill:rgba(60,50,30,.10);}',
-    '@media (prefers-reduced-motion:reduce){.pet *{animation:none !important;}}',
+    '@media (prefers-reduced-motion:reduce){.pet *{animation:none !important;}.pet-heart{display:none !important;}}',
     '@media print{.pet-layer,.pet,.pet-heart{display:none !important;}}'
   ].join('\n');
 
@@ -240,7 +240,8 @@
     '<div class="pet pet-cat" data-state="sit" style="width:100px" title="meow">' + CAT + '<div class="zzz">z z</div></div>';
   document.body.appendChild(layer);
 
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rmq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var reduce = rmq.matches;
 
   /* Personal tempo: the dog trots eagerly; the chunky cat strolls, but is
      shockingly quick when it decides the cursor matters. */
@@ -313,6 +314,7 @@
   function heartAt(px, py) {
     var h = document.createElement('div');
     h.className = 'pet-heart';
+    h.setAttribute('aria-hidden', 'true');
     h.textContent = '❤';
     h.style.left = px + 'px';
     h.style.top = py + 'px';
@@ -404,6 +406,23 @@
   });
 
   kick();
+
+  /* If the visitor turns reduced motion on mid-session, park both pets in a
+     rest pose far into the future (the CSS media query kills the keyframes,
+     this stops the JS walking). Turning it back off leaves them parked —
+     conservative, and a reload restores the usual life. */
+  if (rmq.addEventListener) {
+    rmq.addEventListener('change', function (e) {
+      if (!e.matches) return;
+      pets.forEach(function (p) {
+        p.chase = null;
+        p.state = p === dog ? 'lie' : 'sit';
+        p.el.dataset.state = p.state;
+        p.until = performance.now() + 1e9;
+        render(p);
+      });
+    });
+  }
 
   layer.addEventListener('click', function (e) {
     var el = e.target.closest ? e.target.closest('.pet') : null;
