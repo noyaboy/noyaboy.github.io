@@ -860,8 +860,8 @@ strong { font-weight: 600; color: var(--ink); }
   top: 0;
   left: 0;
   right: 0;
-  height: clamp(300px, 46vw, 440px);
-  background: url(/images/taipei-skyline.jpg) 28% 22% / cover no-repeat;
+  height: clamp(340px, 56vw, 560px);
+  background: url(/images/taipei-skyline.jpg) 28% 0% / cover no-repeat;
   pointer-events: none;
 }
 
@@ -894,7 +894,7 @@ strong { font-weight: 600; color: var(--ink); }
 .has-skyline main { position: relative; z-index: 1; }
 
 /* Push the hero below the fade so the ink stays on paper */
-.has-skyline .hero { padding-top: calc(clamp(300px, 46vw, 440px) - 120px); }
+.has-skyline .hero { padding-top: calc(clamp(340px, 56vw, 560px) - 120px); }
 
 /* --------------------------------------------------------------------------
    Print (a clean CV on paper)
