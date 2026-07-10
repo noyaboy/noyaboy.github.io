@@ -35,10 +35,14 @@
     '@keyframes pet-crouch{0%{transform:none;}55%{transform:translateY(2.5px) scaleY(.9) scaleX(1.06);}100%{transform:translateY(-1.5px) scaleY(1.05) scaleX(.97);}}',
     '.pet[data-state="stand"] .torso{animation:pet-breathe 2.3s ease-in-out infinite alternate;}',
     '.pet-cat[data-state="stand"] .torso{animation-duration:3.2s;}',
+    '.pet-alpaca[data-state="stand"] .torso{animation-duration:3.8s;}',
+    '.pet-bear[data-state="stand"] .torso{animation-duration:4.4s;}',
     /* Arrival: a soft plop (squash, volume kept), then settle into breathing. */
     '.pet[data-state="stand"] .pose-stand{animation:pet-plop .45s cubic-bezier(.3,1.5,.5,1) 1;}',
     '.pet[data-state="sit"] .pose-sit{animation:pet-plop .5s cubic-bezier(.3,1.5,.5,1) 1,pet-breathe 2.6s ease-in-out .5s infinite alternate;}',
     '.pet-cat[data-state="sit"] .pose-sit{animation:pet-plop .55s cubic-bezier(.3,1.5,.5,1) 1,pet-breathe 3.6s ease-in-out .55s infinite alternate;}',
+    '.pet-alpaca[data-state="sit"] .pose-sit{animation:pet-plop .55s cubic-bezier(.3,1.5,.5,1) 1,pet-breathe 4s ease-in-out .55s infinite alternate;}',
+    '.pet-bear[data-state="sit"] .pose-sit{animation:pet-plop .6s cubic-bezier(.3,1.5,.5,1) 1,pet-breathe 4.8s ease-in-out .6s infinite alternate;}',
     '.pet[data-state="lie"] .pose-lie{animation:pet-flop .6s cubic-bezier(.3,1.4,.5,1) 1,pet-breathe-deep 3.8s ease-in-out .6s infinite alternate;}',
     '@keyframes pet-plop{0%{transform:scaleY(1.04) scaleX(.98);}45%{transform:scaleY(.955) scaleX(1.025);}100%{transform:none;}}',
     '@keyframes pet-flop{0%{transform:scaleY(1.05) scaleX(.97);}40%{transform:scaleY(.93) scaleX(1.04);}70%{transform:scaleY(1.02) scaleX(.99);}100%{transform:none;}}',
@@ -55,6 +59,12 @@
     '@keyframes pet-wag-lazy{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(4deg);}}',
     '@keyframes pet-stream{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(5deg);}}',
     '@keyframes pet-tail-settle{0%{transform:rotate(16deg);}40%{transform:rotate(-9deg);}70%{transform:rotate(4deg);}100%{transform:rotate(-5deg);}}',
+    /* Plush follow-through: the alpaca topknot (and any .fluff overlay) lags
+       the walk bob a beat — same overlay-outside-defs trick as the lids. */
+    '.pet .fluff{transform-box:fill-box;transform-origin:50% 100%;}',
+    '.pet[data-state="walk"] .fluff{animation:pet-fluff .45s ease-in-out .08s infinite alternate;}',
+    '.pet[data-state="run"] .fluff{animation:pet-fluff .2s ease-in-out .46s infinite alternate;}',
+    '@keyframes pet-fluff{from{transform:translateY(0) rotate(1.5deg);}to{transform:translateY(-1.6px) rotate(-2deg);}}',
     /* Blinks: the eyes live inside <defs> where neither CSS nor SMIL
        animation reliably reaches <use> instances, so each pose overlays
        fur-colored .lids that unfold from the eye top for ~140ms. */
@@ -147,38 +157,40 @@
     '</g>' +
   '</svg>';
 
-  /* ---- Orange mackerel tabby (drawn from the owner's photo): properly
-         chunky — big round belly, bold flank stripes, ringed tail — with
-         the photo's half-lidded, faintly unimpressed stare: pale green
-         eyes under flat fur-colored lids, white muzzle and chest, pink
-         inner ears, cream paw tips. Floor at y=100. ---- */
+  /* ---- Orange-and-white bicolor cat (drawn from the owner's 橘貓 photo):
+         white base with orange patches — orange caps over both ears, an
+         orange saddle with bold tabby stripes, ringed orange tail — pale
+         aqua eyes with a calm alert stare, pink nose, and the photo's
+         collar with a little red tag. Sit pose is the photo's loaf: paws
+         tucked, tail wrapped. Floor at y=100. ---- */
   var CAT =
   '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
     '<defs>' +
-      '<g id="cat-paw"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#f6e8d2" stroke="#b25715" stroke-width="1.1"/></g>' +
-      '<g id="cat-paw-far"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#d1762a" stroke="#b25715" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#e8d6bd" stroke="#b25715" stroke-width="1.1"/></g>' +
+      '<g id="cat-paw"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#f6ead2" stroke="#c9b9a4" stroke-width="1.1"/></g>' +
+      '<g id="cat-paw-far"><rect x="-4" y="0" width="8" height="20" rx="4" fill="#efe6d6" stroke="#c9b9a4" stroke-width="1.1"/><rect x="-4" y="14" width="8" height="6" rx="3" fill="#e8dcc4" stroke="#c9b9a4" stroke-width="1.1"/></g>' +
       '<g id="cat-head">' +
         '<path d="M-4,-12 L-11,-21.5 L-16.5,-7 Z" fill="#e8933d" stroke="#b25715" stroke-width="1.1" stroke-linejoin="round"/>' +
         '<path d="M4,-12 L11,-21.5 L16.5,-7 Z" fill="#e8933d" stroke="#b25715" stroke-width="1.1" stroke-linejoin="round"/>' +
         '<path d="M-7,-12.6 L-10.8,-18.2 L-13.4,-9.4 Z" fill="#f0aca0"/>' +
         '<path d="M7,-12.6 L10.8,-18.2 L13.4,-9.4 Z" fill="#f0aca0"/>' +
-        '<circle cx="0" cy="0" r="15.5" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
-        '<path d="M-5.5,-13.5 q1.4,3.8 1,6 M-0.3,-15 q0.4,4.4 0.2,6.6 M5,-13.5 q-1.4,3.8 -1,6" fill="none" stroke="#c9711f" stroke-width="2.2" stroke-linecap="round"/>' +
-        '<path d="M-13.5,-6.5 l4.6,2.4 M13.5,-6.5 l-4.6,2.4" fill="none" stroke="#c9711f" stroke-width="2" stroke-linecap="round"/>' +
-        '<path d="M-15.3,2 l5,0.8 M15.3,2 l-5,0.8" fill="none" stroke="#c9711f" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<ellipse cx="0" cy="7.8" rx="7.2" ry="5.4" fill="#fdf5e9"/>' +
+        '<circle cx="0" cy="0" r="15.5" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1.1"/>' +
+        '<ellipse cx="-8.6" cy="-8.6" rx="7.6" ry="6.6" fill="#e8933d"/>' +
+        '<ellipse cx="8.6" cy="-8.6" rx="7.6" ry="6.6" fill="#e8933d"/>' +
+        '<path d="M-11.5,-13 q1.2,3 0.9,4.8 M-6.4,-13.6 q0.5,3.2 0.3,5 M11.5,-13 q-1.2,3 -0.9,4.8 M6.4,-13.6 q-0.5,3.2 -0.3,5" fill="none" stroke="#c9711f" stroke-width="1.8" stroke-linecap="round"/>' +
         '<g class="blink">' +
-          '<ellipse cx="-5.8" cy="-1.6" rx="3.1" ry="3.5" fill="#bcc97b" stroke="#8a7a3c" stroke-width="0.4"/>' +
-          '<ellipse cx="5.8" cy="-1.6" rx="3.1" ry="3.5" fill="#bcc97b" stroke="#8a7a3c" stroke-width="0.4"/>' +
-          '<ellipse cx="-5.8" cy="-1.6" rx="1.15" ry="2.7" fill="#2c2a26"/>' +
-          '<ellipse cx="5.8" cy="-1.6" rx="1.15" ry="2.7" fill="#2c2a26"/>' +
-          '<circle cx="-5" cy="-2.8" r="0.85" fill="#ffffff"/>' +
-          '<circle cx="6.6" cy="-2.8" r="0.85" fill="#ffffff"/>' +
+          '<ellipse cx="-5.8" cy="-1.4" rx="3.2" ry="3.6" fill="#a8cfc4" stroke="#7fa39a" stroke-width="0.5"/>' +
+          '<ellipse cx="5.8" cy="-1.4" rx="3.2" ry="3.6" fill="#a8cfc4" stroke="#7fa39a" stroke-width="0.5"/>' +
+          '<ellipse cx="-5.8" cy="-1.2" rx="1.35" ry="2.6" fill="#2c2a26"/>' +
+          '<ellipse cx="5.8" cy="-1.2" rx="1.35" ry="2.6" fill="#2c2a26"/>' +
+          '<circle cx="-5" cy="-2.6" r="0.85" fill="#ffffff"/>' +
+          '<circle cx="6.6" cy="-2.6" r="0.85" fill="#ffffff"/>' +
         '</g>' +
-        '<path d="M-9,-3.4 l6.4,-1 M2.6,-4.4 l6.4,1" fill="none" stroke="#e8933d" stroke-width="2.6" stroke-linecap="round"/>' +
-        '<path d="M-2,3.8 L2,3.8 L0,6.6 Z" fill="#d5876b" stroke="#b25715" stroke-width="0.6" stroke-linejoin="round"/>' +
+        '<path d="M-2,3.8 L2,3.8 L0,6.6 Z" fill="#e08a7e" stroke="#b25715" stroke-width="0.6" stroke-linejoin="round"/>' +
         '<path d="M0,6.6 q0,1.9 -2.6,2.7 M0,6.6 q0,1.9 2.6,2.7" fill="none" stroke="#a67b52" stroke-width="1" stroke-linecap="round"/>' +
         '<path d="M-8.5,4 L-24,1.5 M-8.5,7.5 L-24,8.5 M8.5,4 L24,1.5 M8.5,7.5 L24,8.5" fill="none" stroke="rgba(94,70,42,.32)" stroke-width="1" stroke-linecap="round"/>' +
+        '<path d="M-10,12.2 Q0,17.5 10,12.2" fill="none" stroke="#4a4650" stroke-width="2.6"/>' +
+        '<circle cx="0" cy="17.6" r="2.7" fill="#c2453f" stroke="#8f2f2a" stroke-width="0.7"/>' +
+        '<circle cx="-0.8" cy="16.9" r="0.7" fill="#e8938c"/>' +
       '</g>' +
     '</defs>' +
     '<ellipse class="ground" cx="66" cy="101" rx="42" ry="3"/>' +
@@ -193,38 +205,184 @@
           '<path d="M30.5,48.5 C28.8,45.5 27.8,42.5 27.4,40.5" fill="none" stroke="#c9711f" stroke-width="10" stroke-linecap="round"/>' +
           '<path d="M25.6,34 C25.3,32.7 25.1,31.3 25,30" fill="none" stroke="#c9711f" stroke-width="10" stroke-linecap="round"/>' +
         '</g>' +
-        '<ellipse cx="68" cy="62" rx="35.5" ry="23" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
-        '<ellipse cx="61" cy="77" rx="19" ry="8" fill="#f6e8d2"/>' +
-        '<path d="M46,46 q3,12 0,19 M57,42 q3,15 0,22 M69,41 q3,15 0,22 M81,43 q3,13 0,19 M91,49 q3,9 0,13" fill="none" stroke="#c9711f" stroke-width="5.5" stroke-linecap="round"/>' +
+        '<ellipse cx="68" cy="62" rx="35.5" ry="23" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1.1"/>' +
+        '<path d="M34,57 Q40,43 68,40.5 Q94,42 101,55 Q88,60 66,58.5 Q46,60 34,57 Z" fill="#e8933d"/>' +
+        '<path d="M46,45 q3,9 0,14 M57,42.5 q3,11 0,16 M69,42 q3,11 0,16 M81,44 q3,9 0,13 M91,49 q2.5,6 0,9" fill="none" stroke="#c9711f" stroke-width="5" stroke-linecap="round"/>' +
+        '<ellipse cx="61" cy="77" rx="19" ry="8" fill="#fdf8ee"/>' +
         '<use href="#cat-head" x="100" y="40"/>' +
-        '<g transform="translate(100,40)"><g class="lids"><ellipse cx="-5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/><ellipse cx="5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/></g></g>' +
+        '<g transform="translate(100,40)"><g class="lids"><ellipse cx="-5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/><ellipse cx="5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/></g></g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
-      '<path d="M36,96 C44,99.6 62,99.6 76,96" fill="none" stroke="#e8933d" stroke-width="8" stroke-linecap="round"/>' +
-      '<path d="M58,98.9 C62,98.8 65,98.4 68,97.8" fill="none" stroke="#c9711f" stroke-width="8" stroke-linecap="round"/>' +
-      '<path d="M73,96.7 C74,96.5 75,96.3 76,96" fill="none" stroke="#c9711f" stroke-width="8" stroke-linecap="round"/>' +
-      '<circle cx="56" cy="76" r="23" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
-      '<path d="M40,66 q5,-9 17,-12 M38,79 q4,-8 14,-10 M41,90 q4,-6 11,-8" fill="none" stroke="#c9711f" stroke-width="5" stroke-linecap="round"/>' +
-      '<ellipse cx="73" cy="62" rx="16.5" ry="24" fill="#e8933d" stroke="#b25715" stroke-width="1.1" transform="rotate(-7 73 62)"/>' +
-      '<path d="M64,52 q10,-4 18,0 M63,62 q10,-4 20,0" fill="none" stroke="#c9711f" stroke-width="4.5" stroke-linecap="round"/>' +
-      '<ellipse cx="77" cy="73" rx="6.5" ry="9" fill="#f6e8d2" transform="rotate(-7 77 73)"/>' +
-      '<g transform="translate(66,82)"><use href="#cat-paw-far"/></g>' +
-      '<g transform="translate(80,82)"><use href="#cat-paw"/></g>' +
-      '<use href="#cat-head" x="75" y="30"/>' +
-      '<g transform="translate(75,30)"><g class="lids"><ellipse cx="-5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/><ellipse cx="5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/></g></g>' +
+      '<ellipse cx="60" cy="81" rx="30" ry="18.5" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1.1"/>' +
+      '<path d="M31,76 Q38,62 60,60.5 Q83,62 89,74 Q78,79 59,78 Q40,79 31,76 Z" fill="#e8933d"/>' +
+      '<path d="M41,65 q3,8 0,12 M51,62.5 q3,9 0,14 M62,62.5 q3,9 0,14 M73,64.5 q3,8 0,11" fill="none" stroke="#c9711f" stroke-width="4.6" stroke-linecap="round"/>' +
+      '<path d="M32,93 C40,98 56,99.5 74,96.5" fill="none" stroke="#e8933d" stroke-width="8" stroke-linecap="round"/>' +
+      '<path d="M52,98.4 C56,98.3 60,98 63,97.6 M70,97.1 C71.5,97 73,96.8 74,96.5" fill="none" stroke="#c9711f" stroke-width="8" stroke-linecap="round"/>' +
+      '<ellipse cx="52" cy="96" rx="7.5" ry="4.5" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1"/>' +
+      '<ellipse cx="69" cy="96" rx="7.5" ry="4.5" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1"/>' +
+      '<use href="#cat-head" x="72" y="47"/>' +
+      '<g transform="translate(72,47)"><g class="lids"><ellipse cx="-5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/><ellipse cx="5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/></g></g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<path d="M28,92 C34,97 46,98.5 58,96" fill="none" stroke="#e8933d" stroke-width="7" stroke-linecap="round"/>' +
       '<path d="M50,97.6 C53,97.3 56,96.8 58,96" fill="none" stroke="#c9711f" stroke-width="7" stroke-linecap="round"/>' +
-      '<ellipse cx="56" cy="85" rx="34" ry="15" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
-      '<path d="M40,72 q3,11 0,16 M53,70 q3,12 0,17 M66,71 q3,11 0,16 M77,74 q3,9 0,13" fill="none" stroke="#c9711f" stroke-width="5" stroke-linecap="round"/>' +
-      '<rect x="80" y="91" width="24" height="8" rx="4" fill="#e8933d" stroke="#b25715" stroke-width="1.1"/>' +
-      '<rect x="85" y="91.6" width="4" height="6.8" fill="#c9711f"/>' +
-      '<rect x="91.5" y="91.6" width="4" height="6.8" fill="#c9711f"/>' +
-      '<rect x="97" y="91" width="8" height="8" rx="4" fill="#f6e8d2" stroke="#b25715" stroke-width="1.1"/>' +
+      '<ellipse cx="56" cy="85" rx="34" ry="15" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1.1"/>' +
+      '<path d="M23,84 Q32,71 56,70 Q80,71 88,82 Q74,87 55,85.5 Q37,87 23,84 Z" fill="#e8933d"/>' +
+      '<path d="M36,74 q3,8 0,12 M48,72 q3,9 0,13 M61,72 q3,9 0,13 M73,74.5 q2.5,7 0,10" fill="none" stroke="#c9711f" stroke-width="4.6" stroke-linecap="round"/>' +
+      '<rect x="80" y="91" width="24" height="8" rx="4" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1.1"/>' +
+      '<rect x="97" y="91" width="8" height="8" rx="4" fill="#f6ead2" stroke="#c9b9a4" stroke-width="1.1"/>' +
       '<use href="#cat-head" x="88" y="61"/>' +
-      '<g transform="translate(88,61)"><g class="lids"><ellipse cx="-5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/><ellipse cx="5.8" cy="-1.6" rx="3.5" ry="3.9" fill="#e8933d"/></g></g>' +
+      '<g transform="translate(88,61)"><g class="lids"><ellipse cx="-5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/><ellipse cx="5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/></g></g>' +
+    '</g>' +
+  '</svg>';
+
+  /* ---- Alpaca (drawn from the owner's 草尼馬 plush): cream shag built
+         from stroked circles, smooth oval face patch, black button eyes
+         (plush toys don't blink — no lids), stitched Y mouth, little felt
+         ears poking sideways, proud vertical neck, stubby legs on smooth
+         pads. The topknot is a .fluff overlay so it lags the walk bob.
+         Floor at y=100. ---- */
+  var ALPACA =
+  '<svg viewBox="0 0 110 104" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' +
+      '<g id="alp-head">' +
+        '<path d="M-12,-3.5 Q-18.5,-6.5 -19,-10 Q-14.5,-9.5 -11.5,-5.5 Z" fill="#ecdfc2" stroke="#d6c6a5" stroke-width="1" stroke-linejoin="round"/>' +
+        '<path d="M12,-3.5 Q18.5,-6.5 19,-10 Q14.5,-9.5 11.5,-5.5 Z" fill="#ecdfc2" stroke="#d6c6a5" stroke-width="1" stroke-linejoin="round"/>' +
+        '<circle cx="-7" cy="-8" r="7" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="7" cy="-8" r="7" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="0" cy="-11" r="7.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="-11" cy="-1" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="11" cy="-1" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="-8" cy="6" r="6" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="8" cy="6" r="6" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="0" cy="0" r="12.5" fill="#f3ead6"/>' +
+        '<ellipse cx="0" cy="1.5" rx="8" ry="9.5" fill="#faf3e3"/>' +
+        '<circle cx="-4.4" cy="-1" r="2.1" fill="#26221f"/>' +
+        '<circle cx="4.4" cy="-1" r="2.1" fill="#26221f"/>' +
+        '<circle cx="-3.7" cy="-1.8" r="0.75" fill="#ffffff"/>' +
+        '<circle cx="5.1" cy="-1.8" r="0.75" fill="#ffffff"/>' +
+        '<path d="M-1.5,4 L1.5,4 M0,4 l0,2.2 M0,6.2 q-1.8,1.8 -3.2,1.5 M0,6.2 q1.8,1.8 3.2,1.5" fill="none" stroke="#a98d63" stroke-width="1" stroke-linecap="round"/>' +
+      '</g>' +
+      '<g id="alp-leg"><rect x="-4" y="0" width="8" height="16" rx="4" fill="#f3ead6" stroke="#d6c6a5" stroke-width="1"/><rect x="-4" y="11" width="8" height="5" rx="2.5" fill="#faf3e3" stroke="#d6c6a5" stroke-width="1"/></g>' +
+      '<g id="alp-leg-far"><rect x="-4" y="0" width="8" height="16" rx="4" fill="#e6dabd" stroke="#d6c6a5" stroke-width="1"/><rect x="-4" y="11" width="8" height="5" rx="2.5" fill="#eee3cb" stroke="#d6c6a5" stroke-width="1"/></g>' +
+    '</defs>' +
+    '<ellipse class="ground" cx="56" cy="101" rx="34" ry="3"/>' +
+    '<g class="pose pose-stand">' +
+      '<g transform="translate(40,84)"><g class="leg leg-a"><use href="#alp-leg-far"/></g></g>' +
+      '<g transform="translate(66,84)"><g class="leg leg-b"><use href="#alp-leg-far"/></g></g>' +
+      '<g transform="translate(50,84)"><g class="leg leg-b"><use href="#alp-leg"/></g></g>' +
+      '<g transform="translate(76,84)"><g class="leg leg-a"><use href="#alp-leg"/></g></g>' +
+      '<g class="torso">' +
+        '<g class="tail-wag"><circle cx="30" cy="66" r="6" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="26.5" cy="62" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g>' +
+        '<circle cx="42" cy="62" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="56" cy="58" r="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="47" cy="74" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<ellipse cx="56" cy="70" rx="24" ry="16" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="70" cy="52" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<rect x="66" y="24" width="18" height="38" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+        '<circle cx="70" cy="58" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
+        '<use href="#alp-head" x="75" y="16"/>' +
+        '<g transform="translate(75,16)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
+      '</g>' +
+    '</g>' +
+    '<g class="pose pose-sit">' +
+      '<ellipse cx="50" cy="85" rx="28" ry="14" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="30" cy="78" r="7" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="46" cy="74" r="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="64" cy="76" r="7.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<ellipse cx="60" cy="96" rx="7" ry="4" fill="#faf3e3" stroke="#d6c6a5" stroke-width="1"/>' +
+      '<ellipse cx="42" cy="97" rx="7" ry="4" fill="#faf3e3" stroke="#d6c6a5" stroke-width="1"/>' +
+      '<g class="tail-wag"><circle cx="25" cy="86" r="5.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g>' +
+      '<rect x="62" y="38" width="18" height="42" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="67" cy="74" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
+      '<use href="#alp-head" x="71" y="30"/>' +
+      '<g transform="translate(71,30)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
+    '</g>' +
+    '<g class="pose pose-lie">' +
+      '<ellipse cx="50" cy="89" rx="30" ry="11.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="28" cy="84" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="44" cy="80" r="7" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<circle cx="60" cy="82" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
+      '<ellipse cx="42" cy="98" rx="8" ry="3.5" fill="#faf3e3" stroke="#d6c6a5" stroke-width="1"/>' +
+      '<g class="tail-wag"><circle cx="23" cy="90" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g>' +
+      '<rect x="60" y="62" width="16" height="26" rx="8" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1" transform="rotate(24 68 75)"/>' +
+      '<use href="#alp-head" x="78" y="58"/>' +
+    '</g>' +
+  '</svg>';
+
+  /* ---- Horned bear (the owner's 角熊 — a shaggy grey plush rhino):
+         fluffy taupe fur, one big ivory horn on the snout and a smaller
+         one on the forehead, floppy ears with pale inners, stitched
+         nostrils and mouth, corduroy cream foot pads. Its signature pose
+         is the photo's slouched teddy sit. Button eyes — no lids.
+         Floor at y=100. ---- */
+  var BEAR =
+  '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' +
+      '<g id="bear-head">' +
+        '<circle cx="-13" cy="-11" r="6.5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="-13" cy="-11" r="3.2" fill="#d9cdbb"/>' +
+        '<circle cx="13" cy="-11" r="6.5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="13" cy="-11" r="3.2" fill="#d9cdbb"/>' +
+        '<circle cx="-8" cy="-8" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="8" cy="-8" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="-12" cy="1" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="12" cy="1" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="-7" cy="8" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="7" cy="8" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="0" cy="0" r="15" fill="#b4a493"/>' +
+        '<ellipse cx="0" cy="8" rx="10" ry="7.5" fill="#c3b4a1"/>' +
+        '<path d="M-3.4,9 Q-2.6,0.5 -0.6,-4.5 Q2.2,0.5 2.8,9 Z" fill="#efe8d4" stroke="#cfc2a4" stroke-width="1" stroke-linejoin="round"/>' +
+        '<path d="M0.6,-7.5 Q1.9,-12.5 3,-14 Q4.4,-10.5 3.8,-6.5 Z" fill="#efe8d4" stroke="#cfc2a4" stroke-width="0.9" stroke-linejoin="round"/>' +
+        '<circle cx="-8.5" cy="-3" r="1.8" fill="#332e28"/>' +
+        '<circle cx="8.5" cy="-3" r="1.8" fill="#332e28"/>' +
+        '<circle cx="-7.8" cy="-3.7" r="0.6" fill="#cfc4b2"/>' +
+        '<circle cx="9.2" cy="-3.7" r="0.6" fill="#cfc4b2"/>' +
+        '<path d="M-5,10.5 q1,1.4 2.2,1.4 M2.8,11.9 q1.2,0 2.2,-1.4" fill="none" stroke="#9c8b76" stroke-width="1" stroke-linecap="round"/>' +
+        '<path d="M-2.5,13.5 q2.5,1.6 5,0" fill="none" stroke="#9c8b76" stroke-width="1" stroke-linecap="round"/>' +
+      '</g>' +
+      '<g id="bear-leg"><rect x="-6" y="0" width="12" height="18" rx="6" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/><rect x="-6" y="12" width="12" height="6" rx="3" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1"/></g>' +
+      '<g id="bear-leg-far"><rect x="-6" y="0" width="12" height="18" rx="6" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1"/><rect x="-6" y="12" width="12" height="6" rx="3" fill="#e0d5c0" stroke="#8a7c6c" stroke-width="1"/></g>' +
+    '</defs>' +
+    '<ellipse class="ground" cx="66" cy="101" rx="44" ry="3"/>' +
+    '<g class="pose pose-stand">' +
+      '<g transform="translate(46,82)"><g class="leg leg-a"><use href="#bear-leg-far"/></g></g>' +
+      '<g transform="translate(72,82)"><g class="leg leg-b"><use href="#bear-leg-far"/></g></g>' +
+      '<g transform="translate(56,82)"><g class="leg leg-b"><use href="#bear-leg"/></g></g>' +
+      '<g transform="translate(82,82)"><g class="leg leg-a"><use href="#bear-leg"/></g></g>' +
+      '<g class="torso">' +
+        '<g class="tail-wag"><circle cx="32" cy="60" r="5.5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/></g>' +
+        '<circle cx="46" cy="56" r="9" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="62" cy="52" r="10" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<circle cx="78" cy="55" r="9" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<ellipse cx="64" cy="66" rx="31" ry="20" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+        '<ellipse cx="60" cy="75" rx="17" ry="9" fill="#c3b4a1"/>' +
+        '<use href="#bear-head" x="96" y="36"/>' +
+      '</g>' +
+    '</g>' +
+    '<g class="pose pose-sit">' +
+      '<ellipse cx="60" cy="72" rx="29" ry="24" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<circle cx="38" cy="60" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<circle cx="82" cy="60" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<ellipse cx="58" cy="79" rx="18" ry="13" fill="#c3b4a1"/>' +
+      '<ellipse cx="34" cy="80" rx="8" ry="12" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1" transform="rotate(14 34 80)"/>' +
+      '<ellipse cx="86" cy="80" rx="8" ry="12" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1" transform="rotate(-14 86 80)"/>' +
+      '<ellipse cx="42" cy="93" rx="9" ry="6.5" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<path d="M39,88.5 l0,9 M42,88 l0,10 M45,88.5 l0,9" stroke="#d8cbb2" stroke-width="1" fill="none"/>' +
+      '<ellipse cx="78" cy="93" rx="9" ry="6.5" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<path d="M75,88.5 l0,9 M78,88 l0,10 M81,88.5 l0,9" stroke="#d8cbb2" stroke-width="1" fill="none"/>' +
+      '<use href="#bear-head" x="60" y="34"/>' +
+    '</g>' +
+    '<g class="pose pose-lie">' +
+      '<ellipse cx="58" cy="86" rx="33" ry="13.5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<circle cx="34" cy="80" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<circle cx="52" cy="77" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<circle cx="70" cy="79" r="7" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<rect x="80" y="90" width="22" height="9" rx="4.5" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<rect x="95" y="90" width="9" height="9" rx="4.5" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1"/>' +
+      '<g class="tail-wag"><circle cx="26" cy="90" r="5" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/></g>' +
+      '<use href="#bear-head" x="90" y="62"/>' +
     '</g>' +
   '</svg>';
 
@@ -237,19 +395,27 @@
   layer.setAttribute('aria-hidden', 'true');
   layer.innerHTML =
     '<div class="pet pet-dog" data-state="walk" style="width:104px" title="woof">' + DOG + '<div class="zzz">z z</div></div>' +
-    '<div class="pet pet-cat" data-state="sit" style="width:100px" title="meow">' + CAT + '<div class="zzz">z z</div></div>';
+    '<div class="pet pet-cat" data-state="sit" style="width:100px" title="meow">' + CAT + '<div class="zzz">z z</div></div>' +
+    '<div class="pet pet-alpaca" data-state="stand" style="width:84px" title="hum">' + ALPACA + '<div class="zzz">z z</div></div>' +
+    '<div class="pet pet-bear" data-state="sit" style="width:106px" title="snuffle">' + BEAR + '<div class="zzz">z z</div></div>';
   document.body.appendChild(layer);
 
   var rmq = window.matchMedia('(prefers-reduced-motion: reduce)');
   var reduce = rmq.matches;
 
   /* Personal tempo: the dog trots eagerly; the chunky cat strolls, but is
-     shockingly quick when it decides the cursor matters. */
+     shockingly quick when it decides the cursor matters; the alpaca ambles
+     and stands around dreaming; the bear mostly just sits, like the plush
+     it is. Rest deadlines are staggered so the four never sync up. */
   var pets = [
     { el: layer.children[0], x: Math.max(8, innerWidth * 0.12), dir: 1, speed: 44, run: 115, w: 104,
       state: 'walk', until: performance.now() + 4200, chase: null, go: 0, rest: ['stand', 'sit', 'sit', 'lie'] },
     { el: layer.children[1], x: Math.min(innerWidth - 108, innerWidth * 0.68), dir: -1, speed: 38, run: 150, w: 100,
-      state: 'sit', until: performance.now() + 3200, chase: null, go: 0, rest: ['sit', 'lie', 'lie', 'stand'] }
+      state: 'sit', until: performance.now() + 3200, chase: null, go: 0, rest: ['sit', 'lie', 'lie', 'stand'] },
+    { el: layer.children[2], x: Math.max(8, innerWidth * 0.36), dir: 1, speed: 24, run: 70, w: 84,
+      state: 'stand', until: performance.now() + 5600, chase: null, go: 0, rest: ['stand', 'sit', 'stand', 'lie'] },
+    { el: layer.children[3], x: Math.min(innerWidth - 114, innerWidth * 0.88), dir: -1, speed: 17, run: 55, w: 106,
+      state: 'sit', until: performance.now() + 7200, chase: null, go: 0, rest: ['sit', 'sit', 'lie', 'stand'] }
   ];
   var dog = pets[0], cat = pets[1];
   pets.forEach(function (p) { p.svg = p.el.querySelector('svg'); });
@@ -263,6 +429,8 @@
   if (reduce) {
     dog.state = 'lie';
     cat.state = 'sit';
+    pets[2].state = 'sit';
+    pets[3].state = 'sit';
     pets.forEach(function (p) { p.el.dataset.state = p.state; render(p); });
     return;
   }
@@ -373,10 +541,12 @@
 
   function schedule(now) {
     if (document.hidden) return;
-    if (moving(dog) || moving(cat)) {
+    if (pets.some(moving)) {
       if (rafId === null) rafId = requestAnimationFrame(tick);
     } else {
-      var delay = Math.max(16, Math.min(dog.until, cat.until) - now);
+      var next = Infinity;
+      for (var i = 0; i < pets.length; i++) next = Math.min(next, pets[i].until);
+      var delay = Math.max(16, next - now);
       if (timerId !== null) clearTimeout(timerId);
       timerId = setTimeout(function () {
         timerId = null;
