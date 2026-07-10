@@ -860,7 +860,7 @@ strong { font-weight: 600; color: var(--ink); }
   top: 0;
   left: 0;
   right: 0;
-  height: clamp(340px, 56vw, 560px);
+  height: clamp(400px, 45vw, 880px);
   background: url(/images/taipei-skyline.jpg) 28% 0% / cover no-repeat;
   pointer-events: none;
 }
@@ -870,10 +870,10 @@ strong { font-weight: 600; color: var(--ink); }
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom,
-    rgba(250, 247, 241, 0) 36%,
-    rgba(250, 247, 241, 0.6) 60%,
-    rgba(250, 247, 241, 0.92) 78%,
-    var(--paper) 88%);
+    rgba(250, 247, 241, 0) 82%,
+    rgba(250, 247, 241, 0.45) 91%,
+    rgba(250, 247, 241, 0.85) 96%,
+    var(--paper) 100%);
 }
 
 .has-skyline .site-header {
@@ -894,7 +894,7 @@ strong { font-weight: 600; color: var(--ink); }
 .has-skyline main { position: relative; z-index: 1; }
 
 /* Push the hero below the fade so the ink stays on paper */
-.has-skyline .hero { padding-top: calc(clamp(340px, 56vw, 560px) - 120px); }
+.has-skyline .hero { padding-top: calc(clamp(400px, 45vw, 880px) - 60px); }
 
 /* --------------------------------------------------------------------------
    Print (a clean CV on paper)
