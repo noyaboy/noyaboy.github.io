@@ -382,8 +382,17 @@
       '<circle cx="38" cy="60" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
       '<circle cx="82" cy="60" r="8" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
       '<ellipse cx="58" cy="79" rx="18" ry="13" fill="#c3b4a1"/>' +
+      '<ellipse cx="55" cy="59" rx="5" ry="3.6" fill="#dda45c" stroke="#b27a3c" stroke-width="1" transform="rotate(-18 55 59)"/>' +
+      '<circle cx="50.8" cy="60.9" r="1.5" fill="#f6f1e6" stroke="#b27a3c" stroke-width="0.8"/>' +
+      '<ellipse cx="64.5" cy="58.5" rx="5" ry="3.6" fill="#d3924a" stroke="#b27a3c" stroke-width="1" transform="rotate(14 64.5 58.5)"/>' +
+      '<circle cx="68.7" cy="60.7" r="1.5" fill="#f6f1e6" stroke="#b27a3c" stroke-width="0.8"/>' +
+      '<path d="M49,64 L71,64 L68.5,88 L51.5,88 Z" fill="#fbf7ef" stroke="#93342c" stroke-width="1.2" stroke-linejoin="round"/>' +
+      '<path d="M53.5,67.5 L55.7,67.5 L54.9,87 L53,87 Z M59,67.5 L61,67.5 L60.6,87 L58.7,87 Z M64.4,67.5 L66.6,67.5 L67,87 L65.1,87 Z" fill="#c04539"/>' +
+      '<path d="M48.6,62.5 L71.4,62.5 L70.9,67.5 L49.1,67.5 Z" fill="#c04539" stroke="#93342c" stroke-width="1" stroke-linejoin="round"/>' +
       '<g transform="rotate(14 34 80)"><ellipse cx="34" cy="80" rx="8" ry="12" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1"/><ellipse cx="34" cy="89.5" rx="5.2" ry="3.9" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1"/><path d="M32.3,87 l0,5 M35.7,87 l0,5" stroke="#d8cbb2" stroke-width="1" fill="none"/></g>' +
       '<g transform="rotate(-14 86 80)"><ellipse cx="86" cy="80" rx="8" ry="12" fill="#a08f7e" stroke="#8a7c6c" stroke-width="1.1"/><ellipse cx="86" cy="89.5" rx="5.2" ry="3.9" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1"/><path d="M84.3,87 l0,5 M87.7,87 l0,5" stroke="#d8cbb2" stroke-width="1" fill="none"/></g>' +
+      '<circle cx="47.8" cy="73.5" r="5.2" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
+      '<circle cx="72.2" cy="73.5" r="5.2" fill="#b4a493" stroke="#8a7c6c" stroke-width="1.1"/>' +
       '<ellipse cx="42" cy="93" rx="9" ry="6.5" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1.1"/>' +
       '<path d="M39,88.5 l0,9 M42,88 l0,10 M45,88.5 l0,9" stroke="#d8cbb2" stroke-width="1" fill="none"/>' +
       '<ellipse cx="78" cy="93" rx="9" ry="6.5" fill="#ece2cd" stroke="#8a7c6c" stroke-width="1.1"/>' +
