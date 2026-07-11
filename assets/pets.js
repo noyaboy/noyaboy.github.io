@@ -286,7 +286,6 @@
         '<rect x="66" y="33" width="18" height="29" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
         '<circle cx="70" cy="58" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
         '<use href="#alp-head" x="75" y="27"/>' +
-        '<g transform="translate(75,27)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
       '</g>' +
       '</g>' +
     '</g>' +
@@ -301,7 +300,6 @@
       '<rect x="62" y="55" width="18" height="25" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
       '<circle cx="67" cy="74" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
       '<use href="#alp-head" x="71" y="47"/>' +
-      '<g transform="translate(71,47)"><g class="fluff"><circle cx="-2" cy="-14.5" r="5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/><circle cx="4" cy="-13.5" r="4" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/></g></g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<ellipse cx="50" cy="89" rx="30" ry="11.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
