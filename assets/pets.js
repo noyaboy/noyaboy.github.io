@@ -411,13 +411,13 @@
       '<g id="cin-head">' +
         '<ellipse cx="0" cy="0" rx="21" ry="16" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5"/>' +
         '<g class="blink">' +
-          '<ellipse cx="-7.5" cy="1" rx="2.5" ry="3.8" fill="#4a86d8"/>' +
-          '<ellipse cx="7.5" cy="1" rx="2.5" ry="3.8" fill="#4a86d8"/>' +
-          '<circle cx="-6.7" cy="-0.5" r="0.85" fill="#ffffff"/>' +
-          '<circle cx="8.3" cy="-0.5" r="0.85" fill="#ffffff"/>' +
+          '<ellipse cx="-9.5" cy="1" rx="2.5" ry="3.8" fill="#4a86d8"/>' +
+          '<ellipse cx="9.5" cy="1" rx="2.5" ry="3.8" fill="#4a86d8"/>' +
+          '<circle cx="-8.7" cy="-0.5" r="0.85" fill="#ffffff"/>' +
+          '<circle cx="10.3" cy="-0.5" r="0.85" fill="#ffffff"/>' +
         '</g>' +
-        '<ellipse cx="-14" cy="6.5" rx="3.8" ry="2.7" fill="#f8cfd8"/>' +
-        '<ellipse cx="14" cy="6.5" rx="3.8" ry="2.7" fill="#f8cfd8"/>' +
+        '<ellipse cx="-15" cy="6.5" rx="3.8" ry="2.7" fill="#f8cfd8"/>' +
+        '<ellipse cx="15" cy="6.5" rx="3.8" ry="2.7" fill="#f8cfd8"/>' +
         '<path d="M-2.6,7 q1.3,1.8 2.6,0 q1.3,1.8 2.6,0" fill="none" stroke="#c9a06b" stroke-width="1.1" stroke-linecap="round"/>' +
       '</g>' +
       '<g id="cin-ear"><path d="M-7,-15 Q-28,-27 -44,-15 Q-51,-7 -45,2 Q-38,8 -29,4 Q-16,-2 -8,-10 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5" stroke-linejoin="round"/></g>' +
@@ -430,11 +430,11 @@
       '<g class="torso">' +
         '<g class="tail-wag"><use href="#cin-tail" x="84" y="75"/></g>' +
         '<ellipse cx="64" cy="80" rx="13.5" ry="12" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5"/>' +
-        '<g transform="translate(64,42) scale(1.75)">' +
-          '<use href="#cin-ear"/>' +
-          '<g transform="scale(-1,1)"><use href="#cin-ear"/></g>' +
+        '<g transform="translate(64,52) scale(1.75)">' +
+          '<g transform="translate(3,-4)"><use href="#cin-ear"/></g>' +
+          '<g transform="scale(-1,1) translate(3,-4)"><use href="#cin-ear"/></g>' +
           '<use href="#cin-head"/>' +
-          '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
+          '<g class="lids"><ellipse cx="-9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
         '</g>' +
       '</g>' +
     '</g>' +
@@ -443,21 +443,21 @@
       '<ellipse cx="55" cy="94" rx="6" ry="3.6" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
       '<ellipse cx="73" cy="94" rx="6" ry="3.6" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
       '<g class="tail-wag"><use href="#cin-tail" x="85" y="83"/></g>' +
-      '<g transform="translate(64,46) scale(1.75)">' +
-        '<use href="#cin-ear"/>' +
-        '<g transform="scale(-1,1)"><use href="#cin-ear"/></g>' +
+      '<g transform="translate(64,56) scale(1.75)">' +
+        '<g transform="translate(3,-4)"><use href="#cin-ear"/></g>' +
+        '<g transform="scale(-1,1) translate(3,-4)"><use href="#cin-ear"/></g>' +
         '<use href="#cin-head"/>' +
-        '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
+        '<g class="lids"><ellipse cx="-9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<ellipse cx="46" cy="90" rx="16" ry="9" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
       '<g class="tail-wag"><use href="#cin-tail" x="28" y="88"/></g>' +
       '<g transform="translate(74,71) scale(1.75)">' +
-        '<g transform="rotate(16)"><use href="#cin-ear"/></g>' +
-        '<g transform="scale(-1,1) rotate(16)"><use href="#cin-ear"/></g>' +
+        '<g transform="translate(3,-4) rotate(16)"><use href="#cin-ear"/></g>' +
+        '<g transform="scale(-1,1) translate(3,-4) rotate(16)"><use href="#cin-ear"/></g>' +
         '<use href="#cin-head"/>' +
-        '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
+        '<g class="lids"><ellipse cx="-9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-fly">' +
@@ -466,11 +466,11 @@
         '<ellipse cx="57" cy="80" rx="4.5" ry="3" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
         '<ellipse cx="71" cy="80" rx="4.5" ry="3" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
         '<g class="tail-wag"><use href="#cin-tail" x="82" y="66"/></g>' +
-        '<g transform="translate(64,36) scale(1.75)">' +
-          '<g class="wing wing-l"><g transform="rotate(-22)"><use href="#cin-ear"/></g></g>' +
-          '<g class="wing wing-r"><g transform="scale(-1,1) rotate(-22)"><use href="#cin-ear"/></g></g>' +
+        '<g transform="translate(64,44) scale(1.75)">' +
+          '<g class="wing wing-l"><g transform="translate(3,-4) rotate(28)"><use href="#cin-ear"/></g></g>' +
+          '<g class="wing wing-r"><g transform="scale(-1,1) translate(3,-4) rotate(28)"><use href="#cin-ear"/></g></g>' +
           '<use href="#cin-head"/>' +
-          '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
+          '<g class="lids"><ellipse cx="-9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
         '</g>' +
       '</g>' +
     '</g>' +
