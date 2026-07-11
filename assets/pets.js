@@ -19,6 +19,20 @@
     '.pet[data-state="walk"] .pose-stand,.pet[data-state="stand"] .pose-stand,.pet[data-state="run"] .pose-stand{display:inline;}',
     '.pet[data-state="sit"] .pose-sit{display:inline;}',
     '.pet[data-state="lie"] .pose-lie{display:inline;}',
+    '.pet[data-state="fly"] .pose-fly{display:inline;}',
+    /* Flight: ear-wings flap in opposite phase, the body floats on its own
+       slower sine, and the ground shadow fades out while airborne. */
+    '.pet .ground{transition:opacity .5s ease;}',
+    '.pet[data-state="fly"] .ground{opacity:0;}',
+    '.pet .wing{transform-box:fill-box;}',
+    '.wing-l{transform-origin:100% 70%;}',
+    '.wing-r{transform-origin:0% 70%;}',
+    '.pet[data-state="fly"] .wing-l{animation:pet-flap-l .45s ease-in-out infinite alternate;}',
+    '.pet[data-state="fly"] .wing-r{animation:pet-flap-r .45s ease-in-out infinite alternate;}',
+    '@keyframes pet-flap-l{from{transform:rotate(5deg);}to{transform:rotate(-16deg);}}',
+    '@keyframes pet-flap-r{from{transform:rotate(-5deg);}to{transform:rotate(16deg);}}',
+    '.pet[data-state="fly"] .fly-body{animation:pet-float 1.5s ease-in-out infinite alternate;}',
+    '@keyframes pet-float{from{transform:translateY(0);}to{transform:translateY(-2.5px);}}',
     /* Gait. Legs sit out the run\'s wind-up (delay matches the crouch). */
     '.pet .leg{transform-box:fill-box;transform-origin:50% 12%;}',
     '.pet[data-state="walk"] .leg-a{animation:pet-step .45s ease-in-out infinite alternate;}',
@@ -70,6 +84,8 @@
        fur-colored .lids that unfold from the eye top for ~140ms. */
     '.pet .lids{transform-box:fill-box;transform-origin:50% 0%;transform:scaleY(0);animation:pet-blink 5.2s linear infinite;}',
     '.pet-cat .lids{animation-duration:7.4s;animation-delay:1.3s;}',
+    '.pet-cinna .lids{animation-duration:6.1s;animation-delay:0.7s;}',
+    '.pet-nori .lids{animation-duration:5.8s;animation-delay:2.6s;}',
     '@keyframes pet-blink{0%,95.5%,99.2%,100%{transform:scaleY(0);}97.3%{transform:scaleY(1);}}',
     '.pet .zzz{display:none;position:absolute;top:-6px;left:60%;color:#9a9a9a;font:700 13px/1 Lato,Verdana,sans-serif;pointer-events:none;}',
     '.pet[data-state="lie"] .zzz{display:block;animation:pet-zzz 2.6s ease-in 3s infinite;opacity:0;}',
@@ -383,6 +399,150 @@
     '</g>' +
   '</svg>';
 
+  /* ---- 大耳狗 (Cinnamoroll-style big-eared pup, drawn from the owner's
+         reference): pure white with a warm tan outline, blue oval eyes,
+         pink cheeks, tiny omega mouth, a cinnamon-roll spiral tail, and
+         the enormous ears it flies with — pose-fly spreads them as
+         flapping wings (.wing, outside defs) while the body dangles.
+         Floor at y=100. ---- */
+  var CINNA =
+  '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' +
+      '<g id="cin-head">' +
+        '<circle cx="0" cy="0" r="15" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
+        '<g class="blink">' +
+          '<ellipse cx="-5.6" cy="-1.5" rx="2.1" ry="3" fill="#4db3e6"/>' +
+          '<ellipse cx="5.6" cy="-1.5" rx="2.1" ry="3" fill="#4db3e6"/>' +
+          '<circle cx="-5" cy="-2.6" r="0.7" fill="#ffffff"/>' +
+          '<circle cx="6.2" cy="-2.6" r="0.7" fill="#ffffff"/>' +
+        '</g>' +
+        '<ellipse cx="-10.3" cy="4.2" rx="3.1" ry="2.3" fill="#f8cfd8"/>' +
+        '<ellipse cx="10.3" cy="4.2" rx="3.1" ry="2.3" fill="#f8cfd8"/>' +
+        '<path d="M-2.4,4.6 q1.2,1.6 2.4,0 q1.2,1.6 2.4,0" fill="none" stroke="#c9a06b" stroke-width="1.1" stroke-linecap="round"/>' +
+      '</g>' +
+      '<g id="cin-leg"><rect x="-3.5" y="0" width="7" height="12" rx="3.5" fill="#ffffff" stroke="#c9a06b" stroke-width="1.3"/></g>' +
+      '<g id="cin-leg-far"><rect x="-3.5" y="0" width="7" height="12" rx="3.5" fill="#f5efe4" stroke="#c9a06b" stroke-width="1.3"/></g>' +
+      '<g id="cin-ear"><path d="M-6,-10 Q-22,-22 -35,-16 Q-38,-6 -24,1 Q-12,4 -6,-2 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4" stroke-linejoin="round"/></g>' +
+      '<g id="cin-tail"><circle cx="0" cy="0" r="7" fill="#ffffff" stroke="#c9a06b" stroke-width="1.3"/><path d="M3.2,0 a3.2,3.2 0 1,1 -3.2,-3.2 a1.8,1.8 0 1,0 1.8,1.8" fill="none" stroke="#c9a06b" stroke-width="1.2" stroke-linecap="round"/></g>' +
+    '</defs>' +
+    '<ellipse class="ground" cx="64" cy="101" rx="38" ry="3"/>' +
+    '<g class="pose pose-stand">' +
+      '<g transform="translate(48,88)"><g class="leg leg-a"><use href="#cin-leg-far"/></g></g>' +
+      '<g transform="translate(72,88)"><g class="leg leg-b"><use href="#cin-leg-far"/></g></g>' +
+      '<g transform="translate(56,88)"><g class="leg leg-b"><use href="#cin-leg"/></g></g>' +
+      '<g transform="translate(80,88)"><g class="leg leg-a"><use href="#cin-leg"/></g></g>' +
+      '<g class="torso">' +
+        '<g class="tail-wag"><use href="#cin-tail" x="38" y="70"/></g>' +
+        '<ellipse cx="64" cy="76" rx="22" ry="16" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
+        '<g transform="translate(60,46)">' +
+          '<use href="#cin-ear"/>' +
+          '<g transform="scale(-1,1)"><use href="#cin-ear"/></g>' +
+        '</g>' +
+        '<use href="#cin-head" x="60" y="46"/>' +
+        '<g transform="translate(60,46)"><g class="lids"><ellipse cx="-5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/><ellipse cx="5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/></g></g>' +
+      '</g>' +
+    '</g>' +
+    '<g class="pose pose-sit">' +
+      '<ellipse cx="64" cy="82" rx="21" ry="15" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
+      '<ellipse cx="52" cy="94" rx="7" ry="4" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
+      '<ellipse cx="76" cy="94" rx="7" ry="4" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
+      '<g class="tail-wag"><use href="#cin-tail" x="40" y="86"/></g>' +
+      '<g transform="translate(64,36)">' +
+        '<use href="#cin-ear"/>' +
+        '<g transform="scale(-1,1)"><use href="#cin-ear"/></g>' +
+      '</g>' +
+      '<use href="#cin-head" x="64" y="36"/>' +
+      '<g transform="translate(64,36)"><g class="lids"><ellipse cx="-5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/><ellipse cx="5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/></g></g>' +
+    '</g>' +
+    '<g class="pose pose-lie">' +
+      '<ellipse cx="58" cy="89" rx="26" ry="11" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
+      '<g class="tail-wag"><use href="#cin-tail" x="32" y="92"/></g>' +
+      '<g transform="translate(78,72)">' +
+        '<g transform="rotate(14)"><use href="#cin-ear"/></g>' +
+        '<g transform="scale(-1,1) rotate(14)"><use href="#cin-ear"/></g>' +
+      '</g>' +
+      '<use href="#cin-head" x="78" y="72"/>' +
+      '<g transform="translate(78,72)"><g class="lids"><ellipse cx="-5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/><ellipse cx="5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/></g></g>' +
+    '</g>' +
+    '<g class="pose pose-fly">' +
+      '<g class="fly-body">' +
+        '<g class="wing wing-l"><path d="M52,40 Q30,26 12,30 Q8,42 26,48 Q42,52 54,46 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4" stroke-linejoin="round"/></g>' +
+        '<g class="wing wing-r"><path d="M76,40 Q98,26 116,30 Q120,42 102,48 Q86,52 74,46 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4" stroke-linejoin="round"/></g>' +
+        '<ellipse cx="64" cy="66" rx="17" ry="13" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
+        '<ellipse cx="56" cy="77" rx="5" ry="3.4" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
+        '<ellipse cx="72" cy="77" rx="5" ry="3.4" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
+        '<g class="tail-wag"><use href="#cin-tail" x="42" y="60"/></g>' +
+        '<use href="#cin-head" x="64" y="42"/>' +
+        '<g transform="translate(64,42)"><g class="lids"><ellipse cx="-5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/><ellipse cx="5.6" cy="-1.5" rx="2.5" ry="3.4" fill="#ffffff"/></g></g>' +
+      '</g>' +
+    '</g>' +
+  '</svg>';
+
+  /* ---- 諾麗 (the owner's black toy poodle): charcoal curls with flyaway
+         wisps on the crown, floppy ear masses, bright white eye glints so
+         the eyes read on dark fur, and the photo's signature pink tongue
+         hanging out. Floor at y=100. ---- */
+  var NORI =
+  '<svg viewBox="0 0 130 104" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' +
+      '<g id="nori-head">' +
+        '<path d="M-9,-13 q-2,-5 1,-7 M-2,-15 q0,-5 3,-6 M6,-13 q2,-4 5,-4" fill="none" stroke="#2a2521" stroke-width="1.6" stroke-linecap="round"/>' +
+        '<circle cx="-8" cy="-7" r="7.5" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<circle cx="8" cy="-7" r="7.5" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<circle cx="0" cy="-10" r="8" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<ellipse cx="-13" cy="3" rx="5.5" ry="8" fill="#2a2521" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<ellipse cx="13" cy="3" rx="5.5" ry="8" fill="#2a2521" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<circle cx="0" cy="0" r="13.5" fill="#35302b"/>' +
+        '<path d="M-9,-6 q3,-3 6,-2 M3,-8 q3,-1 6,2" fill="none" stroke="#4a443d" stroke-width="1" stroke-linecap="round"/>' +
+        '<g class="blink">' +
+          '<circle cx="-5" cy="-2" r="2" fill="#141210"/>' +
+          '<circle cx="5" cy="-2" r="2" fill="#141210"/>' +
+          '<circle cx="-4.2" cy="-2.9" r="0.95" fill="#ffffff"/>' +
+          '<circle cx="5.8" cy="-2.9" r="0.95" fill="#ffffff"/>' +
+        '</g>' +
+        '<ellipse cx="0" cy="5.5" rx="5.5" ry="4.5" fill="#3f3933"/>' +
+        '<ellipse cx="0" cy="3.2" rx="2.6" ry="2" fill="#171412"/>' +
+        '<path d="M-1.6,8.5 q1.6,4.5 0,8 q2.6,-0.5 3.4,-2.5 q0.6,-3 -0.4,-5.5 Z" fill="#e58c96" stroke="#c76472" stroke-width="0.8" stroke-linejoin="round"/>' +
+      '</g>' +
+      '<g id="nori-leg"><rect x="-4" y="0" width="8" height="14" rx="4" fill="#35302b" stroke="#1f1b17" stroke-width="1.1"/></g>' +
+      '<g id="nori-leg-far"><rect x="-4" y="0" width="8" height="14" rx="4" fill="#2a2521" stroke="#1f1b17" stroke-width="1.1"/></g>' +
+    '</defs>' +
+    '<ellipse class="ground" cx="62" cy="101" rx="38" ry="3"/>' +
+    '<g class="pose pose-stand">' +
+      '<g transform="translate(46,86)"><g class="leg leg-a"><use href="#nori-leg-far"/></g></g>' +
+      '<g transform="translate(70,86)"><g class="leg leg-b"><use href="#nori-leg-far"/></g></g>' +
+      '<g transform="translate(54,86)"><g class="leg leg-b"><use href="#nori-leg"/></g></g>' +
+      '<g transform="translate(78,86)"><g class="leg leg-a"><use href="#nori-leg"/></g></g>' +
+      '<g class="torso">' +
+        '<g class="tail-wag"><circle cx="36" cy="62" r="6.5" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/><circle cx="31" cy="57" r="4" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/></g>' +
+        '<circle cx="48" cy="66" r="9" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<circle cx="64" cy="62" r="10" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<ellipse cx="62" cy="74" rx="24" ry="15" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+        '<path d="M48,64 q4,-4 8,-3 M62,58 q5,-2 9,1 M52,76 q5,3 10,2" fill="none" stroke="#4a443d" stroke-width="1" stroke-linecap="round"/>' +
+        '<use href="#nori-head" x="86" y="44"/>' +
+        '<g transform="translate(86,44)"><g class="lids"><circle cx="-5" cy="-2" r="2.4" fill="#35302b"/><circle cx="5" cy="-2" r="2.4" fill="#35302b"/></g></g>' +
+      '</g>' +
+    '</g>' +
+    '<g class="pose pose-sit">' +
+      '<ellipse cx="58" cy="82" rx="20" ry="15" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+      '<circle cx="52" cy="68" r="9" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+      '<path d="M46,74 q4,-5 9,-4 M52,86 q5,3 10,2" fill="none" stroke="#4a443d" stroke-width="1" stroke-linecap="round"/>' +
+      '<ellipse cx="48" cy="94" rx="6.5" ry="4" fill="#35302b" stroke="#1f1b17" stroke-width="1.1"/>' +
+      '<ellipse cx="66" cy="94" rx="6.5" ry="4" fill="#35302b" stroke="#1f1b17" stroke-width="1.1"/>' +
+      '<g class="tail-wag"><circle cx="36" cy="88" r="6" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/></g>' +
+      '<use href="#nori-head" x="66" y="42"/>' +
+      '<g transform="translate(66,42)"><g class="lids"><circle cx="-5" cy="-2" r="2.4" fill="#35302b"/><circle cx="5" cy="-2" r="2.4" fill="#35302b"/></g></g>' +
+    '</g>' +
+    '<g class="pose pose-lie">' +
+      '<ellipse cx="54" cy="88" rx="27" ry="12" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/>' +
+      '<path d="M36,84 q4,-4 9,-3 M52,80 q5,-2 10,1 M44,92 q5,3 10,2" fill="none" stroke="#4a443d" stroke-width="1" stroke-linecap="round"/>' +
+      '<rect x="72" y="92" width="20" height="8" rx="4" fill="#35302b" stroke="#1f1b17" stroke-width="1.1"/>' +
+      '<g class="tail-wag"><circle cx="26" cy="92" r="5.5" fill="#35302b" stroke="#1f1b17" stroke-width="1.2"/></g>' +
+      '<use href="#nori-head" x="84" y="66"/>' +
+      '<g transform="translate(84,66)"><g class="lids"><circle cx="-5" cy="-2" r="2.4" fill="#35302b"/><circle cx="5" cy="-2" r="2.4" fill="#35302b"/></g></g>' +
+    '</g>' +
+  '</svg>';
+
   var style = document.createElement('style');
   style.textContent = CSS;
   document.head.appendChild(style);
@@ -394,7 +554,9 @@
     '<div class="pet pet-dog" data-state="walk" style="width:104px" title="woof">' + DOG + '<div class="zzz">z z</div></div>' +
     '<div class="pet pet-cat" data-state="sit" style="width:100px" title="meow">' + CAT + '<div class="zzz">z z</div></div>' +
     '<div class="pet pet-alpaca" data-state="stand" style="width:84px" title="hum">' + ALPACA + '<div class="zzz">z z</div></div>' +
-    '<div class="pet pet-bear" data-state="sit" style="width:106px" title="snuffle">' + BEAR + '<div class="zzz">z z</div></div>';
+    '<div class="pet pet-bear" data-state="sit" style="width:106px" title="snuffle">' + BEAR + '<div class="zzz">z z</div></div>' +
+    '<div class="pet pet-cinna" data-state="walk" style="width:92px" title="poff">' + CINNA + '<div class="zzz">z z</div></div>' +
+    '<div class="pet pet-nori" data-state="sit" style="width:88px" title="yip">' + NORI + '<div class="zzz">z z</div></div>';
   document.body.appendChild(layer);
 
   var rmq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -412,14 +574,19 @@
     { el: layer.children[2], x: Math.max(8, innerWidth * 0.36), dir: 1, speed: 24, run: 70, w: 84,
       state: 'stand', until: performance.now() + 5600, chase: null, go: 0, rest: ['stand', 'sit', 'stand', 'lie'] },
     { el: layer.children[3], x: Math.min(innerWidth - 114, innerWidth * 0.88), dir: -1, speed: 17, run: 55, w: 106,
-      state: 'sit', until: performance.now() + 7200, chase: null, go: 0, rest: ['sit', 'sit', 'lie', 'stand'] }
+      state: 'sit', until: performance.now() + 7200, chase: null, go: 0, rest: ['sit', 'sit', 'lie', 'stand'] },
+    { el: layer.children[4], x: Math.max(8, innerWidth * 0.48), dir: 1, speed: 30, run: 85, w: 92, y: 0,
+      state: 'walk', until: performance.now() + 4800, chase: null, go: 0, rest: ['stand', 'sit', 'stand', 'lie'] },
+    { el: layer.children[5], x: Math.min(innerWidth - 96, innerWidth * 0.78), dir: -1, speed: 40, run: 120, w: 88,
+      state: 'sit', until: performance.now() + 6100, chase: null, go: 0, rest: ['stand', 'sit', 'sit', 'lie'] }
   ];
-  var dog = pets[0], cat = pets[1];
+  var dog = pets[0], cat = pets[1], cinna = pets[4], nori = pets[5];
   pets.forEach(function (p) { p.svg = p.el.querySelector('svg'); });
 
-  /* Flip the svg (not the container) so the floating "z z" stays readable. */
+  /* Flip the svg (not the container) so the floating "z z" stays readable.
+     y is height above the lawn — only the flyer ever sets it. */
   function render(p) {
-    p.el.style.transform = 'translateX(' + p.x + 'px)';
+    p.el.style.transform = 'translateX(' + p.x + 'px) translateY(' + (-(p.y || 0)) + 'px)';
     p.svg.style.transform = 'scaleX(' + p.dir + ')';
   }
 
@@ -428,6 +595,8 @@
     cat.state = 'sit';
     pets[2].state = 'sit';
     pets[3].state = 'sit';
+    cinna.state = 'sit';
+    nori.state = 'lie';
     pets.forEach(function (p) { p.el.dataset.state = p.state; render(p); });
     return;
   }
@@ -463,10 +632,29 @@
         return;
       }
       if (p === dog && Math.random() < 0.3 && Math.abs(cat.x - p.x) > 220) {
-        p.chase = 'cat';
+        p.chase = cat;
         p.dir = cat.x > p.x ? 1 : -1;
         p.go = now + 380;
         setState(p, 'run', now + 7000);
+        return;
+      }
+      // The poodle puppy pesters the bichon the same way.
+      if (p === nori && Math.random() < 0.3 && Math.abs(dog.x - p.x) > 220) {
+        p.chase = dog;
+        p.dir = dog.x > p.x ? 1 : -1;
+        p.go = now + 380;
+        setState(p, 'run', now + 7000);
+        return;
+      }
+      // The big-eared pup takes to the air: pick a far-off landing spot,
+      // spread the ears, rise to a personal cruise height and glide there.
+      if (p === cinna && Math.random() < 0.4) {
+        p.chase = null;
+        p.flyTo = 6 + Math.random() * Math.max(12, innerWidth - p.w - 12);
+        p.cruise = 34 + Math.random() * 30;
+        p.dir = p.flyTo > p.x ? 1 : -1;
+        p.go = now + 300;
+        setState(p, 'fly', now + 26000);
         return;
       }
       p.state = 'walk';
@@ -496,7 +684,7 @@
   var rafId = null;
   var timerId = null;
 
-  function moving(p) { return p.state === 'walk' || p.state === 'run'; }
+  function moving(p) { return p.state === 'walk' || p.state === 'run' || p.state === 'fly' || p.y > 0; }
 
   function tick(now) {
     rafId = null;
@@ -508,13 +696,13 @@
       var max = innerWidth - p.w - 6;
       if (p.state === 'run') {
         if (now >= p.go) {
-          var target = p.chase === 'mouse' ? mouse.x - p.w / 2 : cat.x;
+          var target = p.chase === 'mouse' ? mouse.x - p.w / 2 : p.chase.x;
           target = Math.max(6, Math.min(max, target));
           var gap = target - p.x;
-          var arrive = p.chase === 'cat' ? 96 : 16;
+          var arrive = p.chase === 'mouse' ? 16 : 96;
           if (Math.abs(gap) <= arrive) {
             p.dir = gap === 0 ? p.dir : (gap > 0 ? 1 : -1);
-            if (p.chase === 'cat') {
+            if (p.chase !== 'mouse') {
               var pr = p.el.getBoundingClientRect();
               heartAt(pr.left + pr.width / 2, pr.top - 4);
             }
@@ -530,6 +718,24 @@
         p.x += p.dir * p.speed * dt;
         if (p.x <= 6) { p.x = 6; p.dir = 1; }
         else if (p.x >= max) { p.x = max; p.dir = -1; }
+      } else if (p.state === 'fly') {
+        if (now >= p.go) {
+          var ftarget = Math.max(6, Math.min(max, p.flyTo));
+          var fgap = ftarget - p.x;
+          if (Math.abs(fgap) > 10 && now < p.until - 1500) {
+            if (p.y < p.cruise) p.y = Math.min(p.cruise, p.y + 55 * dt);
+            p.dir = fgap > 0 ? 1 : -1;
+            p.x += p.dir * p.run * dt;
+            p.x = Math.max(6, Math.min(max, p.x));
+          } else {
+            p.y = Math.max(0, p.y - 60 * dt);
+            if (p.y === 0) setState(p, 'stand', now + 2600);
+          }
+        }
+      }
+      // anything airborne but no longer flying (click, state expiry) settles
+      if (p.state !== 'fly' && p.y > 0) {
+        p.y = Math.max(0, p.y - 90 * dt);
       }
       render(p);
     }
