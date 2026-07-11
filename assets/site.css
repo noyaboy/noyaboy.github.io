@@ -10,6 +10,21 @@
    Fonts — variable subsets served from this origin
    -------------------------------------------------------------------------- */
 
+/* Metric-adjusted local fallbacks: while the webfonts load, Georgia/Arial
+   render pre-shrunk to the webfonts' smaller x-heights, so the swap
+   barely moves a glyph (Newsreader x-height 0.426em vs Georgia 0.484em) */
+@font-face {
+  font-family: 'Newsreader Fallback';
+  src: local('Georgia');
+  size-adjust: 88%;
+}
+
+@font-face {
+  font-family: 'Source Sans 3 Fallback';
+  src: local('Arial');
+  size-adjust: 92%;
+}
+
 @font-face {
   font-family: 'Newsreader';
   font-style: normal;
@@ -88,8 +103,8 @@
    -------------------------------------------------------------------------- */
 
 :root {
-  --serif: 'Newsreader', 'Source Serif 4', Georgia, 'Times New Roman', serif;
-  --sans: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Newsreader', 'Newsreader Fallback', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans: 'Source Sans 3', 'Source Sans 3 Fallback', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'SF Mono', Menlo, Consolas, monospace;
 
   --paper: #faf7f1;
@@ -138,6 +153,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-optical-sizing: auto;
+  font-synthesis: none;  /* never fake a bold or italic we didn't ship */
 }
 
 .container {
@@ -148,7 +164,7 @@ body {
 
 ::selection { background: var(--selection); }
 
-p { text-wrap: pretty; }
+p, li { text-wrap: pretty; }
 
 /* No double-tap-zoom delay on taps; pinch zoom stays available */
 a, button, summary { touch-action: manipulation; }
@@ -251,8 +267,9 @@ a, button, summary { touch-action: manipulation; }
   }
 }
 
+/* Hold 12px+ at the smallest widths; win space back from tracking, not size */
 @media (max-width: 360px) {
-  .site-nav { font-size: 0.7rem; letter-spacing: 0.08em; gap: 0.2rem 0.7rem; }
+  .site-nav { letter-spacing: 0.06em; gap: 0.2rem 0.55rem; }
 }
 
 /* --------------------------------------------------------------------------
@@ -364,7 +381,7 @@ strong { font-weight: 600; color: var(--ink); }
   color: var(--accent);
   font-weight: 700;
   font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -374,7 +391,7 @@ strong { font-weight: 600; color: var(--ink); }
   color: var(--ink);
   font-weight: 700;
   font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -402,23 +419,6 @@ strong { font-weight: 600; color: var(--ink); }
   color: var(--accent);
   margin: 0 0 0.9rem;
 }
-
-.hero h1 {
-  font-size: clamp(2.35rem, 6vw, 3.3rem);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  margin: 0 0 0.2em;
-}
-
-.hero .role {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--muted);
-  font-size: 1.13rem;
-  margin: 0 0 0.55em;
-}
-
-.hero .role a { font-style: italic; }
 
 /* One quotable line — the current mission, stated with a pulse.
    Roman where the role above is italic: this is the declaration, not the caption. */
@@ -629,6 +629,17 @@ strong { font-weight: 600; color: var(--ink); }
   margin: 0 0 0.4em;
 }
 
+/* Reading measure: long-form and meta lines cap near the classic 66ch
+   so a paragraph never runs the full 812px container (~100ch+) */
+.pub details p,
+.project p.desc,
+.news span { max-width: 72ch; }
+
+.pub .authors,
+.pub .tldr,
+.cv-sub,
+.cv-note { max-width: 75ch; }
+
 .pub-links {
   display: flex;
   flex-wrap: wrap;
@@ -661,7 +672,7 @@ strong { font-weight: 600; color: var(--ink); }
 .pub-sub:last-child { margin-bottom: 0; }
 
 .pub-sub h4 {
-  font-size: 1.02rem;
+  font-size: 1.08rem;
   font-weight: 500;
   margin: 0 0 0.1em;
 }
