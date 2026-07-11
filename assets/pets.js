@@ -430,12 +430,12 @@
       '<g class="torso">' +
         '<g class="tail-wag"><use href="#cin-tail" x="84" y="75"/></g>' +
         '<ellipse cx="64" cy="80" rx="13.5" ry="12" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5"/>' +
-        '<g transform="translate(64,53)">' +
+        '<g transform="translate(64,42) scale(1.75)">' +
           '<use href="#cin-ear"/>' +
           '<g transform="scale(-1,1)"><use href="#cin-ear"/></g>' +
+          '<use href="#cin-head"/>' +
+          '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
         '</g>' +
-        '<use href="#cin-head" x="64" y="53"/>' +
-        '<g transform="translate(64,53)"><g class="lids"><ellipse cx="-6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/><ellipse cx="6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/></g></g>' +
       '</g>' +
     '</g>' +
     '<g class="pose pose-sit">' +
@@ -443,33 +443,35 @@
       '<ellipse cx="55" cy="94" rx="6" ry="3.6" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
       '<ellipse cx="73" cy="94" rx="6" ry="3.6" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
       '<g class="tail-wag"><use href="#cin-tail" x="85" y="83"/></g>' +
-      '<g transform="translate(64,58)">' +
+      '<g transform="translate(64,46) scale(1.75)">' +
         '<use href="#cin-ear"/>' +
         '<g transform="scale(-1,1)"><use href="#cin-ear"/></g>' +
+        '<use href="#cin-head"/>' +
+        '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
       '</g>' +
-      '<use href="#cin-head" x="64" y="58"/>' +
-      '<g transform="translate(64,58)"><g class="lids"><ellipse cx="-6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/><ellipse cx="6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/></g></g>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<ellipse cx="46" cy="90" rx="16" ry="9" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
       '<g class="tail-wag"><use href="#cin-tail" x="28" y="88"/></g>' +
-      '<g transform="translate(74,82)">' +
+      '<g transform="translate(74,71) scale(1.75)">' +
         '<g transform="rotate(16)"><use href="#cin-ear"/></g>' +
         '<g transform="scale(-1,1) rotate(16)"><use href="#cin-ear"/></g>' +
+        '<use href="#cin-head"/>' +
+        '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
       '</g>' +
-      '<use href="#cin-head" x="74" y="82"/>' +
-      '<g transform="translate(74,82)"><g class="lids"><ellipse cx="-6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/><ellipse cx="6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/></g></g>' +
     '</g>' +
     '<g class="pose pose-fly">' +
       '<g class="fly-body">' +
-        '<g class="wing wing-l"><path d="M50,36 Q28,20 10,26 Q4,38 22,46 Q38,52 52,46 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5" stroke-linejoin="round"/></g>' +
-        '<g class="wing wing-r"><path d="M78,36 Q100,20 118,26 Q124,38 106,46 Q90,52 76,46 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5" stroke-linejoin="round"/></g>' +
         '<ellipse cx="64" cy="72" rx="12" ry="9.5" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
         '<ellipse cx="57" cy="80" rx="4.5" ry="3" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
         '<ellipse cx="71" cy="80" rx="4.5" ry="3" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
-        '<g class="tail-wag"><use href="#cin-tail" x="81" y="67"/></g>' +
-        '<use href="#cin-head" x="64" y="47"/>' +
-        '<g transform="translate(64,47)"><g class="lids"><ellipse cx="-6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/><ellipse cx="6.5" cy="1" rx="2.8" ry="4" fill="#ffffff"/></g></g>' +
+        '<g class="tail-wag"><use href="#cin-tail" x="82" y="66"/></g>' +
+        '<g transform="translate(64,36) scale(1.75)">' +
+          '<g class="wing wing-l"><g transform="rotate(-22)"><use href="#cin-ear"/></g></g>' +
+          '<g class="wing wing-r"><g transform="scale(-1,1) rotate(-22)"><use href="#cin-ear"/></g></g>' +
+          '<use href="#cin-head"/>' +
+          '<g class="lids"><ellipse cx="-7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="7.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
+        '</g>' +
       '</g>' +
     '</g>' +
   '</svg>';
