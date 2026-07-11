@@ -64,11 +64,11 @@
     var rise = 46 + (1 - depth) * 70 + Math.random() * 18;
     var swayT = 6 + Math.random() * 7;
     d.style.left = (Math.random() * 100).toFixed(2) + '%';
-    d.style.opacity = (0.12 + depth * 0.26).toFixed(2);
+    d.style.opacity = (0.16 + depth * 0.3).toFixed(2);
     d.style.animationDuration = rise.toFixed(1) + 's';
     d.style.animationDelay = (-Math.random() * rise).toFixed(1) + 's';
     var b = document.createElement('i');
-    b.style.width = b.style.height = (1 + 1.6 * depth).toFixed(1) + 'px';
+    b.style.width = b.style.height = (1.4 + 2 * depth).toFixed(1) + 'px';
     b.style.setProperty('--sway', (6 + Math.random() * 18).toFixed(0) + 'px');
     b.style.animationDuration = swayT.toFixed(1) + 's';
     b.style.animationDelay = (-Math.random() * swayT).toFixed(1) + 's';
