@@ -420,7 +420,7 @@
         '<ellipse cx="15" cy="6.5" rx="3.8" ry="2.7" fill="#f8cfd8"/>' +
         '<path d="M-2.6,7 q1.3,1.8 2.6,0 q1.3,1.8 2.6,0" fill="none" stroke="#c9a06b" stroke-width="1.1" stroke-linecap="round"/>' +
       '</g>' +
-      '<g id="cin-ear"><path d="M-7,-15 Q-28,-27 -44,-15 Q-51,-7 -45,2 Q-38,8 -29,4 Q-16,-2 -8,-10 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5" stroke-linejoin="round"/></g>' +
+      '<g id="cin-ear"><path d="M-6,-15 Q-25,-24 -34,-14 Q-40,-5 -35,7 Q-30,16 -22,13 Q-15,9 -13,-2 Q-12,-8 -8,-12 Z" fill="#ffffff" stroke="#c9a06b" stroke-width="1.5" stroke-linejoin="round"/></g>' +
       '<g id="cin-tail"><circle cx="0" cy="0" r="9.5" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/><path d="M4.6,0 a4.6,4.6 0 1,1 -4.6,-4.6 a2.6,2.6 0 1,0 2.6,2.6" fill="none" stroke="#c9a06b" stroke-width="1.3" stroke-linecap="round"/></g>' +
     '</defs>' +
     '<ellipse class="ground" cx="64" cy="101" rx="34" ry="3"/>' +
@@ -454,8 +454,8 @@
       '<ellipse cx="46" cy="90" rx="16" ry="9" fill="#ffffff" stroke="#c9a06b" stroke-width="1.4"/>' +
       '<g class="tail-wag"><use href="#cin-tail" x="28" y="88"/></g>' +
       '<g transform="translate(74,71) scale(1.75)">' +
-        '<g transform="translate(3,-4) rotate(16)"><use href="#cin-ear"/></g>' +
-        '<g transform="scale(-1,1) translate(3,-4) rotate(16)"><use href="#cin-ear"/></g>' +
+        '<g transform="translate(3,-4)"><use href="#cin-ear"/></g>' +
+        '<g transform="scale(-1,1) translate(3,-4)"><use href="#cin-ear"/></g>' +
         '<use href="#cin-head"/>' +
         '<g class="lids"><ellipse cx="-9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
       '</g>' +
@@ -467,8 +467,8 @@
         '<ellipse cx="71" cy="80" rx="4.5" ry="3" fill="#ffffff" stroke="#c9a06b" stroke-width="1.2"/>' +
         '<g class="tail-wag"><use href="#cin-tail" x="82" y="66"/></g>' +
         '<g transform="translate(64,44) scale(1.75)">' +
-          '<g class="wing wing-l"><g transform="translate(3,-4) rotate(28)"><use href="#cin-ear"/></g></g>' +
-          '<g class="wing wing-r"><g transform="scale(-1,1) translate(3,-4) rotate(28)"><use href="#cin-ear"/></g></g>' +
+          '<g class="wing wing-l"><g transform="translate(3,-4) rotate(30)"><use href="#cin-ear"/></g></g>' +
+          '<g class="wing wing-r"><g transform="scale(-1,1) translate(3,-4) rotate(30)"><use href="#cin-ear"/></g></g>' +
           '<use href="#cin-head"/>' +
           '<g class="lids"><ellipse cx="-9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/><ellipse cx="9.5" cy="1" rx="3" ry="4.3" fill="#ffffff"/></g>' +
         '</g>' +
