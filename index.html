@@ -86,10 +86,10 @@
     <div class="hero-text">
       <p class="thesis">Right now: making trigger-level particle tracking keep pace with 40 million beam crossings a second.</p>
       <p>I work on the hardware side of machine learning in the <a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, advised by Prof. Bo-Cheng Lai, and collaborate with researchers at the University of Washington and UIUC on real-time machine learning for high-energy physics.</p>
-      <p>My current focus is <a href="https://github.com/acts-project/traccc">traccc</a>, a GPU track-reconstruction pipeline for the High-Luminosity LHC's high-level trigger — a system that lives or dies on throughput. I optimize its Kalman-filter tracking at the CUDA-kernel level, profile the pipeline with Nsight Systems and Compute, and am building a high-level synthesis (HLS) accelerator for it on the AMD Versal V80. In the long term, I aim to pursue a Ph.D. on the codesign of ML architectures and compilers.</p>
+      <p>My current focus is <a href="https://github.com/acts-project/traccc">traccc</a>, the ACTS project's GPU track-reconstruction demonstrator; my goal is to make it fast enough for the High-Luminosity LHC's high-level trigger — a system that lives or dies on throughput. I optimize its Kalman-filter tracking at the CUDA-kernel level, profile the pipeline with Nsight Systems and Compute, and am building a high-level synthesis (HLS) accelerator for it on the AMD Versal V80. In the long term, I aim to pursue a Ph.D. on the codesign of ML architectures and compilers.</p>
       <div class="hero-actions">
         <a class="btn" href="mailto:science103555@gmail.com">Email</a>
-        <a class="btn" href="/files/resume.pdf?v=15">CV (PDF)</a>
+        <a class="btn" href="/files/resume.pdf?v=16">CV (PDF)</a>
         <a class="btn" href="https://github.com/noyaboy">GitHub</a>
         <a class="btn" href="https://orcid.org/0009-0004-0675-9162">ORCID</a>
         <a class="btn" href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">LinkedIn</a>
@@ -129,9 +129,9 @@
     <h2 class="kicker">News</h2>
     <ul class="news">
       <li><time datetime="2026-07">Jul 2026</time><span>Rejoined <a href="https://www.andestech.com/en/">Andes Technology</a> as a digital IC design intern.</span></li>
-      <li><time datetime="2025-12">Dec 2025</time><span>Received the <strong>Elite New Graduate Scholarship</strong> from the Industry Academia Innovation School, NYCU.</span></li>
-      <li><time datetime="2025-11">Nov 2025</time><span>Our ultra-lightweight HDC-CNN placed <strong>Top-20</strong> in the <a href="/#weak-lensing">NeurIPS 2025 FAIR Universe Weak-Lensing Challenge</a>.</span></li>
-      <li><time datetime="2025-09">Sep 2025</time><span>Presented our work on <a href="/#fastml-gpu-tracking">real-time GPU Kalman-filter tracking</a> at the Fast Machine Learning for Science Conference, CERN.</span></li>
+      <li><time datetime="2025-11">Nov 2025</time><span>Our ultra-lightweight HDC-CNN placed <strong>Top-20</strong> in the <a href="/#weak-lensing">NeurIPS 2025 FAIR Universe Weak Lensing Uncertainty Challenge</a>.</span></li>
+      <li><time datetime="2025-09">Sep 2025</time><span>Presented our work on <a href="/#fastml-gpu-tracking">real-time GPU Kalman-filter tracking</a> at the Fast Machine Learning for Science Conference, ETH Zurich.</span></li>
+      <li><time datetime="2025-09">Sep 2025</time><span>Received the <strong>Elite New Graduate Scholarship</strong> from the Industry Academia Innovation School, NYCU.</span></li>
       <li><time datetime="2025-09">Sep 2025</time><span>Started my M.Eng. at NYCU as a graduate research assistant in the Parallel Computing System Laboratory.</span></li>
       <li><time datetime="2025-08">Aug 2025</time><span>Received the <strong>Excellent Poster Award</strong> at TJCAS 2025 for our <a href="/#higtr-tjcas">GNN-based trajectory reconstruction on FPGA</a>.</span></li>
       <li><time datetime="2025-07">Jul 2025</time><span>Our work on <a href="/#tgda-fgir">training fine-grained recognition models from scratch</a> (TGDA) is out on <a href="https://arxiv.org/abs/2507.12157">arXiv</a>.</span></li>
@@ -182,7 +182,7 @@
             <h4>An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</h4>
             <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
             <div class="pub-links">
-              <a class="btn" href="/files/tjcas_gnn_trajectory_reconstruction.pdf">Paper</a>
+              <a class="btn" href="/files/tjcas_gnn_trajectory_reconstruction.pdf">Summary</a>
               <a class="btn" href="/files/tjcas2025-slides.pdf">Slides</a>
               <a class="btn" href="/files/tjcas2025-poster.pdf">Poster</a>
               <a class="btn" href="/images/tjcas-award.jpg">Photo</a>
@@ -194,7 +194,7 @@
                GNN-Based Trajectory Reconstruction},
   author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
                and Lai, Bo-Cheng and Hsu, Shih-Chieh and
-               Neubauer, Mark and Pandey, Santosh},
+               Neubauer, Mark and Parajuli, Santosh},
   booktitle = {Taiwan and Japan Conference on Circuits and Systems (TJCAS)},
   year      = {2025}
 }</pre>
@@ -213,9 +213,7 @@
               <pre tabindex="0" translate="no">@inproceedings{yang2025higtr,
   title     = {A High-Performance Implementation of GNN-Based
                Trajectory Reconstruction on FPGA},
-  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Yu, Hsuan-Wei
-               and Lai, Bo-Cheng and Hsu, Shih-Chieh and
-               Neubauer, Mark and Pandey, Santosh},
+  author    = {Yang, Yun-Chen and Liang, Hao-Chun and Lai, Bo-Cheng},
   booktitle = {VLSI Design/CAD Symposium},
   year      = {2025}
 }</pre>
@@ -230,15 +228,15 @@
       <div>
         <h3>Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</h3>
         <p class="authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
-        <p class="venue">Fast Machine Learning for Science Conference, CERN (hybrid), 2025 <span class="chip chip-role">First author</span></p>
-        <p class="tldr">Kernel refactoring plus INT8 surrogate models make GPU Kalman-filter track finding fast enough for trigger-level use at high-luminosity colliders.</p>
+        <p class="venue">Fast Machine Learning for Science Conference, ETH Zurich, 2025 <span class="chip chip-role">First author</span></p>
+        <p class="tldr">Kernel refactoring plus INT8 surrogates speed up GPU Kalman-filter track fitting by 2.86× end to end — closing in on the HL-LHC trigger's real-time budget.</p>
         <div class="pub-links">
           <a class="btn" href="/files/fastml2025-poster.pdf">Poster</a>
           <a class="btn" href="/images/fastml-presentation.jpg">Photo</a>
         </div>
         <details>
           <summary>Abstract</summary>
-          <p>Standard Kalman Filter-based tracking algorithms are computationally intensive and struggle to scale with the high-luminosity conditions expected at future colliders. This work presents a real-time GPU-accelerated tracking approach that leverages kernel refactoring and low-precision INT8 surrogates to enhance performance. By optimizing memory access patterns and utilizing reduced-precision arithmetic, we achieve a substantial speedup in tracking throughput without compromising physics accuracy. The proposed method effectively utilizes the massive parallelism of modern GPUs, demonstrating its potential as a viable solution for the online trigger level tracking at the HL-LHC.</p>
+          <p>As the era of the High-Luminosity Large Hadron Collider (HL-LHC) approaches, the GPU-accelerated High-Level Trigger (HLT) of the CMS experiment faces a stringent requirement to reduce the Level-1 readout stream from 100 kHz to 5 kHz, a twenty-fold decrease essential to adhere to archival bandwidth constraints. Meeting this demand necessitates highly efficient real-time charged-particle tracking. In the recent release of the ACTS Traccc pipeline, the Kalman-filter Fit kernel has emerged as the predominant latency bottleneck, primarily due to excessive register pressure and serialization of matrix inversion operations within GPU warp execution. To address these performance limitations, we propose two synergistic GPU optimizations: a kernel refactoring method that restructures the Fit kernel into three distinct computational phases — Predict, Update, and Finalize — each delineated by a single __syncthreads() barrier, enabling more efficient compiler-driven register allocation and reduced spill traffic; and a substitution of the analytic matrix inversion with a quantization-aware INT8 multilayer perceptron trained to approximate the 6×2 Kalman-gain matrix, executed largely in registers via NVIDIA's __dp4a instruction. Evaluations on Geant4-simulated Open-Data-Detector events show that kernel refactoring alone improves throughput by roughly 15%, while the MLP surrogate replicates the analytic Kalman-gain matrix with a mean-squared error below 8 × 10⁻⁵. On an NVIDIA RTX 2080 Ti, the combined optimizations improve Fit-kernel reciprocal throughput by 5.22× (11.5 ms to 2.2 ms) and the end-to-end pipeline from 23.5 ms to 8.23 ms — an overall speed-up of 2.86× — transitioning execution from memory- and SFU-bound to predominantly compute-bound, and approaching the computational-latency budget imposed by the HL-LHC HLT.</p>
         </details>
         <details class="bibtex">
           <summary>BibTeX</summary>
@@ -248,7 +246,7 @@
                   High-Luminosity Colliders},
   author       = {Liang, Hao-Chun and Chou, Yuan-Tang and Lai, Bo-Cheng},
   howpublished = {Poster at the Fast Machine Learning for Science
-                  Conference, CERN},
+                  Conference, ETH Zurich},
   year         = {2025}
 }</pre>
         </details>
@@ -268,7 +266,7 @@
         </div>
         <details>
           <summary>Abstract</summary>
-          <p>Fine-grained image recognition (FGIR) aims to distinguish visually similar sub-categories within a broader class. While most existing FGIR methods rely on backbones pretrained on large-scale datasets like ImageNet, this dependence limits adaptability to resource-constrained environments and hinders the development of task-specific architectures. In this work, we challenge the conventional reliance on pretrained models by introducing a novel training framework called Teacher-Guided Data Augmentation (TGDA). TGDA integrates data-aware augmentation with weak supervision via a fine-grained-aware teacher model, implemented through knowledge distillation. This framework enables the training of high-performance FGIR systems entirely from scratch, unlocking the design of task-specific architectures such as LRNets for low-resolution FGIR and ViTFS, a family of Vision Transformers optimized for efficient inference. Extensive experiments across three FGIR benchmarks show that our method matches or surpasses state-of-the-art pretrained counterparts, improving accuracy by up to 23% in low-resolution settings while significantly reducing parameters and computational costs.</p>
+          <p>Fine-grained image recognition (FGIR) aims to distinguish visually similar sub-categories within a broader class, such as identifying bird species. While most existing FGIR methods rely on backbones pretrained on large-scale datasets like ImageNet, this dependence limits adaptability to resource-constrained environments and hinders the development of task-specific architectures tailored to the unique challenges of FGIR. In this work, we challenge the conventional reliance on pretrained models by demonstrating that high-performance FGIR systems can be trained entirely from scratch. We introduce a novel training framework, TGDA, that integrates data-aware augmentation with weak supervision via a fine-grained-aware teacher model, implemented through knowledge distillation. This framework unlocks the design of task-specific and hardware-aware architectures, including LRNets for low-resolution FGIR and ViTFS, a family of Vision Transformers optimized for efficient inference. Extensive experiments across three FGIR benchmarks over diverse settings involving low-resolution and high-resolution inputs show that our method consistently matches or surpasses state-of-the-art pretrained counterparts. In particular, in the low-resolution setting, LRNets trained with TGDA improve accuracy by up to 23% over prior methods while requiring up to 20.6x less parameters, lower FLOPs, and significantly less training data. Similarly, ViTFS-T can match the performance of a ViT B-16 pretrained on ImageNet-21k while using 15.3x fewer trainable parameters and requiring orders of magnitudes less data. These results highlight TGDA's potential as an adaptable alternative to pretraining, paving the way for more efficient fine-grained vision systems.</p>
         </details>
         <details class="bibtex">
           <summary>BibTeX</summary>
@@ -294,8 +292,8 @@
 
       <div class="project" id="weak-lensing">
         <h3>UltraLightweight HDC-CNN for Weak-Lensing Convergence Maps <span class="chip chip-award">Top-20</span></h3>
-        <p class="meta">Deep Learning final project, NYCU · NeurIPS 2025 FAIR Universe Challenge · Oct – Nov 2025</p>
-        <p class="desc">A top-20 solution to the NeurIPS 2025 FAIR Universe Weak-Lensing Challenge using an ultra-lightweight 0.2M-parameter model: an HDC-CNN architecture combined with an 8-model Mixture-of-Gaussians ensemble and isotonic calibration for robust uncertainty quantification at minimal cost.</p>
+        <p class="meta">Deep Learning final project, NYCU · NeurIPS 2025 FAIR Universe Weak Lensing Uncertainty Challenge · Oct – Nov 2025</p>
+        <p class="desc">A top-20 solution to the NeurIPS 2025 FAIR Universe Weak Lensing Uncertainty Challenge using an ultra-lightweight 0.2M-parameter model: a hybrid dilated convolutional network (HDC-CNN) combined with a uniformly weighted 8-model ensemble and isotonic calibration for robust uncertainty quantification at minimal cost.</p>
         <div class="tags">
           <span class="chip chip-muted">Python</span><span class="chip chip-muted">PyTorch</span><span class="chip chip-muted">TensorFlow</span>
         </div>
@@ -348,9 +346,9 @@
 
     <div class="cv-item">
       <div class="what">
-        <strong>M.Eng., Institute of Pioneer Semiconductor Innovation</strong> (ICS &amp; EDA Group)
+        <strong>M.Eng., Institute of Pioneer Semiconductor Innovation</strong> (Chip Design and Automation Group)
         <span class="org">National Yang Ming Chiao Tung University — advised by Prof. Bo-Cheng Lai</span>
-        <span class="org">Coursework, all A+: <a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">IC Design Laboratory</a> · <a href="https://github.com/noyaboy/NYCU-IEE-VLSI-DSP-2026-Spring">DSP VLSI Design</a> · <a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F">Deep Learning</a> · <a href="https://github.com/noyaboy/NYCU-IEE-2025-FALL-Stochastic-Process">Stochastic Process</a></span>
+        <span class="org">Coursework, all A+: <a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">IC Design Laboratory</a> · <a href="https://github.com/noyaboy/NYCU-IEE-VLSI-DSP-2026-Spring">DSP VLSI Design</a> · <a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F">Deep Learning</a> · <a href="https://github.com/noyaboy/NYCU-IEE-2025-FALL-Stochastic-Process">Stochastic Processes</a></span>
       </div>
       <span class="when">2025 – 2027 (exp.)</span>
     </div>
@@ -391,7 +389,7 @@
       <span class="when">Nov 2024 – Aug 2025</span>
     </div>
 
-    <p class="cv-note" style="margin-top:1.4rem">Full details on the <a href="/cv/">CV page</a> or in the <a href="/files/resume.pdf?v=15">PDF résumé</a>.</p>
+    <p class="cv-note" style="margin-top:1.4rem">Full details on the <a href="/cv/">CV page</a> or in the <a href="/files/resume.pdf?v=16">PDF résumé</a>.</p>
   </section>
 
 </main>
