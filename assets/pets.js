@@ -160,6 +160,10 @@
       '<ellipse cx="65" cy="82" rx="23" ry="16" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
       '<ellipse cx="52" cy="94" rx="9" ry="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
       '<ellipse cx="78" cy="94" rx="9" ry="5.5" fill="#fcfaf5" stroke="#dbd2c3" stroke-width="1.2"/>' +
+      '<circle cx="65" cy="89" r="6.2" fill="#c04539" stroke="#93342c" stroke-width="1.1"/>' +
+      '<path d="M61.8,86.5 q1.4,-1.8 3.6,-2" stroke="#d9766c" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M65,83 q0.4,-2.4 1.8,-3.4" stroke="#7a5c3e" stroke-width="1.2" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="68.3" cy="79.8" rx="2.6" ry="1.5" fill="#8fae62" stroke="#66823f" stroke-width="0.8" transform="rotate(-24 68.3 79.8)"/>' +
       '<use href="#dog-head" x="65" y="42"/>' +
       '<g transform="translate(65,42)"><g class="lids"><circle cx="-8" cy="0" r="3.5" fill="#fcfaf5"/><circle cx="8" cy="0" r="3.5" fill="#fcfaf5"/></g></g>' +
     '</g>' +
@@ -239,6 +243,9 @@
       '<path d="M52,98.4 C56,98.3 60,98 63,97.6 M70,97.1 C71.5,97 73,96.8 74,96.5" fill="none" stroke="#c9711f" stroke-width="8" stroke-linecap="round"/>' +
       '<ellipse cx="52" cy="96" rx="7.5" ry="4.5" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1"/>' +
       '<ellipse cx="69" cy="96" rx="7.5" ry="4.5" fill="#fdf8ee" stroke="#c9b9a4" stroke-width="1"/>' +
+      '<path d="M80,97 L80,90.5 Q80,86 85.5,86 L92.5,86 Q98,86 98,90.5 L98,97 Z" fill="#e9c07e" stroke="#b98a4e" stroke-width="1.1" stroke-linejoin="round"/>' +
+      '<path d="M80,91 Q80,86 85.5,86 L92.5,86 Q98,86 98,91 Q89,87.6 80,91 Z" fill="#c98f4b"/>' +
+      '<path d="M84.5,90 q1,2.4 0,4.4 M89,89.6 q1,2.4 0,4.4 M93.5,90 q1,2.4 0,4.4" stroke="#b98a4e" stroke-width="0.9" fill="none" stroke-linecap="round"/>' +
       '<use href="#cat-head" x="72" y="47"/>' +
       '<g transform="translate(72,47)"><g class="lids"><ellipse cx="-5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/><ellipse cx="5.8" cy="-1.4" rx="3.6" ry="4" fill="#e8933d"/></g></g>' +
     '</g>' +
@@ -316,6 +323,17 @@
       '<rect x="62" y="55" width="18" height="25" rx="9" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
       '<circle cx="67" cy="74" r="6.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1"/>' +
       '<use href="#alp-head" x="71" y="47"/>' +
+      '<path d="M72,55 Q78,54.5 83,50.5" stroke="#66823f" stroke-width="1.2" fill="none" stroke-linecap="round"/>' +
+      '<g fill="#eba7b9" stroke="#c97f95" stroke-width="0.7">' +
+        '<circle cx="85" cy="45.6" r="2"/><circle cx="87.8" cy="47.6" r="2"/><circle cx="86.8" cy="50.8" r="2"/><circle cx="83.2" cy="50.8" r="2"/><circle cx="82.2" cy="47.6" r="2"/>' +
+      '</g>' +
+      '<circle cx="85" cy="48.3" r="1.8" fill="#e8b84b" stroke="#c29135" stroke-width="0.7"/>' +
+      '<path d="M96,100 q0.6,-5 0,-8.5" stroke="#66823f" stroke-width="1.1" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="93.8" cy="96.5" rx="2" ry="1.1" fill="#8fae62" stroke="#66823f" stroke-width="0.7" transform="rotate(-30 93.8 96.5)"/>' +
+      '<g fill="#eba7b9" stroke="#c97f95" stroke-width="0.6">' +
+        '<circle cx="96" cy="88.3" r="1.6"/><circle cx="98.2" cy="89.9" r="1.6"/><circle cx="97.4" cy="92.4" r="1.6"/><circle cx="94.6" cy="92.4" r="1.6"/><circle cx="93.8" cy="89.9" r="1.6"/>' +
+      '</g>' +
+      '<circle cx="96" cy="90.6" r="1.4" fill="#e8b84b" stroke="#c29135" stroke-width="0.6"/>' +
     '</g>' +
     '<g class="pose pose-lie">' +
       '<ellipse cx="50" cy="89" rx="30" ry="11.5" fill="#f3ead6" stroke="#ddcfb2" stroke-width="1.1"/>' +
