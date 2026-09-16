@@ -84,10 +84,10 @@
 
   <section class="hero">
     <div class="hero-text">
-      <p class="thesis">Right now: codesigning hardware and compilers so trigger-level particle tracking keeps pace with 40 million beam crossings a second.</p>
+      <p class="thesis">Right now: taping out an RTL accelerator on TSMC 28nm so trigger-level particle tracking keeps pace with 40 million beam crossings a second.</p>
       <p>A distinction graduate of NTHU’s Electrical Engineering program (top 5% of the class, GPA 4.1/4.3), I work on the hardware side of machine learning in the <a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, advised by Prof. Bo-Cheng Lai. My thesis work on <a href="https://github.com/acts-project/traccc">traccc</a>, the ACTS project’s GPU track-reconstruction demonstrator, is a collaboration with the University of Washington and CERN. I am also second and corresponding author of <a href="#unitrac">UniTrac</a>, an FPGA accelerator for GNN-based track reconstruction built with UW and UIUC.</p>
-      <p>The traccc thesis has grown into a design-space exploration across accelerator architectures, aimed at the High-Luminosity LHC’s high-level trigger, a system that lives or dies on throughput. On GPUs, event-level fusion removed the host-launch bottleneck, only to expose work-bound kernels crippled by data-dependent warp divergence. The AMD Versal V80’s spatial fabric escapes divergence, but routing resources cap the core count and the combinatorial Kalman filter’s feedback loop sets an iteration bound. MIMD manycores like Tenstorrent avoid divergence at the cost of compute density.</p>
-      <p>Every dead end points the same way: custom hardware, with architecture and compiler codesigned around irregular memory mapping. That is what I work on now. In 2030 I plan to apply to U.S. Ph.D. programs to pursue architecture and compiler codesign for machine learning.</p>
+      <p>The traccc thesis has grown into a design-space exploration across accelerator architectures that I built and benchmarked myself, aimed at the High-Luminosity LHC’s high-level trigger, a system that lives or dies on throughput. On GPUs, I implemented event-level fusion to remove the host-launch bottleneck, only to expose work-bound kernels crippled by data-dependent warp divergence. Porting the design to the AMD Versal V80’s spatial fabric escaped that divergence, but routing resources capped the core count and the combinatorial Kalman filter’s feedback loop set an iteration bound. Moving to MIMD manycores like Tenstorrent avoided divergence again, at the cost of compute density.</p>
+      <p>Every dead end pointed the same way: a custom accelerator, with architecture and compiler codesigned around irregular memory mapping. That is what I am building now, in RTL, on the way to a TSMC 28nm tapeout.</p>
       <div class="hero-actions">
         <a class="btn" href="mailto:science103555@gmail.com">Email</a>
         <a class="btn" href="/files/resume.pdf?v=18">CV (PDF)</a>
@@ -149,7 +149,7 @@
   <section class="section" id="research">
     <h2 class="kicker">Research Interests</h2>
     <ul class="interests">
-      <li><strong>ML architecture &amp; compiler codesign</strong><span>jointly optimizing model architectures and compilation stacks for efficient inference — the direction I aim to pursue in a Ph.D.</span></li>
+      <li><strong>ML architecture &amp; compiler codesign</strong><span>jointly optimizing model architectures and compilation stacks for efficient inference</span></li>
       <li><strong>Domain-specific accelerators</strong><span>HLS-based FPGA/ACAP design (AMD Versal) and GNN inference for real-time science · see <a href="/#unitrac">UniTrac</a></span></li>
       <li><strong>Digital chip design</strong><span>RTL-to-signoff implementation: a dual-core RISC CPU and a TSMC 16nm FinFET flip-chip, each taken through the complete flow · see the <a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026/tree/main/Final_Project">code</a> and the <a href="/images/iclab-flipchip-signoff.jpg">layout</a></span></li>
       <li><strong>GPU performance engineering</strong><span>CUDA kernel optimization and profiling with Nsight Systems/Compute · see <a href="/#fastml-gpu-tracking">FastML 2025</a> and <a href="/#token-reduction">ViT profiling</a></span></li>
@@ -165,7 +165,7 @@
       <div>
         <h3>UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</h3>
         <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai</p>
-        <p class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2025 <span class="chip chip-muted">in submission</span> <span class="chip chip-role">Corresponding author</span></p>
+        <p class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2025 <span class="chip chip-muted">2nd major revision</span> <span class="chip chip-role">Corresponding author</span></p>
         <p class="tldr">One FPGA accelerator that runs the entire GNN tracking pipeline — graph construction, GNN inference, and track labeling — within the real-time budgets of the HL-LHC.</p>
         <details>
           <summary>Abstract</summary>
@@ -180,7 +180,7 @@
              and Rios, Edwin Arkel and Parajuli, Santosh and
              Neubauer, Mark S. and Hsu, Shih-Chieh and Lai, Bo-Cheng},
   journal = {ACM Transactions on Reconfigurable Technology and Systems},
-  note    = {In submission},
+  note    = {2nd major revision},
   year    = {2025}
 }</pre>
         </details>
@@ -405,7 +405,7 @@
 <footer class="site-footer">
   <div class="container">
     <div class="footer-row">
-      <span>©&nbsp;2026 Hao-Chun Liang · Last updated August 2026</span>
+      <span>©&nbsp;2026 Hao-Chun Liang · Last updated September 2026</span>
       <span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a> · <a href="https://github.com/noyaboy">GitHub</a> · <a href="https://orcid.org/0009-0004-0675-9162">ORCID</a> · <a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">LinkedIn</a></span>
     </div>
     <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Newsreader &amp; Source Sans · Patrolled by a Bichon Frise, a black poodle, an orange tabby, an alpaca, a horned bear, and a big-eared dog on the wing · Click the paper for a collider event · Taipei at dusk by <a href="https://unsplash.com/@magict1911">Timo Volz</a></p>
