@@ -1,64 +1,22 @@
 /* ==========================================================================
    Hao-Chun Liang — personal academic site
-   Editorial scholar style: Newsreader display serif over Source Sans text,
+   Editorial scholar style: Source Sans throughout (headings and text alike),
    warm paper ground, spaced small-caps section heads, claret accent thread,
    matted portrait, print-friendly CV. Light-only by design.
-   Fonts are self-hosted variable woff2 subsets (see /assets/fonts/).
+   Font is a self-hosted variable woff2 subset (see /assets/fonts/).
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    Fonts — variable subsets served from this origin
    -------------------------------------------------------------------------- */
 
-/* Metric-adjusted local fallbacks: while the webfonts load, Georgia/Arial
-   render pre-shrunk to the webfonts' smaller x-heights, so the swap
-   barely moves a glyph (Newsreader x-height 0.426em vs Georgia 0.484em) */
-@font-face {
-  font-family: 'Newsreader Fallback';
-  src: local('Georgia');
-  size-adjust: 88%;
-}
-
+/* Metric-adjusted local fallback: while the webfont loads, Arial
+   renders pre-shrunk to the webfont's smaller x-height, so the swap
+   barely moves a glyph */
 @font-face {
   font-family: 'Source Sans 3 Fallback';
   src: local('Arial');
   size-adjust: 92%;
-}
-
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/assets/fonts/newsreader-roman-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/assets/fonts/newsreader-roman-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/assets/fonts/newsreader-italic-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/assets/fonts/newsreader-italic-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
@@ -103,7 +61,6 @@
    -------------------------------------------------------------------------- */
 
 :root {
-  --serif: 'Newsreader', 'Newsreader Fallback', 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --sans: 'Source Sans 3', 'Source Sans 3 Fallback', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'SF Mono', Menlo, Consolas, monospace;
 
@@ -216,7 +173,7 @@ a, button, summary { touch-action: manipulation; }
 }
 
 .wordmark {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 500;
   font-size: 1.3rem;
   letter-spacing: 0.005em;
@@ -277,7 +234,7 @@ a, button, summary { touch-action: manipulation; }
    -------------------------------------------------------------------------- */
 
 h1, h2, h3, h4 {
-  font-family: var(--serif);
+  font-family: var(--sans);
   color: var(--ink);
   line-height: 1.25;
   text-wrap: balance;
@@ -294,7 +251,7 @@ section[id], h2[id] { scroll-margin-top: 1.4rem; }
 }
 
 .page-lede {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 1.12rem;
   color: var(--muted);
@@ -380,6 +337,7 @@ strong { font-weight: 600; color: var(--ink); }
 .chip-award {
   color: var(--accent);
   font-weight: 700;
+  font-style: normal;
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -390,6 +348,7 @@ strong { font-weight: 600; color: var(--ink); }
 .chip-role {
   color: var(--ink);
   font-weight: 700;
+  font-style: normal;
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -423,7 +382,7 @@ strong { font-weight: 600; color: var(--ink); }
 /* One quotable line — the current mission, stated with a pulse.
    Roman where the role above is italic: this is the declaration, not the caption. */
 .hero .thesis {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: clamp(1.3rem, 2.4vw, 1.48rem);
   font-weight: 500;
   line-height: 1.42;
@@ -612,7 +571,7 @@ strong { font-weight: 600; color: var(--ink); }
 .pub .authors strong { color: var(--text); }
 
 .pub .venue {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 0.98rem;
   color: var(--muted);
@@ -656,7 +615,7 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 .lineage-note {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 0.9rem;
   color: var(--muted);
@@ -768,7 +727,7 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 .project .meta {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--muted);
@@ -885,7 +844,7 @@ strong { font-weight: 600; color: var(--ink); }
 
 .colophon {
   margin: 0.65rem 0 0;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 0.86rem;
   color: var(--muted);
@@ -991,7 +950,7 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 .band-title .role {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: clamp(1rem, 1.6vw, 1.2rem);
   color: rgba(246, 241, 230, 0.9);
