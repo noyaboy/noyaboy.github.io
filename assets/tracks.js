@@ -144,25 +144,4 @@
     }, LIFE_MS);
   }
 
-  /* Pointer events instead of click: taps on non-interactive elements
-     reliably fire everywhere (iOS included), and drags/scrolls/selections
-     are told apart by movement. Interactive targets keep their focus. */
-  var down = null;
-
-  document.addEventListener('pointerdown', function (e) {
-    if (e.button !== 0) { down = null; return; }
-    down = { x: e.clientX, y: e.clientY, id: e.pointerId, t: performance.now() };
-  }, { passive: true });
-
-  document.addEventListener('pointerup', function (e) {
-    var d = down;
-    down = null;
-    if (!d || e.pointerId !== d.id) return;
-    if (rmq.matches) return;
-    if (performance.now() - d.t > 600) return;
-    if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 12) return;
-    var t = e.target;
-    if (t && t.closest && t.closest('a,button,summary,input,textarea,select,label,.pet')) return;
-    burst(e.clientX, e.clientY);
-  }, { passive: true });
 })();
