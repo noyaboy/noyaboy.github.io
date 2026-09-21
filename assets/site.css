@@ -592,7 +592,7 @@ strong { font-weight: 600; color: var(--ink); }
    so a paragraph never runs the full 812px container (~100ch+) */
 .pub details p,
 .project p.desc,
-.news span { max-width: 72ch; }
+.news span { max-width: 90ch; }
 
 .pub .authors,
 .pub .tldr,
