@@ -589,10 +589,14 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 /* Reading measure: long-form and meta lines cap near the classic 66ch
-   so a paragraph never runs the full 812px container (~100ch+) */
+   so a paragraph never runs the full 812px container (~100ch+).
+   Project descriptions are excluded: the card is a single-column block
+   with nothing beside the text, so capping it just leaves a dead gap
+   on the right instead of improving readability. */
 .pub details p,
-.project p.desc,
 .news span { max-width: 90ch; }
+
+.project p.desc { max-width: none; }
 
 .pub .authors,
 .pub .tldr,
