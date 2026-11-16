@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="Curriculum vitae of Hao-Chun Liang.">
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/gsite.css?v=1">
+  <link rel="stylesheet" href="/assets/gsite.css?v=3">
 </head>
 <body>
 
@@ -41,13 +41,14 @@
     </a>
     <nav class="site-nav" id="site-nav" aria-label="Site">
       <a href="/">Biography</a>
-      <a href="/#education">Education</a>
-      <a href="/#experience">Experience</a>
-      <a href="/#research">Research</a>
-      <a href="/#awards">Awards</a>
-      <a href="/#publications">Publications</a>
-      <a href="/#projects">Projects</a>
-      <a href="/#news">News</a>
+      <div class="nav-group">
+        <a href="/experience/">Experience</a>
+        <button class="sub-toggle" type="button" aria-expanded="false" aria-label="Show Experience pages"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
+        <div class="submenu"><a href="/experience/awards/">Awards</a></div>
+      </div>
+      <a href="/publications/">Publications</a>
+      <a href="/projects/">Projects</a>
+      <a href="/news/">News</a>
       <a href="/cv/" aria-current="page">CV</a>
     </nav>
   </div>
@@ -116,10 +117,10 @@
   <section class="section">
     <h2>Selected Publications</h2>
     <ol class="cite-list">
-      <li><span class="me">Hao-Chun Liang</span>, Yuan-Tang Chou, Bo-Cheng Lai, "<a href="/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a>," <span class="venue">Fast Machine Learning for Science Conference, ETH Zurich, 2025</span>. <span class="note">(First Author)</span></li>
-      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai, "<a href="/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a>," <span class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2026</span>. <span class="note">(Accepted; Corresponding Author)</span></li>
-      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Bo-Cheng Lai, "<a href="/#gnn-fpga-vlsi">A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</a>," <span class="venue">VLSI Design / CAD Symposium, 2025</span>.</li>
-      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Parajuli, "<a href="/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a>," <span class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025</span>. <span class="note">(Excellent Poster Award)</span></li>
+      <li><span class="me">Hao-Chun Liang</span>, Yuan-Tang Chou, Bo-Cheng Lai, "<a href="/publications/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a>," <span class="venue">Fast Machine Learning for Science Conference, ETH Zurich, 2025</span>. <span class="note">(First Author)</span></li>
+      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai, "<a href="/publications/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a>," <span class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2026</span>. <span class="note">(Accepted; Corresponding Author)</span></li>
+      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Bo-Cheng Lai, "<a href="/publications/#gnn-fpga-vlsi">A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</a>," <span class="venue">VLSI Design / CAD Symposium, 2025</span>.</li>
+      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Parajuli, "<a href="/publications/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a>," <span class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025</span>. <span class="note">(Excellent Poster Award)</span></li>
     </ol>
   </section>
 
@@ -134,7 +135,7 @@
 
   <section class="section">
     <ul class="list">
-      <li><a href="/#publications">All publications</a> and <a href="/#projects">all projects</a> are on the homepage.</li>
+      <li><a href="/publications/">All publications</a> and <a href="/projects/">all projects</a> are on the homepage.</li>
     </ul>
   </section>
 
@@ -157,7 +158,7 @@
   </div>
 </footer>
 
-<script src="/assets/gsite.js?v=2" defer></script>
+<script src="/assets/gsite.js?v=3" defer></script>
 <script src="/assets/pets.js?v=17" defer></script>
 </body>
 </html>

@@ -167,6 +167,49 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 .site-nav a[aria-current="page"],
 .site-nav a.is-active { font-weight: 700; }
 
+.nav-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.nav-group > a { padding-right: 2px; }
+.nav-group.is-current > a { font-weight: 700; }
+.sub-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.sub-toggle:hover { background: rgba(0, 0, 0, 0.06); }
+.sub-toggle svg { transition: transform 0.15s ease; }
+.nav-group.is-open .sub-toggle svg { transform: rotate(180deg); }
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: -16px;
+  min-width: 180px;
+  padding: 8px 0;
+  background: var(--bg);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+  z-index: 60;
+}
+.submenu a { display: block; padding: 10px 16px; }
+.nav-group.is-open .submenu { display: block; }
+@media (hover: hover) and (min-width: 961px) {
+  .nav-group:hover .submenu,
+  .nav-group:focus-within .submenu { display: block; }
+  .nav-group:hover .sub-toggle svg { transform: rotate(180deg); }
+}
+
 .nav-toggle {
   display: none;
   width: 40px;
@@ -186,6 +229,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
    -------------------------------------------------------------------------- */
 
 .page {
+  width: 100%;
   max-width: calc(var(--page-w) + 2 * var(--gutter));
   margin: 0 auto;
   padding: 0 var(--gutter);
@@ -267,6 +311,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 }
 
 /* Sections */
+.section-first { margin-top: 56px; }
 .section {
   margin-top: 70px;
   padding: 0 8px;
@@ -424,6 +469,17 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   }
   .site-nav.is-open { display: flex; }
   .site-nav a { padding: 12px 24px; }
+  .nav-group { flex-wrap: wrap; }
+  .nav-group > a { flex: 1; }
+  .sub-toggle { width: 48px; height: 44px; margin-right: 12px; }
+  .submenu {
+    position: static;
+    flex-basis: 100%;
+    min-width: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .submenu a { padding-left: 44px; }
 }
 
 @media (max-width: 720px) {
