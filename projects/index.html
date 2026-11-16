@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lora-700-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/gsite.css?v=27">
+  <link rel="stylesheet" href="/assets/gsite.css?v=28">
 </head>
 <body>
 
@@ -75,7 +75,7 @@
   <section class="section section-first" id="projects">
     <ul class="list project-list">
       <li id="trajectory-accelerator-tapeout">Trajectory Reconstruction Accelerator TSMC 28nm Tapeout <span class="when">(Parallel Computing System Laboratory, NYCU, Jul 2026 - Present)</span>
-        <span class="sub">Taking the trajectory reconstruction accelerator from RTL to silicon through a TSMC 28nm tapeout.</span></li>
+        <span class="sub">Taking the trajectory reconstruction accelerator from RTL to silicon through a TSMC 28nm tapeout. The design grew out of my thesis's design-space exploration on traccc. On GPUs, event-level fusion eliminated the host-launch bottleneck but exposed work-bound kernels crippled by data-dependent warp divergence. The spatial fabric of the AMD Versal V80 removed the divergence, but limited routing resources capped the core count, and the feedback loop of the combinatorial Kalman filter bounded iteration throughput. MIMD manycores such as Tenstorrent avoided divergence at the cost of compute density.</span></li>
       <li id="ai-agent-skill-flow">AI Agent Automation Flow <span class="when">(Andes Technology, Jul 2026 - Present)</span>
         <span class="sub">Automates the team's workflow with custom SKILL.md files across four stages: mental-model extraction, gap analysis, execution and knowledge management. <span class="chips"><a class="chip" href="/files/skill-automation-flow-slides.pdf">Slides</a></span></span></li>
       <li id="regfile-codegen">Regfile RTL/C Code Generation Flow <span class="when">(Andes Technology, Nov 2024 - Present)</span>
