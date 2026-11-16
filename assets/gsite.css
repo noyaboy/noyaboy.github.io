@@ -392,29 +392,22 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 }
 .cite-list .lineage-note { display: block; margin-top: 6px; color: #555; }
 
-/* Resource links (slides, poster, photo, certificate...) as small chips
-   on their own row, instead of a trailing run of underlined words */
+/* Resource links (slides, poster, photo, certificate...) as a bracketed
+   list at the end of the entry: [Slides / Poster / Photo] */
 .chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
-}
-.chip {
-  display: inline-block;
-  padding: 0 9px;
-  border: 1px solid rgba(32, 68, 115, 0.35);
-  border-radius: 4px;
-  background: #fff;
-  color: var(--navy);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 22px;
-  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.875em;
   white-space: nowrap;
 }
-.chip:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
-.chip:focus-visible { outline-offset: 1px; }
+.chips::before { content: "["; color: #8a8a8a; }
+.chips::after { content: "]"; color: #8a8a8a; }
+.chip {
+  color: var(--navy);
+  font-weight: 400;
+  text-decoration: none;
+}
+.chip + .chip::before { content: "\00a0/\00a0"; display: inline-block; color: #9a9a9a; }
+.chip:hover { color: var(--red); text-decoration: underline; }
 
 /* Avoid a lonely word or two on the last line of a paragraph or item;
    headings and captions are balanced instead. Browsers without support
