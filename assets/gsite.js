@@ -77,7 +77,10 @@
   Array.prototype.forEach.call(document.querySelectorAll('.yt-facade'), function (b) {
     b.addEventListener('click', function () {
       var f = document.createElement('iframe');
-      f.src = 'https://www.youtube-nocookie.com/embed/' + b.getAttribute('data-yt') + '?autoplay=1&rel=0';
+      var list = b.getAttribute('data-yt-list');
+      f.src = list
+        ? 'https://www.youtube-nocookie.com/embed/videoseries?list=' + list + '&autoplay=1&rel=0'
+        : 'https://www.youtube-nocookie.com/embed/' + b.getAttribute('data-yt') + '?autoplay=1&rel=0';
       f.title = b.getAttribute('aria-label') || 'YouTube video';
       f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       f.allowFullscreen = true;
