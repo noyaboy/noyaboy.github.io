@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#faf7f1">
+  <meta name="theme-color" content="#f3f3f3">
   <title>CV — Hao-Chun Liang</title>
   <meta name="description" content="Curriculum vitae of Hao-Chun Liang — M.Eng. student at NYCU: education, awards, research experience, and publications in ML hardware acceleration.">
   <link rel="canonical" href="https://noyaboy.github.io/cv/">
@@ -23,197 +23,141 @@
   <meta name="twitter:title" content="CV — Hao-Chun Liang">
   <meta name="twitter:description" content="Curriculum vitae of Hao-Chun Liang.">
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
-  <link rel="preload" href="/assets/fonts/source-sans-3-roman-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=36">
+  <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/gsite.css?v=1">
 </head>
 <body>
 
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">Skip to main content</a>
 
 <header class="site-header">
-  <div class="container">
-    <a class="wordmark" href="/">Hao-Chun Liang</a>
-    <nav class="site-nav" aria-label="Site">
-      <a href="/#news">News</a>
+  <div class="header-inner">
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </button>
+    <a class="brand" href="/" aria-label="Hao-Chun Liang, home">
+      <span class="brand-mark" aria-hidden="true">HL</span>
+      <span class="brand-name">Hao-Chun Liang</span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="/">Biography</a>
+      <a href="/#education">Education</a>
+      <a href="/#experience">Experience</a>
+      <a href="/#research">Research</a>
+      <a href="/#awards">Awards</a>
       <a href="/#publications">Publications</a>
       <a href="/#projects">Projects</a>
+      <a href="/#news">News</a>
       <a href="/cv/" aria-current="page">CV</a>
     </nav>
   </div>
 </header>
 
-<main class="container" id="main">
+<main class="page" id="main">
 
-  <a class="btn" href="/files/resume.pdf?v=19" target="_blank" rel="noopener">CV Download !</a>
-  <h2 class="kicker">Education</h2>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>National Yang Ming Chiao Tung University (NYCU)</strong>
-      <span class="org"> <a href="https://iais.nycu.edu.tw/en/intro1.html">M.Eng., Institute of Pioneer Semiconductor Innovation (Chip Group)</a> · GPA 4.3/4.3 · <a href="/files/nycu-transcript.pdf">Transcript</a></span>
-    </div>
-    <span class="when">Sep 2025 – Jun 2027 (exp.)</span>
+  <div class="title-row">
+    <h1 class="page-title">Curriculum Vitae</h1>
+    <div class="title-action"><a class="btn-navy" href="/files/resume.pdf?v=19" target="_blank" rel="noopener">Download PDF</a></div>
   </div>
 
-  <div class="cv-item">
-    <div class="what">
-      <strong>National Tsing Hua University (NTHU)</strong>
-      <span class="org"> <a href="https://dee.site.nthu.edu.tw/index.php?Lang=en">B.S. in Electrical Engineering</a> · GPA 4.1/4.3 · Distinction Graduation · <a href="/files/nthu-transcript.pdf">Transcript</a></span>
-    </div>
-    <span class="when">Sep 2020 – Jun 2024</span>
-  </div>
-  <ul class="cv-sub">
-    <li>Transferred from the Dept. of Physics</li>
-    <li>Top 1 of 65 students, College of Science Elite Student Award.</li>
-  </ul>
+  <section class="section">
+    <h2>Education</h2>
+    <ul class="list">
+      <li>National Yang Ming Chiao Tung University (NYCU), <a href="https://iais.nycu.edu.tw/en/intro1.html">M.Eng., Institute of Pioneer Semiconductor Innovation (Chip Group)</a> <span class="when">(Sep 2025 - Jun 2027, exp.)</span> <span class="hl">(GPA 4.3/4.3)</span> <a href="/files/nycu-transcript.pdf">Transcript</a></li>
+      <li>National Tsing Hua University (NTHU), <a href="https://dee.site.nthu.edu.tw/index.php?Lang=en">B.S. in Electrical Engineering</a> <span class="when">(Sep 2020 - Jun 2024)</span> <span class="hl">(GPA 4.1/4.3, Distinction Graduation)</span> <a href="/files/nthu-transcript.pdf">Transcript</a>
+        <span class="sub">Transferred from the Dept. of Physics; Top 1 of 65 students, College of Science Elite Student Award.</span>
+      </li>
+    </ul>
+    <h3 class="group">Graduate Coursework (NYCU)</h3>
+    <ul class="list">
+      <li><a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">ICLAB</a> <span class="hl">(A+)</span>, 5 of 143 passed the on-site test</li>
+      <li><a href="https://github.com/noyaboy/NYCU-IEE-VLSI-DSP-2026-Spring">DSP-VLSI</a> <span class="hl">(A+)</span></li>
+      <li><a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F">Deep Learning</a> <span class="hl">(A+)</span></li>
+      <li><a href="https://github.com/noyaboy/NYCU-IEE-2025-FALL-Stochastic-Process">Stochastic Processes</a> <span class="hl">(A+)</span></li>
+    </ul>
+    <h3 class="group">Undergraduate Coursework (NTHU)</h3>
+    <ul class="list">
+      <li>ICLAB (A+), VLSI Testing (A+), VLSI (A), Computer Architecture (A-), Machine Learning (A), Communication System (A+)</li>
+    </ul>
+  </section>
 
-  <p class="cv-note"><strong>Graduate Coursework (NYCU):</strong> <a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">ICLAB</a> (A+, 5 of 143 passed the on-site test), <a href="https://github.com/noyaboy/NYCU-IEE-VLSI-DSP-2026-Spring">DSP-VLSI</a> (A+), <a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F">Deep Learning</a> (A+), <a href="https://github.com/noyaboy/NYCU-IEE-2025-FALL-Stochastic-Process">Stochastic Processes</a> (A+).<br>
-  <strong>Undergraduate Coursework (NTHU):</strong> ICLAB (A+), VLSI Testing (A+), VLSI (A), Computer Architecture (A-), Machine Learning (A), Communication System (A+).</p>
+  <section class="section">
+    <h2>Work Experience</h2>
+    <ul class="list">
+      <li><a href="https://www.andestech.com/en/">Andes Technology Corporation</a> Digital IC Design Intern, Compute Acceleration R&amp;D Division, Deep Learning Accelerator <span class="when">(2026/07 - Present)</span></li>
+      <li><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, NYCU, Graduate Research Assistant <span class="when">(2025/09 - 2027/06, exp.)</span></li>
+      <li><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, NYCU, IT Manager <span class="when">(2025/09 - 2027/06, exp.)</span></li>
+      <li><a href="https://www.andestech.com/en/">Andes Technology Corporation</a> Digital IC Design Intern, Compute Acceleration R&amp;D Division, Deep Learning Accelerator <span class="when">(2024/11 - 2025/08)</span> <a href="/images/andes-farewell.jpg">Photo</a></li>
+    </ul>
+  </section>
 
-  <h2 class="kicker">Work Experience</h2>
+  <section class="section">
+    <h2>Awards &amp; Certificates</h2>
+    <h3 class="group">2025</h3>
+    <ul class="list">
+      <li>Received the <span class="hl">Elite New Graduate Scholarship</span>, Industry Academia Innovation School, NYCU (Sep 2025) <a href="/images/elite-graduate.jpg">Certificate</a></li>
+      <li>Received the <span class="hl">Excellent Poster Award</span>, Taiwan and Japan Conference on Circuits and Systems (TJCAS) (Aug 2025) <a href="/images/tjcas-certificate.jpg">Certificate</a> <a href="/images/tjcas-award.jpg">Photo</a></li>
+    </ul>
+    <h3 class="group">2024</h3>
+    <ul class="list">
+      <li>Completed <span class="hl">Cell-Based Digital Chip Design and Implementation</span> (ADFP TSMC 16nm), Taiwan Semiconductor Research Institute (TSRI) (Aug 2024) <a href="/images/adfp-certificate.jpg">Certificate</a></li>
+      <li>Graduated with <span class="hl">Distinction</span>, National Tsing Hua University (Top 5% of 116 students in professional-course GPA) (May 2024) <a href="/images/distinction-graduation.jpg">Certificate</a> <a href="/files/distinction-rule.pdf">Criteria</a></li>
+    </ul>
+    <h3 class="group">2021</h3>
+    <ul class="list">
+      <li>Received the <span class="hl">College of Science Elite Student Award</span>, National Tsing Hua University (Top 1 of 65 students) (Apr 2021) <a href="/images/elite-award.jpg">Certificate</a></li>
+    </ul>
+    <h3 class="group">2020 - 2022</h3>
+    <ul class="list">
+      <li>Received the <span class="hl">Academic Excellence Award (書卷獎)</span> 3 times, National Tsing Hua University <a href="/images/presidential-award.jpg">Certificate</a></li>
+    </ul>
+  </section>
 
-  <div class="cv-item">
-    <div class="what">
-      <strong>Digital IC Design Intern</strong>
-      <span class="org"><a href="https://www.andestech.com/en/">Andes Technology Corporation</a> · Compute Acceleration R&amp;D Division · Deep Learning Accelerator</span>
-    </div>
-    <span class="when">Jul 2026 – Present</span>
-  </div>
+  <section class="section">
+    <h2>Selected Publications</h2>
+    <ol class="cite-list">
+      <li><span class="me">Hao-Chun Liang</span>, Yuan-Tang Chou, Bo-Cheng Lai, "<a href="/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a>," <span class="venue">Fast Machine Learning for Science Conference, ETH Zurich, 2025</span>. <span class="note">(First Author)</span></li>
+      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai, "<a href="/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a>," <span class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2026</span>. <span class="note">(Accepted; Corresponding Author)</span></li>
+      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Bo-Cheng Lai, "<a href="/#gnn-fpga-vlsi">A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</a>," <span class="venue">VLSI Design / CAD Symposium, 2025</span>.</li>
+      <li>Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Parajuli, "<a href="/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a>," <span class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025</span>. <span class="note">(Excellent Poster Award)</span></li>
+    </ol>
+  </section>
 
-  <div class="cv-item">
-    <div class="what">
-      <strong>Graduate Research Assistant</strong>
-      <span class="org"><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, NYCU</span>
-    </div>
-    <span class="when">Sep 2025 – Jun 2027 (exp.)</span>
-  </div>
-  <!-- <ul class="cv-sub">
-    <li>Architecture design-space exploration for particle track reconstruction (traccc) at the HL-LHC: GPU, AMD Versal ACAP, Tenstorrent, and custom architecture–compiler codesign.</li>
-    <li>First-author presentation at Fast ML for Science 2025 (ETH Zurich); co-author of an award-winning TJCAS 2025 paper and a TRETS journal submission.</li>
-  </ul> -->
+  <section class="section">
+    <h2>Skills</h2>
+    <ul class="list">
+      <li>Programming Languages: <span class="sub inline">C/C++, SystemVerilog, Python, CUDA, Makefile</span></li>
+      <li>Tools: <span class="sub inline">VCS, DC, Vivado, PrimeTime, Spyglass, JasperGold, Innovus, Calibre, NVIDIA NSYS/NCU, Git</span></li>
+      <li>Domains: <span class="sub inline">Chip Design, Domain-Specific Architecture, GPU Performance, AI Agent Automation</span></li>
+    </ul>
+  </section>
 
-  <div class="cv-item">
-    <div class="what">
-      <strong>IT Manager</strong>
-      <span class="org"><a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">Parallel Computing System Laboratory</a>, NYCU</span>
-    </div>
-    <span class="when">Sep 2025 – Jun 2027 (exp.)</span>
-  </div>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>Digital IC Design Intern</strong>
-      <span class="org"><a href="https://www.andestech.com/en/">Andes Technology Corporation</a> · Compute Acceleration R&amp;D Division · Deep Learning Accelerator · <a href="/images/andes-farewell.jpg">Photo</a></span>
-    </div>
-    <span class="when">Nov 2024 – Aug 2025</span>
-  </div>
-  <!-- <ul class="cv-sub">
-    <li>Built a register-file code-generation flow from scratch: CSV register specifications compiled into synthesizable Verilog, C/C++ headers, and documentation.</li>
-  </ul> -->
-
-  <h2 class="kicker">Awards &amp; Certificates</h2>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>Elite New Graduate Scholarship</strong>
-      <span class="org">Industry Academia Innovation School, NYCU · <a href="/images/elite-graduate.jpg">Certificate</a></span>
-    </div>
-    <span class="when">Sep 2025</span>
-  </div>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>Excellent Poster Award</strong>
-      <span class="org">Taiwan and Japan Conference on Circuits and Systems (TJCAS) · <a href="/images/tjcas-certificate.jpg">Certificate</a> · <a href="/images/tjcas-award.jpg">Photo</a></span>
-    </div>
-    <span class="when">Aug 2025</span>
-  </div>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>Cell-Based Digital Chip Design and Implementation</strong> (ADFP TSMC 16nm)
-      <span class="org">Taiwan Semiconductor Research Institute (TSRI) · <a href="/images/adfp-certificate.jpg">Certificate</a></span>
-    </div>
-    <span class="when">Aug 2024</span>
-  </div>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>Distinction Graduation</strong>
-      <span class="org">National Tsing Hua University — Top 5% of 116 students in professional-course GPA · <a href="/images/distinction-graduation.jpg">Certificate</a> · <a href="/files/distinction-rule.pdf">Criteria</a></span>
-    </div>
-    <span class="when">May 2024</span>
-  </div>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>College of Science Elite Student Award</strong>
-      <span class="org">National Tsing Hua University — Top 1 of 65 students · <a href="/images/elite-award.jpg">Certificate</a></span>
-    </div>
-    <span class="when">Apr 2021</span>
-  </div>
-
-  <div class="cv-item">
-    <div class="what">
-      <strong>Academic Excellence Award (書卷獎)</strong> (Received 3 times)
-      <span class="org">National Tsing Hua University · <a href="/images/presidential-award.jpg">Certificate</a></span>
-    </div>
-    <span class="when">2020 – 2022</span>
-  </div>
-
-
-  <h2 class="kicker">Selected Publications</h2>
-
-  <div class="pub">
-    <h3><a href="/#fastml-gpu-tracking">Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders</a></h3>
-    <p class="authors"><strong>Hao-Chun Liang</strong>, Yuan-Tang Chou, Bo-Cheng Lai</p>
-    <p class="venue">Fast Machine Learning for Science Conference, ETH Zurich, 2025</p>
-  </div>
-
-  <div class="pub">
-    <h3><a href="/#unitrac">UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs</a></h3>
-    <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai</p>
-    <p class="venue">ACM Transactions on Reconfigurable Technology and Systems, 2026 <span class="chip chip-award">Accepted</span> <span class="chip chip-role">Corresponding author</span></p>
-  </div>
-
-  <div class="pub">
-    <h3><a href="/#gnn-fpga-vlsi">A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA</a></h3>
-    <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Bo-Cheng Lai</p>
-    <p class="venue">VLSI Design / CAD Symposium, 2025</p>
-  </div>
-
-  <div class="pub">
-    <h3><a href="/#higtr-tjcas">An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction</a></h3>
-    <p class="authors">Yun-Chen Yang, <strong>Hao-Chun Liang</strong>, Hsuan-Wei Yu, Bo-Cheng Lai, Shih-Chieh Hsu, Mark Neubauer, Santosh Parajuli</p>
-    <p class="venue">Taiwan and Japan Conference on Circuits and Systems, 2025 <span class="chip chip-award">Excellent Poster Award</span></p>
-  </div>
-
-  <h2 class="kicker">Skills</h2>
-
-  <p class="cv-note">
-    <strong>Programming Languages:</strong> C/C++, SystemVerilog, Python, CUDA, Makefile <br>
-    <strong>Tools:</strong> VCS, DC, Vivado, PrimeTime, Spyglass, JasperGold, Innovus, Calibre, NVIDIA NSYS/NCU <br>
-    <strong>Domains:</strong> Chip Design, Domain-Specific Architecture, GPU Performance, AI Agent Automation
-  </p>
-
-
-
-
-  <p><a href="/#publications">All publications →</a> · <a href="/#projects">All projects →</a></p>
+  <section class="section">
+    <ul class="list">
+      <li><a href="/#publications">All publications</a> and <a href="/#projects">all projects</a> are on the homepage.</li>
+    </ul>
+  </section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="container">
-    <div class="footer-row">
-      <span>©&nbsp;2026 Hao-Chun Liang · Last updated October 2026</span>
-      <span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a> · <a href="https://github.com/noyaboy">GitHub</a> · <a href="https://orcid.org/0009-0004-0675-9162">ORCID</a> · <a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">LinkedIn</a></span>
+  <div class="footer-inner">
+    <div class="footer-rule"></div>
+    <div class="contact">
+      <h2>Contact Info.</h2>
+      <p>Parallel Computing System Laboratory, National Yang Ming Chiao Tung University, Hsinchu, Taiwan, R.O.C.</p>
+      <ul>
+        <li>E-mail: <a href="mailto:science103555@gmail.com">science103555@gmail.com</a></li>
+        <li>GitHub: <a href="https://github.com/noyaboy">github.com/noyaboy</a></li>
+        <li>ORCID: <a href="https://orcid.org/0009-0004-0675-9162">0009-0004-0675-9162</a></li>
+        <li>LinkedIn: <a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">Hao-Chun (Noah) Liang</a></li>
+      </ul>
     </div>
-    <p class="colophon">Hand-built with plain HTML &amp; CSS · Set in Source Sans · Patrolled by a Bichon Frise, a black poodle, an orange tabby, an alpaca, a horned bear, and a big-eared dog on the wing</p>
+    <p class="copyright">Copyright © 2024-2026 <a href="/">Hao-Chun Liang</a>; Last updated November 16, 2026; All Rights Reserved</p>
   </div>
 </footer>
 
+<script src="/assets/gsite.js?v=1" defer></script>
 <script src="/assets/pets.js?v=17" defer></script>
-<script src="/assets/tracks.js?v=3" defer></script>
 </body>
 </html>
