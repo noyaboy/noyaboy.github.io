@@ -66,6 +66,13 @@
     Array.prototype.forEach.call(dots, function (d, k) {
       d.addEventListener('click', function () { show(k); stop(); start(); });
     });
+    var prev = c.querySelector('.car-prev'), next = c.querySelector('.car-next');
+    if (prev) prev.addEventListener('click', function () { show(i - 1); stop(); start(); });
+    if (next) next.addEventListener('click', function () { show(i + 1); stop(); start(); });
+    c.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { show(i - 1); stop(); }
+      else if (e.key === 'ArrowRight') { show(i + 1); stop(); }
+    });
     c.addEventListener('mouseenter', stop);
     c.addEventListener('mouseleave', start);
     c.addEventListener('focusin', stop);
