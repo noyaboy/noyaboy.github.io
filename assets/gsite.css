@@ -577,32 +577,47 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   font-size: 30px;
   color: #fff;
 }
-.carousel { position: relative; max-width: 720px; margin: 0 auto 44px; }
-.slides { position: relative; aspect-ratio: 3 / 2; }
+/* Spotlight: the active photo in the middle, its neighbours peeking in on
+   both sides at low opacity; the whole strip slides when it changes.
+   Positions are measured in gsite.js because the photos differ in width. */
+.carousel {
+  position: relative;
+  margin: 0 auto 44px;
+  overflow: hidden;
+  --slide-h: 440px;
+}
+.slides { position: relative; height: calc(var(--slide-h) + 34px); }
 .slide {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.6s ease, visibility 0.6s;
+  transform: translateX(-50%);
+  transition: transform 0.6s cubic-bezier(.4, 0, .2, 1), opacity 0.6s ease, visibility 0.6s;
 }
-.slide.is-active { opacity: 1; visibility: visible; }
 .slide img {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  object-fit: contain;
+  display: block;
+  height: var(--slide-h);
+  width: auto;
+  max-width: 72vw;
+  object-fit: cover;
+  border-radius: 2px;
 }
-.slide figcaption { margin-top: 10px; font-size: 12px; color: var(--on-navy); text-align: center; }
+.slide.is-active { opacity: 1; visibility: visible; z-index: 2; }
+.slide.is-prev, .slide.is-next { opacity: 0.35; visibility: visible; cursor: pointer; z-index: 1; }
+.slide.is-prev:hover, .slide.is-next:hover { opacity: 0.55; }
+.slide figcaption { margin-top: 10px; font-size: 12px; color: var(--on-navy); text-align: center; white-space: nowrap; transition: opacity 0.3s; }
+.slide:not(.is-active) figcaption { opacity: 0; }
 .car-arrow {
   position: absolute;
-  top: calc((100% - 21px) / 2);
+  top: calc(var(--slide-h) / 2);
   transform: translateY(-50%);
-  z-index: 2;
+  z-index: 3;
   width: 48px;
   height: 48px;
   display: flex;
@@ -664,7 +679,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   .hero-line { font-size: 17px; }
   .hero-action { right: 50%; transform: translateX(50%); bottom: 22px; }
   .home-intro { grid-template-columns: 1fr; }
-  .slides { aspect-ratio: 4 / 5; }
+  .carousel { --slide-h: 300px; }
+  .slide figcaption { white-space: normal; max-width: 72vw; }
   .home-intro .portrait { width: min(100%, 320px); margin: 0 auto; }
   .intro-text { padding: 36px 8px; }
 }
