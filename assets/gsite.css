@@ -216,7 +216,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 }
 .submenu a { display: block; padding: 10px 16px; }
 .nav-group.is-open .submenu { display: block; }
-@media (hover: hover) and (min-width: 961px) {
+@media (hover: hover) and (min-width: 1001px) {
   .nav-group:hover .submenu,
   .nav-group:focus-within .submenu { display: block; }
   .nav-group:hover .sub-toggle svg { transform: rotate(180deg); }
@@ -629,7 +629,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 .has-hero .site-footer { margin-top: 0; }
 .photo-credit { margin-top: 8px; opacity: 0.8; }
 
-@media (max-width: 960px) {
+@media (max-width: 1000px) {
   .has-hero .site-header:not(.is-scrolled) { background: rgba(243, 243, 243, 0.55); }
   .home-cols { grid-template-columns: 1fr; gap: 12px; }
 }
@@ -728,7 +728,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   .profile .portrait { width: 100%; }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1000px) {
   .nav-toggle { display: block; }
   .brand-name { display: none; }
   .brand-mark { width: auto; }

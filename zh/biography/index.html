@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lora-700-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/gsite.css?v=10">
+  <link rel="stylesheet" href="/assets/gsite.css?v=12">
 </head>
 <body>
 
@@ -46,6 +46,7 @@
     <nav class="site-nav" id="site-nav" aria-label="網站導覽">
       <a href="/zh/">首頁</a>
       <a href="/zh/biography/" aria-current="page">簡介</a>
+      <a href="/zh/talk/">演講</a>
       <div class="nav-group">
         <a href="/zh/experience/">經歷</a>
         <button class="sub-toggle" type="button" aria-expanded="false" aria-label="展開經歷選單"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
@@ -54,6 +55,11 @@
       <a href="/zh/publications/">學術發表</a>
       <a href="/zh/projects/">專案</a>
       <a href="/zh/news/">最新消息</a>
+      <div class="nav-group">
+        <a href="/zh/#activity">活動</a>
+        <button class="sub-toggle" type="button" aria-expanded="false" aria-label="展開活動選單"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
+        <div class="submenu"><a href="/zh/activity/pop-dance-club/">熱舞</a><a href="/zh/activity/pcs-lab/">PCS Lab</a><a href="/zh/activity/martial-arts/">國術</a><a href="/zh/activity/travel/">旅遊</a></div>
+      </div>
       <a href="/cv/" hreflang="en">CV</a>
     </nav>
   </div>
@@ -72,7 +78,7 @@
       <h1>梁皓鈞</h1>
       <p class="subname" lang="en">Hao-Chun (Noah) Liang</p>
       <p>國立陽明交通大學 碩士生 · 晶心科技 數位 IC 設計實習生</p>
-      <p><span class="label">電子信箱：</span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a></p>
+      <p><span class="label">電子信箱：</span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a>、<a href="mailto:noah.ii14@nycu.edu.tw">noah.ii14@nycu.edu.tw</a></p>
       <p><span class="label">主要研究領域：</span>晶片設計、領域專用架構、GPU 效能工程、AI Agent 自動化</p>
       <p class="links-line"><span class="label">連結：</span><a href="https://github.com/noyaboy">GitHub</a>、<a href="https://orcid.org/0009-0004-0675-9162">ORCID</a>、<a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">LinkedIn</a>、<a href="/files/resume.pdf?v=19" target="_blank" rel="noopener">英文履歷 (PDF)</a></p>
     </div>
@@ -84,6 +90,8 @@
     <p>目前於國立陽明交通大學平行計算系統實驗室（<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">PCS Lab</a>）從事研究，指導教授為賴伯承教授。碩士論文以 <a href="https://github.com/acts-project/traccc">traccc</a> 為核心，traccc 是 ACTS 專案以 GPU 實作的粒子軌跡重建平台，與美國華盛頓大學及 CERN 合作開發。另外也是 <a href="/zh/publications/#unitrac">UniTrac</a> 的第二作者暨通訊作者，UniTrac 是以 FPGA 加速 GNN 粒子軌跡重建的硬體架構，與華盛頓大學及伊利諾大學香檳分校共同開發。</p>
     <p>在論文研究中，我獨立設計並量測了一套跨多種加速器架構的設計空間探索，目標是高亮度大型強子對撞機（HL-LHC）高階觸發系統的吞吐量需求。在 GPU 上，我以事件層級融合消除主機端啟動瓶頸，卻發現核心函式受限於運算量，並因資料相依的 warp divergence 而效能低落。將設計移植到 AMD Versal V80 的空間運算陣列後，divergence 消失了，但有限的繞線資源限制了可放置的核心數，組合式卡爾曼濾波器本身的回授迴路也為迭代吞吐量設下硬性上限。改用 Tenstorrent 這類 MIMD 多核心架構，同樣避開了 divergence，代價則是運算密度降低。</p>
     <p>每一條路都指向同一個結論：這個問題需要一顆客製化加速器，並讓架構與編譯器圍繞不規則記憶體存取共同設計。這正是我現在以 RTL 實作、並將以 TSMC 28nm 下線的系統。</p>
+    <p>研究之外，我以優異成績畢業於清華大學（專業科目 GPA 名列 116 人中前 5%），獲頒陽明交大菁英新生獎學金與 TJCAS 2025 優秀海報獎，並三度獲得清華大學書卷獎。我也在 112 上學期擔任清華大學普通物理實驗助教，目前擔任 PCS Lab 網管。</p>
+    <p>實驗室以外，我跳舞。高中就讀彰化高中科學班，同時擔任熱舞社 Gango 公關，隨隊在第十四屆 High School Fight 高校街舞大賽獲得季軍；進入清大後加入熱舞社，獲得 2023 清交梅竹賽熱舞第三名，以及同年 8 月社內盃 1 on 1 Battle 第二名。更早之前，我在 2015 年國術彈腿全國錦標賽拿下國中男子個人賽第一名。跳舞、國術和研究教會我同一件事：每件事情都要做得精采絕倫。</p>
   </div>
 
   <section class="section" id="education">
@@ -92,6 +100,9 @@
       <li>國立陽明交通大學 <a href="https://iais.nycu.edu.tw/en/intro1.html">產學創新研究學院 前瞻半導體研究所 晶片設計組</a> 碩士 <span class="when">(2025/09 - 2027/06，預計)</span> <span class="hl">(GPA 4.3/4.3)</span> <a href="/files/nycu-transcript.pdf">成績單</a></li>
       <li>國立清華大學 <a href="https://dee.site.nthu.edu.tw/index.php?Lang=en">電機工程學系</a> 學士 <span class="when">(2020/09 - 2024/06)</span> <span class="hl">(GPA 4.1/4.3，優異成績畢業)</span> <a href="/files/nthu-transcript.pdf">成績單</a>
         <span class="sub">由物理學系轉入；理學院菁英學生獎，65 人中第 1 名。</span>
+      </li>
+      <li>國立彰化高級中學 <span class="hl">科學班</span> <span class="when">(2017 - 2020)</span>
+        <span class="sub">經獨立甄選入學的科學資優班，課程以大學先修與科學研究為主。</span>
       </li>
     </ul>
     <h3 class="group">碩士修課（陽明交大）</h3>
@@ -133,15 +144,15 @@
     <div class="footer-rule"></div>
     <div class="contact">
       <h2>聯絡資訊</h2>
-      <p>國立陽明交通大學 平行計算系統實驗室，新竹，台灣</p>
+      <p>國立陽明交通大學 工程四館 206 平行計算系統實驗室，新竹，台灣</p>
       <ul>
-        <li>E-mail：<a href="mailto:science103555@gmail.com">science103555@gmail.com</a></li>
+        <li>E-mail：<a href="mailto:science103555@gmail.com">science103555@gmail.com</a>、<a href="mailto:noah.ii14@nycu.edu.tw">noah.ii14@nycu.edu.tw</a></li>
         <li>GitHub：<a href="https://github.com/noyaboy">github.com/noyaboy</a></li>
         <li>ORCID：<a href="https://orcid.org/0009-0004-0675-9162">0009-0004-0675-9162</a></li>
         <li>LinkedIn：<a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">Hao-Chun (Noah) Liang</a></li>
       </ul>
     </div>
-    <p class="copyright">Copyright © 2024-2026 <a href="/zh/">梁皓鈞</a>；最後更新 2026 年 11 月 16 日；版權所有</p>
+    <p class="copyright">Copyright © 2024-2026 <a href="/zh/">梁皓鈞</a>；最後更新 2026 年 11 月 16 日；版權所有；照片版權屬梁皓鈞，另有註明者除外</p>
   </div>
 </footer>
 

@@ -29,7 +29,7 @@
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lora-700-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/images/hehuan-banner.jpg" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="/assets/gsite.css?v=10">
+  <link rel="stylesheet" href="/assets/gsite.css?v=12">
 <script>
 /* Old single-page links (/#unitrac, /#education, ...) now live on their own pages. */
 (function () {
@@ -58,6 +58,7 @@
     <nav class="site-nav" id="site-nav" aria-label="網站導覽">
       <a href="/zh/" aria-current="page">首頁</a>
       <a href="/zh/biography/">簡介</a>
+      <a href="/zh/talk/">演講</a>
       <div class="nav-group">
         <a href="/zh/experience/">經歷</a>
         <button class="sub-toggle" type="button" aria-expanded="false" aria-label="展開經歷選單"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
@@ -66,6 +67,11 @@
       <a href="/zh/publications/">學術發表</a>
       <a href="/zh/projects/">專案</a>
       <a href="/zh/news/">最新消息</a>
+      <div class="nav-group">
+        <a href="/zh/#activity">活動</a>
+        <button class="sub-toggle" type="button" aria-expanded="false" aria-label="展開活動選單"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
+        <div class="submenu"><a href="/zh/activity/pop-dance-club/">熱舞</a><a href="/zh/activity/pcs-lab/">PCS Lab</a><a href="/zh/activity/martial-arts/">國術</a><a href="/zh/activity/travel/">旅遊</a></div>
+      </div>
       <a href="/cv/" hreflang="en">CV</a>
     </nav>
   </div>
@@ -155,7 +161,7 @@
     </div>
   </section>
 
-  <section class="activity" aria-label="Activity">
+  <section class="activity" id="activity" aria-label="Activity">
     <div class="page">
       <h2 class="activity-title" lang="en">Activity</h2>
       <div class="activity-grid">
@@ -171,6 +177,10 @@
           <img src="/images/activity/martial-arts-card.jpg" alt="國術彈腿全國錦標賽頒獎後手持獎盃" width="1359" height="729" loading="lazy">
           <span class="btn-navy">國術</span>
         </a>
+        <a class="activity-card" href="/zh/activity/travel/">
+          <img src="/images/activity/gallery/travel-81.jpg" alt="東京鐵塔" width="1200" height="1600" loading="lazy">
+          <span class="btn-navy">旅遊</span>
+        </a>
       </div>
     </div>
   </section>
@@ -182,15 +192,15 @@
     <div class="footer-rule"></div>
     <div class="contact">
       <h2>聯絡資訊</h2>
-      <p>國立陽明交通大學 平行計算系統實驗室，新竹，台灣</p>
+      <p>國立陽明交通大學 工程四館 206 平行計算系統實驗室，新竹，台灣</p>
       <ul>
-        <li>E-mail：<a href="mailto:science103555@gmail.com">science103555@gmail.com</a></li>
+        <li>E-mail：<a href="mailto:science103555@gmail.com">science103555@gmail.com</a>、<a href="mailto:noah.ii14@nycu.edu.tw">noah.ii14@nycu.edu.tw</a></li>
         <li>GitHub：<a href="https://github.com/noyaboy">github.com/noyaboy</a></li>
         <li>ORCID：<a href="https://orcid.org/0009-0004-0675-9162">0009-0004-0675-9162</a></li>
         <li>LinkedIn：<a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">Hao-Chun (Noah) Liang</a></li>
       </ul>
     </div>
-    <p class="copyright">Copyright © 2024-2026 <a href="/zh/">梁皓鈞</a>；最後更新 2026 年 11 月 16 日；版權所有</p>
+    <p class="copyright">Copyright © 2024-2026 <a href="/zh/">梁皓鈞</a>；最後更新 2026 年 11 月 16 日；版權所有；照片版權屬梁皓鈞，另有註明者除外</p>
     <p class="copyright photo-credit">橫幅照片：合歡山，攝影 <a href="https://unsplash.com/@aj5photos">Anders J</a>，來源 <a href="https://unsplash.com/photos/a-view-from-the-top-of-a-mountain-looking-down-at-a-trail-7bBullEEUgk">Unsplash</a></p>
   </div>
 </footer>
