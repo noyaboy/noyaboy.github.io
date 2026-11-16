@@ -73,6 +73,19 @@
     start();
   });
 
+  // YouTube facades: show the thumbnail, load the player only on click
+  Array.prototype.forEach.call(document.querySelectorAll('.yt-facade'), function (b) {
+    b.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + b.getAttribute('data-yt') + '?autoplay=1&rel=0';
+      f.title = b.getAttribute('aria-label') || 'YouTube video';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      b.parentNode.replaceChild(f, b);
+      f.focus();
+    });
+  });
+
   if (nav && toggle) {
     function setOpen(open) {
       nav.classList.toggle('is-open', open);
