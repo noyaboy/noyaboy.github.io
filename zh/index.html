@@ -28,12 +28,13 @@
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lora-700-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/gsite.css?v=3">
+  <link rel="preload" href="/images/hehuan-banner.jpg" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="/assets/gsite.css?v=5">
 <script>
-/* Old single-page links (/#unitrac, /#projects, ...) now live on their own pages. */
+/* Old single-page links (/#unitrac, /#education, ...) now live on their own pages. */
 (function () {
   function go() {
-  var id = location.hash.slice(1), map = {'ai-agent-skill-flow': '/zh/projects/', 'awards': '/zh/experience/awards/', 'dual-core-risc-cpu': '/zh/projects/', 'experience': '/zh/experience/', 'fastml-gpu-tracking': '/zh/publications/', 'gnn-fpga-vlsi': '/zh/publications/', 'higtr-tjcas': '/zh/publications/', 'lsdma-tlm': '/zh/projects/', 'news': '/zh/news/', 'projects': '/zh/projects/', 'publications': '/zh/publications/', 'regfile-codegen': '/zh/projects/', 'riscv-cpu': '/zh/projects/', 'tgda-fgir': '/zh/publications/', 'token-reduction': '/zh/projects/', 'trajectory-accelerator-tapeout': '/zh/projects/', 'unitrac': '/zh/publications/', 'weak-lensing': '/zh/projects/'};
+  var id = location.hash.slice(1), map = {'ai-agent-skill-flow': '/zh/projects/', 'awards': '/zh/experience/awards/', 'dual-core-risc-cpu': '/zh/projects/', 'education': '/zh/biography/', 'experience': '/zh/experience/', 'fastml-gpu-tracking': '/zh/publications/', 'gnn-fpga-vlsi': '/zh/publications/', 'higtr-tjcas': '/zh/publications/', 'lsdma-tlm': '/zh/projects/', 'news': '/zh/news/', 'projects': '/zh/projects/', 'publications': '/zh/publications/', 'regfile-codegen': '/zh/projects/', 'research': '/zh/biography/', 'riscv-cpu': '/zh/projects/', 'skills': '/zh/biography/', 'tgda-fgir': '/zh/publications/', 'token-reduction': '/zh/projects/', 'trajectory-accelerator-tapeout': '/zh/projects/', 'unitrac': '/zh/publications/', 'weak-lensing': '/zh/projects/'};
   if (map[id]) location.replace(map[id] + (["awards", "experience", "news", "projects", "publications"].indexOf(id) < 0 ? '#' + id : ''));
   }
   go();
@@ -41,7 +42,7 @@
 })();
 </script>
 </head>
-<body>
+<body class="has-hero">
 
 <a class="skip-link" href="#main">跳至主要內容</a>
 
@@ -55,7 +56,8 @@
       <span class="brand-name">梁皓鈞 Hao-Chun Liang</span>
     </a>
     <nav class="site-nav" id="site-nav" aria-label="網站導覽">
-      <a href="/zh/" aria-current="page">簡介</a>
+      <a href="/zh/" aria-current="page">首頁</a>
+      <a href="/zh/biography/">簡介</a>
       <div class="nav-group">
         <a href="/zh/experience/">經歷</a>
         <button class="sub-toggle" type="button" aria-expanded="false" aria-label="展開經歷選單"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
@@ -69,71 +71,80 @@
   </div>
 </header>
 
-<main class="page" id="main">
-
-  <div class="title-row">
-    <p class="page-title" lang="en">Biography</p>
-    <div class="title-action"><a class="btn-navy" href="/" hreflang="en" lang="en">En</a></div>
+<div class="hero" role="banner">
+  <div class="hero-inner">
+    <h1 class="hero-name"><span class="name-zh" lang="zh-Hant-TW">梁皓鈞</span> <span class="name-en" lang="en">Hao-Chun Liang</span></h1>
+    <p class="hero-line" lang="zh-Hant-TW">國立陽明交通大學 前瞻半導體研究所 碩士生</p>
+    <p class="hero-line" lang="en">M.Eng. Student, Institute of Pioneer Semiconductor Innovation, National Yang Ming Chiao Tung University</p>
   </div>
+  <div class="hero-action"><a class="btn-navy" href="/" hreflang="en" lang="en">En</a></div>
+</div>
 
-  <section class="profile" aria-label="個人資料">
+<main class="home" id="main">
+
+  <section class="page home-intro">
     <img class="portrait" src="/images/portrait.jpg" alt="梁皓鈞的照片" width="600" height="600">
-    <div class="identity">
-      <h1>梁皓鈞</h1>
-      <p class="subname" lang="en">Hao-Chun (Noah) Liang</p>
-      <p>國立陽明交通大學 碩士生 · 晶心科技 數位 IC 設計實習生</p>
-      <p><span class="label">電子信箱：</span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a></p>
-      <p><span class="label">主要研究領域：</span>晶片設計、領域專用架構、GPU 效能工程、AI Agent 自動化</p>
-      <p class="links-line"><span class="label">連結：</span><a href="https://github.com/noyaboy">GitHub</a>、<a href="https://orcid.org/0009-0004-0675-9162">ORCID</a>、<a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">LinkedIn</a>、<a href="/files/resume.pdf?v=19" target="_blank" rel="noopener">英文履歷 (PDF)</a></p>
+    <div class="intro-text">
+      <p class="motto">目前正在進行軌跡重建加速器的 TSMC 28nm 下線。</p>
+      <p class="view-bio"><a href="/zh/biography/">查看自傳 View Biography</a></p>
     </div>
   </section>
 
-  <div class="bio">
-    <p>目前正在進行軌跡重建加速器的 TSMC 28nm 下線。</p>
-    <p>畢業於國立清華大學電機工程學系，以優異成績畢業，名列全系前 5%，GPA 4.1/4.3。</p>
-    <p>目前於國立陽明交通大學平行計算系統實驗室（<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">PCS Lab</a>）從事研究，指導教授為賴伯承教授。碩士論文以 <a href="https://github.com/acts-project/traccc">traccc</a> 為核心，traccc 是 ACTS 專案以 GPU 實作的粒子軌跡重建平台，與美國華盛頓大學及 CERN 合作開發。另外也是 <a href="/zh/publications/#unitrac">UniTrac</a> 的第二作者暨通訊作者，UniTrac 是以 FPGA 加速 GNN 粒子軌跡重建的硬體架構，與華盛頓大學及伊利諾大學香檳分校共同開發。</p>
-    <p>在論文研究中，我獨立設計並量測了一套跨多種加速器架構的設計空間探索，目標是高亮度大型強子對撞機（HL-LHC）高階觸發系統的吞吐量需求。在 GPU 上，我以事件層級融合消除主機端啟動瓶頸，卻發現核心函式受限於運算量，並因資料相依的 warp divergence 而效能低落。將設計移植到 AMD Versal V80 的空間運算陣列後，divergence 消失了，但有限的繞線資源限制了可放置的核心數，組合式卡爾曼濾波器本身的回授迴路也為迭代吞吐量設下硬性上限。改用 Tenstorrent 這類 MIMD 多核心架構，同樣避開了 divergence，代價則是運算密度降低。</p>
-    <p>每一條路都指向同一個結論：這個問題需要一顆客製化加速器，並讓架構與編譯器圍繞不規則記憶體存取共同設計。這正是我現在以 RTL 實作、並將以 TSMC 28nm 下線的系統。</p>
-  </div>
-
-  <section class="section" id="education">
-    <h2>學歷</h2>
-    <ul class="list">
-      <li>國立陽明交通大學 <a href="https://iais.nycu.edu.tw/en/intro1.html">產學創新研究學院 前瞻半導體研究所 晶片設計組</a> 碩士 <span class="when">(2025/09 - 2027/06，預計)</span> <span class="hl">(GPA 4.3/4.3)</span> <a href="/files/nycu-transcript.pdf">成績單</a></li>
-      <li>國立清華大學 <a href="https://dee.site.nthu.edu.tw/index.php?Lang=en">電機工程學系</a> 學士 <span class="when">(2020/09 - 2024/06)</span> <span class="hl">(GPA 4.1/4.3，優異成績畢業)</span> <a href="/files/nthu-transcript.pdf">成績單</a>
-        <span class="sub">由物理學系轉入；理學院菁英學生獎，65 人中第 1 名。</span>
-      </li>
-    </ul>
-    <h3 class="group">碩士修課（陽明交大）</h3>
-    <ul class="list">
-      <li><a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">積體電路設計實驗 ICLAB</a> <span class="hl">(A+)</span>，143 人中 5 人通過現場上機考</li>
-      <li><a href="https://github.com/noyaboy/NYCU-IEE-VLSI-DSP-2026-Spring">數位訊號處理之超大型積體電路設計 DSP-VLSI</a> <span class="hl">(A+)</span></li>
-      <li><a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F">深度學習</a> <span class="hl">(A+)</span></li>
-      <li><a href="https://github.com/noyaboy/NYCU-IEE-2025-FALL-Stochastic-Process">隨機過程</a> <span class="hl">(A+)</span></li>
-    </ul>
-    <h3 class="group">大學修課（清華大學）</h3>
-    <ul class="list">
-      <li>積體電路設計實驗 ICLAB (A+)、超大型積體電路測試 (A+)、超大型積體電路設計 (A)、計算機結構 (A-)、機器學習 (A)、通訊系統 (A+)</li>
-    </ul>
-  </section>
-
-  <section class="section" id="research">
-    <h2>研究興趣</h2>
-    <ul class="list">
-      <li>晶片設計<span class="sub">RTL、合成、APR 與簽核實作。</span></li>
-      <li>領域專用架構<span class="sub">針對特定應用的軟硬體協同設計。</span></li>
-      <li>GPU 效能工程<span class="sub">核心函式層級與系統層級最佳化，以 Nsight Systems 和 Nsight Compute 分析。</span></li>
-      <li>AI Agent 自動化<span class="sub">以 SKILL.md 流程進行心智模型萃取、差距分析與知識管理。</span></li>
-    </ul>
-  </section>
-
-  <section class="section" id="skills">
-    <h2>技能</h2>
-    <ul class="list">
-      <li>程式語言：<span class="sub inline">C/C++、SystemVerilog、Python、CUDA、Makefile</span></li>
-      <li>工具：<span class="sub inline">VCS、DC、Vivado、PrimeTime、Spyglass、JasperGold、Innovus、Calibre、NVIDIA NSYS/NCU、Git</span></li>
-      <li>領域：<span class="sub inline">晶片設計、領域專用架構、GPU 效能、AI Agent 自動化</span></li>
-    </ul>
+  <section class="navy-band" aria-label="Recent Spotlight">
+    <div class="page">
+      <div class="band-rule"></div>
+      <h2 class="band-title">Recent Spotlight</h2>
+      <div class="carousel" data-interval="5000">
+        <div class="slides">
+        <figure class="slide is-active" aria-roledescription="slide" aria-label="1 / 7"><img src="/images/cern-salzburger.jpg" alt="赴 CERN 與 Andi Salzburger 討論 traccc 專案，2025/09" loading="eager"><figcaption>赴 CERN 與 Andi Salzburger 討論 traccc 專案，2025/09</figcaption></figure>
+        <figure class="slide" aria-roledescription="slide" aria-label="2 / 7"><img src="/images/cern-lhc-magnet.jpg" alt="與賴伯承教授於 CERN 的 LHC 偶極磁鐵旁，2025/09" loading="lazy"><figcaption>與賴伯承教授於 CERN 的 LHC 偶極磁鐵旁，2025/09</figcaption></figure>
+        <figure class="slide" aria-roledescription="slide" aria-label="3 / 7"><img src="/images/fastml-presentation.jpg" alt="於 ETH Zurich 的 FastML 2025 發表研究" loading="lazy"><figcaption>於 ETH Zurich 的 FastML 2025 發表研究</figcaption></figure>
+        <figure class="slide" aria-roledescription="slide" aria-label="4 / 7"><img src="/images/tjcas-award.jpg" alt="於 TJCAS 2025 獲優秀海報獎" loading="lazy"><figcaption>於 TJCAS 2025 獲優秀海報獎</figcaption></figure>
+        <figure class="slide" aria-roledescription="slide" aria-label="5 / 7"><img src="/images/nstc-poster-2026.jpg" alt="國科會微電子工程學門成果發表會，2026/08" loading="lazy"><figcaption>國科會微電子工程學門成果發表會，2026/08</figcaption></figure>
+        <figure class="slide" aria-roledescription="slide" aria-label="6 / 7"><img src="/images/vlsicad-presentation.jpg" alt="於 VLSI Design / CAD 研討會 2025 發表" loading="lazy"><figcaption>於 VLSI Design / CAD 研討會 2025 發表</figcaption></figure>
+        <figure class="slide" aria-roledescription="slide" aria-label="7 / 7"><img src="/images/andes-farewell.jpg" alt="與晶心科技團隊合影，2024 - 2025" loading="lazy"><figcaption>與晶心科技團隊合影，2024 - 2025</figcaption></figure>
+        </div>
+        <div class="dots" role="group" aria-label="選擇照片">
+        <button type="button" class="dot is-active" aria-label="第 1" aria-current="true"></button>
+        <button type="button" class="dot" aria-label="第 2"></button>
+        <button type="button" class="dot" aria-label="第 3"></button>
+        <button type="button" class="dot" aria-label="第 4"></button>
+        <button type="button" class="dot" aria-label="第 5"></button>
+        <button type="button" class="dot" aria-label="第 6"></button>
+        <button type="button" class="dot" aria-label="第 7"></button>
+        </div>
+      </div>
+      <div class="band-rule"></div>
+      <div class="home-cols">
+      <div class="home-col">
+        <h2 class="band-title">Active Projects</h2>
+        <ul>
+          <li><strong>2026 陽明交大：</strong>軌跡重建加速器 TSMC 28nm 下線</li>
+          <li><strong>2026 晶心科技：</strong>L/SDMA 無時序 SystemC TLM-2 模型</li>
+          <li><strong>2026 晶心科技：</strong>AI Agent 自動化流程</li>
+        </ul>
+        <p class="more"><a href="/zh/projects/">更多專案</a></p>
+      </div>
+      <div class="home-col">
+        <h2 class="band-title">Latest Honor</h2>
+        <ul>
+          <li>獲頒<strong>菁英新生獎學金</strong>（2025）</li>
+          <li>獲頒 TJCAS <strong>優秀海報獎</strong>（2025）</li>
+          <li>清華大學<strong>優異成績畢業</strong>（2024）</li>
+        </ul>
+        <p class="more"><a href="/zh/experience/awards/">更多榮譽</a></p>
+      </div>
+      <div class="home-col">
+        <h2 class="band-title">Recent Publications</h2>
+        <ul>
+          <li><strong>UniTrac</strong>，ACM TRETS 2026，已接受</li>
+          <li><strong>GPU 卡爾曼濾波追蹤</strong>，FastML 2025</li>
+          <li><strong>GNN 軌跡重建 FPGA</strong>，TJCAS 2025</li>
+        </ul>
+        <p class="more"><a href="/zh/publications/">更多發表</a></p>
+      </div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -152,10 +163,11 @@
       </ul>
     </div>
     <p class="copyright">Copyright © 2024-2026 <a href="/zh/">梁皓鈞</a>；最後更新 2026 年 11 月 16 日；版權所有</p>
+    <p class="copyright photo-credit">橫幅照片：合歡山，攝影 <a href="https://unsplash.com/@aj5photos">Anders J</a>，來源 <a href="https://unsplash.com/photos/a-view-from-the-top-of-a-mountain-looking-down-at-a-trail-7bBullEEUgk">Unsplash</a></p>
   </div>
 </footer>
 
-<script src="/assets/gsite.js?v=3" defer></script>
+<script src="/assets/gsite.js?v=4" defer></script>
 <script src="/assets/pets.js?v=17" defer></script>
 </body>
 </html>
