@@ -50,9 +50,29 @@
     if (slides.length < 2) return;
     var i = 0, timer = null;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var GAP = 28, SIDE = 0.86;
+    function layout() {
+      var N = slides.length, w = function (k) { return slides[(k + N) % N].offsetWidth; };
+      Array.prototype.forEach.call(slides, function (s, k) {
+        var d = ((k - i) % N + N) % N; if (d > N / 2) d -= N;
+        var x = 0, sc = 1;
+        if (d !== 0) {
+          var dir = d < 0 ? -1 : 1, acc = w(i) / 2;
+          for (var t = 1; t <= Math.abs(d); t++) {
+            var wk = w(i + dir * t) * SIDE;
+            acc += GAP + wk / 2 + (t < Math.abs(d) ? wk / 2 : 0);
+          }
+          x = dir * acc; sc = SIDE;
+        }
+        s.style.transform = 'translateX(calc(-50% + ' + Math.round(x) + 'px)) scale(' + sc + ')';
+        s.classList.toggle('is-prev', d === -1);
+        s.classList.toggle('is-next', d === 1);
+      });
+    }
     function show(n) {
       i = (n + slides.length) % slides.length;
       Array.prototype.forEach.call(slides, function (s, k) { s.classList.toggle('is-active', k === i); });
+      layout();
       Array.prototype.forEach.call(dots, function (d, k) {
         d.classList.toggle('is-active', k === i);
         if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
@@ -66,6 +86,15 @@
     Array.prototype.forEach.call(dots, function (d, k) {
       d.addEventListener('click', function () { show(k); stop(); start(); });
     });
+    Array.prototype.forEach.call(slides, function (s, k) {
+      s.addEventListener('click', function () {
+        if (s.classList.contains('is-prev') || s.classList.contains('is-next')) { show(k); stop(); start(); }
+      });
+      var im = s.querySelector('img');
+      if (im) { im.loading = 'eager'; if (!im.complete) im.addEventListener('load', layout); }
+    });
+    window.addEventListener('resize', layout);
+    layout();
     var prev = c.querySelector('.car-prev'), next = c.querySelector('.car-next');
     if (prev) prev.addEventListener('click', function () { show(i - 1); stop(); start(); });
     if (next) next.addEventListener('click', function () { show(i + 1); stop(); start(); });
