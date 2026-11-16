@@ -7,53 +7,15 @@
    square-bullet lists with dark-red links, and a navy contact footer.
    All content is the owner's own; only the visual language is borrowed.
 
-   Fonts are self-hosted (Lato, Lora), latin subsets only. CJK glyphs
-   (e.g. 書卷獎) fall back to the visitor's system font.
+   Fonts (owner ruling, Nov 2026): one family everywhere. Latin text is
+   Arial (Liberation Sans / Arimo are its metric twins where Arial is
+   missing); Traditional Chinese is Source Han Serif TC (思源宋體), loaded
+   as Noto Serif TC from Google Fonts in unicode-range chunks.
 
    The pets (assets/pets.js) inject their own CSS and live on a lawn at the
    very bottom of <body>; the footer's tall bottom padding is that lawn.
    ========================================================================== */
 
-@font-face {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/assets/fonts/lato-400-latin.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/assets/fonts/lato-700-latin.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Lato";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/assets/fonts/lato-400-italic-latin.woff2") format("woff2");
-}
-/* Name-only subsets for the Home banner: Yuji Syuku (brush) carries just
-   梁皓鈞, Great Vibes (script) just the letters of "Hao-Chun Liang". */
-@font-face {
-  font-family: "Name Brush";
-  font-display: block;
-  src: url("/assets/fonts/yuji-syuku-name.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Name Script";
-  font-display: block;
-  src: url("/assets/fonts/great-vibes-name.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Lora";
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/assets/fonts/lora-700-italic-latin.woff2") format("woff2");
-}
 
 :root {
   --bg: #f3f3f3;
@@ -67,8 +29,8 @@
   --header-h: 56px;
   --page-w: 1156px;
   --gutter: 24px;
-  --sans: "Lato", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
-  --serif: "Lora", Georgia, "Times New Roman", serif;
+  --sans: Arial, "Liberation Sans", Arimo, "Source Han Serif TC", "Noto Serif TC", "Noto Serif CJK TC", serif;
+  --serif: var(--sans);
 }
 
 *,
@@ -216,7 +178,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 }
 .submenu a { display: block; padding: 10px 16px; }
 .nav-group.is-open .submenu { display: block; }
-@media (hover: hover) and (min-width: 1001px) {
+@media (hover: hover) and (min-width: 1041px) {
   .nav-group:hover .submenu,
   .nav-group:focus-within .submenu { display: block; }
   .nav-group:hover .sub-toggle svg { transform: rotate(180deg); }
@@ -517,11 +479,11 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .hero-name {
   margin: 0 0 14px;
   color: var(--navy);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.15;
 }
-.name-zh { font-family: "Name Brush", var(--serif); font-size: clamp(40px, 4vw, 58px); letter-spacing: 0.06em; }
-.name-en { font-family: "Name Script", var(--serif); font-size: clamp(44px, 4.4vw, 64px); margin-left: 10px; }
+.name-zh { font-family: var(--sans); font-size: clamp(40px, 4vw, 58px); letter-spacing: 0.06em; }
+.name-en { font-family: var(--sans); font-size: clamp(44px, 4.4vw, 64px); margin-left: 10px; }
 .hero-line {
   margin: 10px 0 0;
   color: var(--navy);
@@ -547,7 +509,7 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .intro-text { text-align: center; padding: 0 12px; }
 .motto {
   margin: 0 0 18px;
-  font-family: var(--serif), var(--sans);
+  font-family: var(--sans);
   font-style: italic;
   font-weight: 700;
   font-size: 20px;
@@ -674,7 +636,7 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 @media (max-width: 720px) {
   .hero { min-height: 420px; padding-bottom: 80px; }
   .name-zh { font-size: 46px; display: block; }
-  .name-en { font-size: 50px; margin-left: 0; display: block; }
+  .name-en { font-size: clamp(30px, 10vw, 50px); margin-left: 0; display: block; white-space: nowrap; }
   .hero-action { right: 50%; transform: translateX(50%); bottom: 22px; }
   .home-intro { grid-template-columns: 1fr; }
   .carousel { --slide-h: 300px; }
@@ -914,7 +876,8 @@ html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .
   .profile .portrait { width: 100%; }
 }
 
-@media (max-width: 1000px) {
+/* Arial is wider than the old Lato: the English nav needs ~1013px on one row */
+@media (max-width: 1040px) {
   .nav-toggle { display: block; }
   .brand-name { display: none; }
   .brand-mark { width: auto; }
@@ -980,3 +943,7 @@ html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .
   .section h2 { break-after: avoid; }
   a { color: #000; }
 }
+
+/* Chinese has no true italic; slanted CJK (synthesized oblique) reads poorly */
+:lang(zh-Hant-TW) :is(.page-title, .motto, .band-title, .activity-title, .cite-list .venue, em, i),
+.page-title:lang(zh-Hant-TW), .motto:lang(zh-Hant-TW) { font-style: normal; }

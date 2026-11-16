@@ -87,7 +87,7 @@
     '.pet-cinna .lids{animation-duration:6.1s;animation-delay:0.7s;}',
     '.pet-nori .lids{animation-duration:5.8s;animation-delay:2.6s;}',
     '@keyframes pet-blink{0%,95.5%,99.2%,100%{transform:scaleY(0);}97.3%{transform:scaleY(1);}}',
-    '.pet .zzz{display:none;position:absolute;top:-6px;left:60%;color:#9a9a9a;font:700 13px/1 Lato,Verdana,sans-serif;pointer-events:none;}',
+    '.pet .zzz{display:none;position:absolute;top:-6px;left:60%;color:#9a9a9a;font:700 13px/1 Arial,Arimo,sans-serif;pointer-events:none;}',
     '.pet[data-state="lie"] .zzz{display:block;animation:pet-zzz 2.6s ease-in 3s infinite;opacity:0;}',
     '@keyframes pet-zzz{0%{opacity:0;transform:translateY(0);}25%{opacity:.85;}100%{opacity:0;transform:translateY(-16px);}}',
     /* Hearts rise on an arc, not a rail. */
