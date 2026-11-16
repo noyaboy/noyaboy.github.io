@@ -33,8 +33,9 @@
   // Bold the nav link of the section currently in view (homepage only).
   if (!nav || !('IntersectionObserver' in window)) return;
   var links = {};
-  Array.prototype.forEach.call(nav.querySelectorAll('a[href^="/#"]'), function (a) {
-    links[a.getAttribute('href').slice(2)] = a;
+  Array.prototype.forEach.call(nav.querySelectorAll('a[href*="/#"]'), function (a) {
+    var href = a.getAttribute('href');
+    links[href.slice(href.indexOf('#') + 1)] = a;
   });
   var targets = Object.keys(links).map(function (id) {
     return document.getElementById(id);
