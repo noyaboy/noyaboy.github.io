@@ -694,6 +694,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   gap: clamp(12px, 2vw, 28px);
   margin-top: 8px;
 }
+/* A lone video (Martial Arts) spans the full width, like the PCS Lab photo */
+.video-grid.single { grid-template-columns: 1fr; }
 .video { margin: 0; }
 .yt-facade, .video iframe {
   position: relative;
@@ -953,3 +955,14 @@ html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .
 
 /* in-page targets (award video links, Gango) clear the sticky header */
 main [id] { scroll-margin-top: calc(var(--header-h) + 16px); }
+
+/* Owner ruling 2026-11-17: phones (480px and below) are left-aligned; a column
+   that narrow cannot be justified without wide word gaps */
+@media (max-width: 480px) {
+  .bio p,
+  .section > p,
+  .list > li,
+  .cite-list > li,
+  .news-list li,
+  .list .sub:not(.inline) { text-align: start; }
+}
