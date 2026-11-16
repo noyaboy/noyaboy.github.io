@@ -391,7 +391,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   100% { background: transparent; }
 }
 
-.center { text-align: center; }
+.center,
+.section > p.center { text-align: center; }
 
 /* News */
 .news-list time { font-weight: 700; }

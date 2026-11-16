@@ -167,6 +167,94 @@
     });
   })();
 
+  // No short last lines (owner ruling): a block whose last line fills less
+  // than a third of its width is re-set, at every window size. First try a
+  // barely visible tightening so the tail climbs onto the line above, then
+  // balanced lines for short left-aligned blocks, then a barely visible
+  // loosening (mostly word spacing) so more words carry down, and only then
+  // balanced lines (left-aligned, so justify cannot stretch them).
+  (function () {
+    var MIN = 0.34;
+    var TIGHT = [[-0.004, -0.03], [-0.008, -0.06], [-0.012, -0.09], [-0.016, -0.12]];
+    var LOOSE = [[0, 0.05], [0.003, 0.1], [0.006, 0.15], [0.01, 0.2]];
+    var BLOCK = /^(block|list-item|flex|grid|table)/;
+    var sel = 'main p, main li, main .sub, main figcaption, .identity p, .site-footer .contact p, .site-footer .copyright';
+
+    function leaf(el) {
+      if (el.closest('.site-nav, .chips, .slide, .hero')) return false;
+      for (var c = el.firstElementChild; c; c = c.nextElementSibling) {
+        if (BLOCK.test(getComputedStyle(c).display)) return false;
+      }
+      return true;
+    }
+    // Line boxes of el: [{left, right}] top to bottom.
+    function lines(el) {
+      var r = document.createRange();
+      r.selectNodeContents(el);
+      var rows = [];
+      Array.prototype.forEach.call(r.getClientRects(), function (b) {
+        if (b.width < 1) return;
+        var row = null;
+        for (var i = 0; i < rows.length; i++) {
+          if (Math.abs(rows[i].mid - (b.top + b.bottom) / 2) < b.height / 2) { row = rows[i]; break; }
+        }
+        if (!row) rows.push({ mid: (b.top + b.bottom) / 2, left: b.left, right: b.right });
+        else { row.left = Math.min(row.left, b.left); row.right = Math.max(row.right, b.right); }
+      });
+      rows.sort(function (a, b) { return a.mid - b.mid; });
+      return rows;
+    }
+    function measure(el) {
+      var cs = getComputedStyle(el), box = el.getBoundingClientRect();
+      var left = box.left + parseFloat(cs.paddingLeft), width = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      var ls = lines(el);
+      if (ls.length < 2 || width <= 0) return { n: ls.length, ok: true };
+      var tail = (ls[ls.length - 1].right - left) / width;
+      return { n: ls.length, ok: tail >= MIN };
+    }
+    function setSpacing(el, base, d) {
+      var fs = parseFloat(getComputedStyle(el).fontSize);
+      el.style.letterSpacing = (base + d[0] * fs) + 'px';
+      el.style.wordSpacing = (d[1] * fs) + 'px';
+    }
+    function fix(el) {
+      el.style.letterSpacing = el.style.wordSpacing = el.style.textWrap = el.style.textAlign = '';
+      var m = measure(el);
+      if (m.ok) return;
+      var ls0 = parseFloat(getComputedStyle(el).letterSpacing) || 0, i, t;
+      for (i = 0; i < TIGHT.length; i++) {
+        setSpacing(el, ls0, TIGHT[i]);
+        t = measure(el);
+        if (t.n < m.n && t.ok) return;
+      }
+      // Left-aligned blocks of a few lines look most natural balanced
+      var justified = getComputedStyle(el).textAlign === 'justify';
+      if (!justified && m.n <= 4) {
+        el.style.letterSpacing = el.style.wordSpacing = '';
+        el.style.textWrap = 'balance';
+        if (measure(el).ok) return;
+        el.style.textWrap = '';
+      }
+      for (i = 0; i < LOOSE.length; i++) {
+        setSpacing(el, ls0, LOOSE[i]);
+        t = measure(el);
+        if (t.ok && t.n <= m.n + 1) return;
+      }
+      el.style.letterSpacing = el.style.wordSpacing = '';
+      el.style.textWrap = 'balance';
+      if (getComputedStyle(el).textAlign === 'justify') el.style.textAlign = 'start';
+    }
+    function run() {
+      var els = Array.prototype.filter.call(document.querySelectorAll(sel), leaf);
+      els.forEach(fix);
+    }
+    var timer;
+    function later() { clearTimeout(timer); timer = setTimeout(run, 120); }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(run); else run();
+    window.addEventListener('load', run);
+    window.addEventListener('resize', later);
+  })();
+
   // Lightbox: photos and PDFs open in a dialog over the dimmed page.
   // Galleries get previous/next; PDFs open normally on phones, where
   // inline PDF viewing is unreliable.
