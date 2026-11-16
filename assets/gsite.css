@@ -799,13 +799,19 @@ html[lang="zh-Hant-TW"] .cite-list > li {
   letter-spacing: 0.02em;
 }
 .bio p { margin-bottom: 1.1em; }
-/* Owner request: every prose paragraph is justified; hyphenation keeps English word gaps even.
-   Short one-entry list items (awards, experience, education, news), captions, the footer address, the narrow Home-column headline lists and the centered motto keep their alignment. */
+/* Owner request: all running text is justified (bio, paragraphs, list entries, citations, news, CV);
+   hyphenation keeps English word gaps even. Captions, the footer address, the narrow Home-column
+   headline lists and the centered motto keep their alignment. */
 .bio p,
 .section > p,
+.list > li,
 .cite-list > li,
+.news-list li,
 .list .sub:not(.inline) { text-align: justify; hyphens: auto; }
-html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .cite-list > li, .list .sub) { text-justify: inter-character; }
+/* A wrapped title line that ends right before a block .sub is stretched by Chromium as if it were a full line */
+.list > li:has(> .sub:not(.inline)) { text-align: start; }
+.list > li:has(> .sub:not(.inline)) > .sub:not(.inline) { text-align: justify; }
+html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .news-list li, .list .sub) { text-justify: inter-character; }
 .list > li { margin-bottom: 0.6em; }
 .cite-list > li { margin-bottom: 0.9em; }
 .list .sub { margin-top: 0.15em; }
