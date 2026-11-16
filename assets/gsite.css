@@ -284,13 +284,13 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 /* Photo beside the identity block */
 .profile {
   display: grid;
-  grid-template-columns: 463px 1fr;
+  grid-template-columns: 360px 1fr;
   gap: 37px;
   margin-top: 112px;
   align-items: start;
 }
 .profile .portrait {
-  width: 463px;
+  width: 360px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
@@ -513,13 +513,13 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 
 .home-intro {
   display: grid;
-  grid-template-columns: 463px 1fr;
+  grid-template-columns: 360px 1fr;
   gap: 37px;
   align-items: center;
   padding-top: 24px;
   padding-bottom: 24px;
 }
-.home-intro .portrait { width: 463px; aspect-ratio: 1 / 1; object-fit: cover; }
+.home-intro .portrait { width: 360px; aspect-ratio: 1 / 1; object-fit: cover; }
 .intro-text { text-align: center; padding: 0 12px; }
 .motto {
   margin: 0 0 18px;
@@ -641,7 +641,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   .hero-action { right: 50%; transform: translateX(50%); bottom: 22px; }
   .home-intro { grid-template-columns: 1fr; }
   .slides { aspect-ratio: 4 / 5; }
-  .home-intro .portrait { width: 100%; }
+  .home-intro .portrait { width: min(100%, 320px); margin: 0 auto; }
   .intro-text { padding: 36px 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -755,6 +755,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   .title-row { padding-top: 26px; }
   .page-title { font-size: 34px; }
   .title-action { position: static; margin-top: 38px; }
+  .profile .portrait { width: min(100%, 320px); margin: 0 auto; }
   .profile {
     grid-template-columns: 1fr;
     gap: 50px;
