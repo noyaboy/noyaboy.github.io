@@ -799,6 +799,9 @@ html[lang="zh-Hant-TW"] .cite-list > li {
   letter-spacing: 0.02em;
 }
 .bio p { margin-bottom: 1.1em; }
+/* Owner request: justified biography paragraphs; hyphenation keeps English word gaps even */
+.bio p { text-align: justify; hyphens: auto; }
+html[lang="zh-Hant-TW"] .bio p { text-justify: inter-character; }
 .list > li { margin-bottom: 0.6em; }
 .cite-list > li { margin-bottom: 0.9em; }
 .list .sub { margin-top: 0.15em; }

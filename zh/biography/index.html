@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lora-700-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/gsite.css?v=26">
+  <link rel="stylesheet" href="/assets/gsite.css?v=27">
 </head>
 <body>
 
@@ -85,12 +85,11 @@
   </section>
 
   <div class="bio">
-    <p>目前正在進行軌跡重建加速器的 TSMC 28nm 下線。</p>
-    <p>目前於國立陽明交通大學平行計算系統實驗室（<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/" target="_blank" rel="noopener">PCS Lab</a>）從事研究，指導教授為賴伯承教授。碩士論文以 <a href="https://github.com/acts-project/traccc" target="_blank" rel="noopener">traccc</a> 為基礎，traccc 是 ACTS 專案以 GPU 實作的粒子軌跡重建平台，研究與美國華盛頓大學及 CERN 合作。我也是 <a href="/zh/publications/#unitrac">UniTrac</a> 的第二作者暨通訊作者，UniTrac 是以 FPGA 加速 GNN 粒子軌跡重建的硬體架構，與華盛頓大學及伊利諾大學香檳分校共同開發。</p>
-    <p>在論文研究中，我親手建構並量測了一套橫跨多種加速器架構的設計空間探索，目標是滿足高亮度大型強子對撞機（HL-LHC）高階觸發系統的吞吐量需求。在 GPU 上，我以事件層級融合消除了主機端的啟動瓶頸，接著卻發現核心函式受限於工作量，又因資料相依的 warp divergence 而效能低落。將設計移植到 AMD Versal V80 的空間運算陣列後，divergence 消失了，但有限的繞線資源限制了可放置的核心數，組合式卡爾曼濾波器本身的回授迴路也為迭代吞吐量設下硬性上限。改用 Tenstorrent 這類 MIMD 多核心架構，同樣避開了 divergence，代價則是運算密度降低。</p>
-    <p>每一條路都指向同一個結論：這個問題需要一顆客製化加速器，並讓架構與編譯器圍繞不規則記憶體存取共同設計。這正是我現在以 RTL 打造、即將以 TSMC 28nm 下線的系統。</p>
-    <p>我以優異成績畢業於清華大學電機工程學系，GPA 4.1/4.3，專業科目 GPA 名列 116 人中前 5%，並三度獲得書卷獎。進入陽明交大後獲頒菁英新生獎學金，我們的 FPGA 軌跡重建研究也在 TJCAS 2025 獲得優秀海報獎。我曾在 112 上學期擔任清華大學普通物理實驗助教，目前擔任 PCS Lab 網管。</p>
-    <p>實驗室以外，我跳舞。高中就讀彰化高中科學班時，我擔任熱舞社 Gango 公關，隨隊在第十四屆 High School Fight 高校街舞大賽拿下季軍。進入清大後加入熱舞社，獲得 2023 清交梅竹賽熱舞第三名，以及同年 8 月社內盃 1 on 1 Battle 第二名。更早之前，我在 2015 年國術彈腿全國錦標賽拿下國中男子個人賽第一名。跳舞、國術和研究教會我同一件事：人這一輩子能做的事不多，所以每件事情都要做得精采絕倫。</p>
+    <p>目前於國立陽明交通大學平行計算系統實驗室（<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/" target="_blank" rel="noopener">PCS Lab</a>）從事研究，指導教授為賴伯承教授，並擔任實驗室網管。碩士論文以 <a href="https://github.com/acts-project/traccc" target="_blank" rel="noopener">traccc</a> 為基礎，traccc 是 ACTS 專案以 GPU 實作的粒子軌跡重建平台，研究與美國華盛頓大學及 CERN 合作。我也是 <a href="/zh/publications/#unitrac">UniTrac</a> 的第二作者暨通訊作者，UniTrac 是以 FPGA 加速 GNN 粒子軌跡重建的硬體架構，與華盛頓大學及伊利諾大學香檳分校共同開發。</p>
+    <p>在論文研究中，我親手建構並量測橫跨多種加速器架構的設計空間探索，目標是滿足高亮度大型強子對撞機（HL-LHC）高階觸發系統的吞吐量需求。在 GPU 上，我以事件層級融合消除了主機端的啟動瓶頸，卻發現核心函式受限於工作量，又因資料相依的 warp divergence 而效能低落。將設計移植到 AMD Versal V80 的空間運算陣列後，divergence 消失了，但有限的繞線資源限制了可放置的核心數。</p>
+    <p>在 V80 上，組合式卡爾曼濾波器本身的回授迴路也為迭代吞吐量設下硬性上限。改用 Tenstorrent 這類 MIMD 多核心架構，同樣避開了 divergence，代價則是運算密度降低。每一條路都指向同一個結論：這個問題需要一顆客製化加速器，並讓架構與編譯器圍繞不規則記憶體存取共同設計。這正是我現在以 RTL 打造、正進行 TSMC 28nm 下線的系統。</p>
+    <p>我以優異成績畢業於清華大學電機工程學系，GPA 4.1/4.3，專業科目 GPA 名列 116 人中前 5%，並三度獲得書卷獎。進入陽明交大後獲頒菁英新生獎學金，我們的 FPGA 軌跡重建研究也在 TJCAS 2025 獲得優秀海報獎。112 上學期我也擔任清華大學普通物理實驗助教。</p>
+    <p>實驗室以外，我跳舞。高中時我擔任彰中熱舞社 Gango 公關，隨隊在第十四屆 High School Fight 高校街舞大賽拿下季軍。進入清大後加入熱舞社，獲得 2023 清交梅竹賽熱舞第三名，以及同年 8 月的社內盃 1 on 1 Battle 第二名。2015 年我也拿下國術彈腿全國錦標賽冠軍。跳舞、國術和研究教會我同一件事：人這一輩子能做的事不多，所以每件事情都要做得精采絕倫。</p>
   </div>
 
   <section class="section" id="education">
