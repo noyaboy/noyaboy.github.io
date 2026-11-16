@@ -709,6 +709,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   margin: 8px 0 28px;
 }
 .gallery figure { margin: 0; }
+.flag { width: 1.35em; height: 0.9em; vertical-align: -0.08em; margin-right: 6px; border-radius: 2px; }
+.flag-square { width: 0.9em; }
 .trip-dates { margin-left: 8px; font-weight: 400; color: #555; font-size: 14px; }
 .gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
 .gallery a:hover img { opacity: 0.88; }
@@ -797,6 +799,17 @@ html[lang="zh-Hant-TW"] .cite-list > li {
   max-width: var(--measure);
   margin-left: auto;
   margin-right: auto;
+}
+
+/* sections built around photos or videos: headings follow the media,
+   not the text column */
+.section:has(> .gallery, > .video-grid, > .photo) > h2,
+.section:has(> .gallery, > .video-grid, > .photo) > h3,
+.section:has(> .gallery, > .video-grid, > .photo) > .club-name,
+.section:has(> .gallery, > .video-grid, > .photo) > p {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 /* bold stays where it marks a name: awards, project titles, list labels */
