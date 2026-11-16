@@ -1,6 +1,7 @@
 /* Header behavior for the Google Sites-style theme: a shadow once the page
-   scrolls, the mobile menu toggle, and the active-section highlight in the
-   navigation. Self-contained, no dependencies. */
+   scrolls, the mobile menu toggle, and the Experience dropdown (hover or
+   focus opens it on desktop; the chevron button toggles it everywhere).
+   Self-contained, no dependencies. */
 (function () {
   'use strict';
   var header = document.querySelector('.site-header');
@@ -14,6 +15,34 @@
 
   var nav = document.getElementById('site-nav');
   var toggle = document.querySelector('.nav-toggle');
+  var groups = nav ? nav.querySelectorAll('.nav-group') : [];
+
+  function setGroup(group, open) {
+    group.classList.toggle('is-open', open);
+    var btn = group.querySelector('.sub-toggle');
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  function closeGroups(except) {
+    Array.prototype.forEach.call(groups, function (g) {
+      if (g !== except) setGroup(g, false);
+    });
+  }
+
+  Array.prototype.forEach.call(groups, function (g) {
+    var btn = g.querySelector('.sub-toggle');
+    if (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = !g.classList.contains('is-open');
+        closeGroups(g);
+        setGroup(g, open);
+      });
+    }
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('.nav-group')) closeGroups(null);
+  });
+
   if (nav && toggle) {
     function setOpen(open) {
       nav.classList.toggle('is-open', open);
@@ -26,28 +55,7 @@
       if (e.target.closest('a')) setOpen(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') { setOpen(false); closeGroups(null); }
     });
   }
-
-  // Bold the nav link of the section currently in view (homepage only).
-  if (!nav || !('IntersectionObserver' in window)) return;
-  var links = {};
-  Array.prototype.forEach.call(nav.querySelectorAll('a[href*="/#"]'), function (a) {
-    var href = a.getAttribute('href');
-    links[href.slice(href.indexOf('#') + 1)] = a;
-  });
-  var targets = Object.keys(links).map(function (id) {
-    return document.getElementById(id);
-  }).filter(Boolean);
-  if (!targets.length) return;
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (!en.isIntersecting) return;
-      Object.keys(links).forEach(function (id) {
-        links[id].classList.toggle('is-active', id === en.target.id);
-      });
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  targets.forEach(function (t) { io.observe(t); });
 })();

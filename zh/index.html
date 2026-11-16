@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f3f3f3">
-  <title>Hao-Chun Liang 個人簡介 — 國立陽明交通大學</title>
-  <meta name="description" content="Hao-Chun Liang，國立陽明交通大學碩士生，研究晶片設計、領域專用架構、GPU 效能工程與 AI Agent 自動化。">
+  <title>梁皓鈞 Hao-Chun Liang 個人簡介 — 國立陽明交通大學</title>
+  <meta name="description" content="梁皓鈞（Hao-Chun Liang），國立陽明交通大學碩士生，研究晶片設計、領域專用架構、GPU 效能工程與 AI Agent 自動化。">
   <link rel="canonical" href="https://noyaboy.github.io/zh/">
   <link rel="alternate" hreflang="en" href="https://noyaboy.github.io/">
   <link rel="alternate" hreflang="zh-Hant-TW" href="https://noyaboy.github.io/zh/">
@@ -28,7 +28,18 @@
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preload" href="/assets/fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lora-700-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/gsite.css?v=1">
+  <link rel="stylesheet" href="/assets/gsite.css?v=3">
+<script>
+/* Old single-page links (/#unitrac, /#projects, ...) now live on their own pages. */
+(function () {
+  function go() {
+  var id = location.hash.slice(1), map = {'ai-agent-skill-flow': '/zh/projects/', 'awards': '/zh/experience/awards/', 'dual-core-risc-cpu': '/zh/projects/', 'experience': '/zh/experience/', 'fastml-gpu-tracking': '/zh/publications/', 'gnn-fpga-vlsi': '/zh/publications/', 'higtr-tjcas': '/zh/publications/', 'lsdma-tlm': '/zh/projects/', 'news': '/zh/news/', 'projects': '/zh/projects/', 'publications': '/zh/publications/', 'regfile-codegen': '/zh/projects/', 'riscv-cpu': '/zh/projects/', 'tgda-fgir': '/zh/publications/', 'token-reduction': '/zh/projects/', 'trajectory-accelerator-tapeout': '/zh/projects/', 'unitrac': '/zh/publications/', 'weak-lensing': '/zh/projects/'};
+  if (map[id]) location.replace(map[id] + (["awards", "experience", "news", "projects", "publications"].indexOf(id) < 0 ? '#' + id : ''));
+  }
+  go();
+  window.addEventListener('hashchange', go);
+})();
+</script>
 </head>
 <body>
 
@@ -39,19 +50,20 @@
     <button class="nav-toggle" type="button" aria-label="開啟選單" aria-expanded="false" aria-controls="site-nav">
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
-    <a class="brand" href="/zh/" aria-label="Hao-Chun Liang 中文首頁">
+    <a class="brand" href="/zh/" aria-label="梁皓鈞 中文首頁">
       <span class="brand-mark" aria-hidden="true">HL</span>
-      <span class="brand-name">Hao-Chun Liang</span>
+      <span class="brand-name">梁皓鈞 Hao-Chun Liang</span>
     </a>
     <nav class="site-nav" id="site-nav" aria-label="網站導覽">
       <a href="/zh/" aria-current="page">簡介</a>
-      <a href="/zh/#education">學歷</a>
-      <a href="/zh/#experience">經歷</a>
-      <a href="/zh/#research">研究興趣</a>
-      <a href="/zh/#awards">獲獎榮譽</a>
-      <a href="/zh/#publications">學術發表</a>
-      <a href="/zh/#projects">專案</a>
-      <a href="/zh/#news">最新消息</a>
+      <div class="nav-group">
+        <a href="/zh/experience/">經歷</a>
+        <button class="sub-toggle" type="button" aria-expanded="false" aria-label="展開經歷選單"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
+        <div class="submenu"><a href="/zh/experience/awards/">獲獎榮譽</a></div>
+      </div>
+      <a href="/zh/publications/">學術發表</a>
+      <a href="/zh/projects/">專案</a>
+      <a href="/zh/news/">最新消息</a>
       <a href="/cv/" hreflang="en">CV</a>
     </nav>
   </div>
@@ -65,9 +77,9 @@
   </div>
 
   <section class="profile" aria-label="個人資料">
-    <img class="portrait" src="/images/portrait.jpg" alt="Hao-Chun Liang 的照片" width="600" height="600">
+    <img class="portrait" src="/images/portrait.jpg" alt="梁皓鈞的照片" width="600" height="600">
     <div class="identity">
-      <h1 lang="en">Hao-Chun Liang</h1>
+      <h1>梁皓鈞</h1>
       <p class="subname" lang="en">Hao-Chun (Noah) Liang</p>
       <p>國立陽明交通大學 碩士生 · 晶心科技 數位 IC 設計實習生</p>
       <p><span class="label">電子信箱：</span><a href="mailto:science103555@gmail.com">science103555@gmail.com</a></p>
@@ -79,7 +91,7 @@
   <div class="bio">
     <p>目前正在進行軌跡重建加速器的 TSMC 28nm 下線。</p>
     <p>畢業於國立清華大學電機工程學系，以優異成績畢業，名列全系前 5%，GPA 4.1/4.3。</p>
-    <p>目前於國立陽明交通大學平行計算系統實驗室（<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">PCS Lab</a>）從事研究，指導教授為賴伯承教授。碩士論文以 <a href="https://github.com/acts-project/traccc">traccc</a> 為核心，traccc 是 ACTS 專案以 GPU 實作的粒子軌跡重建平台，與美國華盛頓大學及 CERN 合作開發。另外也是 <a href="#unitrac">UniTrac</a> 的第二作者暨通訊作者，UniTrac 是以 FPGA 加速 GNN 粒子軌跡重建的硬體架構，與華盛頓大學及伊利諾大學香檳分校共同開發。</p>
+    <p>目前於國立陽明交通大學平行計算系統實驗室（<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">PCS Lab</a>）從事研究，指導教授為賴伯承教授。碩士論文以 <a href="https://github.com/acts-project/traccc">traccc</a> 為核心，traccc 是 ACTS 專案以 GPU 實作的粒子軌跡重建平台，與美國華盛頓大學及 CERN 合作開發。另外也是 <a href="/zh/publications/#unitrac">UniTrac</a> 的第二作者暨通訊作者，UniTrac 是以 FPGA 加速 GNN 粒子軌跡重建的硬體架構，與華盛頓大學及伊利諾大學香檳分校共同開發。</p>
     <p>在論文研究中，我獨立設計並量測了一套跨多種加速器架構的設計空間探索，目標是高亮度大型強子對撞機（HL-LHC）高階觸發系統的吞吐量需求。在 GPU 上，我以事件層級融合消除主機端啟動瓶頸，卻發現核心函式受限於運算量，並因資料相依的 warp divergence 而效能低落。將設計移植到 AMD Versal V80 的空間運算陣列後，divergence 消失了，但有限的繞線資源限制了可放置的核心數，組合式卡爾曼濾波器本身的回授迴路也為迭代吞吐量設下硬性上限。改用 Tenstorrent 這類 MIMD 多核心架構，同樣避開了 divergence，代價則是運算密度降低。</p>
     <p>每一條路都指向同一個結論：這個問題需要一顆客製化加速器，並讓架構與編譯器圍繞不規則記憶體存取共同設計。這正是我現在以 RTL 實作、並將以 TSMC 28nm 下線的系統。</p>
   </div>
@@ -105,16 +117,6 @@
     </ul>
   </section>
 
-  <section class="section" id="experience">
-    <h2>經歷</h2>
-    <ul class="list">
-      <li><a href="https://www.andestech.com/en/">晶心科技</a> 運算加速研發處 深度學習加速器 數位 IC 設計實習生 <span class="when">(2026/07 - 至今)</span></li>
-      <li>國立陽明交通大學 <a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">平行計算系統實驗室</a> 研究助理 <span class="when">(2025/09 - 2027/06，預計)</span></li>
-      <li>國立陽明交通大學 <a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">平行計算系統實驗室</a> 網管 <span class="when">(2025/09 - 2027/06，預計)</span></li>
-      <li><a href="https://www.andestech.com/en/">晶心科技</a> 運算加速研發處 深度學習加速器 數位 IC 設計實習生 <span class="when">(2024/11 - 2025/08)</span> <a href="/images/andes-farewell.jpg">照片</a></li>
-    </ul>
-  </section>
-
   <section class="section" id="research">
     <h2>研究興趣</h2>
     <ul class="list">
@@ -134,83 +136,6 @@
     </ul>
   </section>
 
-  <section class="section" id="awards">
-    <h2>獲獎榮譽</h2>
-    <h3 class="group">2025</h3>
-    <ul class="list">
-      <li>獲頒 國立陽明交通大學 產學創新研究學院 <span class="hl">菁英新生獎學金</span> (2025/09) <a href="/images/elite-graduate.jpg">證書</a></li>
-      <li>獲頒 台日電路與系統研討會（TJCAS）<span class="hl">優秀海報獎</span> (2025/08) <a href="/images/tjcas-certificate.jpg">證書</a> <a href="/images/tjcas-award.jpg">照片</a></li>
-    </ul>
-    <h3 class="group">2024</h3>
-    <ul class="list">
-      <li>完成 台灣半導體研究中心（TSRI）<span class="hl">Cell-Based 數位晶片設計與實作</span>（ADFP TSMC 16nm）課程 (2024/08) <a href="/images/adfp-certificate.jpg">證書</a></li>
-      <li>國立清華大學 <span class="hl">優異成績畢業</span>（專業科目 GPA 名列 116 人中前 5%）(2024/05) <a href="/images/distinction-graduation.jpg">證書</a> <a href="/files/distinction-rule.pdf">辦法</a></li>
-    </ul>
-    <h3 class="group">2021</h3>
-    <ul class="list">
-      <li>獲頒 國立清華大學 理學院 <span class="hl">菁英學生獎</span>（65 人中第 1 名）(2021/04) <a href="/images/elite-award.jpg">證書</a></li>
-    </ul>
-    <h3 class="group">2020 - 2022</h3>
-    <ul class="list">
-      <li>獲頒 國立清華大學 <span class="hl">書卷獎</span> 3 次 <a href="/images/presidential-award.jpg">證書</a></li>
-    </ul>
-  </section>
-
-  <section class="section" id="publications">
-    <h2>學術發表</h2>
-    <ol class="cite-list">
-      <li id="unitrac">Yun-Chen Yang, <span class="me">Hao-Chun Liang</span>, Hsuan-Wei Yu, Edwin Arkel Rios, Santosh Parajuli, Mark S. Neubauer, Shih-Chieh Hsu, Bo-Cheng Lai, "UniTrac: A Unified FPGA Accelerator for GNN-based Particle Track Reconstruction in HEPs," <span class="venue">ACM Transactions on Reconfigurable Technology and Systems (TRETS), 2026</span>. <span class="note">（已接受；第二作者暨通訊作者）</span>
-        <span class="lineage-note">本期刊論文延伸自以下兩篇會議論文：</span>
-        <ul class="lineage">
-          <li id="higtr-tjcas">"An Integrated FPGA Implementation of Complete GNN-Based Trajectory Reconstruction," <span class="venue">Taiwan and Japan Conference on Circuits and Systems (TJCAS), 2025</span>. <span class="note">（優秀海報獎）</span> <span class="links"><a href="/files/tjcas2025-slides.pdf">投影片</a><a href="/files/tjcas2025-poster.pdf">海報</a><a href="/images/tjcas-award.jpg">照片</a></span></li>
-          <li id="gnn-fpga-vlsi">"A High-Performance Implementation of GNN-Based Trajectory Reconstruction on FPGA," <span class="venue">VLSI Design / CAD Symposium, 2025</span>. <span class="links"><a href="/files/vlsicad2025-slides.pdf">投影片</a><a href="/images/vlsicad-presentation.jpg">照片</a></span></li>
-        </ul>
-      </li>
-      <li id="fastml-gpu-tracking"><span class="me">Hao-Chun Liang</span>, Yuan-Tang Chou, Bo-Cheng Lai, "Real-Time GPU Kalman-Filter Tracking via Kernel Refactoring and INT8 Surrogates for High-Luminosity Colliders," <span class="venue">Fast Machine Learning for Science Conference, ETH Zurich, 2025</span>. <span class="note">（第一作者）</span> <span class="links"><a href="/files/fastml2025-poster.pdf">海報</a><a href="/images/fastml-presentation.jpg">照片</a></span></li>
-      <li id="tgda-fgir">Edwin Arkel Rios, Fernando Mikael, Oswin Gosal, Femiloye Oyerinde, <span class="me">Hao-Chun Liang</span>, Bo-Cheng Lai, Min-Chun Hu, "Fine-Grained Image Recognition from Scratch with Teacher-Guided Data Augmentation," <span class="venue">arXiv:2507.12157, 2025</span>. <span class="note">（第五作者）</span> <span class="links"><a href="https://arxiv.org/abs/2507.12157">arXiv</a></span></li>
-    </ol>
-  </section>
-
-  <section class="section" id="projects">
-    <h2>專案</h2>
-    <ul class="list project-list">
-      <li id="trajectory-accelerator-tapeout">軌跡重建加速器 TSMC 28nm 下線 <span class="when">(陽明交大 平行計算系統實驗室，2026/07 - 至今)</span>
-        <span class="sub">將軌跡重建加速器從 RTL 實作一路推進到 TSMC 28nm 下線製造。</span></li>
-      <li id="lsdma-tlm">L/SDMA 無時序 SystemC 演算法與 TLM-2 模型 <span class="when">(晶心科技，2026/07 - 至今)</span>
-        <span class="sub">無時序的 SystemC TLM-2 黃金參考模型，作為軟體與硬體實作驗證的基準。</span></li>
-      <li id="ai-agent-skill-flow">AI Agent 自動化流程 <span class="when">(晶心科技，2026/07 - 至今)</span> <a href="/files/skill-automation-flow-slides.pdf">投影片</a>
-        <span class="sub">以客製化的 SKILL.md 檔案自動化團隊工作流程，涵蓋心智模型萃取、差距分析、執行與知識管理四個階段。</span></li>
-      <li id="dual-core-risc-cpu">雙核心 RISC CPU：UMC 180nm 從 RTL 到簽核 <span class="when">(陽明交大 ICLAB 期末專題，2026/03 - 2026/07)</span> <a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">GitHub</a>
-        <span class="sub">雙核心 RISC 處理器，在 UMC 180nm 走完完整的 RTL 到 GDSII 流程，包含設計、模擬與形式驗證、合成、時序收斂及佈局繞線。Verilog、VCS、Spyglass、Design Compiler、JasperGold、PrimeTime、Innovus。</span></li>
-      <li id="weak-lensing">弱重力透鏡收斂圖的超輕量 HDC-CNN <span class="when">(陽明交大 深度學習期末專題；NeurIPS 2025 FAIR Universe Weak Lensing Uncertainty Challenge，2025/10 - 2025/11)</span> <a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F/tree/main/final_project">GitHub</a>
-        <span class="sub">參數量 0.2M 的混合膨脹卷積 CNN 集成模型，以保序校準做穩健的不確定性量化。Python、PyTorch、TensorFlow。</span></li>
-      <li id="regfile-codegen">Regfile RTL/C 程式碼自動生成流程 <span class="when">(晶心科技，2024/11 - 2025/08)</span>
-        <span class="sub">將 CSV 暫存器規格自動編譯成可合成的 Verilog 暫存器檔、C/C++ 標頭檔與文件，確保軟硬體介面一致。Perl、Python、Verilog、Shell、Makefile。</span></li>
-      <li id="riscv-cpu">具 Hazard 處理的 RISC-V 五級管線 CPU 核心 <span class="when">(清華大學 ICLAB 期末專題，2023/12 - 2024/01)</span> <a href="https://github.com/noyaboy/5-Stage-Pipelined-RISC-V-CPU-Core">GitHub</a>
-        <span class="sub">RV32I 五級管線核心，具備 forwarding、hazard 停頓與雙 bank 指令及資料快取，以 GPDK 45nm 實作。Verilog、VCS、Spyglass、Design Compiler、PrimeTime、Innovus。</span></li>
-    </ul>
-  </section>
-
-  <section class="section" id="news">
-    <h2>最新消息</h2>
-    <ul class="list news-list">
-      <li><time datetime="2026-10">2026/10</time> <span class="what">UniTrac 獲 ACM Transactions on Reconfigurable Technology and Systems（TRETS）接受。</span></li>
-      <li><time datetime="2026-08">2026/08</time> <span class="what">於國科會微電子工程學門成果發表會發表研究成果。<a href="/images/nstc-poster-2026.jpg" aria-label="國科會成果發表會海報照片，看板 D48">照片</a></span></li>
-      <li><time datetime="2026-07">2026/07</time> <span class="what">重返<a href="https://www.andestech.com/en/">晶心科技</a>擔任數位 IC 設計實習生。</span></li>
-      <li><time datetime="2026-06">2026/06</time> <span class="what">完成雙核心 RISC CPU，UMC 180nm 從 RTL 到簽核（<a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">ICLAB 期末專題</a>）。</span></li>
-      <li><time datetime="2026-06">2026/06</time> <span class="what">完成 CDC-Core 覆晶晶片，TSMC 16nm FinFET 從 RTL 到簽核。</span></li>
-      <li><time datetime="2026-04">2026/04</time> <span class="what">ICLAB 現場上機考 143 人中 5 人通過，為其中之一。</span></li>
-      <li><time datetime="2025-09">2025/09</time> <span class="what">於 FastML 2025 發表即時 GPU 卡爾曼濾波軌跡追蹤研究。</span></li>
-      <li><time datetime="2025-09">2025/09</time> <span class="what">赴 CERN 與 Andi Salzburger 討論 traccc 專案。<a href="/images/cern-salzburger.jpg" aria-label="於 CERN Science Gateway 與 Andi Salzburger 合照">照片</a> <a href="/images/cern-lhc-magnet.jpg" aria-label="與賴伯承教授於 LHC 偶極磁鐵旁合照">照片</a></span></li>
-      <li><time datetime="2025-09">2025/09</time> <span class="what">獲陽明交大菁英新生獎學金。</span></li>
-      <li><time datetime="2025-09">2025/09</time> <span class="what">進入陽明交大碩士班，並於 PCS Lab 擔任研究助理。</span></li>
-      <li><time datetime="2025-08">2025/08</time> <span class="what">於 TJCAS 2025 獲優秀海報獎。</span></li>
-      <li><time datetime="2025-07">2025/07</time> <span class="what">TGDA 細粒度影像辨識論文發表於 <a href="https://arxiv.org/abs/2507.12157">arXiv</a>。</span></li>
-      <li><time datetime="2024-11">2024/11</time> <span class="what">加入<a href="https://www.andestech.com/en/">晶心科技</a>擔任數位 IC 設計實習生。</span></li>
-      <li><time datetime="2024-06">2024/06</time> <span class="what">以優異成績畢業於清華大學電機工程學系。</span></li>
-    </ul>
-  </section>
-
 </main>
 
 <footer class="site-footer">
@@ -226,11 +151,11 @@
         <li>LinkedIn：<a href="https://www.linkedin.com/in/hao-chun-noah-liang-131348207/">Hao-Chun (Noah) Liang</a></li>
       </ul>
     </div>
-    <p class="copyright">Copyright © 2024-2026 <a href="/zh/">Hao-Chun Liang</a>；最後更新 2026 年 11 月 16 日；版權所有</p>
+    <p class="copyright">Copyright © 2024-2026 <a href="/zh/">梁皓鈞</a>；最後更新 2026 年 11 月 16 日；版權所有</p>
   </div>
 </footer>
 
-<script src="/assets/gsite.js?v=2" defer></script>
+<script src="/assets/gsite.js?v=3" defer></script>
 <script src="/assets/pets.js?v=17" defer></script>
 </body>
 </html>

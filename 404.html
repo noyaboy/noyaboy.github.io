@@ -8,7 +8,7 @@
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32">
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="/assets/gsite.css?v=1">
+  <link rel="stylesheet" href="/assets/gsite.css?v=3">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -24,13 +24,14 @@
     </a>
     <nav class="site-nav" id="site-nav" aria-label="Site">
       <a href="/">Biography</a>
-      <a href="/#education">Education</a>
-      <a href="/#experience">Experience</a>
-      <a href="/#research">Research</a>
-      <a href="/#awards">Awards</a>
-      <a href="/#publications">Publications</a>
-      <a href="/#projects">Projects</a>
-      <a href="/#news">News</a>
+      <div class="nav-group">
+        <a href="/experience/">Experience</a>
+        <button class="sub-toggle" type="button" aria-expanded="false" aria-label="Show Experience pages"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
+        <div class="submenu"><a href="/experience/awards/">Awards</a></div>
+      </div>
+      <a href="/publications/">Publications</a>
+      <a href="/projects/">Projects</a>
+      <a href="/news/">News</a>
       <a href="/cv/">CV</a>
     </nav>
   </div>
@@ -59,7 +60,7 @@
     <p class="copyright">Copyright © 2024-2026 <a href="/">Hao-Chun Liang</a>; Last updated November 16, 2026; All Rights Reserved</p>
   </div>
 </footer>
-<script src="/assets/gsite.js?v=2" defer></script>
+<script src="/assets/gsite.js?v=3" defer></script>
 <script src="/assets/pets.js?v=17" defer></script>
 </body>
 </html>
