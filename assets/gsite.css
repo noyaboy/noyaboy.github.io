@@ -530,6 +530,10 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   line-height: 1.5;
   color: var(--ink-strong);
 }
+.motto.now { font-size: 16px; font-weight: 400; margin-top: 6px; }
+.photo { margin: 0 0 20px; }
+.photo img { width: 100%; height: auto; }
+.photo figcaption { margin-top: 8px; color: #555; }
 .view-bio a { color: var(--navy); font-weight: 400; text-decoration: none; }
 .view-bio a:hover { text-decoration: underline; }
 
