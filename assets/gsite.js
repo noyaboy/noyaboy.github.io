@@ -138,6 +138,92 @@
     });
   })();
 
+  // Lightbox: photos and PDFs open in a dialog over the dimmed page.
+  // Galleries get previous/next; PDFs open normally on phones, where
+  // inline PDF viewing is unreliable.
+  (function () {
+    if (!window.HTMLDialogElement) return;
+    var IMG = /\.(jpe?g|png|webp|gif)(\?|#|$)/i, PDF = /\.pdf(\?|#|$)/i;
+    var zh = document.documentElement.lang.indexOf('zh') === 0;
+    var T = zh ? { close: '關閉', prev: '上一張', next: '下一張', open: '在新分頁開啟' }
+               : { close: 'Close', prev: 'Previous', next: 'Next', open: 'Open in new tab' };
+    var dlg = document.createElement('dialog');
+    dlg.className = 'lightbox';
+    dlg.innerHTML =
+      '<div class="lb-frame"><div class="lb-body"></div><p class="lb-cap"></p></div>' +
+      '<button type="button" class="lb-btn lb-close" aria-label="' + T.close + '">&times;</button>' +
+      '<button type="button" class="lb-btn lb-prev" aria-label="' + T.prev + '">&#8249;</button>' +
+      '<button type="button" class="lb-btn lb-next" aria-label="' + T.next + '">&#8250;</button>' +
+      '<a class="lb-open" target="_blank" rel="noopener">' + T.open + ' &#8599;</a>';
+    document.body.appendChild(dlg);
+    var body = dlg.querySelector('.lb-body'), cap = dlg.querySelector('.lb-cap'),
+        prev = dlg.querySelector('.lb-prev'), next = dlg.querySelector('.lb-next'),
+        open = dlg.querySelector('.lb-open'), set = [], at = 0;
+    function caption(a) {
+      var fig = a.closest('figure'), fc = fig && fig.querySelector('figcaption');
+      if (fc) return fc.textContent.trim();
+      var img = a.querySelector('img');
+      if (img && img.alt) return img.alt;
+      var li = a.closest('li');
+      if (li) {
+        var c = li.cloneNode(true);
+        Array.prototype.forEach.call(c.querySelectorAll('.chips, .when'), function (x) { x.remove(); });
+        return c.textContent.replace(/\s+/g, ' ').trim();
+      }
+      return a.getAttribute('aria-label') || '';
+    }
+    function show(i) {
+      at = (i + set.length) % set.length;
+      var a = set[at], href = a.getAttribute('href');
+      body.innerHTML = '';
+      if (PDF.test(href)) {
+        var f = document.createElement('iframe');
+        f.src = href; f.title = caption(a) || 'PDF';
+        body.appendChild(f); dlg.classList.add('is-pdf');
+      } else {
+        var im = document.createElement('img');
+        im.src = href; im.alt = caption(a);
+        body.appendChild(im); dlg.classList.remove('is-pdf');
+      }
+      cap.textContent = caption(a);
+      open.href = href;
+      var many = set.length > 1;
+      prev.hidden = next.hidden = !many;
+    }
+    function close() { dlg.close(); body.innerHTML = ''; }
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('main a[href]');
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var href = a.getAttribute('href');
+      var isImg = IMG.test(href), isPdf = PDF.test(href);
+      if (!isImg && !isPdf) return;
+      if (isPdf && (window.innerWidth < 760 || /iPhone|iPad|Android/i.test(navigator.userAgent))) return;
+      if (/resume\.pdf/.test(href)) return;
+      e.preventDefault();
+      var g = a.closest('.gallery');
+      set = g ? Array.prototype.slice.call(g.querySelectorAll('a[href]')) : [a];
+      show(set.indexOf(a));
+      dlg.showModal();
+    });
+    dlg.querySelector('.lb-close').addEventListener('click', close);
+    prev.addEventListener('click', function () { show(at - 1); });
+    next.addEventListener('click', function () { show(at + 1); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target === body) close(); });
+    dlg.addEventListener('cancel', function (e) { e.preventDefault(); close(); });
+    dlg.addEventListener('keydown', function (e) {
+      if (set.length < 2) return;
+      if (e.key === 'ArrowLeft') show(at - 1);
+      else if (e.key === 'ArrowRight') show(at + 1);
+    });
+    var x0 = null;
+    dlg.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    dlg.addEventListener('touchend', function (e) {
+      if (x0 === null || set.length < 2) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50) show(at + (dx < 0 ? 1 : -1));
+    });
+  })();
+
   if (nav && toggle) {
     function setOpen(open) {
       nav.classList.toggle('is-open', open);
