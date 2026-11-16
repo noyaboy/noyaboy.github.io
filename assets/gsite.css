@@ -61,8 +61,9 @@ body > main { flex: 1 0 auto; }
 
 img { max-width: 100%; height: auto; display: block; }
 
-a { color: var(--red); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
-a:hover { color: #7a1400; }
+/* Owner ruling 2026-11-17: links are navy, regular weight, thin underline (academic convention) */
+a { color: var(--navy); font-weight: 400; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: rgba(32, 68, 115, 0.45); }
+a:hover { color: #142c4d; text-decoration-color: currentColor; }
 a:focus-visible,
 button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; border-radius: 2px; }
 
@@ -319,7 +320,9 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   line-height: 22px;
 }
 .list > li::marker { font-size: 0.85em; }
-.list .hl { color: var(--red); font-weight: 700; }
+.list .hl { color: inherit; font-weight: 400; }
+/* Bold black stays only where it marks something: award names on the Awards pages */
+.awards-page .list .hl { color: var(--ink-strong); font-weight: 700; }
 .list .sub {
   display: block;
   margin-top: 2px;
@@ -338,9 +341,9 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   line-height: 22px;
   scroll-margin-top: calc(var(--header-h) + 16px);
 }
-.cite-list .me { font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.cite-list .me { font-weight: 700; color: var(--ink-strong); }
 .cite-list .venue { font-style: italic; }
-.cite-list .note { color: var(--red); font-weight: 700; }
+.cite-list .note { color: #666; font-weight: 400; }
 .cite-list .links { margin-left: 2px; }
 .cite-list .links a { font-weight: 400; margin-right: 6px; }
 .cite-list .lineage {
@@ -369,7 +372,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   text-decoration: none;
 }
 .chip + .chip::before { content: "\00a0/\00a0"; display: inline-block; color: #9a9a9a; }
-.chip:hover { color: var(--red); text-decoration: underline; }
+.chip:hover { color: #142c4d; text-decoration: underline; }
 
 /* Avoid a lonely word or two on the last line of a paragraph or item;
    headings and captions are balanced instead. Browsers without support
@@ -798,8 +801,7 @@ html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .
   margin-right: 0;
 }
 
-/* bold stays where it marks a name: awards, project titles, list labels */
-.list .hl,
+/* bold stays where it marks a name: project titles, list labels */
 .project-list > li,
 #research .list > li,
 #skills .list > li { font-weight: 700; }
@@ -947,3 +949,6 @@ html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .
 /* Chinese has no true italic; slanted CJK (synthesized oblique) reads poorly */
 :lang(zh-Hant-TW) :is(.page-title, .motto, .band-title, .activity-title, .cite-list .venue, em, i),
 .page-title:lang(zh-Hant-TW), .motto:lang(zh-Hant-TW) { font-style: normal; }
+
+/* in-page targets (award video links, Gango) clear the sticky header */
+main [id] { scroll-margin-top: calc(var(--header-h) + 16px); }
