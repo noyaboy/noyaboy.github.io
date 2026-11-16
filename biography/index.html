@@ -86,12 +86,11 @@
 
   <div class="bio">
     <p>Right now: taping out a trajectory reconstruction accelerator on TSMC 28nm.</p>
-    <p>I graduated with distinction in Electrical Engineering from National Tsing Hua University, ranking in the top 5% of my class with a GPA of 4.1/4.3.</p>
-    <p>I currently conduct research in the Parallel Computing System Laboratory (<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">PCS Lab</a>) under Prof. Bo-Cheng Lai. My thesis centers on <a href="https://github.com/acts-project/traccc">traccc</a>, the GPU-based track-reconstruction demonstrator for the ACTS project, developed in collaboration with the University of Washington and CERN. I am also the second and corresponding author of <a href="/publications/#unitrac">UniTrac</a>, an FPGA accelerator for GNN-based track reconstruction, co-developed with UW and UIUC.</p>
-    <p>Through this thesis, I independently designed and benchmarked a design-space exploration spanning multiple accelerator architectures, targeting the throughput demands of the High-Luminosity LHC's high-level trigger. On GPUs, I introduced event-level fusion to eliminate the host-launch bottleneck, only to uncover work-bound kernels crippled by data-dependent warp divergence. Porting the design to the AMD Versal V80's spatial fabric eliminated this divergence, but limited routing resources capped achievable core count, while the feedback loop inherent to the combinatorial Kalman filter imposed a hard bound on iteration throughput. Shifting to MIMD manycore architectures such as Tenstorrent again avoided divergence, but at the cost of compute density.</p>
-    <p>Each approach converged on the same conclusion: this problem demands a custom accelerator whose architecture and compiler are co-designed around irregular memory access. That is the system I am now building in RTL, en route to a TSMC 28nm tapeout.</p>
-    <p>Beyond research, I graduated from NTHU with distinction (top 5% of 116 in major-course GPA), received NYCU's Elite New Graduate Scholarship and the TJCAS 2025 Excellent Poster Award, and earned NTHU's Academic Excellence Award three times. I was a teaching assistant for NTHU's General Physics Laboratory in Fall 2023, and I currently serve as the PCS Lab's IT manager.</p>
-    <p>Outside the lab, I dance. At Changhua Senior High, where I was in the Science Class, I was public-relations officer of Gango, the school's dance club, and danced with the team that took third place at the 14th High School Fight street dance competition. At NTHU I joined the Pop Dance Club, placing third at the 2023 Mei-Chu Tournament and second in the club's 1-on-1 battle that August. Earlier still, I won the junior high boys' individual title at the 2015 national Tantui championship. Dance, martial arts and research taught me the same lesson: every one of the few things we get to do should be done excellently.</p>
+    <p>I currently conduct research in the Parallel Computing System Laboratory (<a href="https://sites.google.com/nycu.edu.tw/pcs-lab/">PCS Lab</a>) under Prof. Bo-Cheng Lai. My thesis builds on <a href="https://github.com/acts-project/traccc">traccc</a>, the GPU track-reconstruction demonstrator of the ACTS project, in collaboration with the University of Washington and CERN. I am also second and corresponding author of <a href="/publications/#unitrac">UniTrac</a>, an FPGA accelerator for GNN-based track reconstruction, co-developed with UW and UIUC.</p>
+    <p>For this thesis I built and benchmarked, on my own, a design-space exploration across several accelerator architectures, aimed at the throughput the High-Luminosity LHC's high-level trigger demands. On GPUs, I introduced event-level fusion to eliminate the host-launch bottleneck, only to uncover work-bound kernels crippled by data-dependent warp divergence. Porting the design to the spatial fabric of the AMD Versal V80 removed the divergence, but limited routing resources capped the core count, and the feedback loop inherent to the combinatorial Kalman filter set a hard bound on iteration throughput. MIMD manycore architectures such as Tenstorrent avoided divergence as well, but at the cost of compute density.</p>
+    <p>Each approach converged on the same conclusion: this problem demands a custom accelerator whose architecture and compiler are co-designed around irregular memory access. That is the system I am now building in RTL, on the way to a TSMC 28nm tapeout.</p>
+    <p>I graduated from NTHU Electrical Engineering with distinction, with a GPA of 4.1/4.3 and a major-course GPA in the top 5% of 116 students, and received NTHU's Academic Excellence Award three times. At NYCU I received the Elite New Graduate Scholarship, and our FPGA tracking work received the Excellent Poster Award at TJCAS 2025. I was a teaching assistant for NTHU's General Physics Laboratory in Fall 2023 and now serve as the PCS Lab's IT manager.</p>
+    <p>Outside the lab, I dance. At National Changhua Senior High School, where I studied in the Science Class, I was public-relations officer of Gango, the school's dance club, and performed with the team that took third place at the 14th High School Fight. At NTHU I joined the Pop Dance Club, placing third in street dance at the 2023 Mei-Chu Tournament and second in the club's 1-on-1 battle that August. Before all of this, I won the junior high boys' individual title at the 2015 national Tantui championship. Dance, martial arts and research have taught me the same thing: we only get to do a few things, so each one deserves to be done excellently.</p>
   </div>
 
   <section class="section" id="education">
@@ -102,29 +101,29 @@
         <span class="sub">Transferred from the Dept. of Physics; Top 1 of 65 students, College of Science Elite Student Award.</span>
       </li>
       <li>National Changhua Senior High School, <span class="hl">Science Class</span> <span class="when">(2017 - 2020)</span>
-        <span class="sub">A selective gifted-science program with its own entrance exam, focused on university-level coursework and research.</span>
+        <span class="sub">A highly selective gifted-science track, admitted through its own entrance examination.</span>
       </li>
     </ul>
     <h3 class="group">Graduate Coursework (NYCU)</h3>
     <ul class="list">
-      <li><a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">ICLAB</a> <span class="hl">(A+)</span>, 5 of 143 passed the on-site test</li>
+      <li><a href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026">ICLAB</a> <span class="hl">(A+)</span>, one of 5 out of 143 students to pass the on-site exam</li>
       <li><a href="https://github.com/noyaboy/NYCU-IEE-VLSI-DSP-2026-Spring">DSP-VLSI</a> <span class="hl">(A+)</span></li>
       <li><a href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F">Deep Learning</a> <span class="hl">(A+)</span></li>
       <li><a href="https://github.com/noyaboy/NYCU-IEE-2025-FALL-Stochastic-Process">Stochastic Processes</a> <span class="hl">(A+)</span></li>
     </ul>
     <h3 class="group">Undergraduate Coursework (NTHU)</h3>
     <ul class="list">
-      <li>ICLAB (A+), VLSI Testing (A+), VLSI (A), Computer Architecture (A-), Machine Learning (A), Communication System (A+)</li>
+      <li>ICLAB (A+), VLSI Testing (A+), VLSI (A), Computer Architecture (A-), Machine Learning (A), Communication Systems (A+)</li>
     </ul>
   </section>
 
   <section class="section" id="research">
     <h2>Research Interests</h2>
     <ul class="list">
-      <li>Chip Design<span class="sub">RTL, Synthesis, APR and Signoff Implementation.</span></li>
-      <li>Domain-Specific Architecture<span class="sub">HW/SW Codesign for Specialized Applications.</span></li>
-      <li>GPU Performance Engineering<span class="sub">Kernel-level and System-level Optimization, Profiled with Nsight Systems/Compute.</span></li>
-      <li>AI Agent Automation<span class="sub">SKILL.md Flow for Mental Model Extraction, Gap Analysis and Knowledge Management.</span></li>
+      <li>Chip Design<span class="sub">RTL design, synthesis, place-and-route and signoff.</span></li>
+      <li>Domain-Specific Architecture<span class="sub">Hardware and software codesigned for a specific application.</span></li>
+      <li>GPU Performance Engineering<span class="sub">Kernel- and system-level optimization, profiled with Nsight Systems and Nsight Compute.</span></li>
+      <li>AI Agent Automation<span class="sub">SKILL.md flows for mental-model extraction, gap analysis and knowledge management.</span></li>
     </ul>
   </section>
 
