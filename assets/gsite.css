@@ -257,7 +257,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   font-family: var(--serif);
   font-style: italic;
   font-weight: 700;
-  font-size: 45.33px;
+  font-size: clamp(32px, 3.2vw + 8px, 45.33px);
   line-height: 1.38;
   color: var(--navy);
 }
@@ -520,13 +520,13 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   font-weight: 400;
   line-height: 1.15;
 }
-.name-zh { font-family: "Name Brush", var(--serif); font-size: 58px; letter-spacing: 0.06em; }
-.name-en { font-family: "Name Script", var(--serif); font-size: 64px; margin-left: 10px; }
+.name-zh { font-family: "Name Brush", var(--serif); font-size: clamp(40px, 4vw, 58px); letter-spacing: 0.06em; }
+.name-en { font-family: "Name Script", var(--serif); font-size: clamp(44px, 4.4vw, 64px); margin-left: 10px; }
 .hero-line {
   margin: 10px 0 0;
   color: var(--navy);
   font-weight: 700;
-  font-size: 18px;
+  font-size: clamp(13px, 1.85vw, 18px);
   text-shadow: 0 0 6px rgba(243, 243, 243, 0.95), 0 0 14px rgba(243, 243, 243, 0.9);
 }
 .hero-action {
@@ -656,10 +656,10 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 
 .home-cols {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.5vw, 32px);
 }
-.home-col .band-title { font-size: 24px; margin-bottom: 18px; }
+.home-col .band-title { font-size: clamp(18px, 1.6vw + 4px, 24px); margin-bottom: 18px; }
 .home-col ul { margin: 0; padding-left: 20px; list-style: square; }
 .home-col li { margin: 0 0 8px; line-height: 22px; }
 .home-col strong { font-weight: 700; }
@@ -670,13 +670,11 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 
 @media (max-width: 1000px) {
   .has-hero .site-header:not(.is-scrolled) { background: rgba(243, 243, 243, 0.55); }
-  .home-cols { grid-template-columns: 1fr; gap: 12px; }
 }
 @media (max-width: 720px) {
   .hero { min-height: 420px; padding-bottom: 80px; }
   .name-zh { font-size: 46px; display: block; }
   .name-en { font-size: 50px; margin-left: 0; display: block; }
-  .hero-line { font-size: 17px; }
   .hero-action { right: 50%; transform: translateX(50%); bottom: 22px; }
   .home-intro { grid-template-columns: 1fr; }
   .carousel { --slide-h: 300px; }
@@ -703,7 +701,7 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .activity-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px;
+  gap: clamp(12px, 2vw, 28px);
 }
 .activity-card { display: block; text-decoration: none; text-align: center; }
 .activity-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
@@ -712,8 +710,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 1.2vw, 14px);
   margin: 8px 0 28px;
 }
 .gallery figure { margin: 0; }
@@ -726,8 +724,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .club-name { margin: 0 0 28px; font-weight: 700; font-size: 18px; text-align: center; }
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 28px);
   margin-top: 8px;
 }
 .video { margin: 0; }
@@ -760,6 +758,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 @media (max-width: 720px) {
   .video-grid { grid-template-columns: 1fr; }
   .activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-cols { grid-template-columns: 1fr; gap: 12px; }
 }
 
 
