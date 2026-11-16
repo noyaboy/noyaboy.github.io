@@ -751,6 +751,63 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   .video-grid { grid-template-columns: 1fr; }
 }
 
+
+/* --------------------------------------------------------------------------
+   Reading typography (owner-approved 2026-11-16): body text at regular
+   weight, a readable measure, roomier leading. Photos, galleries, videos
+   and the footer keep the full page width.
+   -------------------------------------------------------------------------- */
+
+:root { --measure: 46rem; }
+html[lang="zh-Hant-TW"] { --measure: 42rem; }
+body { text-autospace: normal; }
+
+.bio,
+.section > h2,
+.section > h3,
+.section > p,
+.section > .list,
+.section > .cite-list,
+.section > .club-name {
+  max-width: var(--measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bio p,
+.list > li,
+.cite-list > li,
+.news-list li {
+  font-weight: 400;
+  line-height: 1.65;
+}
+html[lang="zh-Hant-TW"] .bio p,
+html[lang="zh-Hant-TW"] .list > li,
+html[lang="zh-Hant-TW"] .cite-list > li {
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+.bio p { margin-bottom: 1.1em; }
+.list > li { margin-bottom: 0.6em; }
+.cite-list > li { margin-bottom: 0.9em; }
+.list .sub { margin-top: 0.15em; }
+.section h3.group { margin-top: 1.4em; }
+.section > h3.group,
+.section > h2 {
+  max-width: var(--measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* bold stays where it marks a name: awards, project titles, list labels */
+.list .hl,
+.project-list > li,
+#research .list > li,
+#skills .list > li { font-weight: 700; }
+.project-list .sub,
+#research .list .sub,
+#skills .list .sub { font-weight: 400; }
+
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
