@@ -553,7 +553,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   font-size: 30px;
   color: #fff;
 }
-.carousel { position: relative; max-width: 960px; margin: 0 auto 44px; }
+.carousel { position: relative; max-width: 720px; margin: 0 auto 44px; }
 .slides { position: relative; aspect-ratio: 3 / 2; }
 .slide {
   position: absolute;
@@ -671,6 +671,16 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 .activity-card .btn-navy { display: block; margin-top: 14px; }
 .activity-card:hover .btn-navy { background: #2a5891; }
 
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 8px 0 28px;
+}
+.gallery figure { margin: 0; }
+.gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.gallery a:hover img { opacity: 0.88; }
+.gallery figcaption { margin-top: 6px; font-size: 14px; line-height: 20px; }
 .club-name { margin: 0 0 28px; font-weight: 700; font-size: 18px; text-align: center; }
 .video-grid {
   display: grid;
