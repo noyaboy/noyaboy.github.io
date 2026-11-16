@@ -35,6 +35,18 @@
   font-display: swap;
   src: url("/assets/fonts/lato-400-italic-latin.woff2") format("woff2");
 }
+/* Name-only subsets for the Home banner: Yuji Syuku (brush) carries just
+   梁皓鈞, Great Vibes (script) just the letters of "Hao-Chun Liang". */
+@font-face {
+  font-family: "Name Brush";
+  font-display: block;
+  src: url("/assets/fonts/yuji-syuku-name.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Name Script";
+  font-display: block;
+  src: url("/assets/fonts/great-vibes-name.woff2") format("woff2");
+}
 @font-face {
   font-family: "Lora";
   font-style: italic;
@@ -441,6 +453,169 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   color: #fff;
 }
 
+
+/* --------------------------------------------------------------------------
+   Home: mountain banner under a transparent header, photo with a line,
+   navy spotlight carousel and three summary columns
+   -------------------------------------------------------------------------- */
+
+.has-hero .site-header:not(.is-scrolled) { background: transparent; }
+
+.hero {
+  position: relative;
+  margin-top: calc(-1 * var(--header-h));
+  min-height: 340px;
+  padding: calc(var(--header-h) + 20px) var(--gutter) 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    linear-gradient(rgba(243, 243, 243, 0.34), rgba(243, 243, 243, 0.5) 55%, rgba(243, 243, 243, 0.62)),
+    url("/images/hehuan-banner.jpg") center 30% / cover no-repeat;
+}
+.hero-inner {
+  position: relative;
+  max-width: 960px;
+}
+/* soft light halo so navy text stays above 4.5:1 over the darker ridges */
+.hero-inner::before {
+  content: "";
+  position: absolute;
+  inset: -16px -72px;
+  z-index: -1;
+  background: linear-gradient(rgba(243, 243, 243, 0), rgba(243, 243, 243, 0.72) 14%, rgba(243, 243, 243, 0.72) 86%, rgba(243, 243, 243, 0));
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 72px, #000 calc(100% - 72px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 72px, #000 calc(100% - 72px), transparent);
+  pointer-events: none;
+}
+.hero { isolation: isolate; }
+.hero-name {
+  margin: 0 0 14px;
+  color: var(--navy);
+  font-weight: 400;
+  line-height: 1.15;
+}
+.name-zh { font-family: "Name Brush", var(--serif); font-size: 58px; letter-spacing: 0.06em; }
+.name-en { font-family: "Name Script", var(--serif); font-size: 64px; margin-left: 10px; }
+.hero-line {
+  margin: 10px 0 0;
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 18px;
+  text-shadow: 0 0 6px rgba(243, 243, 243, 0.95), 0 0 14px rgba(243, 243, 243, 0.9);
+}
+.hero-action {
+  position: absolute;
+  right: max(var(--gutter), calc((100% - var(--page-w)) / 2));
+  bottom: 18px;
+}
+
+.home-intro {
+  display: grid;
+  grid-template-columns: 463px 1fr;
+  gap: 37px;
+  align-items: center;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+.home-intro .portrait { width: 463px; aspect-ratio: 1 / 1; object-fit: cover; }
+.intro-text { text-align: center; padding: 0 12px; }
+.motto {
+  margin: 0 0 18px;
+  font-family: var(--serif), var(--sans);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink-strong);
+}
+.view-bio a { color: var(--navy); font-weight: 400; text-decoration: none; }
+.view-bio a:hover { text-decoration: underline; }
+
+.navy-band {
+  margin-top: 24px;
+  background: var(--navy);
+  color: var(--on-navy);
+  padding: 0 0 48px;
+}
+.band-rule { height: 1px; background: var(--rule-on-navy); margin: 0 0 36px; }
+.navy-band .band-title {
+  margin: 0 0 32px;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 30px;
+  color: #fff;
+}
+.carousel { max-width: 960px; margin: 0 auto 44px; }
+.slides { position: relative; aspect-ratio: 3 / 2; }
+.slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+.slide.is-active { opacity: 1; visibility: visible; }
+.slide img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+}
+.slide figcaption { margin-top: 10px; font-size: 12px; color: var(--on-navy); text-align: center; }
+.dots { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+.dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+}
+.dot.is-active { background: #fff; }
+.dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.home-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.home-col .band-title { font-size: 24px; margin-bottom: 18px; }
+.home-col ul { margin: 0; padding-left: 20px; list-style: square; }
+.home-col li { margin: 0 0 8px; line-height: 22px; }
+.home-col strong { font-weight: 700; }
+.home-col .more { margin: 18px 0 0; text-align: center; }
+.navy-band a { color: #fff; font-weight: 400; }
+.has-hero .site-footer { margin-top: 0; }
+.photo-credit { margin-top: 8px; opacity: 0.8; }
+
+@media (max-width: 960px) {
+  .has-hero .site-header:not(.is-scrolled) { background: rgba(243, 243, 243, 0.55); }
+  .home-cols { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 720px) {
+  .hero { min-height: 420px; padding-bottom: 80px; }
+  .name-zh { font-size: 46px; display: block; }
+  .name-en { font-size: 50px; margin-left: 0; display: block; }
+  .hero-line { font-size: 17px; }
+  .hero-action { right: 50%; transform: translateX(50%); bottom: 22px; }
+  .home-intro { grid-template-columns: 1fr; }
+  .slides { aspect-ratio: 4 / 5; }
+  .home-intro .portrait { width: 100%; }
+  .intro-text { padding: 36px 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
+}
+
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
@@ -508,7 +683,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 
 @media print {
   body { background: #fff; color: #000; }
-  .site-header, .skip-link, .title-action, .pet-layer, .site-footer { display: none !important; }
+  .site-header, .skip-link, .title-action, .hero-action, .pet-layer, .site-footer, .navy-band { display: none !important; }
   .page-title { color: #000; font-size: 28px; }
   .profile { margin-top: 24px; }
   .section { margin-top: 24px; break-inside: auto; }
