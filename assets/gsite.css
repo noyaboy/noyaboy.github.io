@@ -616,6 +616,67 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   .slide { transition: none; }
 }
 
+
+/* Activity cards (Home) and the club page videos */
+.activity { padding: 56px 0 72px; }
+.activity-title {
+  margin: 0 0 36px;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--navy);
+}
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 266px));
+  justify-content: center;
+  gap: 28px;
+}
+.activity-card { display: block; text-decoration: none; text-align: center; }
+.activity-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.activity-card .btn-navy { display: block; margin-top: 14px; }
+.activity-card:hover .btn-navy { background: #2a5891; }
+
+.club-name { margin: 0 0 28px; font-weight: 700; font-size: 18px; text-align: center; }
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 8px;
+}
+.video { margin: 0; }
+.yt-facade, .video iframe {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 0;
+  background: #000;
+  cursor: pointer;
+}
+.yt-facade img { width: 100%; height: 100%; object-fit: cover; }
+.yt-facade .play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 68px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  opacity: 0.88;
+  transition: opacity 0.15s ease;
+}
+.yt-facade:hover .play, .yt-facade:focus-visible .play { opacity: 1; }
+.video figcaption { margin-top: 10px; line-height: 22px; }
+.video figcaption strong { display: block; }
+.yt-title { display: block; font-size: 14px; color: #555; }
+.yt-title a { font-weight: 400; }
+@media (max-width: 720px) {
+  .video-grid { grid-template-columns: 1fr; }
+}
+
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
