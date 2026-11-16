@@ -392,6 +392,37 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 }
 .cite-list .lineage-note { display: block; margin-top: 6px; color: #555; }
 
+/* Resource links (slides, poster, photo, certificate...) as small chips
+   on their own row, instead of a trailing run of underlined words */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.chip {
+  display: inline-block;
+  padding: 0 9px;
+  border: 1px solid rgba(32, 68, 115, 0.35);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.chip:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+.chip:focus-visible { outline-offset: 1px; }
+
+/* Avoid a lonely word or two on the last line of a paragraph or item;
+   headings and captions are balanced instead. Browsers without support
+   simply wrap as before. */
+p, li, .sub, figcaption { text-wrap: pretty; }
+.nobr { white-space: nowrap; }
+h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
+
 /* Projects */
 .project-list > li { scroll-margin-top: calc(var(--header-h) + 16px); margin-bottom: 12px; }
 

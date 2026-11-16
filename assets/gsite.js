@@ -96,6 +96,48 @@
     });
   });
 
+  // No orphans: keep the last 4 CJK characters, or the last two words,
+  // of each paragraph, list item and caption together on one line.
+  // CSS text-wrap: pretty does little for Chinese and is missing in some
+  // browsers, so this does the job everywhere.
+  (function () {
+    var CJK = /[⺀-鿿＀-￯]/;
+    var sel = 'main p, main li, main .sub, main figcaption';
+    Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) {
+      if (el.textContent.trim().length < 12) return;
+      var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (n) {
+          if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          var p = n.parentNode;
+          while (p && p !== el) {
+            if (p.classList && (p.classList.contains('chips') || p.classList.contains('nobr') || p.classList.contains('sub'))) {
+              return p.classList.contains('sub') && el.classList.contains('sub') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+            }
+            p = p.parentNode;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var last = null, n;
+      while ((n = w.nextNode())) last = n;
+      if (!last) return;
+      var t = last.nodeValue.replace(/\s+$/, '');
+      var tail = last.nodeValue.slice(t.length);
+      if (CJK.test(t.slice(-2))) {
+        if (t.length < 6) return;
+        var keep = t.slice(-4);
+        last.nodeValue = t.slice(0, -4);
+        var span = document.createElement('span');
+        span.className = 'nobr';
+        span.textContent = keep + tail;
+        last.parentNode.insertBefore(span, last.nextSibling);
+      } else {
+        var i = t.lastIndexOf(' ');
+        if (i > 0 && t.length - i < 16) last.nodeValue = t.slice(0, i) + ' ' + t.slice(i + 1) + tail;
+      }
+    });
+  })();
+
   if (nav && toggle) {
     function setOpen(open) {
       nav.classList.toggle('is-open', open);
