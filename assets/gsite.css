@@ -807,10 +807,12 @@ html[lang="zh-Hant-TW"] .cite-list > li {
 .list > li,
 .cite-list > li,
 .news-list li,
-.list .sub:not(.inline) { text-align: justify; hyphens: auto; }
+.list .sub:not(.inline) { text-align: justify; hyphens: auto; text-wrap: wrap; }
+/* text-wrap: pretty plus justify makes Chromium stretch the LAST line too; gsite.js already binds the last words, so plain wrap loses nothing */
 /* A wrapped title line that ends right before a block .sub is stretched by Chromium as if it were a full line */
 .list > li:has(> .sub:not(.inline)) { text-align: start; }
 .list > li:has(> .sub:not(.inline)) > .sub:not(.inline) { text-align: justify; }
+.list > li:has(> .sub:not(.inline)) { text-wrap: pretty; }
 html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .news-list li, .list .sub) { text-justify: inter-character; }
 .list > li { margin-bottom: 0.6em; }
 .cite-list > li { margin-bottom: 0.9em; }
