@@ -217,10 +217,10 @@
       el.style.letterSpacing = (base + d[0] * fs) + 'px';
       el.style.wordSpacing = (d[1] * fs) + 'px';
     }
-    function fix(el) {
+    function reset(el) {
       el.style.letterSpacing = el.style.wordSpacing = el.style.textWrap = el.style.textAlign = '';
-      var m = measure(el);
-      if (m.ok) return;
+    }
+    function fix(el, m) {
       var ls0 = parseFloat(getComputedStyle(el).letterSpacing) || 0, i, t;
       for (i = 0; i < TIGHT.length; i++) {
         setSpacing(el, ls0, TIGHT[i]);
@@ -244,15 +244,27 @@
       el.style.textWrap = 'balance';
       if (getComputedStyle(el).textAlign === 'justify') el.style.textAlign = 'start';
     }
+    // Reset everything, then measure everything: one layout for the whole
+    // page instead of one per block. Only the few failing blocks iterate.
+    var done = '';
     function run() {
+      var loaded = 0, f = document.fonts;
+      if (f && f.forEach) f.forEach(function (x) { if (x.status === 'loaded') loaded++; });
+      var key = innerWidth + '|' + loaded;
+      if (key === done) return;
+      done = key;
       var els = Array.prototype.filter.call(document.querySelectorAll(sel), leaf);
-      els.forEach(fix);
+      els.forEach(reset);
+      var ms = els.map(measure);
+      els.forEach(function (el, k) { if (!ms[k].ok) fix(el, ms[k]); });
     }
+    // Phones fire resize when the address bar slides; only width matters.
     var timer;
     function later() { clearTimeout(timer); timer = setTimeout(run, 120); }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(run); else run();
     window.addEventListener('load', run);
     window.addEventListener('resize', later);
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', later);
   })();
 
   // Lightbox: photos and PDFs open in a dialog over the dimmed page.
