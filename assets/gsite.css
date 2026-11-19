@@ -648,9 +648,6 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
   .home-intro .portrait { width: min(100%, 320px); margin: 0 auto; }
   .intro-text { padding: 36px 8px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .slide { transition: none; }
-}
 
 
 /* Activity cards (Home) and the club page videos */

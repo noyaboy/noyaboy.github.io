@@ -43,13 +43,13 @@
     if (!e.target.closest || !e.target.closest('.nav-group')) closeGroups(null);
   });
 
-  // Home spotlight carousel: auto-advance, dots jump, pauses on hover/focus
+  // Home spotlight carousel: auto-advance, dots jump, pauses on hover/focus.
+  // It runs even under prefers-reduced-motion (owner ruling, 2026-11-19).
   Array.prototype.forEach.call(document.querySelectorAll('.carousel'), function (c) {
     var slides = c.querySelectorAll('.slide');
     var dots = c.querySelectorAll('.dot');
     if (slides.length < 2) return;
     var i = 0, timer = null;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var GAP = 28, SIDE = 0.86;
     function layout() {
       var N = slides.length, w = function (k) { return slides[(k + N) % N].offsetWidth; };
@@ -79,7 +79,7 @@
       });
     }
     function start() {
-      if (reduce || timer) return;
+      if (timer) return;
       timer = setInterval(function () { show(i + 1); }, +c.getAttribute('data-interval') || 5000);
     }
     function stop() { clearInterval(timer); timer = null; }
