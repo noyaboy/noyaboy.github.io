@@ -704,6 +704,7 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .gallery img.pos-75 { object-position: 50% 75%; }
 .gallery a:hover img { opacity: 0.88; }
 .gallery figcaption { margin-top: 6px; font-size: 14px; line-height: 20px; }
+.gallery figcaption.credit { font-size: 12px; line-height: 16px; color: #5c5c5c; }
 .club-name { margin: 0 0 28px; font-weight: 700; font-size: 18px; text-align: center; }
 .video-grid {
   display: grid;
