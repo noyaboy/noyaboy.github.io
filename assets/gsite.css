@@ -700,6 +700,8 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .flag-square { width: 0.9em; }
 .trip-dates { margin-left: 8px; font-weight: 400; color: #555; font-size: 14px; }
 .gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.gallery img.pos-40 { object-position: 50% 40%; }
+.gallery img.pos-75 { object-position: 50% 75%; }
 .gallery a:hover img { opacity: 0.88; }
 .gallery figcaption { margin-top: 6px; font-size: 14px; line-height: 20px; }
 .club-name { margin: 0 0 28px; font-weight: 700; font-size: 18px; text-align: center; }

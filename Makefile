@@ -10,7 +10,7 @@ update:
 # recompile and deploy files/resume.pdf, and re-pack resume.zip so the
 # source backup stays in sync with what you just built.
 # Deliberately does NOT touch the ?v= on resume.pdf links in index.html /
-# cv/index.html — those stay pinned (currently v18) unless asked otherwise.
+# cv/index.html — those stay pinned (bump them by hand) unless asked otherwise.
 .PHONY: resume
 
 resume-src/main.tex:
