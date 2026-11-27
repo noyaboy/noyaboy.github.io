@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f3f3f3">
   <title>專案 — 梁皓鈞 Hao-Chun Liang</title>
-  <meta name="description" content="梁皓鈞（Hao-Chun Liang），國立陽明交通大學碩士生，研究領域專用加速器、GPU 效能工程與 AI Agent 自動化。">
+  <meta name="description" content="梁皓鈞（Hao-Chun Liang）的專案：軌跡重建加速器 TSMC 28nm 下線、晶心科技 AI Agent 自動化流程，以及 FPGA 與 GPU 軌跡追蹤研究。">
   <link rel="canonical" href="https://noyaboy.github.io/zh/projects/">
   <link rel="alternate" hreflang="en" href="https://noyaboy.github.io/projects/">
   <link rel="alternate" hreflang="zh-Hant-TW" href="https://noyaboy.github.io/zh/projects/">
@@ -15,16 +15,18 @@
   <link rel="apple-touch-icon" href="/images/apple-touch-icon-180x180.png">
   <link rel="manifest" href="/images/manifest.json">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Hao-Chun Liang">
+  <meta property="og:site_name" content="梁皓鈞 Hao-Chun Liang">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:title" content="專案 — 梁皓鈞 Hao-Chun Liang">
-  <meta property="og:description" content="國立陽明交通大學碩士生，研究晶片設計與機器學習硬體加速。">
+  <meta property="og:description" content="梁皓鈞（Hao-Chun Liang）的專案：軌跡重建加速器 TSMC 28nm 下線、晶心科技 AI Agent 自動化流程，以及 FPGA 與 GPU 軌跡追蹤研究。">
   <meta property="og:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://noyaboy.github.io/zh/projects/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="專案 — 梁皓鈞 Hao-Chun Liang">
-  <meta name="twitter:description" content="國立陽明交通大學碩士生，研究晶片設計與機器學習硬體加速。">
+  <meta name="twitter:description" content="梁皓鈞（Hao-Chun Liang）的專案：軌跡重建加速器 TSMC 28nm 下線、晶心科技 AI Agent 自動化流程，以及 FPGA 與 GPU 軌跡追蹤研究。">
   <meta name="twitter:image" content="https://noyaboy.github.io/images/og-card-taipei.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,11 +85,11 @@
       <li id="regfile-codegen">Regfile RTL/C 程式碼自動生成流程 <span class="when">(晶心科技，2024/11 - 至今)</span>
         <span class="sub">將 CSV 暫存器規格自動編譯成可合成的 Verilog 暫存器檔、C/C++ 標頭檔與文件，確保軟硬體介面一致。2026 年起加入中間表示（IR）最佳化。工具：Perl、Python、Verilog、Shell、Makefile。</span></li>
       <li id="dual-core-risc-cpu">雙核心 RISC CPU：UMC 180nm 從 RTL 到簽核 <span class="when">(陽明交大 ICLAB 期末專題，2026/03 - 2026/07)</span>
-        <span class="sub">雙核心 RISC 處理器，在 UMC 180nm 走完完整的 RTL 到 GDSII 流程，包含設計、模擬與形式驗證、合成、時序收斂及佈局繞線。工具：Verilog、VCS、Spyglass、Design Compiler、JasperGold、PrimeTime、Innovus。 <span class="chips"><a class="chip" href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026" target="_blank" rel="noopener">GitHub</a></span></span></li>
+        <span class="sub">雙核心 RISC 處理器，在 UMC 180nm 走完完整的 RTL 到 GDSII 流程，包含設計、模擬與形式驗證、合成、時序收斂及佈局繞線。工具：Verilog、VCS、SpyGlass、Design Compiler、JasperGold、PrimeTime、Innovus。 <span class="chips"><a class="chip" href="https://github.com/noyaboy/NYCU_IEE_ICLAB_SPRING2026" target="_blank" rel="noopener">GitHub</a></span></span></li>
       <li id="weak-lensing">弱重力透鏡收斂圖的超輕量 HDC-CNN <span class="when">(陽明交大 深度學習期末專題；NeurIPS 2025 FAIR Universe Weak Lensing Uncertainty Challenge，2025/10 - 2025/11)</span>
         <span class="sub">參數量 0.2M 的混合膨脹卷積 CNN 集成模型，以保序校準做穩健的不確定性量化。工具：Python、PyTorch、TensorFlow。 <span class="chips"><a class="chip" href="https://github.com/noyaboy/NYCU-IEE-Deep-Learning-2025F/tree/main/final_project" target="_blank" rel="noopener">GitHub</a></span></span></li>
       <li id="riscv-cpu">具 Hazard 處理的 RISC-V 五級管線 CPU 核心 <span class="when">(清華大學 ICLAB 期末專題，2023/12 - 2024/01)</span>
-        <span class="sub">RV32I 五級管線核心，具備 forwarding、hazard 停頓與雙 bank 指令及資料快取，以 GPDK 45nm 實作。工具：Verilog、VCS、Spyglass、Design Compiler、PrimeTime、Innovus。 <span class="chips"><a class="chip" href="https://github.com/noyaboy/5-Stage-Pipelined-RISC-V-CPU-Core" target="_blank" rel="noopener">GitHub</a></span></span></li>
+        <span class="sub">RV32I 五級管線核心，具備 forwarding、hazard 停頓與雙 bank 指令及資料快取，以 GPDK 45nm 實作。工具：Verilog、VCS、SpyGlass、Design Compiler、PrimeTime、Innovus。 <span class="chips"><a class="chip" href="https://github.com/noyaboy/5-Stage-Pipelined-RISC-V-CPU-Core" target="_blank" rel="noopener">GitHub</a></span></span></li>
     </ul>
   </section>
 
@@ -100,7 +102,7 @@
       <h2>聯絡資訊</h2>
       <p>國立陽明交通大學 工程四館 206 平行計算系統實驗室，新竹，台灣</p>
       <ul>
-        <li>E-mail：<a href="mailto:science103555@gmail.com">science103555@gmail.com</a>、<a href="mailto:noah.ii14@nycu.edu.tw">noah.ii14@nycu.edu.tw</a></li>
+        <li>Email：<a href="mailto:science103555@gmail.com">science103555@gmail.com</a>、<a href="mailto:noah.ii14@nycu.edu.tw">noah.ii14@nycu.edu.tw</a></li>
         <li>GitHub：<a href="https://github.com/noyaboy" target="_blank" rel="noopener">github.com/noyaboy</a></li>
         <li>ORCID：<a href="https://orcid.org/0009-0004-0675-9162" target="_blank" rel="noopener">0009-0004-0675-9162</a></li>
         <li>Google Scholar：<a href="https://scholar.google.com/citations?user=6Bo3wSEAAAAJ" target="_blank" rel="noopener">Hao-Chun Liang</a></li>
