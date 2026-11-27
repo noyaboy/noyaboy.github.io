@@ -741,6 +741,7 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 .video figcaption strong { display: block; }
 .yt-title { display: block; font-size: 14px; color: #555; }
 .yt-title a { font-weight: 400; }
+figcaption .credit { display: block; font-size: 12px; line-height: 16px; color: #5c5c5c; }
 @media (max-width: 720px) {
   .video-grid { grid-template-columns: 1fr; }
   .activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
