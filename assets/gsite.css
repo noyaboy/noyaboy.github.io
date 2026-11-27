@@ -66,6 +66,7 @@ a { color: var(--navy); font-weight: 400; text-decoration: underline; text-decor
 a:hover { color: #142c4d; text-decoration-color: currentColor; }
 a:focus-visible,
 button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; border-radius: 2px; }
+.site-footer a:focus-visible { outline-color: #fff; }
 
 .skip-link {
   position: absolute;
@@ -299,14 +300,14 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
   font-weight: 700;
   color: var(--ink-strong);
 }
-.section h3.group {
+.section .group {
   margin: 18px 0 4px;
   font-size: 16px;
   line-height: 28.8px;
   font-weight: 700;
   color: #2b1e1b;
 }
-.section h3.group:first-of-type { margin-top: 6px; }
+.section .group:first-of-type { margin-top: 6px; }
 
 .list {
   margin: 0;
@@ -343,7 +344,7 @@ button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; bord
 }
 .cite-list .me { font-weight: 700; color: var(--ink-strong); }
 .cite-list .venue { font-style: italic; }
-.cite-list .note { color: #666; font-weight: 400; }
+.cite-list .note { color: #5c5c5c; font-weight: 400; }
 .cite-list .links { margin-left: 2px; }
 .cite-list .links a { font-weight: 400; margin-right: 6px; }
 .cite-list .lineage {
@@ -607,17 +608,34 @@ h1, h2, h3, .page-title, .band-title, .motto, .hero-line { text-wrap: balance; }
 @media (hover: none) {
   .car-arrow { opacity: 0.7; width: 40px; height: 40px; }
 }
-.dots { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+.dots { display: flex; justify-content: center; align-items: center; gap: 0; margin-top: 4px; }
 .dot {
-  width: 9px;
-  height: 9px;
-  padding: 0;
+  /* 24px hit area (WCAG 2.5.8) around a 9px visual dot */
+  width: 24px;
+  height: 24px;
+  padding: 7.5px;
   border: 0;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.45);
+  background-clip: content-box;
   cursor: pointer;
 }
-.dot.is-active { background: #fff; }
+.dot.is-active { background-color: #fff; }
+.car-pause {
+  width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.car-pause:hover { color: #fff; }
+.car-pause:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 .home-cols {
@@ -782,8 +800,8 @@ html[lang="zh-Hant-TW"] :is(.bio p, .section > p, .list > li, .cite-list > li, .
 .list > li { margin-bottom: 0.6em; }
 .cite-list > li { margin-bottom: 0.9em; }
 .list .sub { margin-top: 0.15em; }
-.section h3.group { margin-top: 1.4em; }
-.section > h3.group,
+.section .group { margin-top: 1.4em; }
+.section > .group,
 .section > h2 {
   max-width: var(--measure);
   margin-left: auto;

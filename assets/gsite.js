@@ -43,7 +43,8 @@
     if (!e.target.closest || !e.target.closest('.nav-group')) closeGroups(null);
   });
 
-  // Home spotlight carousel: auto-advance, dots jump, pauses on hover/focus.
+  // Home spotlight carousel: auto-advance, dots jump, pauses on hover/focus,
+  // and a pause/play button after the dots stops it for touch users (WCAG 2.2.2).
   // It runs even under prefers-reduced-motion (owner ruling, 2026-11-19).
   Array.prototype.forEach.call(document.querySelectorAll('.carousel'), function (c) {
     var slides = c.querySelectorAll('.slide');
@@ -78,8 +79,9 @@
         if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
       });
     }
+    var held = false;
     function start() {
-      if (timer) return;
+      if (timer || held) return;
       timer = setInterval(function () { show(i + 1); }, +c.getAttribute('data-interval') || 5000);
     }
     function stop() { clearInterval(timer); timer = null; }
@@ -102,6 +104,22 @@
       if (e.key === 'ArrowLeft') { show(i - 1); stop(); }
       else if (e.key === 'ArrowRight') { show(i + 1); stop(); }
     });
+    var bar = c.querySelector('.dots');
+    if (bar) {
+      var zh = /^zh/.test(document.documentElement.lang);
+      var ICON_PAUSE = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="2.6" height="9" fill="currentColor"/><rect x="7.4" y="1.5" width="2.6" height="9" fill="currentColor"/></svg>';
+      var ICON_PLAY = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/></svg>';
+      var pb = document.createElement('button');
+      pb.type = 'button';
+      pb.className = 'car-pause';
+      var paint = function () {
+        pb.innerHTML = held ? ICON_PLAY : ICON_PAUSE;
+        pb.setAttribute('aria-label', held ? (zh ? '播放輪播' : 'Play slideshow') : (zh ? '暫停輪播' : 'Pause slideshow'));
+      };
+      pb.addEventListener('click', function () { held = !held; paint(); if (held) stop(); });
+      paint();
+      bar.appendChild(pb);
+    }
     c.addEventListener('mouseenter', stop);
     c.addEventListener('mouseleave', start);
     c.addEventListener('focusin', stop);
